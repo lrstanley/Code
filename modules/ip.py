@@ -61,6 +61,8 @@ def ip_lookup(standerp, input):
     if answer:
         response += gen_response(answer)
     else:
+        response += "Error looking up IP address."
+        return
         q = socket.getaddrinfo(query, 80)
         try:
             resp, ip = getipv4(q)
