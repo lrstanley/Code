@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+"""
+Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Credits: Sean B. Palmer, Michael Yanovich
+web.py - Stan-Derp Web Facilities
+http://standerp.liamstanley.net/
+"""
+
+import re, urllib
+from htmlentitydefs import name2codepoint
+
+class Grab(urllib.URLopener): 
+   def __init__(self, *args): 
+      self.version = 'Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0'
+      urllib.URLopener.__init__(self, *args)
+   def http_error_default(self, url, fp, errcode, errmsg, headers): 
+      return urllib.addinfourl(fp, [headers, errcode], "http:" + url)
+urllib._urlopener = Grab()
+
+def get(uri): 
+   if not uri.startswith('http'): 
+      return
+   u = urllib.urlopen(uri)
+   bytes = u.read()
+   u.close()
+   return bytes
+
+def head(uri): 
+   if not uri.startswith('http'): 
+      return
+   u = urllib.urlopen(uri)
+   info = u.info()
+   u.close()
+   return info
+
+def post(uri, query): 
+   if not uri.startswith('http'): 
+      return
+   data = urllib.urlencode(query)
+   u = urllib.urlopen(uri, data)
+   bytes = u.read()
+   u.close()
+   return bytes
+
+r_entity = re.compile(r'&([^;\s]+);')
+
+def entity(match): 
+   value = match.group(1).lower()
+   if value.startswith('#x'): 
+      return unichr(int(value[2:], 16))
+   elif value.startswith('#'): 
+      return unichr(int(value[1:]))
+   elif name2codepoint.has_key(value): 
+      return unichr(name2codepoint[value])
+   return '[' + value + ']'
+
+def decode(html): 
+   return r_entity.sub(entity, html)
+
+r_string = re.compile(r'("(\\.|[^"\\])*")')
+r_json = re.compile(r'^[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]+$')
+env = {'__builtins__': None, 'null': None, 'true': True, 'false': False}
+
+def json(text): 
+   """Evaluate JSON text safely (we hope)."""
+   if r_json.match(r_string.sub('', text)): 
+      text = r_string.sub(lambda m: 'u' + m.group(1), text)
+      return eval(text.strip(' \t\r\n'), env, {})
+   raise ValueError('Input must be serialised JSON.')
+
+if __name__=="__main__": 
+   main()

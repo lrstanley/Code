@@ -1,0 +1,327 @@
+#!/usr/bin/env python
+"""
+Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Credits: Sean B. Palmer, Michael Yanovich
+url.py - Stan-Derp url Module
+http://standerp.liamstanley.net/
+
+Module imported from jenni.
+"""
+
+import re
+from htmlentitydefs import name2codepoint
+from modules import unicode as uc
+import urllib2
+import urlparse
+import socket
+import web
+
+# Place a file in your ~/standerp/ folder named, bitly.txt
+# and inside this file place your API key followed by a ','
+# and then your username. For example, the only line in that
+# file should look like this:
+# R_d67798xkjc87sdx6x8c7kjc87,myusername
+
+# this variable is to determine when to use bitly. If the URL is more
+# than this length, it'll display a bitly URL instead. To disable bit.ly, put None
+# even if it's set to None, triggering .bitly command will still work!
+BITLY_TRIGGER_LEN_TITLE = 35
+BITLY_TRIGGER_LEN_NOTITLE = 80
+EXCLUSION_CHAR = "!"
+IGNORE = ["git.io"]
+PROXY = True
+
+# do not edit below this line unless you know what you're doing
+bitly_loaded = 0
+
+try:
+    file = open("bitly.txt", "r")
+    key = file.read()
+    key = key.split(",")
+    bitly_api_key = str(key[0].strip())
+    bitly_user = str(key[1].strip())
+    file.close()
+    bitly_loaded = 1
+except:
+    print "ERROR: No bitly.txt found."
+
+url_finder = re.compile(r'(?u)(%s?(http|https|ftp)(://\S+\.\S+/?\S+?))' % (EXCLUSION_CHAR))
+r_entity = re.compile(r'&[A-Za-z0-9#]+;')
+INVALID_WEBSITE = 0x01
+
+def noteuri(standerp, input):
+    uri = input.group(1).encode('utf-8')
+    if not hasattr(standerp.bot, 'last_seen_uri'):
+        standerp.bot.last_seen_uri = {}
+    standerp.bot.last_seen_uri[input.sender] = uri
+noteuri.rule = r'(?u).*(http[s]?://[^<> "\x01]+)[,.]?'
+noteuri.priority = 'low'
+
+def find_title(url):
+    """
+    This finds the title when provided with a string of a URL."
+    """
+    uri = url
+
+    if not uri and hasattr(self, 'last_seen_uri'):
+        uri = self.last_seen_uri.get(origin.sender)
+
+    for item in IGNORE:
+        if item in uri:
+            return
+
+    if not re.search('^((https?)|(ftp))://', uri):
+        uri = 'http://' + uri
+
+    if "twitter.com" in uri:
+        uri = uri.replace('#!', '?_escaped_fragment_=')
+
+    redirects = 0
+    ## follow re-directs, if someone pastes a bitly of a tinyurl, etc..
+    page = str()
+    while True:
+        proxy_link = str()
+        if PROXY:
+            proxy_link += "http://freesite.concealme.com/proxy/"
+        req = urllib2.Request(proxy_link + uri, headers={'Accept':'text/html'})
+        req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:10.0) Gecko/20100101 Firefox/10.0')
+        u = urllib2.urlopen(req)
+        info = u.info()
+        page = u.read()
+        u.close()
+
+        if not isinstance(info, list):
+            status = '200'
+        else:
+            status = str(info[1])
+            info = info[0]
+        if status.startswith('3'):
+            uri = urlparse.urljoin(uri, info['Location'])
+        else:
+            break
+
+        redirects += 1
+        if redirects >= 10:
+            return "Too many re-directs."
+
+    try: mtype = info['content-type']
+    except: return
+    if not (('/html' in mtype) or ('/xhtml' in mtype)):
+        return
+
+    content = page
+    regex = re.compile('<(/?)title( [^>]+)?>', re.IGNORECASE)
+    content = regex.sub(r'<\1title>', content)
+    regex = re.compile('[\'"]<title>[\'"]', re.IGNORECASE)
+    content = regex.sub('', content)
+    start = content.find('<title>')
+    if start == -1: return
+    end = content.find('</title>', start)
+    if end == -1: return
+    content = content[start+7:end]
+    content = content.strip('\n').rstrip().lstrip()
+    title = content
+
+    if len(title) > 200:
+        title = title[:200] + '[...]'
+
+    def e(m):
+        entity = m.group()
+        if entity.startswith('&#x'):
+            cp = int(entity[3:-1],16)
+            return unichr(cp).encode('utf-8')
+        elif entity.startswith('&#'):
+            cp = int(entity[2:-1])
+            return unichr(cp).encode('utf-8')
+        else:
+            char = name2codepoint[entity[1:-1]]
+            return unichr(char).encode('utf-8')
+
+    title = r_entity.sub(e, title)
+
+    title = title.replace('\n', '')
+    title = title.replace('\r', '')
+
+    def remove_spaces(x):
+        if "  " in x:
+            x = x.replace("  ", " ")
+            return remove_spaces(x)
+        else:
+            return x
+
+    title = remove_spaces(title)
+
+    t2 = uc.remove_control_chars(title)
+
+    title = re.sub(r'(?i)dcc\ssend', '', t2)
+
+    if title:
+        title = uc.decode(title)
+    else: title = 'No title - Could not unicode-ify it'
+
+    if title:
+        return title
+    else:
+        return 'No title'
+
+def short(text):
+    """
+    This function creates a bitly url for each url in the provided "text" string.
+    The return type is a list.
+    """
+
+    if not bitly_loaded: return list()
+    if not text: return list()
+    bitlys = list()
+    try:
+        a = re.findall(url_finder, text)
+        k = len(a)
+        i = 0
+        while i < k:
+            b = uc.decode(a[i][0])
+            if not b.startswith("http://bit.ly") or not b.startswith("http://j.mp/"):
+                url = "http://api.j.mp/v3/shorten?login=%s&apiKey=%s&longUrl=%s&format=txt" % (bitly_user, bitly_api_key, urllib2.quote(b))
+                shorter = web.get(url)
+                shorter.strip()
+                bitlys.append([b, shorter])
+            i += 1
+        return bitlys
+    except:
+        return
+
+def generateBitLy (standerp, input):
+    if not bitly_loaded: return
+    bitly = short(input)
+    idx = 7
+    for b in bitly:
+        displayBitLy(standerp, b[0], b[1])
+generateBitLy.commands = ['bitly']
+generateBitLy.priority = 'high'
+
+def displayBitLy (standerp, url, shorten):
+    if url is None or shorten is None: return
+    u = getTLD(url)
+    standerp.say('%s  -  %s' % (u, shorten))
+
+def remove_nonprint(text):
+    new = str()
+    for char in text:
+        x = ord(char)
+        if x > 32 and x < 126:
+            new += char
+    return new
+
+def getTLD (url):
+    url = url.strip()
+    url = remove_nonprint(url)
+    idx = 7
+    if url.startswith('https://'): idx = 8
+    elif url.startswith('ftp://'): idx = 6
+    u = url[idx:]
+    f = u.find('/')
+    if f == -1: u = url
+    else: u = url[0:idx] + u[0:f]
+    return remove_nonprint(u)
+
+def doUseBitLy (title, url):
+    BTL = None
+    if title:
+        BTL = BITLY_TRIGGER_LEN_TITLE
+    else:
+        BTL = BITLY_TRIGGER_LEN_NOTITLE
+    return bitly_loaded and BTL is not None and len(url) > BTL
+
+def get_results(text):
+    if not text: return list()
+    a = re.findall(url_finder, text)
+    k = len(a)
+    i = 0
+    display = list()
+    while i < k:
+        url = uc.encode(a[i][0])
+        url = uc.decode(url)
+        url = uc.iriToUri(url)
+        url = remove_nonprint(url)
+        domain = getTLD(url)
+        if "//" in domain:
+            domain = domain.split('//')[1]
+        if not url.startswith(EXCLUSION_CHAR):
+            try:
+                page_title = find_title(url)
+            except:
+                page_title = None # if it can't access the site fail silently
+            if bitly_loaded: # and (page_title is not None or page_title == INVALID_WEBSITE):
+                bitly = short(url)
+                bitly = bitly[0][1]
+            else: bitly = url
+            display.append([page_title, url, bitly])
+        i += 1
+    return display
+
+def show_title_auto (standerp, input):
+    if input.startswith('.title ') or input.startswith('.bitly ') or input.startswith('.isup '): return
+    if len(re.findall("\([\d]+\sfiles\sin\s[\d]+\sdirs\)", input)) == 1: return
+    try:
+        results = get_results(input)
+    except: return
+    if results is None: return
+
+    k = 1
+    for r in results:
+        if k > 3: break
+        k += 1
+
+        useBitLy = doUseBitLy(r[0], r[1])
+        if r[0] is None:
+            if useBitLy: displayBitLy(standerp, r[1], r[2])
+            continue
+        if useBitLy: r[1] = r[2]
+        else: r[1] = getTLD(r[1])
+        standerp.say('[ %s ] - %s' % (r[0], r[1]))
+show_title_auto.rule = '(?iu).*(%s?(http|https)(://\S+)).*' % (EXCLUSION_CHAR)
+show_title_auto.priority = 'high'
+
+def show_title_demand (standerp, input):
+    results = get_results(input.group(2))
+    if results is None:
+        standerp.reply('No title found.')
+        return
+
+    for r in results:
+        if r[0] is None: continue
+        if doUseBitLy(r[0], r[1]): r[1] = r[2]
+        else: r[1] = getTLD(r[1])
+        standerp.say('[ %s ] - %s' % (r[0], r[1]))
+show_title_demand.commands = ['title']
+show_title_demand.priority = 'high'
+
+def proxy_change(standerp, input):
+    """.proxy (on|off|status) -- enable/disable proxy for automatic URL titles"""
+    if not input.owner: return
+    global PROXY
+    txt = input.group(2)
+    if txt:
+        txt = (txt).lower()
+
+    statement = str()
+    if txt == "on" or txt == "enable":
+        PROXY = True
+        statement = "enabled"
+    elif txt == "off" or txt == "disable":
+        PROXY = False
+        statement = "disabled"
+    elif txt == "status" or not txt:
+        if PROXY: status = "enabled"
+        else: status = "disabled"
+        standerp.reply("Proxy for automatic titles is currently: %s." % (status))
+        return
+
+    if statement:
+        standerp.reply("Proxy for automatic titles has been, %s." % (statement))
+    else:
+        standerp.reply("To enable the proxy use, '.proxy on'. To disable the proxy use, '.proxy off'.")
+proxy_change.commands = ['proxy']
+proxy_change.priority = 'high'
+
+if __name__ == '__main__':
+    print __doc__.strip()

@@ -1,0 +1,6 @@
+default.py
+testing.py
+*.pyc
+*.txt
+*.db
+@*.py
