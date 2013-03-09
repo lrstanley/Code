@@ -98,7 +98,7 @@ def manage_rss(standerp, input):
     else:
         standerp.reply("Incorrect parameters specified.")
     c.close()
-manage_rss.commands = ['rss']
+manage_rss.commands = ['rss', 'feed']
 manage_rss.priority = 'low'
 
 
