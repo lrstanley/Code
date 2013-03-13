@@ -24,7 +24,7 @@ def create_default_config(fn):
    # Uncomment things you wish to add to the file
    # lines with "#" in front of them are comments
    nick = 'standerp'
-   host = 'irc.esper.net'
+   host = 'irc.example.net'
    channels = ['#example', '#test']
    owner = 'yournickname'
 
@@ -146,7 +146,7 @@ def main(argv=None):
       if not hasattr(module, 'password'): 
          module.password = None
 
-      if module.host == 'irc.esper.net': 
+      if module.host == 'irc.example.net': 
          error = ('Error: you must edit the config file first!\n' + 
                   "You're currently using %s" % module.filename)
          print >> sys.stderr, error
