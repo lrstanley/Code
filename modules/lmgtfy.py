@@ -9,7 +9,7 @@ About: http://standerp.liamstanley.net/
 import re
 
 def lmgtfy(standerp, input): #needs more work for utf-8 encoding. but, meh.
-   """Let my Google That For You"""
+    """Let my Google That For You"""
     lmgtfy = input.group(2)
     lmgtfy = re.sub(r"[^\w\s]", '', lmgtfy)
     lmgtfy = lmgtfy.replace(".", "")
