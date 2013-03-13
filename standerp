@@ -25,6 +25,7 @@ def create_default_config(fn):
    # lines with "#" in front of them are comments
    nick = 'standerp'
    host = 'irc.example.net'
+   port = '6667'
    channels = ['#example', '#test']
    owner = 'yournickname'
 
@@ -133,6 +134,7 @@ def main(argv=None):
       name = os.path.basename(config_name).split('.')[0] + '_config'
       module = imp.load_source(name, config_name)
       module.filename = config_name
+      module.port = int(module.port)
 
       if not hasattr(module, 'prefix'): 
          module.prefix = r'\.'
