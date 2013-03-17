@@ -46,7 +46,7 @@ def msg(standerp, input):
    if (not a) or (not b): return
    if input.admin: 
       standerp.msg(a, b)
-msg.rule = (['msg', 'message'], r'(#?\S+) (.+)')
+msg.rule = (['msg', 'message', 'say'], r'(#?\S+) (.+)')
 msg.priority = 'low'
 
 def me(standerp, input): 
