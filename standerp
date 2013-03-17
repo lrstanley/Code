@@ -36,7 +36,7 @@ def create_default_config(fn):
    # These are people who will be able to use admin.py's functions...
    admins = [owner, 'stanlee', 'someoneyoutrust']
    # But admin.py is disabled by default, as follows:
-   exclude = ['admin', 'mcbot', 'rss']
+   exclude = ['admin', 'mcbot', 'rss', 'twss']
 
    # If you want to enumerate a list of modules rather than disabling
    # some, use "enable = ['example']", which takes precedent over exclude
