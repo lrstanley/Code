@@ -14,6 +14,12 @@ def hello(standerp, input):
    standerp.say(greeting + ' ' + input.nick + punctuation)
 hello.rule = r'(?i)(hi|hello|hey|sup|ello|erro|ohai) $nickname[ \t]*$'
 
+def thanks(standerp, input): 
+   welcome = random.choice(('Your welcome', 'welcome', 'np', 'no prob', 'no problemo'))
+   punctuation = random.choice(('', '!'))
+   standerp.say(welcome + ' ' + input.nick + punctuation)
+thanks.rule = r'(?i)(thanks|thx|tnx}thank|thnx) $nickname[ \t]*$'
+
 def interjection(standerp, input): 
    standerp.say(input.nick + '!')
 interjection.rule = r'$nickname!'

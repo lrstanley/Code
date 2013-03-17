@@ -24,7 +24,8 @@ def create_default_config(fn):
    # Uncomment things you wish to add to the file
    # lines with "#" in front of them are comments
    nick = 'standerp'
-   host = 'irc.esper.net'
+   host = 'irc.example.net'
+   # port = '6667' untested.
    channels = ['#example', '#test']
    owner = 'yournickname'
 
@@ -35,7 +36,7 @@ def create_default_config(fn):
    # These are people who will be able to use admin.py's functions...
    admins = [owner, 'stanlee', 'someoneyoutrust']
    # But admin.py is disabled by default, as follows:
-   exclude = ['admin']
+   exclude = ['admin', 'mcbot', 'rss']
 
    # If you want to enumerate a list of modules rather than disabling
    # some, use "enable = ['example']", which takes precedent over exclude
@@ -142,6 +143,8 @@ def main(argv=None):
 
       if not hasattr(module, 'port'): 
          module.port = 6667
+      elif hasattr(module, 'port'):
+         module.port = int(module.port)
 
       if not hasattr(module, 'password'): 
          module.password = None

@@ -44,7 +44,12 @@ def service(standerp, input, command, args):
       return standerp.reply("Sorry, the service didn't respond any output.")
    try: line = lines[0].encode('utf-8')[:350]
    except: line = lines[0][:250]
-   standerp.say(line)
+   if line.find('ENOTFOUND') > -1:
+       if input.group(1) == 'urban':
+           line = "I'm sorry, that definition wasn't found."
+           standerp.say(line)
+   else:
+       standerp.say(line)
 
 def refresh(standerp): 
    if hasattr(standerp.config, 'services'): 
