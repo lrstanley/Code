@@ -23,12 +23,20 @@ def create_default_config(fn):
    # Stan-Derp Copyright (C) 2012-2013 Liam Stanley
    # Uncomment things you wish to add to the file
    # lines with "#" in front of them are comments
+   
+   # irc bot nickname
    nick = 'standerp'
+   # irc server host
    host = 'irc.example.net'
+   # port to use to connect
    port = '6667'
+   #channels to auto-join
    channels = ['#example', '#test']
+   #your nickname for use in admin functions
    owner = 'yournickname'
-
+   # website to show for help documentation
+   website = 'http://standerp.liamstanley.net'
+   
    # password is the Nickserv password, serverpass is the server password
    # password = 'example'
    # serverpass = 'serverpass'

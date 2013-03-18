@@ -32,7 +32,7 @@ commands.priority = 'low'
 def help(standerp, input): 
    response = (
       'Hi, I\'m a bot. Say ".commands" to me in private for a list ' + 
-      'of my commands, or see http://standerp.liamstanley.net/ for more ' + 
+      'of my commands, or see ' + standerp.config.website + ' for more ' + 
       'general details. My owner is %s.'
    ) % standerp.config.owner
    standerp.reply(response)
