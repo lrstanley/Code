@@ -141,10 +141,14 @@ def main(argv=None):
       if not hasattr(module, 'name'): 
          module.name = 'standerp, http://liamstanley.net'
 
-      if not hasattr(module, 'port'): 
-         module.port = 6667
-      elif hasattr(module, 'port'):
-         module.port = int(module.port)
+#      if not hasattr(module, 'port'): 
+#         module.port = 6667
+      try:
+          if module.port:
+              module.port = int(module.port)
+      except:
+          print("Could not find port in config... using default 6667")
+          module.port = 6667
 
       if not hasattr(module, 'password'): 
          module.password = None
