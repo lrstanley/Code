@@ -25,7 +25,7 @@ def create_default_config(fn):
    # lines with "#" in front of them are comments
    nick = 'standerp'
    host = 'irc.example.net'
-   # port = '6667' untested.
+   port = '6667'
    channels = ['#example', '#test']
    owner = 'yournickname'
 
