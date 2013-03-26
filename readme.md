@@ -5,7 +5,9 @@ Stan-Derp (Or known as Code on #L @ irc.esper.net) is a open source python IRC b
 
 Features
 --------
-- Stan-Derp is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
+________
+
+Stan-Derp is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
 
 Fast & Light Weight
 - Stan-Derp is very small, so it won't take up resources. Also, Stan-Derp is very responsive and quick-paced! Also he can run in 1-2 processes!
@@ -26,6 +28,9 @@ Configuration
 - By default, Stan-Derp has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules.
 
 
+Information
+-----------
+___________
 For more information, configuration, and installation instructions, please visit http://standerp.liamstanley.net
 
 for rss.py to work, install feedparser via your pip/yum/other package installer.
