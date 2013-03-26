@@ -44,15 +44,22 @@ Full command would be:
     
 (full path purposes) 
 
-If you wish to run Stan-Derp on a UNIX shell, the best thing to do would be to fork it to the background processes, you do this by execution python/Stan-Derp with: 
+If you wish to run Stan-Derp on a UNIX shell, the best thing to do would be to fork it to the background process usign nohup, you do this by execution python/Stan-Derp with: 
 
-    python ./standerp &
+    nohup python ./standerp &
 
-
-The "&" plays a crucial part in forking itself to the background. If this method 'still' doesn't work, you need to try these commands. (you need to use the method above, THEN cancel out of the current process (I use CTRL+C on windows)) 
+The `nohup` and `&` play a crucial part in forking itself to the background. If this method 'still' doesn't work, you need to try these commands. (you need to use the method above, THEN cancel out of the current process (I use CTRL+C on windows keyboards)) 
 
     bg
     disown -h
+
+Another method of forking it into the background, is by using the well-known linux program called screen.
+
+    screen python ./standerp
+    
+This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit the screen safely, hit `CTRL+A` then `CTRL+D`.
+To log back into, and view the playback of Stan-Derp, type `screen -r`.
+
 
 Configuration & Personalization 
 ===============================
