@@ -70,7 +70,7 @@ Warning! Once you install Stan-Derp using the method above, you need to configur
 Unix & Unix-like OS: 
 --------------------
 
-Edit the file located at `../standerp/default.py`(previous directory) 
+Edit the file located at `../.standerp/default.py`. this is either the previous directory, or your $HOME directory `/home/(user)`.
 
 Windows
 -------
