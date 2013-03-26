@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-codepoints.py - Stan-Derp Codepoints Module
-http://standerp.liamstanley.net/
+codepoints.py - Code Codepoints Module
+http://code.liamstanley.net/
 """
 
 import re, unicodedata
@@ -63,15 +63,15 @@ def codepoint_extended(arg):
       if r_search.search(name): 
          yield about(u, cp, name)
 
-def u(standerp, input): 
+def u(code, input): 
    """Look up unicode information."""
    arg = input.bytes[3:]
-   # standerp.msg('#inamidst', '%r' % arg)
+   # code.msg('#inamidst', '%r' % arg)
    if not arg: 
-      return standerp.reply('You gave me zero length input.')
+      return code.reply('You gave me zero length input.')
    elif not arg.strip(' '): 
-      if len(arg) > 1: return standerp.reply('%s SPACEs (U+0020)' % len(arg))
-      return standerp.reply('1 SPACE (U+0020)')
+      if len(arg) > 1: return code.reply('%s SPACEs (U+0020)' % len(arg))
+      return code.reply('1 SPACE (U+0020)')
 
    # @@ space
    if set(arg.upper()) - set(
@@ -91,41 +91,41 @@ def u(standerp, input):
       if len(arg) == 4: 
          try: u = unichr(int(arg, 16))
          except ValueError: pass
-         else: return standerp.say(about(u))
+         else: return code.say(about(u))
 
       if extended: 
          # look up a codepoint with regexp
          results = list(islice(codepoint_extended(arg), 4))
          for i, result in enumerate(results): 
             if (i < 2) or ((i == 2) and (len(results) < 4)): 
-               standerp.say(result)
+               code.say(result)
             elif (i == 2) and (len(results) > 3): 
-               standerp.say(result + ' [...]')
+               code.say(result + ' [...]')
          if not results: 
-            standerp.reply('Sorry, no results')
+            code.reply('Sorry, no results')
       else: 
          # look up a codepoint freely
          result = codepoint_simple(arg)
          if result is not None: 
-            standerp.say(result)
-         else: standerp.reply("Sorry, no results for %r." % arg)
+            code.say(result)
+         else: code.reply("Sorry, no results for %r." % arg)
    else: 
       text = arg.decode('utf-8')
       # look up less than three podecoints
       if len(text) <= 3: 
          for u in text: 
-            standerp.say(about(u))
+            code.say(about(u))
       # look up more than three podecoints
       elif len(text) <= 10: 
-         standerp.reply(' '.join('U+%04X' % ord(c) for c in text))
-      else: standerp.reply('Sorry, your input is too long!')
+         code.reply(' '.join('U+%04X' % ord(c) for c in text))
+      else: code.reply('Sorry, your input is too long!')
 u.commands = ['u']
 u.example = '.u 203D'
 
-def bytes(standerp, input): 
+def bytes(code, input): 
    """Show the input as pretty printed bytes."""
    b = input.bytes
-   standerp.reply('%r' % b[b.find(' ') + 1:])
+   code.reply('%r' % b[b.find(' ') + 1:])
 bytes.commands = ['bytes']
 bytes.example = '.bytes \xe3\x8b\xa1'
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-unicode.py - Stan-Derp unicode Module
-http://standerp.liamstanley.net/
+unicode.py - Code unicode Module
+http://code.liamstanley.net/
 """
 
 import re
@@ -15,7 +15,7 @@ control_chars = ''.join(map(unichr, range(0,32) + range(127,160)))
 control_char_re = re.compile('[%s]' % re.escape(control_chars))
 
 
-def supercombiner(standerp, input):
+def supercombiner(code, input):
     """.sc -- displays the infamous supercombiner"""
     s = 'u'
     for i in xrange(1, 3000):
@@ -24,7 +24,7 @@ def supercombiner(standerp, input):
         if len(s) > 100:
             break
     s = remove_control_chars(s)
-    standerp.say(s)
+    code.say(s)
 supercombiner.commands = ['sc']
 supercombiner.rate = 30
 

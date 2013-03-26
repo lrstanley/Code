@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding=utf-8
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-translate.py - Stan-Derp Translation Module
-http://standerp.liamstanley.net/
+translate.py - Code Translation Module
+http://code.liamstanley.net/
 """
 
 import re, urllib
@@ -43,14 +43,14 @@ def translate(text, input='auto', output='en'):
 
    return ''.join(x[0] for x in data[0]), language
 
-def tr(standerp, context): 
+def tr(code, context): 
    """Translates a phrase, with an optional language hint."""
    input, output, phrase = context.groups()
 
    phrase = phrase.encode('utf-8')
 
    if (len(phrase) > 350) and (not context.admin): 
-      return standerp.reply('Phrase must be under 350 characters.')
+      return code.reply('Phrase must be under 350 characters.')
 
    input = input or 'auto'
    input = input.encode('utf-8')
@@ -65,18 +65,18 @@ def tr(standerp, context):
          msg = '"%s" (%s to %s, translation)' % (msg, input, output)
       else: msg = 'The %s to %s translation failed, sorry!' % (input, output)
 
-      standerp.reply(msg)
-   else: standerp.reply('Language guessing failed, so try suggesting one!')
+      code.reply(msg)
+   else: code.reply('Language guessing failed, so try suggesting one!')
 
 tr.rule = ('$nick', ur'(?:([a-z]{2}) +)?(?:([a-z]{2}|en-raw) +)?["“](.+?)["”]\? *$')
 tr.example = '$nickname: "mon chien"? or $nickname: fr "mon chien"?'
 tr.priority = 'low'
 
-def tr2(standerp, input): 
+def tr2(code, input): 
    """Translates a phrase, with an optional language hint."""
    command = input.group(2)
    if not command:
-      return standerp.reply("Need something to translate!")
+      return code.reply("Need something to translate!")
    command = command.encode('utf-8')
 
    def langcode(p): 
@@ -93,7 +93,7 @@ def tr2(standerp, input):
    phrase = command
 
    if (len(phrase) > 350) and (not input.admin): 
-      return standerp.reply('Phrase must be under 350 characters.')
+      return code.reply('Phrase must be under 350 characters.')
 
    src, dest = args
    if src != dest: 
@@ -105,13 +105,13 @@ def tr2(standerp, input):
          msg = '"%s" (%s to %s, translation)' % (msg, src, dest)
       else: msg = 'The %s to %s translation failed, sorry!' % (src, dest)
 
-      standerp.reply(msg)
-   else: standerp.reply('Language guessing failed, so try suggesting one!')
+      code.reply(msg)
+   else: code.reply('Language guessing failed, so try suggesting one!')
 
 tr2.commands = ['tr']
 tr2.priority = 'low'
 
-def mangle(standerp, input): 
+def mangle(code, input): 
    phrase = input.group(2).encode('utf-8')
    for lang in ['fr', 'de', 'es', 'it', 'ja']: 
       backup = phrase
@@ -128,7 +128,7 @@ def mangle(standerp, input):
          break
       __import__('time').sleep(0.5)
 
-   standerp.reply(phrase or 'ERRORS SRY')
+   code.reply(phrase or 'ERRORS SRY')
 mangle.commands = ['mangle']
 
 if __name__ == '__main__': 

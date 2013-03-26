@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-clock.py - Stan-Derp Clock Module
-http://standerp.liamstanley.net/
+clock.py - Code Clock Module
+http://code.liamstanley.net/
 """
 
 import re, math, time, urllib, locale, socket, struct, datetime
@@ -246,38 +246,38 @@ f_time.commands = ['t']
 f_time.name = 't'
 f_time.example = '.t UTC'
 
-def beats(standerp, input): 
+def beats(code, input): 
    """Shows the internet time in Swatch beats."""
    beats = ((time.time() + 3600) % 86400) / 86.4
    beats = int(math.floor(beats))
-   standerp.say('@%03i' % beats)
+   code.say('@%03i' % beats)
 beats.commands = ['beats']
 beats.priority = 'low'
 
 def divide(input, by): 
    return (input / by), (input % by)
 
-def yi(standerp, input): 
+def yi(code, input): 
    """Shows whether it is currently yi or not."""
    quadraels, remainder = divide(int(time.time()), 1753200)
    raels = quadraels * 4
    extraraels, remainder = divide(remainder, 432000)
    if extraraels == 4: 
-      return standerp.say('Yes! PARTAI!')
-   else: standerp.say('Not yet...')
+      return code.say('Yes! PARTAI!')
+   else: code.say('Not yet...')
 yi.commands = ['yi']
 yi.priority = 'low'
 
-def tock(standerp, input): 
+def tock(code, input): 
    """Shows the time from the USNO's atomic clock."""
    u = urllib.urlopen('http://tycho.usno.navy.mil/cgi-bin/timer.pl')
    info = u.info()
    u.close()
-   standerp.say('"' + info['Date'] + '" - tycho.usno.navy.mil')
+   code.say('"' + info['Date'] + '" - tycho.usno.navy.mil')
 tock.commands = ['tock']
 tock.priority = 'high'
 
-def npl(standerp, input): 
+def npl(code, input): 
    """Shows the time from NPL's SNTP server."""
    # for server in ('ntp1.npl.co.uk', 'ntp2.npl.co.uk'): 
    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -292,8 +292,8 @@ def npl(standerp, input):
       a, b = str(d).split('.')
       f = '%Y-%m-%d %H:%M:%S'
       result = datetime.datetime.fromtimestamp(d).strftime(f) + '.' + b[:6]
-      standerp.say(result + ' - ntp1.npl.co.uk')
-   else: standerp.say('No data received, sorry')
+      code.say(result + ' - ntp1.npl.co.uk')
+   else: code.say('No data received, sorry')
 npl.commands = ['npl']
 npl.priority = 'high'
 

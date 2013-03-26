@@ -1,5 +1,5 @@
 @echo off
-title Stan-Derp windows-launcher
-python standerp || C:\Python27\python.exe standerp
+title Code windows-launcher
+python code || C:\Python27\python.exe code
 pause > null
 exit

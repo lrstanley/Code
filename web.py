@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-web.py - Stan-Derp Web Facilities
-http://standerp.liamstanley.net/
+web.py - Code Web Facilities
+http://code.liamstanley.net/
 """
 
 import re, urllib

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-bot.py - Stan-Derp IRC Bot
-http://standerp.liamstanley.net/
+bot.py - Code IRC Bot
+http://code.liamstanley.net/
 """
 
 import sys, os, re, threading, imp
@@ -19,7 +19,7 @@ def decode(bytes):
          text = bytes.decode('cp1252')
    return text
 
-class standerp(irc.Bot): 
+class code(irc.Bot): 
    def __init__(self, config): 
       args = (config.nick, config.name, config.channels, config.password)
       irc.Bot.__init__(self, *args)
@@ -150,9 +150,9 @@ class standerp(irc.Bot):
                bind(self, func.priority, regexp, func)
 
    def wrapped(self, origin, text, match): 
-      class standerpWrapper(object): 
-         def __init__(self, standerp): 
-            self.bot = standerp
+      class codeWrapper(object): 
+         def __init__(self, code): 
+            self.bot = code
 
          def __getattr__(self, attr): 
             sender = origin.sender or text
@@ -163,7 +163,7 @@ class standerp(irc.Bot):
                return lambda msg: self.bot.msg(sender, msg)
             return getattr(self.bot, attr)
 
-      return standerpWrapper(self)
+      return codeWrapper(self)
 
    def input(self, origin, text, bytes, match, event, args): 
       class CommandInput(unicode): 
@@ -183,8 +183,8 @@ class standerp(irc.Bot):
 
       return CommandInput(text, origin, bytes, match, event, args)
 
-   def call(self, func, origin, standerp, input): 
-      try: func(standerp, input)
+   def call(self, func, origin, code, input): 
+      try: func(code, input)
       except Exception, e: 
          self.error(origin)
 
@@ -210,14 +210,14 @@ class standerp(irc.Bot):
                if match: 
                   if self.limit(origin, func): continue
 
-                  standerp = self.wrapped(origin, text, match)
+                  code = self.wrapped(origin, text, match)
                   input = self.input(origin, text, bytes, match, event, args)
 
                   if func.thread: 
-                     targs = (func, origin, standerp, input)
+                     targs = (func, origin, code, input)
                      t = threading.Thread(target=self.call, args=targs)
                      t.start()
-                  else: self.call(func, origin, standerp, input)
+                  else: self.call(func, origin, code, input)
 
                   for source in [origin.sender, origin.nick]: 
                      try: self.stats[(func.name, source)] += 1

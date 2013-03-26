@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-twitter.py - Stan-Derp Twitter Module
-http://standerp.liamstanley.net/
+twitter.py - Code Twitter Module
+http://code.liamstanley.net/
 """
 
 import re, time
@@ -66,24 +66,24 @@ def id_tweet(tid):
       return format(tweet, username)
    return "Sorry, couldn't get a tweet from %s" % link
 
-def twitter(standerp, input):
+def twitter(code, input):
    arg = input.group(2)
    if not arg:
-      return standerp.reply("Give me a link, a username, or a tweet id")
+      return code.reply("Give me a link, a username, or a tweet id")
 
    arg = arg.strip()
    if isinstance(arg, unicode):
       arg = arg.encode('utf-8')
 
    if arg.isdigit():
-      standerp.say(id_tweet(arg))
+      code.say(id_tweet(arg))
    elif r_username.match(arg):
-      standerp.say(user_tweet(arg))
+      code.say(user_tweet(arg))
    elif r_link.match(arg):
       username = arg.split('/')[3]
       tweet = read_tweet(arg)
-      standerp.say(format(tweet, username))
-   else: standerp.reply("Give me a link, a username, or a tweet id")
+      code.say(format(tweet, username))
+   else: code.reply("Give me a link, a username, or a tweet id")
 
 twitter.commands = ['tw', 'twitter', 'twit']
 twitter.thread = True

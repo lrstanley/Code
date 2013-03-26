@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-etymology.py - Stan-Derp Etymology Module
-http://standerp.liamstanley.net/
+etymology.py - Code Etymology Module
+http://code.liamstanley.net/
 """
 
 import re, urllib
@@ -20,7 +20,7 @@ r_whitespace = re.compile(r'[\t\r\n ]+')
 
 class Grab(urllib.URLopener): 
    def __init__(self, *args): 
-      self.version = 'Mozilla/5.0 (standerp)'
+      self.version = 'Mozilla/5.0 (code)'
       urllib.URLopener.__init__(self, *args)
    def http_error_default(self, url, fp, errcode, errmsg, headers): 
       return urllib.addinfourl(fp, [headers, errcode], "http:" + url)

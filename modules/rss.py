@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-url.py - Stan-Derp url Module
-http://standerp.liamstanley.net/
+url.py - Code url Module
+http://code.liamstanley.net/
 """
 
 import feedparser
@@ -25,10 +25,10 @@ def checkdb(cursor):
             site_name text, site_url text, fg text, bg text)")
 
 
-def manage_rss(standerp, input):
+def manage_rss(code, input):
     """.rss operation channel site_name url -- 'add', 'del', or 'list' rss"""
     if not input.admin:
-        standerp.reply("Sorry, you need to be an admin to modify the RSS feeds.")
+        code.reply("Sorry, you need to be an admin to modify the RSS feeds.")
         return
     conn = sqlite3.connect('rss.db')
     c = conn.cursor()
@@ -37,7 +37,7 @@ def manage_rss(standerp, input):
 
     text = input.group().split()
     if len(text) < 2:
-        standerp.reply("Proper usage: '.rss add ##channel Site_Name URL', '.rss del ##channel Site_Name URL', '.rss del ##channel'")
+        code.reply("Proper usage: '.rss add ##channel Site_Name URL', '.rss del ##channel Site_Name URL', '.rss del ##channel'")
     elif len(text) > 2:
         channel = text[2].lower()
 
@@ -63,7 +63,7 @@ def manage_rss(standerp, input):
             if len(ending) == 3:
                 bg_colour = ending[2]
         else:
-            standerp.reply("Not enough parameters specified.")
+            code.reply("Not enough parameters specified.")
             return
         if fg_colour:
             fg_colour = fg_colour.zfill(2)
@@ -73,30 +73,30 @@ def manage_rss(standerp, input):
             site_url, fg_colour, bg_colour))
         conn.commit()
         c.close()
-        standerp.reply("Successfully added values to database.")
+        code.reply("Successfully added values to database.")
     elif len(text) == 3 and text[1] == 'del':
         # .rss del ##channel
         c.execute("DELETE FROM rss WHERE channel = ?", (channel,))
         conn.commit()
         c.close()
-        standerp.reply("Successfully removed values from database.")
+        code.reply("Successfully removed values from database.")
     elif len(text) >= 4 and text[1] == 'del':
         # .rss del ##channel Site_Name
         c.execute("DELETE FROM rss WHERE channel = ? and site_name = ?",
                 (channel, " ".join(text[3:]),))
         conn.commit()
         c.close()
-        standerp.reply("Successfully removed the site from the given channel.")
+        code.reply("Successfully removed the site from the given channel.")
     elif len(text) == 2 and text[1] == 'list':
         c.execute("SELECT * FROM rss")
         k = 0
         for row in c:
             k += 1
-            standerp.say("list: " + unicode(row))
+            code.say("list: " + unicode(row))
         if k == 0:
-            standerp.reply("No entries in database")
+            code.reply("No entries in database")
     else:
-        standerp.reply("Incorrect parameters specified.")
+        code.reply("Incorrect parameters specified.")
     c.close()
 manage_rss.commands = ['rss', 'feed']
 manage_rss.priority = 'low'
@@ -110,7 +110,7 @@ restarted = False
 feeds = dict()
 
 
-def read_feeds(standerp):
+def read_feeds(code):
     global restarted
     global STOP
 
@@ -121,7 +121,7 @@ def read_feeds(standerp):
     c.execute("SELECT * FROM rss")
     if not c.fetchall():
         STOP = True
-        standerp.say("No RSS feeds found in database. Please add some rss feeds.")
+        code.say("No RSS feeds found in database. Please add some rss feeds.")
 
     c.execute("SELECT * FROM rss")
     conn_recent = sqlite3.connect('recent_rss.db')
@@ -138,13 +138,13 @@ def read_feeds(standerp):
         try:
             fp = feedparser.parse(feed_url)
         except:
-            standerp.say("Can't parse.")
+            code.say("Can't parse.")
 
         try:
             entry = fp.entries[0]
         except:
-            standerp.say("row: " + str(row))
-            standerp.say("Can't find element: " + str(fp))
+            code.say("row: " + str(row))
+            code.say("Can't find element: " + str(fp))
             continue
 
         if not feed_fg and not feed_bg:
@@ -176,7 +176,7 @@ def read_feeds(standerp):
             if entry.updated:
                 response += " - %s" % (entry.updated)
 
-            standerp.msg(feed_channel, response)
+            code.msg(feed_channel, response)
 
             t = (feed_channel, feed_site_name, entry.title, article_url,)
             cursor_recent.execute("INSERT INTO recent VALUES (?, ?, ?, ?)", t)
@@ -184,15 +184,15 @@ def read_feeds(standerp):
             conn.commit()
         else:
             if DEBUG:
-                standerp.msg(feed_channel, u"Skipping previously read entry: %s %s" % (site_name_effect, entry.title))
+                code.msg(feed_channel, u"Skipping previously read entry: %s %s" % (site_name_effect, entry.title))
     cursor_recent.close()
     c.close()
 
 
-def startrss(standerp, input):
+def startrss(code, input):
     """Begin reading RSS feeds"""
     if not input.admin:
-        standerp.reply("You must be an admin to start up the RSS feeds.")
+        code.reply("You must be an admin to start up the RSS feeds.")
         return
     global first_run, restarted, DEBUG, INTERVAL, STOP
     DEBUG = False
@@ -201,41 +201,41 @@ def startrss(standerp, input):
     if query == '-v':
         DEBUG = True
         STOP = False
-        standerp.reply("Debugging enabled.")
+        code.reply("Debugging enabled.")
     elif query == '-q':
         DEBUG = False
         STOP = False
-        standerp.reply("Debugging disabled.")
+        code.reply("Debugging disabled.")
     elif query == '-i':
         INTERVAL = input.group(3)
-        standerp.reply("INTERVAL updated to: %s" % (str(INTERVAL)))
+        code.reply("INTERVAL updated to: %s" % (str(INTERVAL)))
     elif query == '--stop':
         STOP = True
-        standerp.reply("Stop parameter updated.")
+        code.reply("Stop parameter updated.")
 
     if first_run:
         if DEBUG:
-            standerp.say("Okay, I'll start rss fetching...")
+            code.say("Okay, I'll start rss fetching...")
         first_run = False
     else:
         restarted = True
         if DEBUG:
-            standerp.say("Okay, I'll re-start rss...")
+            code.say("Okay, I'll re-start rss...")
 
     if not STOP:
         while True:
             if STOP:
-                standerp.reply("STOPPED")
+                code.reply("STOPPED")
                 first_run = False
                 STOP = False
                 break
             if DEBUG:
-                standerp.say("Rechecking feeds")
-            read_feeds(standerp)
+                code.say("Rechecking feeds")
+            read_feeds(code)
             time.sleep(INTERVAL)
 
     if DEBUG:
-        standerp.say("Stopped checking")
+        code.say("Stopped checking")
 startrss.commands = ['startrss']
 startrss.priority = 'high'
 

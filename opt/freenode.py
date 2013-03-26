@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-freenode.py - Stan-Derp Freenode Specific Stuff
-http://standerp.liamstanley.net/
+freenode.py - Code Freenode Specific Stuff
+http://code.liamstanley.net/
 """
 
-def replaced(standerp, input): 
+def replaced(code, input): 
    command = input.group(1)
    responses = {
       'cp': '.cp has been replaced by .u', 
@@ -25,7 +25,7 @@ def replaced(standerp, input):
    }
    try: response = responses[command]
    except KeyError: return
-   else: standerp.reply(response)
+   else: code.reply(response)
 replaced.commands = [
    'cp', 'pc', 'unicode', 'compare', 'map', 'acronym', 
    'v', 'validate', 'thesaurus', 'web', 'mangle', 'origin', 

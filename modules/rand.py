@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-rand.py - Stan-Derp Random Integer Selector
-http://standerp.liamstanley.net/
+rand.py - Code Random Integer Selector
+http://code.liamstanley.net/
 """
 
 import random
 import re
 
-def rand(standerp, input):
+def rand(code, input):
     """.rand <arg1> <arg2> - Generates a random integer between <arg1> and <arg2>."""
     if input.group(2) == " " or not input.group(2):
-        standerp.say("I'm sorry, " + str(input.nick) + ", but you must enter at least one number.")
+        code.say("I'm sorry, " + str(input.nick) + ", but you must enter at least one number.")
     else:
         random.seed()
         li_integers = input.group(2)
@@ -31,9 +31,9 @@ def rand(standerp, input):
                     a = li_integers_str
                     a = int(a)
                     randinte = random.randint(0, a)
-                standerp.say(str(input.nick) + ": your random integer is: " + str(randinte))
+                code.say(str(input.nick) + ": your random integer is: " + str(randinte))
             else:
-                standerp.reply("lolwut")
+                code.reply("lolwut")
         else:
             ln = li_integers.split()
             if len(ln) == 2:
@@ -50,9 +50,9 @@ def rand(standerp, input):
                     randinte = random.randint(a, b)
                 else:
                     randinte = random.randint(b, a)
-                standerp.say(str(input.nick) + ": your random integer is: " + str(randinte))
+                code.say(str(input.nick) + ": your random integer is: " + str(randinte))
             else:
-                standerp.reply("I'm not sure what you want me to do!")
+                code.reply("I'm not sure what you want me to do!")
 
 rand.commands = ['rand']
 rand.priority = 'medium'

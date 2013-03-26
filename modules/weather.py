@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-weather.py - Stan-Derp Weather Module
-http://standerp.liamstanley.net/
+weather.py - Code Weather Module
+http://code.liamstanley.net/
 """
 
 import re, urllib
@@ -50,7 +50,7 @@ def local(icao, hour, minute):
       #         ':' + str(minute) + 'Z)')
    return str(hour) + ':' + str(minute) + 'Z'
 
-def code(standerp, search): 
+def code(code, search): 
    from icao import data
    
    if search.upper() in [loc[0] for loc in data]:
