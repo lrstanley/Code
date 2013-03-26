@@ -1,12 +1,32 @@
 Stan-Derp the flexible Python IRC Bot
 =====================================
 
-Stan-Derp (Or known as Stan-Lee on #L @ irc.esper.net) is a open source python IRC bot forked from Phenny, with new modules, easier to understand commands, and easy installation! Stan-Derp can run on any operating system that supports Python 2.4 or higher.
+Stan-Derp (Or known as Code on #L @ irc.esper.net) is a open source python IRC bot forked from Phenny/Jenni, with new modules, easier to understand commands, and easy installation! Stan-Derp can run on any operating system that supports Python 2.4 or higher.
+
+Features
+--------
+- Stan-Derp is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
+
+Fast & Light Weight
+- Stan-Derp is very small, so it won't take up resources. Also, Stan-Derp is very responsive and quick-paced! Also he can run in 1-2 processes!
+
+Load & Unload Modules
+- Stan-Derp has the ability to load user defined IRC modules, that are pre-made or ones that you create. Stan-Derp also can live-reload modules for active and fast development.
+
+Very User Friendly
+- It is very easy to install and run Stan-Derp, even if you have no knowledge of ever running a IRC bot before. ".help" commands, and friendly responses help everything feel smooth and elegant.
+
+Easy-To-use API
+- When creating your own modules, it is always very easy to have a fully documented API and easy to understand functions.
+
+Open-Source
+- Found a bug, feature, or technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Stan-Derp) page to make requests and post bugs. Heck, even fork Stan-Derp as your own and make your own modifications!</dd>
+
+Configuration
+- By default, Stan-Derp has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules.
+
 
 For more information, configuration, and installation instructions, please visit http://standerp.liamstanley.net
-
-Installation: http://standerp.liamstanley.net/#install
-Configuration http://standerp.liamstanley.net/#config
 
 for rss.py to work, install feedparser via your pip/yum/other package installer.
 
