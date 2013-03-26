@@ -143,7 +143,7 @@ if not hasattr(module, 'prefix'):
           
 module.prefix = r'\(CustomPrefix)'
 
-Lisencing
+Licensing
 ---------
 _________
 
