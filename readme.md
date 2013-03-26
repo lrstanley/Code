@@ -27,13 +27,118 @@ Open-Source
 Configuration
 - By default, Stan-Derp has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules.
 
+Installation - How do I install?
+================================
+________________________________
 
-Information
------------
-___________
-For more information, configuration, and installation instructions, please visit http://standerp.liamstanley.net
+ > for rss.py to work, install feedparser via your pip/yum/other package installer.
 
-for rss.py to work, install feedparser via your pip/yum/other package installer.
+1) Run ./standerp - this creates a default config file 
+2) Edit ~/.standerp/default.py 
+3) Run ./standerp- this now runs standerp with your settings 
+
+Full command would be: 
+
+    python ./standerp
+    home/standerp/lib/python272 ./standerp
+    
+(full path purposes) 
+
+If you wish to run Stan-Derp on a UNIX shell, the best thing to do would be to fork it to the background processes, you do this by execution python/Stan-Derp with: 
+
+    python ./standerp &
+
+
+The "&" plays a crucial part in forking itself to the background. If this method 'still' doesn't work, you need to try these commands. (you need to use the method above, THEN cancel out of the current process (I use CTRL+C on windows)) 
+
+    bg
+    disown -h
+
+Configuration & Personalization 
+===============================
+_______________________________
+
+Warning! Once you install Stan-Derp using the method above, you need to configure him to point to the server you wish to connect him to, as well as add a module path, and administrators/owners.
+
+Unix & Unix-like OS: 
+--------------------
+
+Edit the file located at `../standerp/default.py`(previous directory) 
+
+Windows
+-------
+
+Edit the file located in your Documents folder, which should be located at: 
+`C:\\users\myusername\.standerp\default.py`
+`default.py` might be located in the same spot as the UNIX location listed above.
+You should see a file like this:
+
+    # Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+    # Uncomment things you wish to add to the file
+    # lines with "#" in front of them are comments
+
+    # irc bot nickname
+    nick = 'standerp'
+    # irc server host
+    host = 'irc.example.net'
+    # port to use to connect
+    port = '6667'
+    #channels to auto-join
+    channels = ['#example', '#test']
+    #your nickname for use in admin functions
+    owner = 'yournickname'
+    # website to show for help documentation
+    website = 'http://standerp.liamstanley.net'
+
+    # password is the Nickserv password, serverpass is the server password
+    # password = 'example'
+    # serverpass = 'serverpass'
+
+    # These are people who will be able to use admin.py's functions...
+    admins = [owner, 'stanlee', 'someoneyoutrust']
+    # But admin.py is disabled by default, as follows:
+    exclude = ['admin', 'mcbot', 'rss', 'twss']
+
+    # If you want to enumerate a list of modules rather than disabling
+    # some, use "enable = ['example']", which takes precedent over exclude
+    # 
+    # enable = []
+
+    # Directories to load user modules from
+    # e.g. /path/to/my/modules
+    extra = []
+
+    # Services to load: maps channel names to white or black lists
+    external = { 
+      '#ponycode': ['!'], # allow all
+      '#L': [], # allow none
+      '*': ['!'] # default whitelist, allow all
+    }
+
+    # EOF
+
+you should uncomment, and replace the necessary items (like serverpass & nickservpass) to run your bot. 
+
+Customize Even More: 
+====================
+____________________
+
+Changing Prefix: 
+(this would be in the config, i jsut haven't gotten aroudn to it yet. sorry!)
+
+If you wish to change the command prefix from "." to another item Edit /standerp/standerp and find this: 
+if not hasattr(module, 'prefix'):
+          
+module.prefix = r'\.'
+
+And change it to: 
+if not hasattr(module, 'prefix'):
+          
+module.prefix = r'\(CustomPrefix)'
+
+Lisencing
+---------
+_________
 
 Stan-Derp Copyright (C) 2012-2013 Liam Stanley (More info here: http://standerp.liamstanley.net/#license)
 
