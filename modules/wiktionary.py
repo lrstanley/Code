@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-wiktionary.py - Stan-Derp Wiktionary Module
-http://standerp.liamstanley.net/
+wiktionary.py - Code Wiktionary Module
+http://code.liamstanley.net/
 """
 
 import re
@@ -70,13 +70,13 @@ def format(word, definitions, number=2):
          result += ', '.join(n)
    return result.strip(' .,')
 
-def w(standerp, input): 
+def w(code, input): 
    if not input.group(2):
-      return standerp.reply("Nothing to define.")
+      return code.reply("Nothing to define.")
    word = input.group(2)
    etymology, definitions = wiktionary(word)
    if not definitions: 
-      standerp.say("Couldn't get any definitions for %s." % word)
+      code.say("Couldn't get any definitions for %s." % word)
       return
 
    result = format(word, definitions)
@@ -87,12 +87,12 @@ def w(standerp, input):
 
    if len(result) > 300: 
       result = result[:295] + '[...]'
-   standerp.say(result)
+   code.say(result)
 w.commands = ['w','define2','wik2']
 w.example = '.w Michigan'
 
-def encarta(standerp, input): 
-   return standerp.reply('Microsoft removed Encarta, try .w instead!')
+def encarta(code, input): 
+   return code.reply('Microsoft removed Encarta, try .w instead!')
 encarta.commands = ['wdict', 'encarta', 'wdefine']
 
 if __name__ == '__main__': 

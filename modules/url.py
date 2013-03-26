@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-url.py - Stan-Derp url Module
-http://standerp.liamstanley.net/
+url.py - Code url Module
+http://code.liamstanley.net/
 
 Module imported from jenni.
 """
@@ -16,7 +16,7 @@ import urlparse
 import socket
 import web
 
-# Place a file in your ~/standerp/ folder named, bitly.txt
+# Place a file in your ~/code/ folder named, bitly.txt
 # and inside this file place your API key followed by a ','
 # and then your username. For example, the only line in that
 # file should look like this:
@@ -49,11 +49,11 @@ url_finder = re.compile(r'(?u)(%s?(http|https|ftp)(://\S+\.\S+/?\S+?))' % (EXCLU
 r_entity = re.compile(r'&[A-Za-z0-9#]+;')
 INVALID_WEBSITE = 0x01
 
-def noteuri(standerp, input):
+def noteuri(code, input):
     uri = input.group(1).encode('utf-8')
-    if not hasattr(standerp.bot, 'last_seen_uri'):
-        standerp.bot.last_seen_uri = {}
-    standerp.bot.last_seen_uri[input.sender] = uri
+    if not hasattr(code.bot, 'last_seen_uri'):
+        code.bot.last_seen_uri = {}
+    code.bot.last_seen_uri[input.sender] = uri
 noteuri.rule = r'(?u).*(http[s]?://[^<> "\x01]+)[,.]?'
 noteuri.priority = 'low'
 
@@ -189,19 +189,19 @@ def short(text):
     except:
         return
 
-def generateBitLy (standerp, input):
+def generateBitLy (code, input):
     if not bitly_loaded: return
     bitly = short(input)
     idx = 7
     for b in bitly:
-        displayBitLy(standerp, b[0], b[1])
+        displayBitLy(code, b[0], b[1])
 generateBitLy.commands = ['bitly']
 generateBitLy.priority = 'high'
 
-def displayBitLy (standerp, url, shorten):
+def displayBitLy (code, url, shorten):
     if url is None or shorten is None: return
     u = getTLD(url)
-    standerp.say('%s  -  %s' % (u, shorten))
+    code.say('%s  -  %s' % (u, shorten))
 
 def remove_nonprint(text):
     new = str()
@@ -258,7 +258,7 @@ def get_results(text):
         i += 1
     return display
 
-def show_title_auto (standerp, input):
+def show_title_auto (code, input):
     if input.startswith('.title ') or input.startswith('.bitly ') or input.startswith('.isup '): return
     if len(re.findall("\([\d]+\sfiles\sin\s[\d]+\sdirs\)", input)) == 1: return
     try:
@@ -273,29 +273,29 @@ def show_title_auto (standerp, input):
 
         useBitLy = doUseBitLy(r[0], r[1])
         if r[0] is None:
-            if useBitLy: displayBitLy(standerp, r[1], r[2])
+            if useBitLy: displayBitLy(code, r[1], r[2])
             continue
         if useBitLy: r[1] = r[2]
         else: r[1] = getTLD(r[1])
-        standerp.say('[ %s ] - %s' % (r[0], r[1]))
+        code.say('[ %s ] - %s' % (r[0], r[1]))
 show_title_auto.rule = '(?iu).*(%s?(http|https)(://\S+)).*' % (EXCLUSION_CHAR)
 show_title_auto.priority = 'high'
 
-def show_title_demand (standerp, input):
+def show_title_demand (code, input):
     results = get_results(input.group(2))
     if results is None:
-        standerp.reply('No title found.')
+        code.reply('No title found.')
         return
 
     for r in results:
         if r[0] is None: continue
         if doUseBitLy(r[0], r[1]): r[1] = r[2]
         else: r[1] = getTLD(r[1])
-        standerp.say('[ %s ] - %s' % (r[0], r[1]))
+        code.say('[ %s ] - %s' % (r[0], r[1]))
 show_title_demand.commands = ['title']
 show_title_demand.priority = 'high'
 
-def proxy_change(standerp, input):
+def proxy_change(code, input):
     """.proxy (on|off|status) -- enable/disable proxy for automatic URL titles"""
     if not input.owner: return
     global PROXY
@@ -313,13 +313,13 @@ def proxy_change(standerp, input):
     elif txt == "status" or not txt:
         if PROXY: status = "enabled"
         else: status = "disabled"
-        standerp.reply("Proxy for automatic titles is currently: %s." % (status))
+        code.reply("Proxy for automatic titles is currently: %s." % (status))
         return
 
     if statement:
-        standerp.reply("Proxy for automatic titles has been, %s." % (statement))
+        code.reply("Proxy for automatic titles has been, %s." % (statement))
     else:
-        standerp.reply("To enable the proxy use, '.proxy on'. To disable the proxy use, '.proxy off'.")
+        code.reply("To enable the proxy use, '.proxy on'. To disable the proxy use, '.proxy off'.")
 proxy_change.commands = ['proxy']
 proxy_change.priority = 'high'
 

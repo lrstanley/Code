@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
-__init__.py - Stan-Derp Init Module
-http://standerp.liamstanley.net/
+Code Copyright (C) 2012-2013 Liam Stanley
+__init__.py - Code Init Module
+http://code.liamstanley.net/
 """
 
 import sys, os, time, threading, signal
@@ -25,13 +25,13 @@ class Watcher(object):
       try: os.kill(self.child, signal.SIGKILL)
       except OSError: pass
 
-def run_standerp(config): 
+def run_code(config): 
    if hasattr(config, 'delay'): 
       delay = config.delay
    else: delay = 20
 
    def connect(config): 
-      p = bot.standerp(config)
+      p = bot.code(config)
       p.run(config.host, config.port)
 
    try: Watcher()
@@ -51,7 +51,7 @@ def run_standerp(config):
       time.sleep(delay)
 
 def run(config): 
-   t = threading.Thread(target=run_standerp, args=(config,))
+   t = threading.Thread(target=run_code, args=(config,))
    if hasattr(t, 'run'): 
       t.run()
    else: t.start()

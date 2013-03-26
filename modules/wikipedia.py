@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-wikipedia.py - Stan-Derp Wikipedia Module
-http://standerp.liamstanley.net/
+wikipedia.py - Code Wikipedia Module
+http://code.liamstanley.net/
 """
 
 import re, urllib, gzip, StringIO
@@ -148,10 +148,10 @@ def wikipedia(term, language='en', last=False):
    term = term.decode('utf-8').encode('utf-8')
    return sentence + ' - ' + (wikiuri % (language, term))
 
-def wik(standerp, input): 
+def wik(code, input): 
    origterm = input.groups()[1]
    if not origterm: 
-      return standerp.say('Perhaps you meant ".wik Zen"?')
+      return code.say('Perhaps you meant ".wik Zen"?')
    origterm = origterm.encode('utf-8')
 
    term = urllib.unquote(origterm)
@@ -168,11 +168,11 @@ def wik(standerp, input):
    except IOError: 
       args = (language, wikiuri % (language, term))
       error = "Can't connect to %s.wikipedia.org (%s)" % args
-      return standerp.say(error)
+      return code.say(error)
 
    if result is not None: 
-      standerp.say(result)
-   else: standerp.say('Can\'t find anything in Wikipedia for "%s".' % origterm)
+      code.say(result)
+   else: code.say('Can\'t find anything in Wikipedia for "%s".' % origterm)
 
 wik.commands = ['wik', 'wiki', 'define', 'dict']
 wik.priority = 'high'

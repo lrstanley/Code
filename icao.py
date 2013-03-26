@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-icao.py - Stan-Derp ICAO Codes Data
-http://standerp.liamstanley.net/
+icao.py - Code ICAO Codes Data
+http://code.liamstanley.net/
 """
 
 data = (

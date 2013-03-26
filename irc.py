@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-irc.py - Stan-Derp A Utility IRC Bot
-http://standerp.liamstanley.net/
+irc.py - Code A Utility IRC Bot
+http://code.liamstanley.net/
 """
 
 import sys, re, time, traceback

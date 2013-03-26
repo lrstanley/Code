@@ -1,31 +1,31 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-seen.py - Stan-Derp Seen Module
-http://standerp.liamstanley.net/
+seen.py - Code Seen Module
+http://code.liamstanley.net/
 """
 
 import time
 from tools import deprecated
 
-def seen(standerp, input): 
+def seen(code, input): 
    """.seen <nick> - Reports when <nick> was last seen."""
    nick = input.group(2)
    if not nick:
-      return standerp.reply("Need a nickname to search for...")
+      return code.reply("Need a nickname to search for...")
    nick = nick.lower()
 
-   if not hasattr(standerp, 'seen'): 
-      return standerp.reply("?")
+   if not hasattr(code, 'seen'): 
+      return code.reply("?")
 
-   if standerp.seen.has_key(nick): 
-      channel, t = standerp.seen[nick]
+   if code.seen.has_key(nick): 
+      channel, t = code.seen[nick]
       t = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime(t))
 
       msg = "I last saw %s at %s on %s" % (nick, t, channel)
-      standerp.reply(msg)
-   else: standerp.reply("Sorry, I haven't seen %s around." % nick)
+      code.reply(msg)
+   else: code.reply("Sorry, I haven't seen %s around." % nick)
 seen.rule = (['seen'], r'(\S+)')
 
 @deprecated

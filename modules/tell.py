@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-tell.py - Stan-Derp tell Module
-http://standerp.liamstanley.net/
+tell.py - Code tell Module
+http://code.liamstanley.net/
 """
 
 import os, re, time, random
@@ -47,7 +47,7 @@ def dumpReminders(fn, data):
 
 def setup(self):
     fn = self.nick + '-' + self.config.host + '.tell.db'
-    self.tell_filename = os.path.join(os.path.expanduser('~/.standerp'), fn)
+    self.tell_filename = os.path.join(os.path.expanduser('~/.code'), fn)
     if not os.path.exists(self.tell_filename):
         try: f = open(self.tell_filename, 'w')
         except OSError: pass
@@ -56,7 +56,7 @@ def setup(self):
             f.close()
     self.reminders = loadReminders(self.tell_filename)
 
-def f_remind(standerp, input):
+def f_remind(code, input):
     teller = input.nick
 
     if input.group() and (input.group()).startswith(".tell"):
@@ -74,29 +74,29 @@ def f_remind(standerp, input):
     tellee_original = tellee.rstrip('.,:;')
     tellee = tellee_original.lower()
 
-    if not os.path.exists(standerp.tell_filename):
+    if not os.path.exists(code.tell_filename):
         return
 
     timenow = time.strftime('%d %b %H:%MZ', time.gmtime())
     whogets = list()
     for tellee in tellee.split(","):
         if len(tellee) > 20:
-            standerp.say("Nickname %s is too long." % (tellee))
+            code.say("Nickname %s is too long." % (tellee))
             continue
-        if not tellee in (teller.lower(), standerp.nick, 'me'):
+        if not tellee in (teller.lower(), code.nick, 'me'):
             warn = False
             if not tellee in whogets:
                 whogets.append(tellee)
-                if tellee not in standerp.reminders:
-                    standerp.reminders[tellee] = [(teller, verb, timenow, msg)]
+                if tellee not in code.reminders:
+                    code.reminders[tellee] = [(teller, verb, timenow, msg)]
                 else:
-                    # if len(standerp.reminders[tellee]) >= maximum:
+                    # if len(code.reminders[tellee]) >= maximum:
                     #   warn = True
-                    standerp.reminders[tellee].append((teller, verb, timenow, msg))
+                    code.reminders[tellee].append((teller, verb, timenow, msg))
     response = str()
     if teller.lower() == tellee:
         response = 'You can %s yourself that.' % (verb)
-    elif tellee.lower() == standerp.nick.lower():
+    elif tellee.lower() == code.nick.lower():
         response = "Hey, I'm not as stupid as Monty you know!"
     else:
         response = "I'll pass that on when %s is around."
@@ -111,55 +111,55 @@ def f_remind(standerp, input):
         if rand > 0.9999: response = "yeah, yeah"
         elif rand > 0.999: response = "yeah, sure, whatever"
 
-    standerp.reply(response)
+    code.reply(response)
 
-    dumpReminders(standerp.tell_filename, standerp.reminders)
+    dumpReminders(code.tell_filename, code.reminders)
 f_remind.rule = ('$nick', ['[tT]ell', '[aA]sk'], r'(\S+) (.*)')
 f_remind.commands = ['tell', 'to']
 
-def getReminders(standerp, channel, key, tellee):
+def getReminders(code, channel, key, tellee):
     lines = []
     template = "%s: %s <%s> %s %s %s"
     today = time.strftime('%d %b', time.gmtime())
 
-    for (teller, verb, datetime, msg) in standerp.reminders[key]:
+    for (teller, verb, datetime, msg) in code.reminders[key]:
         if datetime.startswith(today):
             datetime = datetime[len(today)+1:]
         lines.append(template % (tellee, datetime, teller, verb, tellee, msg))
 
-    try: del standerp.reminders[key]
-    except KeyError: standerp.msg(channel, 'Hmm...')
+    try: del code.reminders[key]
+    except KeyError: code.msg(channel, 'Hmm...')
     return lines
 
-def message(standerp, input):
+def message(code, input):
     if not input.sender.startswith('#'): return
 
     tellee = input.nick
     channel = input.sender
 
     if not os: return
-    if not os.path.exists(standerp.tell_filename):
+    if not os.path.exists(code.tell_filename):
         return
 
     reminders = []
-    remkeys = list(reversed(sorted(standerp.reminders.keys())))
+    remkeys = list(reversed(sorted(code.reminders.keys())))
     for remkey in remkeys:
         if not remkey.endswith('*') or remkey.endswith(':'):
             if tellee.lower() == remkey:
-                reminders.extend(getReminders(standerp, channel, remkey, tellee))
+                reminders.extend(getReminders(code, channel, remkey, tellee))
         elif tellee.lower().startswith(remkey.rstrip('*:')):
-            reminders.extend(getReminders(standerp, channel, remkey, tellee))
+            reminders.extend(getReminders(code, channel, remkey, tellee))
 
     for line in reminders[:maximum]:
-        standerp.say(line)
+        code.say(line)
 
     if reminders[maximum:]:
-        standerp.say('Further messages sent privately')
+        code.say('Further messages sent privately')
         for line in reminders[maximum:]:
-            standerp.msg(tellee, line)
+            code.msg(tellee, line)
 
-    if len(standerp.reminders.keys()) != remkeys:
-        dumpReminders(standerp.tell_filename, standerp.reminders)
+    if len(code.reminders.keys()) != remkeys:
+        dumpReminders(code.tell_filename, code.reminders)
 message.rule = r'(.*)'
 message.priority = 'low'
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding=utf-8
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-calc.py - Stan-Derp Calculator Module
-http://standerp.liamstanley.net/
+calc.py - Code Calculator Module
+http://code.liamstanley.net/
 """
 
 import re
@@ -26,11 +26,11 @@ subs = [
    ('mbps', '(megabits / second)')
 ]
 
-def dcalc(standerp, input): 
+def dcalc(code, input): 
    """Frink Online Calculator"""
    q = input.group(2)
    if not q: 
-      return standerp.say('0?')
+      return code.say('0?')
 
    query = q[:]
    for a, b in subs: 
@@ -60,16 +60,16 @@ def dcalc(standerp, input):
       elif ' in ' in q: 
          result += ' ' + q.split(' in ', 1)[1]
 
-      standerp.say(q + ' = ' + result[:350])
-   else: standerp.reply("Sorry, can't calculate that.")
-   standerp.say('Note that .dcalc/.cd is deprecated, consider using .calc')
+      code.say(q + ' = ' + result[:350])
+   else: code.reply("Sorry, can't calculate that.")
+   code.say('Note that .dcalc/.cd is deprecated, consider using .calc')
 dcalc.commands = ['dcalc', 'dc']
 dcalc.example = '.dcalc 5 + 3'
 
-def calc(standerp, input): 
+def calc(code, input): 
    """Google calculator."""
    if not input.group(2):
-      return standerp.reply("Nothing to calculate.")
+      return code.reply("Nothing to calculate.")
    q = input.group(2).encode('utf-8')
    q = q.replace('\xcf\x95', 'phi') # utf-8 U+03D5
    q = q.replace('\xcf\x80', 'pi') # utf-8 U+03C0
@@ -85,30 +85,30 @@ def calc(standerp, input):
       answer = answer.replace('<sup>', '^(')
       answer = answer.replace('</sup>', ')')
       answer = web.decode(answer)
-      standerp.say(answer)
-   else: standerp.say('Sorry, no result.')
+      code.say(answer)
+   else: code.say('Sorry, no result.')
 calc.commands = ['c', 'calc', 'calculate']
 calc.example = '.calc 5 + 3'
 
-def py(standerp, input): 
+def py(code, input): 
    query = input.group(2).encode('utf-8')
    uri = 'http://tumbolia.appspot.com/py/'
    answer = web.get(uri + web.urllib.quote(query))
    if answer: 
-      standerp.say(answer)
-   else: standerp.reply('Sorry, no result.')
+      code.say(answer)
+   else: code.reply('Sorry, no result.')
 py.commands = ['py', 'python']
 py.example = '.py print(int(1.0) + int(3))'
 
-def wa(standerp, input): 
+def wa(code, input): 
    if not input.group(2):
-      return standerp.reply("No search term.")
+      return code.reply("No search term.")
    query = input.group(2).encode('utf-8')
    uri = 'http://tumbolia.appspot.com/wa/'
    answer = web.get(uri + web.urllib.quote(query.replace('+', '%2B')))
    if answer: 
-      standerp.say(answer)
-   else: standerp.reply('Sorry, no result.')
+      code.say(answer)
+   else: code.reply('Sorry, no result.')
 wa.commands = ['wa']
 
 if __name__ == '__main__': 

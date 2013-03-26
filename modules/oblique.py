@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-oblique.py - Stan-Derp Web Services Interface
-http://standerp.liamstanley.net/
+oblique.py - Code Web Services Interface
+http://code.liamstanley.net/
 """
 
 import re, urllib
@@ -27,7 +27,7 @@ def mappings(uri):
       result[command] = template.replace('&amp;', '&')
    return result
 
-def service(standerp, input, command, args): 
+def service(code, input, command, args): 
    t = o.services[command]
    template = t.replace('${args}', urllib.quote(args.encode('utf-8'), ''))
    template = template.replace('${nick}', urllib.quote(input.nick, ''))
@@ -37,23 +37,23 @@ def service(standerp, input, command, args):
    if isinstance(info, list): 
       info = info[0]
    if not 'text/plain' in info.get('content-type', '').lower(): 
-      return standerp.reply("Sorry, the service didn't respond in plain text.")
+      return code.reply("Sorry, the service didn't respond in plain text.")
    bytes = web.get(uri)
    lines = bytes.splitlines()
    if not lines: 
-      return standerp.reply("Sorry, the service didn't respond any output.")
+      return code.reply("Sorry, the service didn't respond any output.")
    try: line = lines[0].encode('utf-8')[:350]
    except: line = lines[0][:250]
    if line.find('ENOTFOUND') > -1:
        if input.group(1) == 'urban':
            line = "I'm sorry, that definition wasn't found."
-           standerp.say(line)
+           code.say(line)
    else:
-       standerp.say(line)
+       code.say(line)
 
-def refresh(standerp): 
-   if hasattr(standerp.config, 'services'): 
-      services = standerp.config.services
+def refresh(code): 
+   if hasattr(code.config, 'services'): 
+      services = code.config.services
    else: services = definitions
 
    old = o.services
@@ -61,7 +61,7 @@ def refresh(standerp):
    o.services = mappings(o.serviceURI)
    return len(o.services), set(o.services) - set(old)
 
-def o(standerp, input): 
+def o(code, input): 
    """Call a webservice."""
    if input.group(1) == 'urban':
        text = 'ud '+ input.group(2)
@@ -73,16 +73,16 @@ def o(standerp, input):
        text = input.group(2)
 
    if (not o.services) or (text == 'refresh'): 
-      length, added = refresh(standerp)
+      length, added = refresh(code)
       if text == 'refresh': 
          msg = 'Okay, found %s services.' % length
          if added: 
             msg += ' Added: ' + ', '.join(sorted(added)[:5])
             if len(added) > 5: msg += ', &c.'
-         return standerp.reply(msg)
+         return code.reply(msg)
 
    if not text: 
-      return standerp.reply('Try %s for details.' % o.serviceURI)
+      return code.reply('Try %s for details.' % o.serviceURI)
 
    if ' ' in text: 
       command, args = text.split(' ', 1)
@@ -91,29 +91,29 @@ def o(standerp, input):
 
    if command == 'service': 
       msg = o.services.get(args, 'No such service!')
-      return standerp.reply(msg)
+      return code.reply(msg)
 
    if not o.services.has_key(command): 
-      return standerp.reply('Service not found in %s' % o.serviceURI)
+      return code.reply('Service not found in %s' % o.serviceURI)
 
-   if hasattr(standerp.config, 'external'): 
-      default = standerp.config.external.get('*')
-      manifest = standerp.config.external.get(input.sender, default)
+   if hasattr(code.config, 'external'): 
+      default = code.config.external.get('*')
+      manifest = code.config.external.get(input.sender, default)
       if manifest: 
          commands = set(manifest)
          if (command not in commands) and (manifest[0] != '!'): 
-            return standerp.reply('Sorry, %s is not whitelisted' % command)
+            return code.reply('Sorry, %s is not whitelisted' % command)
          elif (command in commands) and (manifest[0] == '!'): 
-            return standerp.reply('Sorry, %s is blacklisted' % command)
-   service(standerp, input, command, args)
+            return code.reply('Sorry, %s is blacklisted' % command)
+   service(code, input, command, args)
 o.commands = ['o', 'urban', 'whois', 'flip']
 o.example = '.o servicename arg1 arg2 arg3'
 o.services = {}
 o.serviceURI = None
 
-def snippet(standerp, input): 
+def snippet(code, input): 
    if not o.services: 
-      refresh(standerp)
+      refresh(code)
 
    search = urllib.quote(input.group(2).encode('utf-8'))
    py = "BeautifulSoup.BeautifulSoup(re.sub('<.*?>|(?<= ) +', '', " + \
@@ -123,7 +123,7 @@ def snippet(standerp, input):
         ".replace('null', 'None'))['responseData']['resul" + \
         "ts'][0]['content'].decode('unicode-escape')).replace(" + \
         "'&quot;', '\x22')), convertEntities=True)"
-   service(standerp, input, 'py', py)
+   service(code, input, 'py', py)
 snippet.commands = ['snippet']
 
 if __name__ == '__main__': 

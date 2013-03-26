@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-twss.py - Stan-Derp 'That's what she said' Module
-http://standerp.liamstanley.net/
+twss.py - Code 'That's what she said' Module
+http://code.liamstanley.net/
 """
 
 import urllib2
@@ -48,7 +48,7 @@ if not os.path.exists("modules/twss.txt"):
     f.close()
 
 
-def say_it(standerp, input):
+def say_it(code, input):
     global last
     user_quotes = None
     with open("modules/twss.txt") as f:
@@ -59,17 +59,17 @@ def say_it(standerp, input):
     quotes = scraped_quotes.union(user_quotes) if user_quotes else scraped_quotes
     formatted = input.group(1).lower()
     if re.sub("[^\w\s]", "", formatted) in quotes:
-        standerp.say("That's what she said.")
+        code.say("That's what she said.")
     last = re.sub("[^\w\s]", "", formatted)
 say_it.rule = r"(.*)"
 say_it.priority = "low"
 
-def add_twss(standerp, input):
+def add_twss(code, input):
     print last
     with open("modules/twss_user_added.txt", "a") as f:
         f.write(re.sub(r"[^\w\s]", "", last.lower()) + "\n")
         f.close()
-    standerp.say("That's what she said.")
+    code.say("That's what she said.")
 add_twss.commands = ["twss"]
 add_twss.priority = "low"
 add_twss.threading = False

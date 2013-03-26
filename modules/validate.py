@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-validate.py - Stan-Derp Validation Module
-http://standerp.liamstanley.net/
+validate.py - Code Validation Module
+http://code.liamstanley.net/
 """
 
 import web
 
-def val(standerp, input): 
+def val(code, input): 
    """Check a webpage using the W3C Markup Validator."""
    if not input.group(2):
-      return standerp.reply("Nothing to validate.")
+      return code.reply("Nothing to validate.")
    uri = input.group(2)
    if not uri.startswith('http://'): 
       uri = 'http://' + uri
@@ -22,7 +22,7 @@ def val(standerp, input):
    result = uri + ' is '
 
    if isinstance(info, list): 
-      return standerp.say('Got HTTP response %s' % info[1])
+      return code.say('Got HTTP response %s' % info[1])
 
    if info.has_key('X-W3C-Validator-Status'): 
       result += str(info['X-W3C-Validator-Status'])
@@ -34,7 +34,7 @@ def val(standerp, input):
             else: result += ' (%s error)' % n
    else: result += 'Unvalidatable: no X-W3C-Validator-Status'
 
-   standerp.reply(result)
+   code.reply(result)
 val.rule = (['val'], r'(?i)(\S+)')
 val.example = '.val http://www.w3.org/'
 

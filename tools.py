@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-tools.py - Stan-Derp Tools
-http://standerp.liamstanley.net/
+tools.py - Code Tools
+http://code.liamstanley.net/
 """
 
 def deprecated(old): 
-   def new(standerp, input, old=old): 
-      self = standerp
+   def new(code, input, old=old): 
+      self = code
       origin = type('Origin', (object,), {
          'sender': input.sender, 
          'nick': input.nick

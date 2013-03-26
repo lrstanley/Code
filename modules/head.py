@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Stan-Derp Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-head.py - Stan-Derp HTTP Metadata Utilities
-http://standerp.liamstanley.net/
+head.py - Code HTTP Metadata Utilities
+http://code.liamstanley.net/
 """
 
 import re, urllib, urllib2, httplib, urlparse, time
@@ -11,7 +11,7 @@ from htmlentitydefs import name2codepoint
 import web
 from tools import deprecated
 
-def meta(standerp, input): 
+def meta(code, input): 
    """Provide HTTP meta (HEAD) information."""
    uri = input.group(2)
    uri = (uri or '').encode('utf-8')
@@ -19,22 +19,22 @@ def meta(standerp, input):
       uri, metaer = uri.rsplit(' ', 1)
    else: uri, metaer = uri, None
 
-   if not uri and hasattr(standerp, 'last_seen_uri'): 
-      try: uri = standerp.last_seen_uri[input.sender]
-      except KeyError: return standerp.say('?')
+   if not uri and hasattr(code, 'last_seen_uri'): 
+      try: uri = code.last_seen_uri[input.sender]
+      except KeyError: return code.say('?')
 
    if not uri.startswith('htt'): 
       uri = 'http://' + uri
    # uri = uri.replace('#!', '?_escaped_fragment_=')
 
    try: info = web.meta(uri)
-   except IOError: return standerp.say("Can't connect to %s" % uri)
-   except httplib.InvalidURL: return standerp.say("Not a valid URI, sorry.")
+   except IOError: return code.say("Can't connect to %s" % uri)
+   except httplib.InvalidURL: return code.say("Not a valid URI, sorry.")
 
    if not isinstance(info, list): 
       try: info = dict(info)
       except TypeError: 
-         return standerp.reply('Try .meta http://example.org/ [optional meta]')
+         return code.reply('Try .meta http://example.org/ [optional meta]')
       info['Status'] = '200'
    else: 
       newInfo = dict(info[0])
@@ -53,14 +53,14 @@ def meta(standerp, input):
          data.append(time.strftime('%Y-%m-%d %H:%M:%S UTC', modified))
       if info.has_key('content-length'): 
          data.append(info['content-length'] + ' bytes')
-      standerp.reply(', '.join(data))
+      code.reply(', '.join(data))
    else: 
       metaerlower = metaer.lower()
       if info.has_key(metaerlower): 
-         standerp.say(metaer + ': ' + info.get(metaerlower))
+         code.say(metaer + ': ' + info.get(metaerlower))
       else: 
          msg = 'There was no %s metaer in the response.' % metaer
-         standerp.say(msg)
+         code.say(msg)
 meta.commands = ['meta']
 meta.example = '.meta http://www.w3.org/'
 
@@ -92,14 +92,14 @@ def f_title(self, origin, match, args):
    ]
    for s in localhost: 
       if uri.startswith(s): 
-         return standerp.reply('Sorry, access forbidden.')
+         return code.reply('Sorry, access forbidden.')
 
    try: 
       redirects = 0
       while True: 
          headers = {
             'Accept': 'text/html', 
-            'User-Agent': 'Mozilla/5.0 (standerp)'
+            'User-Agent': 'Mozilla/5.0 (code)'
          }
          req = urllib2.Request(uri, headers=headers)
          u = urllib2.urlopen(req)
@@ -176,11 +176,11 @@ def f_title(self, origin, match, args):
    else: self.msg(origin.sender, origin.nick + ': No title found')
 f_title.commands = ['title', 'head']
 
-def noteuri(standerp, input): 
+def noteuri(code, input): 
    uri = input.group(1).encode('utf-8')
-   if not hasattr(standerp.bot, 'last_seen_uri'): 
-      standerp.bot.last_seen_uri = {}
-   standerp.bot.last_seen_uri[input.sender] = uri
+   if not hasattr(code.bot, 'last_seen_uri'): 
+      code.bot.last_seen_uri = {}
+   code.bot.last_seen_uri[input.sender] = uri
 noteuri.rule = r'.*(http[s]?://[^<> "\x01]+)[,.]?'
 noteuri.priority = 'low'
 
