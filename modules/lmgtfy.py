@@ -8,17 +8,21 @@ About: http://code.liamstanley.net/
 
 import re
 
-def lmgtfy(code, input): #needs more work for utf-8 encoding. but, meh.
+def lmgtfy(standerp, input): #needs more work for utf-8 encoding. but, meh.
     """Let my Google That For You"""
     lmgtfy = input.group(2)
-    lmgtfy = re.sub(r"[^\w\s]", '', lmgtfy)
-    lmgtfy = lmgtfy.replace(".", "")
-    lmgtfy = lmgtfy.strip(" ")
+    lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy)
+    lmgtfy = lmgtfy.replace(".", " ")
     lmgtfy = lmgtfy.replace(" ", "+")
-    lmgtfy = lmgtfy.replace("++", "+")
-    lmgtfyurl = "http://lmgtfy.com/?q=" + lmgtfy
     # http://stackoverflow.com/questions/1007481/how-do-i-replace-whitespaces-with-underscore-and-vice-versa
     # http://paste.liamstanley.net/index.php?1d
+    while lmgtfy.find('++') > -1:
+        lmgtfy = lmgtfy.replace("++", "+")
+        lmgtfy = lmgtfy.strip("+")
+    while lmgtfy.find(' ') > -1:
+        lmgtfy = lmgtfy.replace(" ", "")
+        lmgtfy = lmgtfy.strip(" ")
+    lmgtfyurl = "http://lmgtfy.com/?q=" + lmgtfy
     code.say(input.nick + ": " + lmgtfyurl)
 lmgtfy.commands = ['lmgtfy']
 lmgtfy.example = '.lmgtfy linux'
