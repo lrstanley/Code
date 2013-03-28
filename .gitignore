@@ -4,3 +4,4 @@ testing.py
 *.txt
 *.db
 @*.py
+@*
