@@ -42,7 +42,7 @@ def create_default_config(fn):
    # uncomment to enable (remember this wont work with ai.py disabled.)
    # greetchans = ['#Example', '#Hugs']
    # exclude users from receiving a welcome message below.
-   # excludeusers = ['#Serious', '#Channels']
+   # excludeusers = ['Serious', 'Channels']
    
    # your nickname for use in admin functions
    # You can also specify nick@hostmask
