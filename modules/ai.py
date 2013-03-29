@@ -63,7 +63,7 @@ def welcomemessage(code, input):
        if any( [aistate == False, input.nick == code.nick, excludeuser.find("'" + input.sender + "'") > -1] ):
            return
        elif greetchan.find("'" + input.sender + "'") > -1:
-          code.say(random.choice(greeting) + input.nick + ', welcome to ' +  input.sender + '!')
+          code.say(random.choice(greeting) + " " + input.nick + ', welcome to ' +  input.sender + '!')
        else: return
    except:
        return
