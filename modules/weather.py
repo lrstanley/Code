@@ -420,8 +420,8 @@ def fucking_weather(code, input):
         return
     new_text = str()
     for x in text:
-        if x in latex.HTML_ENCODINGS:
-            new_text += latex.HTML_ENCODINGS[x]
+        if x in htmlencode.HTML_ENCODINGS:
+            new_text += htmlencode.HTML_ENCODINGS[x]
         else:
             new_text += x
     page = web.get("http://thefuckingweather.com/?where=%s" % (new_text))
