@@ -57,8 +57,8 @@ def create_default_config(fn):
    # Block modules from specific channels
    # To not block anything for a channel, just don't mention it
    excludes = {
-           '##blacklist': ['!'],
-       }
+        '##blacklist': ['!'],
+   }
 
    # Channel code will report all private messages sent to her to.
    # This includes server notices.
