@@ -52,18 +52,18 @@ state.priority = 'high'
 
 ## Functions that do not rely on "AISTATE"
 
-def hello_join(code, input):
-    well = random.random()
-    if 0 < well < 0.01:
-        if input.nick == code.config.nick:
-            return
-        random_greeting = random.choice(greeting)
-        punctuation = random.choice(('!', ' '))
-        code.say(random_greeting + ' ' + input.nick + punctuation)
+#def hello_join(code, input):
+#    well = random.random()
+#    if 0 < well < 0.01:
+#        if input.nick == code.config.nick:
+#            return
+#        random_greeting = random.choice(greeting)
+#        punctuation = random.choice(('!', ' '))
+#        code.say(random_greeting + ' ' + input.nick + punctuation)
 #hello_join.event = 'JOIN'
 #hello_join.rule = '.*'
 #hello_join.priority = 'medium'
-
+#above may intern conflict with below, best not use
 #to be set in config
 def welcomemessage(code, input):
    try:
@@ -71,14 +71,14 @@ def welcomemessage(code, input):
        greetchan = str(greetchan)
        if input.nick == code.nick:
           return
-       elif greetchan.find("'" + input.nick + "'") > -1:
-          code.say('Hello' + input.nick + ', welcome to ' +  input.sender + '!')
+       elif greetchan.find("'" + input.sender + "'") > -1:
+          code.say(random.choice(greeting) + input.nick + ', welcome to ' +  input.sender + '!')
        else: return
    except:
        return
 welcomemessage.event = 'JOIN'
 welcomemessage.rule = r'.*'
-welcomemessage.priority = 'high'
+welcomemessage.priority = 'medium'
 welcomemessage.thread = False
 
 def goodbye(code, input):
