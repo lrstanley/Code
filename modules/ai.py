@@ -67,7 +67,7 @@ state.priority = 'high'
 #to be set in config
 def welcomemessage(code, input):
    try:
-       greetchan = code.config.greet_chans
+       greetchan = code.config.greetchans
        greetchan = str(greetchan)
        if input.nick == code.nick:
           return
