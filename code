@@ -77,12 +77,12 @@ def create_default_config(fn):
    # e.g. /path/to/my/modules
    extra = ['""" + os.getcwd() + '/modules/' + """']
 
-    # Services to load: maps channel names to white or black lists
-    external = {
-        '#liberal': ['!'], # allow all
-        '#conservative': [], # allow none
-        '*': ['!'] # default whitelist, allow all
-    }
+   # Services to load: maps channel names to white or black lists
+   external = {
+       '#liberal': ['!'], # allow all
+       '#conservative': [], # allow none
+       '*': ['!'] # default whitelist, allow all
+   }
 
    # EOF
    """
