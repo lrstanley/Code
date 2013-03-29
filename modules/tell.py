@@ -6,6 +6,18 @@ tell.py - Code tell Module
 http://code.liamstanley.net/
 """
 
+#!/usr/bin/env python
+"""
+tell.py - code Tell and Ask Module
+Copyright 2012-2013, Michael Yanovich (yanovich.net)
+Copyright 2008, Sean B. Palmer (inamidst.com)
+Licensed under the Eiffel Forum License 2.
+
+More info:
+ * code: https://github.com/myano/code/
+ * Phenny: http://inamidst.com/phenny/
+"""
+
 import os, re, time, random
 import web
 
@@ -29,7 +41,7 @@ def loadReminders(fn):
         line = line.strip()
         if line:
             try: tellee, teller, verb, timenow, msg = line.split('\t', 4)
-            except ValueError: continue
+            except ValueError: continue # @@ hmm
             result.setdefault(tellee, []).append((teller, verb, timenow, msg))
     f.close()
     return result
@@ -54,11 +66,12 @@ def setup(self):
         else:
             f.write('')
             f.close()
-    self.reminders = loadReminders(self.tell_filename)
+    self.reminders = loadReminders(self.tell_filename) # @@ tell
 
 def f_remind(code, input):
     teller = input.nick
 
+    # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group()).startswith(".tell"):
         verb = "tell".encode('utf-8')
         line = input.groups()
@@ -83,7 +96,7 @@ def f_remind(code, input):
         if len(tellee) > 20:
             code.say("Nickname %s is too long." % (tellee))
             continue
-        if not tellee in (teller.lower(), code.nick, 'me'):
+        if not tellee in (teller.lower(), code.nick, 'me'): # @@
             warn = False
             if not tellee in whogets:
                 whogets.append(tellee)
@@ -106,14 +119,14 @@ def f_remind(code, input):
         else:
             response = response % (whogets[0])
 
-    if not whogets:
+    if not whogets: # Only get cute if there are not legits
         rand = random.random()
         if rand > 0.9999: response = "yeah, yeah"
         elif rand > 0.999: response = "yeah, sure, whatever"
 
     code.reply(response)
 
-    dumpReminders(code.tell_filename, code.reminders)
+    dumpReminders(code.tell_filename, code.reminders) # @@ tell
 f_remind.rule = ('$nick', ['[tT]ell', '[aA]sk'], r'(\S+) (.*)')
 f_remind.commands = ['tell', 'to']
 
@@ -128,7 +141,7 @@ def getReminders(code, channel, key, tellee):
         lines.append(template % (tellee, datetime, teller, verb, tellee, msg))
 
     try: del code.reminders[key]
-    except KeyError: code.msg(channel, 'Hmm...')
+    except KeyError: code.msg(channel, 'Er...')
     return lines
 
 def message(code, input):
@@ -159,7 +172,7 @@ def message(code, input):
             code.msg(tellee, line)
 
     if len(code.reminders.keys()) != remkeys:
-        dumpReminders(code.tell_filename, code.reminders)
+        dumpReminders(code.tell_filename, code.reminders) # @@ tell
 message.rule = r'(.*)'
 message.priority = 'low'
 

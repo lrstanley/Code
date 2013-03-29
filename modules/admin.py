@@ -6,57 +6,85 @@ admin.py - Code Admin Module
 http://code.liamstanley.net/
 """
 
-def join(code, input): 
-   """Join the specified channel. This is an admin-only command."""
-   # Can only be done in privmsg by an admin
-   if input.sender.startswith('#'): return
-   if input.admin: 
-      channel, key = input.group(1), input.group(2)
-      if not key: 
-         code.write(['JOIN'], channel)
-      else: code.write(['JOIN', channel, key])
+import os
+
+def join(code, input):
+    """Join the specified channel. This is an admin-only command."""
+    # Can only be done in privmsg by an admin
+    if input.sender.startswith('#'): return
+    if input.admin:
+        channel, key = input.group(1), input.group(2)
+        if not key:
+            code.write(['JOIN'], channel)
+        else: code.write(['JOIN', channel, key])
 join.rule = r'\.join (#\S+)(?: *(\S+))?'
 join.priority = 'low'
 join.example = '.join #example or .join #example key'
 
-def part(code, input): 
-   """Part the specified channel. This is an admin-only command."""
-   # Can only be done in privmsg by an admin
-   if input.sender.startswith('#'): return
-   if input.admin: 
-      code.write(['PART'], input.group(2))
+def part(code, input):
+    """Part the specified channel. This is an admin-only command."""
+    # Can only be done in privmsg by an admin
+    if input.sender.startswith('#'): return
+    if input.admin:
+        code.write(['PART'], input.group(2))
 part.commands = ['part', 'leave']
 part.priority = 'low'
 part.example = '.part #example'
 
-def quit(code, input): 
-   """Quit from the server. This is an owner-only command."""
-   # Can only be done in privmsg by the owner
-   if input.sender.startswith('#'): return
-   if input.owner: 
-      code.write(['QUIT'])
-      __import__('os')._exit(0)
-quit.commands = ['quit']
+def quit(code, input):
+    """Quit from the server. This is an owner-only command."""
+    # Can only be done in privmsg by the owner
+    if input.sender.startswith('#'): return
+    if input.owner:
+        code.write(['QUIT'])
+        __import__('os')._exit(0)
+quit.commands = ['quit', 'terminate']
 quit.priority = 'low'
 
-def msg(code, input): 
-   # Can only be done in privmsg by an admin
-   if input.sender.startswith('#'): return
-   a, b = input.group(2), input.group(3)
-   if (not a) or (not b): return
-   if input.admin: 
-      code.msg(a, b)
-msg.rule = (['msg', 'message', 'say'], r'(#?\S+) (.+)')
+def msg(code, input):
+    # Can only be done in privmsg by an admin
+    if input.sender.startswith('#'): return
+    a, b = input.group(2), input.group(3)
+    if (not a) or (not b): return
+    if not input.owner:
+        if a.lower() == "nickserv": return
+        if a.lower() == "chanserv": return
+    helper = False
+    if hasattr(code.config, 'helpers'):
+        if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):
+            helper = True
+    if input.admin or helper:
+        code.msg(a, b)
+msg.rule = (['msg', 'say'], r'(#?\S+) (.+)')
 msg.priority = 'low'
 
-def me(code, input): 
-   # Can only be done in privmsg by an admin
-   if input.sender.startswith('#'): return
-   if input.admin: 
-      msg = '\x01ACTION %s\x01' % input.group(3)
-      code.msg(input.group(2) or input.sender, msg)
-me.rule = (['me', 'action'], r'(#?\S+) (.+)')
+def me(code, input):
+    # Can only be done in privmsg by an admin
+    if input.sender.startswith('#'): return
+    a, b = input.group(2), input.group(3)
+    helper = False
+    if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):
+        helper = True
+    if input.admin or helper:
+        if a and b:
+            msg = '\x01ACTION %s\x01' % input.group(3)
+            code.msg(input.group(2), msg, x=True)
+me.rule = (['me', 'action'], r'(#?\S+) (.*)')
 me.priority = 'low'
+
+def defend_ground(code, input):
+    """
+    This function monitors all kicks across all channels code is in. If she
+    detects that she is the one kicked she'll automatically join that channel.
+
+    WARNING: This may not be needed and could cause problems if code becomes
+    annoying. Please use this with caution.
+    """
+    channel = input.sender
+    code.write(['JOIN'], channel)
+defend_ground.event = 'KICK'
+defend_ground.rule = '.*'
+defend_ground.priority = 'low'
 
 def blocks(code, input):
     if not input.admin: return
@@ -156,17 +184,35 @@ blocks.commands = ['blocks']
 blocks.priority = 'low'
 blocks.thread = False
 
+char_replace = {
+        r"\x01": chr(1),
+        r"\x02": chr(2),
+        r"\x03": chr(3),
+        }
+
 def write_raw(code, input):
     if not input.owner: return
     txt = input.bytes[7:]
-    code.reply(txt)
     txt = txt.encode('utf-8')
     a = txt.split(":")
-    code.reply(str(a))
-    code.write([a[0].strip()],a[1].strip(),True)
-write_raw.commands = ['write']
+    status = False
+    if len(a) > 1:
+        newstr = a[1]
+        for x in char_replace:
+            if x in newstr:
+                newstr = newstr.replace(x, char_replace[x])
+        code.write(a[0].split(), newstr, raw=True)
+        status = True
+    elif a:
+        b = a[0].split()
+        code.write([b[0].strip()], u" ".join(b[1:]), raw=True)
+        status = True
+    if status:
+        code.reply("Message sent to server.")
+write_raw.commands = ['write', 'raw']
 write_raw.priority = 'high'
 write_raw.thread = False
 
-if __name__ == '__main__': 
-   print __doc__.strip()
+if __name__ == '__main__':
+    print __doc__.strip()
+
