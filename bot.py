@@ -72,7 +72,7 @@ class Code(irc.Bot):
                 self.register(vars(module))
                 modules.append(name)
 
-        if modules:
+        if modules: #im getting double the modules, why is this?
             print >> sys.stderr, 'Registered modules:', ', '.join(modules)
         else: print >> sys.stderr, "Warning: Couldn't find any modules"
 

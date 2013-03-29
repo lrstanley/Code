@@ -11,7 +11,7 @@ import re
 import urllib
 import web
 from tools import deprecated
-from modules import latex
+from modules import htmlencode
 
 r_from = re.compile(r'(?i)([+-]\d+):00 from')
 
