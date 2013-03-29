@@ -64,6 +64,23 @@ def hello_join(code, input):
 #hello_join.rule = '.*'
 #hello_join.priority = 'medium'
 
+#to be set in config
+def welcomemessage(code, input):
+   try:
+       greetchan = code.config.greet_chans
+       greetchan = str(greetchan)
+       if input.nick == code.nick:
+          return
+       elif greetchan.find("'" + input.nick + "'") > -1:
+          code.say('Hello' + input.nick + ', welcome to ' +  input.sender + '!')
+       else: return
+   except:
+       return
+welcomemessage.event = 'JOIN'
+welcomemessage.rule = r'.*'
+welcomemessage.priority = 'high'
+welcomemessage.thread = False
+
 def goodbye(code, input):
     byemsg = random.choice(('Bye', 'Goodbye', 'Seeya', 'Ttyl'))
     punctuation = random.choice(('!', ' '))

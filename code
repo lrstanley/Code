@@ -37,6 +37,11 @@ def create_default_config(fn):
    # channels to auto-join
    channels = ['#example', '#test']
    
+   # channels to greet users on channel join
+   # e.g "Hello Code, welcome to #Lounge!"
+   # uncomment to enable (remember this wont work with ai.py disabled.)
+   # greet_chans = ['#Example', '#hugs']
+   
    # your nickname for use in admin functions
    # You can also specify nick@hostmask
    # For example: code@unaffiliated/code
