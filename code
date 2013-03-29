@@ -40,7 +40,9 @@ def create_default_config(fn):
    # channels to greet users on channel join
    # e.g "Hello Code, welcome to #Lounge!"
    # uncomment to enable (remember this wont work with ai.py disabled.)
-   # greetchans = ['#Example', '#hugs']
+   # greetchans = ['#Example', '#Hugs']
+   # exclude users from receiving a welcome message below.
+   # excludeusers = ['#Serious', '#Channels']
    
    # your nickname for use in admin functions
    # You can also specify nick@hostmask

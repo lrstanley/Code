@@ -69,7 +69,11 @@ def welcomemessage(code, input):
    try:
        greetchan = code.config.greetchans
        greetchan = str(greetchan)
+       excludeuser = code.config.excludeusers
+       excludeuser = str(excludeuser)
        if input.nick == code.nick:
+          return
+       elif excludeuser.find("'" + input.sender + "'") > -1:
           return
        elif greetchan.find("'" + input.sender + "'") > -1:
           code.say(random.choice(greeting) + input.nick + ', welcome to ' +  input.sender + '!')
