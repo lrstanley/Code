@@ -263,8 +263,8 @@ class TestBot(Bot):
     f_ping.rule = r'^\.ping(?:[ \t]+(\d+))?$'
 
 def main():
--   # bot = TestBot('TestBot', ['#L'])
--   # bot.run('irc.esper.net')
+   # bot = TestBot('TestBot', ['#L'])
+   # bot.run('irc.esper.net')
     print __doc__
 
 if __name__ == "__main__":
