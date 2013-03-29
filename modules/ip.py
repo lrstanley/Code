@@ -49,10 +49,10 @@ def getipv4(q):
             return resp, ip
 
 
-def ip_lookup(jenni, input):
+def ip_lookup(code, input):
     hip = input.group(2)
     if not hip:
-        return jenni.reply("No search term!")
+        return code.reply("No search term!")
     query = hip.encode('utf-8')
     answer = grab_info(query)
     response = "[IP/Host Lookup] "
@@ -66,7 +66,7 @@ def ip_lookup(jenni, input):
             response += resp
         except:
             response += "No results currently found for: %s" % (hip)
-    jenni.reply(response)
+    code.reply(response)
 ip_lookup.commands = ['ip', 'iplookup', 'host']
 ip_lookup.example = ".iplookup 8.8.8.8"
 
