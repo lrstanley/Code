@@ -60,7 +60,7 @@ def welcomemessage(code, input):
        excludeuser = code.config.excludeusers
        excludeuser = str(excludeuser)
        global aistate
-       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'" + input.sender + "'") > -1, excludeuser.find("'" + input.sender + "'") > -1] )
+       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'" + input.sender + "'") > -1] ):
            return
        elif greetchan.find("'" + input.sender + "'") > -1:
           code.say(random.choice(greeting) + input.nick + ', welcome to ' +  input.sender + '!')
