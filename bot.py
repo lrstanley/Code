@@ -36,18 +36,18 @@ class Code(irc.Bot):
         self.setup()
 
     def setup(self): 
-      self.variables = {}
+        self.variables = {}
 
-      filenames = []
-      if not hasattr(self.config, 'enable'): 
+        filenames = []
+        if not hasattr(self.config, 'enable'): 
          for fn in os.listdir(os.path.join(home, 'modules')): 
             if fn.endswith('.py') and not fn.startswith('_'): 
                filenames.append(os.path.join(home, 'modules', fn))
-      else: 
+        else: 
          for fn in self.config.enable: 
             filenames.append(os.path.join(home, 'modules', fn + '.py'))
 
-      if hasattr(self.config, 'extra'): 
+        if hasattr(self.config, 'extra'): 
          for fn in self.config.extra: 
             if os.path.isfile(fn): 
                filenames.append(fn)
