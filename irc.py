@@ -95,7 +95,9 @@ class Bot(asynchat.async_chat):
             if self.logging:
                 log_raw(temp)
         except IndexError:
-            print "INDEXERROR", text
+            return
+            #the fuck went wrong m8.
+            #print "INDEXERROR", text
             #pass
 
     def write(self, args, text=None, raw=False):

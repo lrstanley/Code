@@ -432,7 +432,7 @@ def fucking_weather(code, input):
     remarks = re_mark.findall(page)
     response = str()
     if temps:
-        response += temps[0] + u"°F?! "
+        response += temps[0] + "FUCKING DEGREES?! "
     if remarks:
         response += remarks[0]
     else:
