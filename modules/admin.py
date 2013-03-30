@@ -74,8 +74,8 @@ me.priority = 'low'
 
 def defend_ground(code, input):
     """
-    This function monitors all kicks across all channels code is in. If she
-    detects that she is the one kicked she'll automatically join that channel.
+    This function monitors all kicks across all channels code is in. If he
+    detects that he is the one kicked he'll automatically join that channel.
 
     WARNING: This may not be needed and could cause problems if code becomes
     annoying. Please use this with caution.
