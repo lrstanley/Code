@@ -15,7 +15,7 @@ high = 1
 owner_gone = True
 greet_user = ""
 
-greeting = ['Hello', 'Hallo', 'Hi', 'Welcome', 'Ohaider', 'Ello', 'Ohai', 'Hiya']
+greeting = ['Hello', 'Hallo', 'Hi', 'Ohaider', 'Ello', 'Ohai', 'Hiya']
 
 random.seed()
 
