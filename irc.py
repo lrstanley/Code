@@ -219,7 +219,7 @@ class Bot(asynchat.async_chat):
             messages = [m[1] for m in self.stack[-8:]]
             if messages.count(text) >= 5:
                 text = '...'
-                if messages.count('...') >= 1:
+                if messages.count('...') > 1:
                     self.sending.release()
                     return
 
