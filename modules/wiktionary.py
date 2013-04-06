@@ -88,8 +88,8 @@ def w(code, input):
    if len(result) > 300: 
       result = result[:295] + '[...]'
    code.say(result)
-w.commands = ['w','define2','wik2']
-w.example = '.w Michigan'
+w.commands = ['w','define', 'd', 'wik2', 'wiki2', 'dict']
+w.example = '.w example'
 
 def encarta(code, input): 
    return code.reply('Microsoft removed Encarta, try .w instead!')

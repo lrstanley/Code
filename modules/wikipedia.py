@@ -174,7 +174,7 @@ def wik(code, input):
       code.say(result)
    else: code.say('Can\'t find anything in Wikipedia for "%s".' % origterm)
 
-wik.commands = ['wik', 'wiki', 'define', 'dict']
+wik.commands = ['wik', 'wiki', 'define2', 'dict2']
 wik.priority = 'high'
 
 if __name__ == '__main__': 
