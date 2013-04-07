@@ -13,8 +13,9 @@ conversation = False
 low = 0
 high = 1
 owner_gone = True
-greet_user = ""
-
+greet_user = ''
+global lastuser
+lastuser = ''
 greeting = ['Hello', 'Hallo', 'Hi', 'Ohaider', 'Ello', 'Ohai', 'Hiya']
 
 random.seed()
@@ -54,17 +55,20 @@ state.priority = 'high'
 
 #to be set in config
 def welcomemessage(code, input):
+   global lastuser
    try:
        greetchan = code.config.greetchans
        greetchan = str(greetchan)
-       excludeuser = code.config.excludeusers
-       excludeuser = str(excludeuser)
+       try:
+           excludeuser = code.config.excludeusers
+           excludeuser = str(excludeuser)
+       except:
+           excludeuser = ''
        global aistate
        if any( [aistate == False, input.nick == code.nick, excludeuser.find("'" + input.nick + "'") > -1, lastuser.find(input.nick) > -1] ): #shut up, im tired. -.-
            return
        elif greetchan.find("'" + input.sender + "'") > -1:
           code.say(random.choice(greeting) + " " + input.nick + ', welcome to ' +  input.sender + '!')
-          global lastuser # basically, if a user that joins has a name similiar to a person that just previously joined, it will hit a brick wall
           lastuser = input.nick
        else: return
    except:

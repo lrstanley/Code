@@ -8,68 +8,56 @@ http://code.liamstanley.net/
 
 import os
 
-def join(code, input):
-    """Join the specified channel. This is an admin-only command."""
-    # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
-    if input.admin:
-        channel, key = input.group(1), input.group(2)
-        if not key:
-            code.write(['JOIN'], channel)
-        else: code.write(['JOIN', channel, key])
+def join(code, input): 
+   """Join the specified channel. This is an admin-only command."""
+   # Can only be done in privmsg by an admin
+   if input.sender.startswith('#'): return
+   if input.admin: 
+      channel, key = input.group(1), input.group(2)
+      if not key: 
+         code.write(['JOIN'], channel)
+      else: code.write(['JOIN', channel, key])
 join.rule = r'\.join (#\S+)(?: *(\S+))?'
 join.priority = 'low'
 join.example = '.join #example or .join #example key'
 
-def part(code, input):
-    """Part the specified channel. This is an admin-only command."""
-    # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
-    if input.admin:
-        code.write(['PART'], input.group(2))
+def part(code, input): 
+   """Part the specified channel. This is an admin-only command."""
+   # Can only be done in privmsg by an admin
+   if input.sender.startswith('#'): return
+   if input.admin: 
+      code.write(['PART'], input.group(2))
 part.commands = ['part', 'leave']
 part.priority = 'low'
 part.example = '.part #example'
 
-def quit(code, input):
-    """Quit from the server. This is an owner-only command."""
-    # Can only be done in privmsg by the owner
-    if input.sender.startswith('#'): return
-    if input.owner:
-        code.write(['QUIT'])
-        __import__('os')._exit(0)
-quit.commands = ['quit', 'terminate']
+def quit(code, input): 
+   """Quit from the server. This is an owner-only command."""
+   # Can only be done in privmsg by the owner
+   if input.sender.startswith('#'): return
+   if input.owner: 
+      code.write(['QUIT'])
+      __import__('os')._exit(0)
+quit.commands = ['quit', 'shutdown', 'terminate']
 quit.priority = 'low'
 
-def msg(code, input):
-    # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
-    a, b = input.group(2), input.group(3)
-    if (not a) or (not b): return
-    if not input.owner:
-        if a.lower() == "nickserv": return
-        if a.lower() == "chanserv": return
-    helper = False
-    if hasattr(code.config, 'helpers'):
-        if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):
-            helper = True
-    if input.admin or helper:
-        code.msg(a, b)
-msg.rule = (['msg', 'say'], r'(#?\S+) (.+)')
+def msg(code, input): 
+   # Can only be done in privmsg by an admin
+   if input.sender.startswith('#'): return
+   a, b = input.group(2), input.group(3)
+   if (not a) or (not b): return
+   if input.admin: 
+      code.msg(a, b)
+msg.rule = (['msg', 'say', 'send'], r'(#?\S+) (.+)')
 msg.priority = 'low'
 
-def me(code, input):
-    # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
-    a, b = input.group(2), input.group(3)
-    helper = False
-    if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):
-        helper = True
-    if input.admin or helper:
-        if a and b:
-            msg = '\x01ACTION %s\x01' % input.group(3)
-            code.msg(input.group(2), msg, x=True)
-me.rule = (['me', 'action'], r'(#?\S+) (.*)')
+def me(code, input): 
+   # Can only be done in privmsg by an admin
+   if input.sender.startswith('#'): return
+   if input.admin: 
+      msg = '\x01ACTION %s\x01' % input.group(3)
+      code.msg(input.group(2) or input.sender, msg)
+me.rule = (['me', 'action'], r'(#?\S+) (.+)')
 me.priority = 'low'
 
 def defend_ground(code, input):
