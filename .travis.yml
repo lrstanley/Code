@@ -1,4 +1,6 @@
 language: python
+notifications:
+  irc: "irc.esper.net#L"
 python:
   - "2.6"
   - "2.7"
