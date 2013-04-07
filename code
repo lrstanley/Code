@@ -66,7 +66,14 @@ def create_default_config(fn):
    excludes = {
        '##blacklist': ['!'],
    }
-
+   
+   # This allows one to allow specific people to use ".msg channel message here"
+   # in specific channels.
+   helpers = {
+       '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
+       '##channel2': ['some/other/hostmask'],
+   }
+        
    # Channel code will report all private messages sent to her to.
    # This includes server notices.
    # logchan_pm = '#code-log'
