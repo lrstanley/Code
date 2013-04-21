@@ -5,4 +5,5 @@ python:
   - "2.6"
   - "2.7"
 # command to run tests
-script: python code
+before_script: chmod +x debug
+script: ./debug
