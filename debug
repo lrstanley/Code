@@ -9,21 +9,21 @@ echo "------------------------------------------------------"
 echo "-------------------------------------"
 echo "Compiling all in $PWD starting now..."
 echo "-------------------------------------"
-python -m compileall $PWD/*.py || { echo 'Compiling method in $PWD failed...' ; exit 1; }
+python -m compileall $PWD/*.py || { echo 'Compiling method failed...' ; exit 1; }
 echo "-------------------------------"
 echo "Compiling ./code in $PWD now..."
 echo "-------------------------------"
-python -m py_compile $PWD/code || { echo 'Compiling method in $PWD failed...' ; exit 1; }
+python -m py_compile $PWD/code || { echo 'Compiling method failed...' ; exit 1; }
 echo "---------------------------------------------"
 echo "Compiling all modules in $PWD starting now..."
 echo "---------------------------------------------"
-python -m compileall $PWD/modules/*.py || { echo 'Compiling method in $PWD failed...' ; exit 1; }
+python -m compileall $PWD/modules/*.py || { echo 'Compiling method failed...' ; exit 1; }
 echo "-----------------------------------"
 echo "Cleaning up $PWD of all binaries..."
 echo "-----------------------------------"
-rm -rfv $PWD/*.pyc || { echo 'Failed to remove $PWD binaries. oh well...' ; }
-rm -rfv $PWD/modules/*.pyc || { echo 'Failed to remove $PWD binaries. oh well...' ; }
-rm -rfv $PWD/codec || { echo 'Failed to remove $PWD binaries. oh well...' ; }
+rm -rfv $PWD/*.pyc || { echo 'Failed to remove binaries. oh well...' ; }
+rm -rfv $PWD/modules/*.pyc || { echo 'Failed to remove binaries. oh well...' ; }
+rm -rfv $PWD/codec || { echo 'Failed to remove binaries. oh well...' ; }
 echo "-------------------------------------------"
 echo "If no errors resided, then were good to go!"
 echo "-------------------------------------------"
