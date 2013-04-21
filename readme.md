@@ -136,14 +136,14 @@ Changing Prefix:
 (this would be in the config, i jsut haven't gotten aroudn to it yet. sorry!)
 
 If you wish to change the command prefix from "." to another item Edit /code/code and find this: 
-if not hasattr(module, 'prefix'):
-          
-module.prefix = r'\.'
+
+    if not hasattr(module, 'prefix'):
+        module.prefix = r'\.'
 
 And change it to: 
-if not hasattr(module, 'prefix'):
-          
-module.prefix = r'\(CustomPrefix)'
+
+    if not hasattr(module, 'prefix'):
+        module.prefix = r'\(CustomPrefix)'
 
 Licensing
 ---------
