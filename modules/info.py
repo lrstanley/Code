@@ -22,11 +22,13 @@ doc.priority = 'low'
 def commands(code, input): 
    # This function only works in private message
    if input.sender.startswith('#'): return
-   names = ', '.join(sorted(code.doc.iterkeys()))
-   code.say('Commands I recognise: ' + names + '.')
+#depricated method, inaccurate
+#   names = ', '.join(sorted(code.doc.iterkeys()))
+#   code.say('Commands I recognise: ' + names + '.')
+   code.say(("The list of commands for %s is extensive, so they are now located here: https://github.com/Liamraystanley/Code/wiki#features") % code.nick)
    code.say(("For help, do '%s: help example?' where example is the " + 
                "name of the command you want help for. Code Copyright Liam Stanley 2013.") % code.nick)
-commands.commands = ['commands']
+commands.commands = ['commands', 'cmd', 'cmds']
 commands.priority = 'low'
 
 def help(code, input): 
@@ -36,7 +38,9 @@ def help(code, input):
       'general details. My owner is %s.'
    ) % code.config.owner
    code.reply(response)
-help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
+#old regex method
+#help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
+help.commands = ['help', 'support']
 help.priority = 'low'
 
 def stats(code, input): 
@@ -45,7 +49,10 @@ def stats(code, input):
    users = {}
    channels = {}
 
-   ignore = set(['f_note', 'startup', 'message', 'noteuri'])
+   ignore = set(['f_note', 'startup', 'message', 'noteuri',
+                 'say_it', 'collectlines', 'oh_baby', 'chat'])
+                 'say_it', 'collectlines', 'oh_baby', 'chat',
+                 'collect_links'])
    for (name, user), count in code.stats.items(): 
       if name in ignore: continue
       if not user: continue
