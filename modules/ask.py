@@ -16,7 +16,7 @@ def ask(code, input):
     random.seed()
 
     if choices == None:
-        code.reply("There is no spoon! Please try a valid question.")
+        code.reply("Please try a valid question.")
     elif choices.lower() == "what is the answer to life, the universe, and everything?":
         code.reply("42")
     else:
@@ -28,7 +28,6 @@ def ask(code, input):
 ask.commands = ['ask']
 ask.priority = 'low'
 ask.example = '.ask today or tomorrow or next week'
-ask.rate = 20
 
 if __name__ == '__main__':
     print __doc__.strip()
