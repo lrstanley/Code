@@ -74,6 +74,7 @@ tr.priority = 'low'
 
 def tr2(code, input): 
    """Translates a phrase, with an optional language hint."""
+   if not input.group(2): return code.say("No input provided.")
    command = input.group(2)
    if not command:
       return code.reply("Need something to translate!")
