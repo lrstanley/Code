@@ -28,7 +28,7 @@ EXCLUSION_CHAR = '!'
 IGNORE = ['git.io']
 
 # do not edit below this line unless you know what you're doing
-bitly_loaded = 0
+bitly_loaded = False
 BLOCKED_MODULES = ['title', 'bitly', 'isup', 'py']
 
 try:
@@ -38,7 +38,7 @@ try:
     bitly_api_key = str(key[0].strip())
     bitly_user = str(key[1].strip())
     file.close()
-    bitly_loaded = 1
+    bitly_loaded = True
 except:
     print 'Ignoring: No bitly.txt found.'
 
@@ -325,8 +325,12 @@ def show_title_auto(code, input):
             else:
                 response = reg_format % (returned_title, getTLD(orig))
         elif len(orig) > BITLY_TRIGGER_LEN_NOTITLE:
-            response = '(%s) - %s' % (returned_title, bitly_link)
-
+            #response = '(%s) - %s' % (returned_title, bitly_link)
+            if useBitLy:
+                response = '%s' % (bitly_link)
+            else:
+                ## Fail silently, link can't be bitly'ed and no title was found
+                pass
         if response:
             code.say(response)
 show_title_auto.rule = '(?iu).*(%s?(http|https)(://\S+)).*' % (EXCLUSION_CHAR)
@@ -336,7 +340,7 @@ show_title_auto.priority = 'high'
 def show_title_demand(code, input):
     txt = input.group(2)
     if not txt:
-        return code.reply('Pleaes give me a URL')
+        return code.reply('Please give me a URL.')
     status, results = get_results(input.group(2))
 
     for r in results:
