@@ -340,7 +340,7 @@ show_title_auto.priority = 'high'
 def show_title_demand(code, input):
     txt = input.group(2)
     if not txt:
-        return code.reply('Please give me a URL.')
+        return #code.reply('Please give me a URL.') <-- fail silently. only solution atm.
     status, results = get_results(input.group(2))
 
     for r in results:
