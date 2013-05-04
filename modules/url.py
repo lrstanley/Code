@@ -376,7 +376,7 @@ def show_title_demand(code, input):
 
         if status and link_pass:
             response = '[ %s ]' % (returned_title)
-        code.reply(response)
+            code.reply(response)
         else:
             return
 show_title_demand.commands = ['title']
