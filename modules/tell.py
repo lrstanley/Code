@@ -22,17 +22,6 @@ import os, re, time, random
 import web
 
 maximum = 4
-lispchannels = frozenset([ '#lisp', '#scheme', '#opendarwin', '#macdev',
-'#fink', '#jedit', '#dylan', '#emacs', '#xemacs', '#colloquy', '#adium',
-'#growl', '#chicken', '#quicksilver', '#svn', '#slate', '#squeak', '#wiki',
-'#nebula', '#myko', '#lisppaste', '#pearpc', '#fpc', '#hprog',
-'#concatenative', '#slate-users', '#swhack', '#ud', '#t', '#compilers',
-'#erights', '#esp', '#scsh', '#sisc', '#haskell', '#rhype', '#sicp', '#darcs',
-'#hardcider', '#lisp-it', '#webkit', '#launchd', '#mudwalker', '#darwinports',
-'#muse', '#chatkit', '#kowaleba', '#vectorprogramming', '#opensolaris',
-'#oscar-cluster', '#ledger', '#cairo', '#idevgames', '#hug-bunny', '##parsers',
-'#perl6', '#sdlperl', '#ksvg', '#rcirc', '#code4lib', '#linux-quebec',
-'#programmering', '#maxima', '#robin', '##concurrency', '#paredit' ])
 
 def loadReminders(fn):
     result = {}
@@ -77,28 +66,28 @@ def f_remind(code, input):
         line = input.groups()
         line_txt = line[1].split()
         tellee = line_txt[0]
-        msg = " ".join(line_txt[1:])
+        msg = ' '.join(line_txt[1:])
     else:
         verb, tellee, msg = input.groups()
+    #unicode, mate
     verb = verb.encode('utf-8')
     tellee = tellee.encode('utf-8')
     msg = msg.encode('utf-8')
 
-    tellee_original = tellee.rstrip('.,:;')
-    tellee = tellee_original.lower()
+    tellee = tellee.rstrip('.,:;')
 
     if not os.path.exists(code.tell_filename):
         return
 
     timenow = time.strftime('%d %b %H:%MZ', time.gmtime())
     whogets = list()
-    for tellee in tellee.split(","):
+    for tellee in tellee.split(','):
         if len(tellee) > 20:
             code.say("Nickname %s is too long." % (tellee))
             continue
-        if not tellee in (teller.lower(), code.nick, 'me'): # @@
+        if not tellee.lower() in (teller.lower(), code.nick): # @@
             warn = False
-            if not tellee in whogets:
+            if not tellee.lower() in whogets:
                 whogets.append(tellee)
                 if tellee not in code.reminders:
                     code.reminders[tellee] = [(teller, verb, timenow, msg)]
@@ -107,10 +96,10 @@ def f_remind(code, input):
                     #   warn = True
                     code.reminders[tellee].append((teller, verb, timenow, msg))
     response = str()
-    if teller.lower() == tellee:
+    if teller.lower() == tellee.lower() or tellee.lower() == 'me':
         response = 'You can %s yourself that.' % (verb)
     elif tellee.lower() == code.nick.lower():
-        response = "Hey, I'm not as stupid as Monty you know!"
+        response = "Hey, I'm not that derp you know!"
     else:
         response = "I'll pass that on when %s is around."
         if len(whogets) > 1:
@@ -137,7 +126,7 @@ def getReminders(code, channel, key, tellee):
 
     for (teller, verb, datetime, msg) in code.reminders[key]:
         if datetime.startswith(today):
-            datetime = datetime[len(today)+1:]
+            datetime = datetime[len(today) + 1:]
         lines.append(template % (tellee, datetime, teller, verb, tellee, msg))
 
     try: del code.reminders[key]
@@ -158,9 +147,9 @@ def message(code, input):
     remkeys = list(reversed(sorted(code.reminders.keys())))
     for remkey in remkeys:
         if not remkey.endswith('*') or remkey.endswith(':'):
-            if tellee.lower() == remkey:
+            if tellee.lower() == remkey.lower():
                 reminders.extend(getReminders(code, channel, remkey, tellee))
-        elif tellee.lower().startswith(remkey.rstrip('*:')):
+        elif tellee.lower().startswith(remkey.rstrip('*:').lower()):
             reminders.extend(getReminders(code, channel, remkey, tellee))
 
     for line in reminders[:maximum]:
