@@ -153,6 +153,7 @@ def wik(code, input):
    if not origterm: 
       return code.say('Perhaps you meant ".wik Zen"?')
    origterm = origterm.encode('utf-8')
+   origterm = origterm.strip()
 
    term = urllib.unquote(origterm)
    language = 'en'
