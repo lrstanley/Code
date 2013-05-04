@@ -47,9 +47,9 @@ def msg(code, input):
     a, b = input.group(2), input.group(3)
     if (not a) or (not b): return
     if not input.owner:
-    al = a.lower()
-    if al == 'chanserv' or al == 'nickserv' or al == 'hostserv' or al == 'memoserv' or al == 'saslserv' or al == 'operserv':
-        return
+        al = a.lower()
+        if al == 'chanserv' or al == 'nickserv' or al == 'hostserv' or al == 'memoserv' or al == 'saslserv' or al == 'operserv':
+           return
     helper = False
     if hasattr(code.config, 'helpers'):
         if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):

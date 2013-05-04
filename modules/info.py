@@ -50,7 +50,6 @@ def stats(code, input):
    channels = {}
 
    ignore = set(['f_note', 'startup', 'message', 'noteuri',
-                 'say_it', 'collectlines', 'oh_baby', 'chat'])
                  'say_it', 'collectlines', 'oh_baby', 'chat',
                  'collect_links'])
    for (name, user), count in code.stats.items(): 
