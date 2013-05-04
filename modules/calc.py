@@ -93,10 +93,15 @@ calc.example = '.calc 5 + 3'
 def py(code, input): 
    query = input.group(2).encode('utf-8')
    uri = 'http://tumbolia.appspot.com/py/'
-   answer = web.get(uri + web.urllib.quote(query))
-   if answer: 
-      code.say(answer)
-   else: code.reply('Sorry, no result.')
+   try:
+       answer = web.get(uri + web.urllib.quote(query))
+       if answer:
+           code.say(answer)
+       else:
+           code.reply('Sorry, no result.')
+   except Exception, e:
+       code.reply('The server did not return an answer.')
+       print '[.py]', e
 py.commands = ['py', 'python']
 py.example = '.py print(int(1.0) + int(3))'
 
