@@ -29,7 +29,7 @@ Open-Source
 Configuration
 - By default, Code has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules.
 
-Installation - How do I install?
+Installation - How do I install? 
 ================================
 ________________________________
 
