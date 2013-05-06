@@ -35,9 +35,9 @@ ________________________________
 
  > for rss.py to work, install feedparser via your pip/yum/other package installer.
 
-1) Run ./code - this creates a default config file 
+1) Run `./code`- this creates a default config file 
 2) Edit ~/.code/default.py 
-3) Run ./code- this now runs code with your settings 
+3) Run `./code` - this now runs code with your settings 
 
 Full command would be: 
 
