@@ -1,7 +1,7 @@
 Code the flexible Python IRC Bot
 ================================
 
-Build state: [![Build Status](http://build.liamstanley.net/job/Code/badge/icon)](http://build.liamstanley.net/job/Code/)
+Build State: [![Build Status](http://build.liamstanley.net/job/Code/badge/icon)](http://build.liamstanley.net/job/Code/)
 
 Code (on #L @ irc.esper.net) is a open source python IRC bot forked from Phenny/Jenni, with new modules, easier to understand commands, and easy installation! Code can run on any operating system that supports Python 2.4 or higher.
 
