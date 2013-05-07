@@ -47,6 +47,18 @@ def help(code, input):
 help.commands = ['help', 'support']
 help.priority = 'low'
 
+
+def about(code, input):
+   response = (
+      code.nick + ' was developed by Liam Stanley and many others. ' + code.nick + ' is a open-source ' + 
+      'Python Modular IRC Bot, that serves as a fun, fast, and collective resource ' + 
+      ' for large, and small channels. More info: http://code.liamstanley.net'
+   )
+   code.reply(response)
+about.commands = ['about', 'liam']
+about.priority = 'low'
+
+
 def stats(code, input): 
    """Show information on command usage patterns."""
    commands = {}
