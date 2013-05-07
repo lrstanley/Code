@@ -31,11 +31,15 @@ def commands(code, input):
 commands.commands = ['commands', 'command', 'cmd', 'cmds']
 commands.priority = 'low'
 
-def help(code, input): 
+def help(code, input):
+   try:
+      website = code.config.website
+   except: #revert to default - The Code homepage.
+      website = 'http://code.liamstanley.net'
    response = (
       'Hi, I\'m a bot. Say ".commands" to me in private for a list ' + 
-      'of my commands, or see ' + code.config.website + ' for more ' + 
-      'general details. My owner is %s.'
+      'of my commands, or see ' + website + ' for more general details.' + 
+      ' %s is my owner.'
    ) % code.config.owner
    code.reply(response)
 #old regex method
