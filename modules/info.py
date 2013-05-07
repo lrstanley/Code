@@ -27,8 +27,8 @@ def commands(code, input):
 #   code.say('Commands I recognise: ' + names + '.')
    code.say(("The list of commands for %s is extensive, so they are now located here: https://github.com/Liamraystanley/Code/wiki#features") % code.nick)
    code.say(("For help, do '%s: help example?' where example is the " + 
-               "name of the command you want help for. Code Copyright Liam Stanley 2013.") % code.nick)
-commands.commands = ['commands', 'cmd', 'cmds']
+               "name of the command you want help for.") % code.nick)
+commands.commands = ['commands', 'command', 'cmd', 'cmds']
 commands.priority = 'low'
 
 def help(code, input): 
