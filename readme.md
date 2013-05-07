@@ -1,5 +1,5 @@
 Code the flexible Python IRC Bot
-=====================================
+================================
 
 Build state: [![Build Status](https://travis-ci.org/Liamraystanley/Code.png?branch=master)](https://travis-ci.org/Liamraystanley/Code)
 
