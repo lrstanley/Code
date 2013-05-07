@@ -6,7 +6,7 @@ Build state: [![Build Status](https://travis-ci.org/Liamraystanley/Code.png?bran
 Code (on #L @ irc.esper.net) is a open source python IRC bot forked from Phenny/Jenni, with new modules, easier to understand commands, and easy installation! Code can run on any operating system that supports Python 2.4 or higher.
 
 Features
--------- 
+--------
 ________
 
 Code is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
