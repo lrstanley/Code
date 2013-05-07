@@ -21,13 +21,16 @@ doc.priority = 'low'
 
 def commands(code, input): 
    # This function only works in private message
-   if input.sender.startswith('#'): return
+   if input.sender.startswith('#'):
+       code.say(('%s: Please query me that command.') % input.nick)
+   else:
 #depricated method, inaccurate
 #   names = ', '.join(sorted(code.doc.iterkeys()))
 #   code.say('Commands I recognise: ' + names + '.')
-   code.say(("The list of commands for %s is extensive, so they are now located here: https://github.com/Liamraystanley/Code/wiki#features") % code.nick)
-   code.say(("For help, do '%s: help example?' where example is the " + 
-               "name of the command you want help for.") % code.nick)
+      code.say(('The list of commands for %s is extensive, so they are now ' +
+                  'located here: https://github.com/Liamraystanley/Code/wiki#features') % code.nick)
+      code.say(('For help, do \'%s: help example?\' where example is the ' + 
+                  'name of the command you want help for.') % code.nick)
 commands.commands = ['commands', 'command', 'cmd', 'cmds']
 commands.priority = 'low'
 
