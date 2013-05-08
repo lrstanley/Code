@@ -21,27 +21,46 @@ doc.priority = 'low'
 
 def commands(code, input): 
    # This function only works in private message
-   if input.sender.startswith('#'): return
+   if input.sender.startswith('#'):
+       code.say(('%s: Please query me that command.') % input.nick)
+   else:
 #depricated method, inaccurate
 #   names = ', '.join(sorted(code.doc.iterkeys()))
 #   code.say('Commands I recognise: ' + names + '.')
-   code.say(("The list of commands for %s is extensive, so they are now located here: https://github.com/Liamraystanley/Code/wiki#features") % code.nick)
-   code.say(("For help, do '%s: help example?' where example is the " + 
-               "name of the command you want help for. Code Copyright Liam Stanley 2013.") % code.nick)
-commands.commands = ['commands', 'cmd', 'cmds']
+      code.say(('The list of commands for %s is extensive, so they are now ' +
+                  'located here: https://github.com/Liamraystanley/Code/wiki#features') % code.nick)
+      code.say(('For help, do \'%s: help example?\' where example is the ' + 
+                  'name of the command you want help for.') % code.nick)
+commands.commands = ['commands', 'command', 'cmd', 'cmds']
 commands.priority = 'low'
 
-def help(code, input): 
+def help(code, input):
+   try:
+      website = code.config.website
+   except: #revert to default - The Code homepage.
+      website = 'http://code.liamstanley.net'
    response = (
       'Hi, I\'m a bot. Say ".commands" to me in private for a list ' + 
-      'of my commands, or see ' + code.config.website + ' for more ' + 
-      'general details. My owner is %s.'
+      'of my commands, or see ' + website + ' for more general details.' + 
+      ' %s is my owner.'
    ) % code.config.owner
    code.reply(response)
 #old regex method
 #help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
 help.commands = ['help', 'support']
 help.priority = 'low'
+
+
+def about(code, input):
+   response = (
+      code.nick + ' was developed by Liam Stanley and many others. ' + code.nick + ' is a open-source ' + 
+      'Python Modular IRC Bot, that serves as a fun, fast, and collective resource ' + 
+      ' for large, and small channels. More info: http://code.liamstanley.net'
+   )
+   code.reply(response)
+about.commands = ['about', 'liam']
+about.priority = 'low'
+
 
 def stats(code, input): 
    """Show information on command usage patterns."""

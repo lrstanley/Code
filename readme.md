@@ -1,12 +1,12 @@
 Code the flexible Python IRC Bot
-=====================================
+================================
 
-Build state: [![Build Status](https://travis-ci.org/Liamraystanley/Code.png?branch=master)](https://travis-ci.org/Liamraystanley/Code)
+Build State: [![Build Status](http://build.liamstanley.net/job/Code/badge/icon)](http://build.liamstanley.net/job/Code/)
 
 Code (on #L @ irc.esper.net) is a open source python IRC bot forked from Phenny/Jenni, with new modules, easier to understand commands, and easy installation! Code can run on any operating system that supports Python 2.4 or higher.
 
 Features
---------
+-------- 
 ________
 
 Code is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
@@ -29,15 +29,15 @@ Open-Source
 Configuration
 - By default, Code has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules.
 
-Installation - How do I install?
+Installation - How do I install? 
 ================================
 ________________________________
 
  > for rss.py to work, install feedparser via your pip/yum/other package installer.
 
-1) Run ./code - this creates a default config file 
+1) Run `./code`- this creates a default config file 
 2) Edit ~/.code/default.py 
-3) Run ./code- this now runs code with your settings 
+3) Run `./code` - this now runs code with your settings 
 
 Full command would be: 
 
