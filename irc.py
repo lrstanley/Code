@@ -79,8 +79,14 @@ class Bot(asynchat.async_chat):
     # def push(self, *args, **kargs):
     #     asynchat.async_chat.push(self, *args, **kargs)
 
+    # text styling support
+    #Bold            = \x02
+    #Color           = \x03
+    #Reset           = \x0f
+    #Underline       = \x1f
+    #Italicized      = \x16
 
-#coloring method is a bit shabby.
+    # coloring method is a bit shabby.
     def findcolor(self, color):
         color = str(color)
         color = color.lower()
@@ -159,10 +165,41 @@ class Bot(asynchat.async_chat):
                     color = color.split('/') #split, if two different colors
                     message = '\x03' + self.findcolor(color[0]) + ',' + self.findcolor(color[1]) + message + '\x03'
                 except: #fail, which means only one color specified
-                    #color = color.split() #turn it into a list anyway
                     message = '\x03' + self.findcolor(color[0]) + message + '\x03'
             else:
-                #message = message #wot, huehue
+                pass
+            return message
+        except:
+            return message
+
+    def bold(self, message):
+        try:
+            if self.config.textstyles:
+			    message = str(message)
+                message = '\x02' + message + '\x02'
+            else:
+                pass
+            return message
+        except:
+            return message
+			
+    def italic(self, message):
+        try:
+            if self.config.textstyles:
+			    message = str(message)
+                message = '\x16' + message + '\x16'
+            else:
+                pass
+            return message
+        except:
+            return message
+
+    def underline(self, message):
+        try:
+            if self.config.textstyles:
+			    message = str(message)
+                message = '\x1f' + message + '\x1f'
+            else:
                 pass
             return message
         except:
