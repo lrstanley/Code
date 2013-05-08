@@ -190,7 +190,6 @@ class Code(irc.Bot):
                 s.group = match.group
                 s.groups = match.groups
                 s.args = args
-                s.colors = self.config.colors
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:
