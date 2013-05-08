@@ -122,17 +122,17 @@ class Bot(asynchat.async_chat):
             return color
 
     def color(self,color,message):
-            try:
-                if self.config.textstyles:
-                    try:
-                        color = color.split() #split, if two different colors
-                        message = '\x03' + findcolor(color[0]) + ',' + findcolor(color[1]) + message + '\x03'
-                    except: #fail, which means only one color specified
-                        color = color.split() #turn it into a list anyway
-                        message = '\x03' + findcolor(color[0]) + message + '\x03'
-                else:
-                    message = message #wot, huehue
-                return message
+        try:
+            if self.config.textstyles:
+                try:
+                    color = color.split() #split, if two different colors
+                    message = '\x03' + findcolor(color[0]) + ',' + findcolor(color[1]) + message + '\x03'
+                except: #fail, which means only one color specified
+                    color = color.split() #turn it into a list anyway
+                    message = '\x03' + findcolor(color[0]) + message + '\x03'
+            else:
+                message = message #wot, huehue
+            return message
         except:
             return message
 
