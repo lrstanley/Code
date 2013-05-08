@@ -178,9 +178,9 @@ class Code(irc.Bot):
 
         return CodeWrapper(self)
 
-    def input(self, origin, text, bytes, match, event, args):
+    def input(self, origin, text, bytes, match, event, args, colors):
         class CommandInput(unicode):
-            def __new__(cls, text, origin, bytes, match, event, args):
+            def __new__(cls, text, origin, bytes, match, event, args, colors):
                 s = unicode.__new__(cls, text)
                 s.sender = origin.sender
                 s.nick = origin.nick
@@ -190,6 +190,7 @@ class Code(irc.Bot):
                 s.group = match.group
                 s.groups = match.groups
                 s.args = args
+                s.colors = colors
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:
@@ -206,7 +207,7 @@ class Code(irc.Bot):
                 s.host = origin.host
                 return s
 
-        return CommandInput(text, origin, bytes, match, event, args)
+        return CommandInput(text, origin, bytes, match, event, args, colors)
 
     def call(self, func, origin, code, input):
         nick = (input.nick).lower()
