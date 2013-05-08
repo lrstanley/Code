@@ -79,6 +79,46 @@ class Bot(asynchat.async_chat):
     # def push(self, *args, **kargs):
     #     asynchat.async_chat.push(self, *args, **kargs)
 
+
+#coloring method is a bit shabby, also note, no background colors for now. SOO LAZY.
+    def color(self,color,response):
+        response = response.lower()
+        if color == 'white':
+            response = '\x0300' + str(response) + '\x03'
+        elif color == 'black':
+            response = '\x0301' + response + '\x03'
+        elif color == 'blue' or color == 'navy':
+            response = '\x0302' + response + '\x03'
+        elif color == 'green':
+            response = '\x0303' + response + '\x03'
+        elif color == 'red':
+            response = '\x0304' + response + '\x03'
+        elif color == 'brown' or color == 'maroon':
+            response = '\x0305' + response + '\x03'
+        elif color == 'purple':
+            response = '\x0306' + response + '\x03'
+        elif color == 'orange' or color == 'olive' or color == 'gold':
+            response = '\x0307' + response + '\x03'
+        elif color == 'yellow':
+            response = '\x0308' + response + '\x03'
+        elif color == 'lightgreen' or color == 'lime':
+            response = '\x0309' + response + '\x03'
+        elif color == 'teal':
+            response = '\x0310' + response + '\x03'
+        elif color == 'cyan':
+            response = '\x0311' + response + '\x03'
+        elif color == 'lightblue' or color == 'royal':
+            response = '\x0312' + response + '\x03'
+        elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
+            response = '\x0313' + response + '\x03'
+        elif color == 'grey':
+            response = '\x0314' + response + '\x03'
+        elif color == 'blightgrey' or color == 'silver':
+            response = '\x0315' + response + '\x03'
+        elif color == 'black':
+            response = '\x0316' + response + '\x03'
+        return response
+
     def __write(self, args, text=None, raw=False):
         # print '%r %r %r' % (self, args, text)
         try:
