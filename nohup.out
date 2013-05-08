@@ -1,0 +1,138 @@
+python: can't open file 'coee': [Errno 2] No such file or directory
+Registered modules: tell, translate, ask, reload, remind, version, rand, oblique, head, slap, info, countdown, etymology, calc, wiktionary, clock, ip, movie, weather, admin, startup, codepoints, find, unicode, twitter, seen, htmlencode, search, quote, ping, ai, wikipedia, lmgtfy, url, isup, validate
+Ignoring: No bitly.txt found.
+low ^\.(help)(?: +(.*))?$ <function help at 0x246eb90>
+low ^\.(support)(?: +(.*))?$ <function help at 0x246eb90>
+medium (?i)(code|Code)\b.*(hey|hi|hello)\b.*$ <function hau2 at 0x259a050>
+medium TIME <function ctcp_time at 0x246e230>
+high ^\.(gc)(?: +(.*))?$ <function gc at 0x25956e0>
+medium ^\.(ip)(?: +(.*))?$ <function ip_lookup at 0x257b6e0>
+medium ^\.(iplookup)(?: +(.*))?$ <function ip_lookup at 0x257b6e0>
+medium ^\.(host)(?: +(.*))?$ <function ip_lookup at 0x257b6e0>
+medium ^\.(whois)(?: +(.*))?$ <function ip_lookup at 0x257b6e0>
+low Code[,:] +(reload) +(\S+)? <function f_reload at 0x2448668>
+high (?i).*(thank).*(you).*(code|Code).*$ <function ty at 0x259a1b8>
+low Code[,:] +(?:([a-z]{2}) +)?(?:([a-z]{2}|en-raw) +)?["“](.+?)["”]\? *$ <function tr at 0x2448488>
+low ^\.(tr)(?: +(.*))?$ <function tr2 at 0x2448500>
+medium (?i)(hey|hi|hello)\b.*(code|Code)\b.*$ <function hau at 0x2595f50>
+low ^\.(yi)(?: +(.*))?$ <function yi at 0x2573230>
+high ^\.(tock)(?: +(.*))?$ <function tock at 0x25732a8>
+medium Code[,:] +([tT]ell) +(\S+) (.*) <function f_remind at 0x2448140>
+medium Code[,:] +([aA]sk) +(\S+) (.*) <function f_remind at 0x2448140>
+medium ^\.(tell)(?: +(.*))?$ <function f_remind at 0x2448140>
+medium ^\.(to)(?: +(.*))?$ <function f_remind at 0x2448140>
+high ^\.(title)(?: +(.*))?$ <function show_title_demand at 0x263a1b8>
+high .* <function collectlines at 0x25885f0>
+medium ^\.(bytes)(?: +(.*))?$ <function bytes at 0x2588410>
+medium ^\.(in)(?: +(.*))?$ <function remind at 0x24488c0>
+medium (?i).*(bad|horrible|awful|terrible).*$ <function bad at 0x259a140>
+medium ^\.(isup)(?: +(.*))?$ <function isup at 0x263a230>
+medium ^\.(check)(?: +(.*))?$ <function isup at 0x263a230>
+medium ^\.(ping)(?: +(.*))?$ <function isup at 0x263a230>
+medium VERSION <function ctcp_version at 0x2448cf8>
+medium ^\.(tw)(?: +(.*))?$ <function twitter at 0x2588d70>
+medium ^\.(twitter)(?: +(.*))?$ <function twitter at 0x2588d70>
+low (.*) <function startup at 0x25881b8>
+medium SOURCE <function ctcp_source at 0x2448d70>
+medium \.(weather)\b(?: +(?:(.*)))? <function f_weather at 0x257bb18>
+medium ^\.(meta)(?: +(.*))?$ <function meta at 0x246e668>
+high ^\.(write)(?: +(.*))?$ <function write_raw at 0x2588050>
+high ^\.(raw)(?: +(.*))?$ <function write_raw at 0x2588050>
+high (?iu).*(!?(http|https)(://\S+)).* <function show_title_auto at 0x263a140>
+medium ^\.(sc)(?: +(.*))?$ <function supercombiner at 0x25886e0>
+low ^\.(stats)(?: +(.*))?$ <function stats at 0x246ec80>
+medium ^\.(movie)(?: +(.*))?$ <function movie at 0x257b848>
+medium ^\.(imdb)(?: +(.*))?$ <function movie at 0x257b848>
+medium ^\.(lmgtfy)(?: +(.*))?$ <function lmgtfy at 0x26359b0>
+high ^\.(state)(?: +(.*))?$ <function state at 0x2595de8>
+medium ^\.(version)(?: +(.*))?$ <function version at 0x2448c08>
+high Code! <function interjection at 0x2595b90>
+medium ^\.(wa)(?: +(.*))?$ <function wa at 0x2475320>
+low ^\.(ask)(?: +(.*))?$ <function ask at 0x24485f0>
+high ^\.(on)(?: +(.*))?$ <function on at 0x2595d70>
+medium ^\.(google)(?: +(.*))?$ <function search at 0x25959b0>
+high ^\.(g)(?: +(.*))?$ <function g at 0x2595668>
+low .* <function defend_ground at 0x257bed8>
+medium ^\.(o)(?: +(.*))?$ <function o at 0x246e488>
+medium ^\.(urban)(?: +(.*))?$ <function o at 0x246e488>
+medium ^\.(whois)(?: +(.*))?$ <function o at 0x246e488>
+medium ^\.(flip)(?: +(.*))?$ <function o at 0x246e488>
+medium .* <function welcomemessage at 0x2595e60>
+medium ^\.(w)(?: +(.*))?$ <function w at 0x2475500>
+medium ^\.(define)(?: +(.*))?$ <function w at 0x2475500>
+medium ^\.(d)(?: +(.*))?$ <function w at 0x2475500>
+medium ^\.(wik2)(?: +(.*))?$ <function w at 0x2475500>
+medium ^\.(wiki2)(?: +(.*))?$ <function w at 0x2475500>
+medium ^\.(dict)(?: +(.*))?$ <function w at 0x2475500>
+medium PING\s(.*) <function ctcp_ping at 0x246e1b8>
+medium ^\.(quote)(?: +(.*))?$ <function getquote at 0x2595320>
+medium ^\.(rand)(?: +(.*))?$ <function rand at 0x246e2a8>
+medium (?i)i.*love.*(code|Code).* <function love at 0x259a488>
+low ^\.(countdown)(?: +(.*))?$ <function generic_countdown at 0x246ecf8>
+high ^\.(wik)(?: +(.*))?$ <function wik at 0x26358c0>
+high ^\.(wiki)(?: +(.*))?$ <function wik at 0x26358c0>
+high ^\.(define2)(?: +(.*))?$ <function wik at 0x26358c0>
+high ^\.(dict2)(?: +(.*))?$ <function wik at 0x26358c0>
+medium ^\.(search)(?: +(.*))?$ <function duck at 0x2595938>
+medium ^\.(duck)(?: +(.*))?$ <function duck at 0x2595938>
+medium ^\.(ddg)(?: +(.*))?$ <function duck at 0x2595938>
+low (.*) <function message at 0x2448230>
+low ^\.(quit)(?: +(.*))?$ <function quit at 0x257bd70>
+low ^\.(terminate)(?: +(.*))?$ <function quit at 0x257bd70>
+medium \.(val)\b(?: +(?:(?i)(\S+)))? <function val at 0x263a320>
+medium ^\.(py)(?: +(.*))?$ <function py at 0x24752a8>
+medium ^\.(python)(?: +(.*))?$ <function py at 0x24752a8>
+low (?u).*(http[s]?://[^<> "\x01]+)[,.]? <function noteuri at 0x2635b90>
+medium (?i)(code|Code)\,\si.*love.* <function love3 at 0x259a578>
+medium (?i)(code|Code)\:\si.*love.* <function love2 at 0x259a500>
+low \.(msg)\b(?: +(?:(#?\S+) (.+)))? <function msg at 0x257bde8>
+low \.(say)\b(?: +(?:(#?\S+) (.+)))? <function msg at 0x257bde8>
+medium ^\.(c)(?: +(.*))?$ <function calc at 0x2475230>
+medium ^\.(calc)(?: +(.*))?$ <function calc at 0x2475230>
+medium ^\.(calculate)(?: +(.*))?$ <function calc at 0x2475230>
+low ^\.(fucking_weather)(?: +(.*))?$ <function fucking_weather at 0x257bb90>
+low ^\.(fw)(?: +(.*))?$ <function fucking_weather at 0x257bb90>
+low ^\.(commands)(?: +(.*))?$ <function commands at 0x246eb18>
+low ^\.(command)(?: +(.*))?$ <function commands at 0x246eb18>
+low ^\.(cmd)(?: +(.*))?$ <function commands at 0x246eb18>
+low ^\.(cmds)(?: +(.*))?$ <function commands at 0x246eb18>
+medium ^\.(wdict)(?: +(.*))?$ <function encarta at 0x2475578>
+medium ^\.(encarta)(?: +(.*))?$ <function encarta at 0x2475578>
+medium ^\.(wdefine)(?: +(.*))?$ <function encarta at 0x2475578>
+medium (?i)(Code|code)\:\s+(ping)\s* <function ping_reply at 0x259a410>
+low \.(me)\b(?: +(?:(#?\S+) (.*)))? <function me at 0x257be60>
+low \.(action)\b(?: +(?:(#?\S+) (.*)))? <function me at 0x257be60>
+medium ^\.(title)(?: +(.*))?$ <function f_title at 0x246e758>
+medium ^\.(head)(?: +(.*))?$ <function f_title at 0x246e758>
+low \.join (#\S+)(?: *(\S+))? <function join at 0x257bc80>
+high ^\.(bitly)(?: +(.*))?$ <function generateBitLy at 0x2635de8>
+high (?u)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w])(.*) <function findandreplace at 0x2588668>
+low ^\.(about)(?: +(.*))?$ <function about at 0x246ec08>
+low ^\.(liam)(?: +(.*))?$ <function about at 0x246ec08>
+medium ^\.(mangle)(?: +(.*))?$ <function mangle at 0x2448578>
+medium ^\.(dcalc)(?: +(.*))?$ <function dcalc at 0x24751b8>
+medium ^\.(dc)(?: +(.*))?$ <function dcalc at 0x24751b8>
+medium (code|Code)\:\s+(yes|no)$ <function yesno at 0x259a398>
+medium ^\.(slap)(?: +(.*))?$ <function slap at 0x246e8c0>
+low ^\.(beats)(?: +(.*))?$ <function beats at 0x2573140>
+medium ^\.(t)(?: +(.*))?$ <function f_time at 0x25730c8>
+medium (?i).*(thanks).*(code|Code).* <function ty4 at 0x259a2a8>
+medium \.(seen)\b(?: +(?:(\S+)))? <function seen at 0x2588e60>
+medium (?i)Code\:\s+(thank).*(you).* <function ty2 at 0x259a230>
+medium ^\.(suggest)(?: +(.*))?$ <function suggest at 0x2595a28>
+medium (?i)Code\:\s+(.*) <function random_resp at 0x259a320>
+medium ^\.(snippet)(?: +(.*))?$ <function snippet at 0x246e500>
+medium ^\.(gcs)(?: +(.*))?$ <function gcs at 0x2595758>
+medium ^\.(comp)(?: +(.*))?$ <function gcs at 0x2595758>
+low (.*) <function f_note at 0x2588f50>
+high ^\.(npl)(?: +(.*))?$ <function npl at 0x2573320>
+low ^\.(blocks)(?: +(.*))?$ <function blocks at 0x257bf50>
+high ^\.(tex)(?: +(.*))?$ <function latex at 0x25950c8>
+high ^\.(off)(?: +(.*))?$ <function off at 0x2595cf8>
+low Code[,:] +(?i)(?:help|doc) +([A-Za-z]+)(?:\?+)?$ <function doc at 0x246eaa0>
+medium ^\.(bing)(?: +(.*))?$ <function bing at 0x2595848>
+low ^\.(part)(?: +(.*))?$ <function part at 0x257bcf8>
+low ^\.(leave)(?: +(.*))?$ <function part at 0x257bcf8>
+medium ^\.(u)(?: +(.*))?$ <function u at 0x2588398>
+medium (?i)Code\:\s+(bye|goodbye|seeya|cya|ttyl|g2g|gnight|goodnight) <function goodbye at 0x2595ed8>
+high \.(ety)\b(?: +(?:(.+?)$))? <function f_etymology at 0x2475Connecting to irc.esper.net:6667... connected!

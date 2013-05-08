@@ -80,9 +80,10 @@ class Bot(asynchat.async_chat):
     #     asynchat.async_chat.push(self, *args, **kargs)
 
 
-#coloring method is a bit shabby, also note, no background colors for now. SOO LAZY.
-    def findcolor(color):
-        color = str(color.lower())
+#coloring method is a bit shabby.
+    def findcolor(self, color):
+        color = str(color)
+        color = color.lower()
         try:
             if color == 'white':
                 colorcode = '00'
@@ -114,24 +115,55 @@ class Bot(asynchat.async_chat):
                 colorcode = '13'
             elif color == 'grey':
                 colorcode = '14'
-            elif color == 'blightgrey' or color == 'silver':
+            elif color == 'lightgrey' or color == 'silver':
+                colorcode = '01'
+            elif color == 'blue' or color == 'navy':
+                colorcode = '02'
+            elif color == 'green':
+                colorcode = '03'
+            elif color == 'red':
+                colorcode = '04'
+            elif color == 'brown' or color == 'maroon':
+                colorcode = '05'
+            elif color == 'purple':
+                colorcode = '06'
+            elif color == 'orange' or color == 'olive' or color == 'gold':
+                colorcode = '07'
+            elif color == 'yellow':
+                colorcode = '08' #quite a fucking
+            elif color == 'lightgreen' or color == 'lime':
+                colorcode = '09' #odd bug. wtf mate.
+            elif color == 'teal':
+                colorcode = '10'
+            elif color == 'cyan':
+                colorcode = '11'
+            elif color == 'lightblue' or color == 'royal':
+                colorcode = '12'
+            elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
+                colorcode = '13'
+            elif color == 'grey':
+                colorcode = '14'
+            elif color == 'lightgrey' or color == 'silver':
                 colorcode = '15'
-            return color
+            return str(colorcode)
         except:
-            color = ''
-            return color
+            colorcode = ''
+            return str(colorcode)
 
-    def color(self,color,message):
+    def color(self, color, message):
         try:
             if self.config.textstyles:
                 try:
-                    color = color.split() #split, if two different colors
-                    message = '\x03' + findcolor(color[0]) + ',' + findcolor(color[1]) + message + '\x03'
+                    color = str(color)
+                    message = str(message)
+                    color = color.split('/') #split, if two different colors
+                    message = '\x03' + self.findcolor(color[0]) + ',' + self.findcolor(color[1]) + message + '\x03'
                 except: #fail, which means only one color specified
-                    color = color.split() #turn it into a list anyway
-                    message = '\x03' + findcolor(color[0]) + message + '\x03'
+                    #color = color.split() #turn it into a list anyway
+                    message = '\x03' + self.findcolor(color[0]) + message + '\x03'
             else:
-                message = message #wot, huehue
+                #message = message #wot, huehue
+                pass
             return message
         except:
             return message

@@ -32,4 +32,3 @@ isup.example = '.isup http://google.com'
 
 if __name__ == '__main__':
     print __doc__.strip()
-
