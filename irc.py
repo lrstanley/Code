@@ -9,7 +9,6 @@ http://code.liamstanley.net/
 import sys, re, time, traceback
 import socket, asyncore, asynchat
 import os, codecs
-import str
 
 IRC_CODES = ('251', '252', '254', '255', '265', '266', '250', '333', '353', '366', '372', '375', '376', 'QUIT', 'NICK')
 cwd = os.getcwd()
