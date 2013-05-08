@@ -81,49 +81,60 @@ class Bot(asynchat.async_chat):
 
 
 #coloring method is a bit shabby, also note, no background colors for now. SOO LAZY.
-    def color(self,color,response):
-        response = response.lower()
+    def findcolor(color):
+        color = str(color.lower())
         try:
-            if self.config.colors:
-                if color == 'white':
-                    colorcode = 00
-                elif color == 'black' or color == 'blank' or color == 'clear' or color == 'transparent':
-                    colorcode = '01'
-                elif color == 'blue' or color == 'navy':
-                    colorcode = '02'
-                elif color == 'green':
-                    colorcode = '03'
-                elif color == 'red':
-                    colorcode = '04'
-                elif color == 'brown' or color == 'maroon':
-                    colorcode = '05'
-                elif color == 'purple':
-                    colorcode = '06'
-                elif color == 'orange' or color == 'olive' or color == 'gold':
-                    colorcode = '07'
-                elif color == 'yellow':
-                    colorcode = '08' #quite a fucking
-                elif color == 'lightgreen' or color == 'lime':
-                    colorcode = '09' #odd bug. wtf mate.
-                elif color == 'teal':
-                    colorcode = '10'
-                elif color == 'cyan':
-                    colorcode = '11'
-                elif color == 'lightblue' or color == 'royal':
-                    colorcode = '12'
-                elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
-                    colorcode = '13'
-                elif color == 'grey':
-                    colorcode = '14'
-                elif color == 'blightgrey' or color == 'silver':
-                    colorcode = '15'
-                response = '\x03' + colorcode + str(response) + '\x03'
-            else:
-                return response
-            return response # note, after color-ifying, variables are turned into strings.
-                            # should be executed RIGHT BEFORE code.say or code.reply.
+            if color == 'white':
+                colorcode = '00'
+            elif color == 'black' or color == 'blank' or color == 'clear' or color == 'transparent':
+                colorcode = '01'
+            elif color == 'blue' or color == 'navy':
+                colorcode = '02'
+            elif color == 'green':
+                colorcode = '03'
+            elif color == 'red':
+                colorcode = '04'
+            elif color == 'brown' or color == 'maroon':
+                colorcode = '05'
+            elif color == 'purple':
+                colorcode = '06'
+            elif color == 'orange' or color == 'olive' or color == 'gold':
+                colorcode = '07'
+            elif color == 'yellow':
+                colorcode = '08' #quite a fucking
+            elif color == 'lightgreen' or color == 'lime':
+                colorcode = '09' #odd bug. wtf mate.
+            elif color == 'teal':
+                colorcode = '10'
+            elif color == 'cyan':
+                colorcode = '11'
+            elif color == 'lightblue' or color == 'royal':
+                colorcode = '12'
+            elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
+                colorcode = '13'
+            elif color == 'grey':
+                colorcode = '14'
+            elif color == 'blightgrey' or color == 'silver':
+                colorcode = '15'
+            return color
         except:
-            return response
+            color = ''
+            return color
+
+    def color(self,color,message):
+            try:
+                if self.config.textstyles:
+                    try:
+                        color = color.split() #split, if two different colors
+                        message = '\x03' + findcolor(color[0]) + ',' + findcolor(color[1]) + message + '\x03'
+                    except: #fail, which means only one color specified
+                        color = color.split() #turn it into a list anyway
+                        message = '\x03' + findcolor(color[0]) + message + '\x03'
+                else:
+                    message = message #wot, huehue
+            return message
+        except:
+            return message
 
     def __write(self, args, text=None, raw=False):
         # print '%r %r %r' % (self, args, text)

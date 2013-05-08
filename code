@@ -21,87 +21,88 @@ def check_python_version():
 def create_default_config(fn):
     f = open(fn, 'w')
     output = """\
-   #Code Copyright (C) 2012-2013 Liam Stanley
-   #Uncomment things you wish to add to the file
-   #lines with "#" in front of them are comments
+   # Code Copyright (C) 2012-2013 Liam Stanley
+   # Uncomment things you wish to add to the file
+   # lines with "#" in front of them are comments
    
-   #irc bot nickname
+   # irc bot nickname
    nick = 'code'
    
-   #irc server host
+   # irc server host
    host = 'irc.example.net'
    
-   #port to use to connect
+   # port to use to connect
    port = 6667
    
-   #channels to auto-join
+   # channels to auto-join
    channels = ['#example', '#test']
    
-   #channels to greet users on channel join
-   #e.g "Hello Code, welcome to #Lounge!"
-   #uncomment to enable (remember this wont work with ai.py disabled.)
+   # channels to greet users on channel join
+   # e.g "Hello Code, welcome to #Lounge!"
+   # uncomment to enable (remember this wont work with ai.py disabled.)
    #greetchans = ['#Example', '#Hugs']
-   #exclude users from receiving a welcome message below.
+   # exclude users from receiving a welcome message below.
    #excludeusers = ['Serious', 'User']
    
-   #your nickname for use in admin functions
-   #You can also specify nick@hostmask
-   #For example: code@unaffiliated/code
+   # your nickname for use in admin functions
+   # You can also specify nick@hostmask
+   # For example: code@unaffiliated/code
    owner = 'yournickname'
    
-   #website to show for help documentation
+   # website to show for help documentation
    #website = 'http://code.liamstanley.net'
    
-   #password is the Nickserv password, serverpass is the server password
+   # password is the Nickserv password, serverpass is the server password
    #password = 'example'
    #serverpass = 'serverpass'
    
-   #would you like color coded commands? this enables disables code.color()
-   #although, if your module uses raw carrot notation, then it won't disable that
-   colors = True
+   # would you like color/bolc/italic coded commands? this enables/disables
+   # code.color/bold/italic() or any other form of carot notation applied directly by code
+   # although, if your module uses raw carot notation, then it won't disable that
+   textstyles = True
    
-   #These are people who will be able to use admin.py's functions...
+   # These are people who will be able to use admin.py's functions...
    admins = [owner, 'someoneyoutrust']
-   #But admin.py is disabled by default, as follows:
+   # But admin.py is disabled by default, as follows:
    exclude = ['admin', 'mcbot', 'rss', 'twss']
 
-   #Block modules from specific channels
-   #To not block anything for a channel, just don't mention it
+   # Block modules from specific channels
+   # To not block anything for a channel, just don't mention it
    excludes = {
        '##blacklist': ['!'],
    }
    
-   #This allows one to allow specific people to use ".msg channel message here"
-   #in specific channels.
+   # This allows one to allow specific people to use ".msg channel message here"
+   # in specific channels.
    helpers = {
        '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
        '##channel2': ['some/other/hostmask'],
    }
         
-   #Channel code will report all private messages sent to her to.
-   #This includes server notices.
+   # Channel code will report all private messages sent to her to.
+   # This includes server notices.
    #logchan_pm = '#code-log'
 
-   #Enable raw logging of everything code sees.
-   #logged to the folder 'log'
+   # Enable raw logging of everything code sees.
+   # logged to the folder 'log'
    logging = False
     
-   #If you want to enumerate a list of modules rather than disabling
-   #some, use "enable = ['example']", which takes precedent over exclude
+   # If you want to enumerate a list of modules rather than disabling
+   # some, use "enable = ['example']", which takes precedent over exclude
    #enable = []
 
-   #Directories to load user modules from
-   #e.g. /path/to/my/modules
+   # Directories to load user modules from
+   # e.g. /path/to/my/modules
    extra = ['""" + os.getcwd() + '/modules/' + """']
 
-   #Services to load: maps channel names to white or black lists
+   # Services to load: maps channel names to white or black lists
    external = {
        '#liberal': ['!'], # allow all
        '#conservative': [], # allow none
        '*': ['!'] # default whitelist, allow all
    }
 
-   #EOF
+   # EOF
    """
     print >> f, trim(output)
     f.close()
