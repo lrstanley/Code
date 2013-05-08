@@ -5,4 +5,5 @@ testing.py
 *.db
 @*.py
 @*
-*.*~
+*~
+*.out
