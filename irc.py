@@ -175,7 +175,7 @@ class Bot(asynchat.async_chat):
     def bold(self, message):
         try:
             if self.config.textstyles:
-			    message = str(message)
+                message = str(message)
                 message = '\x02' + message + '\x02'
             else:
                 pass
@@ -186,7 +186,7 @@ class Bot(asynchat.async_chat):
     def italic(self, message):
         try:
             if self.config.textstyles:
-			    message = str(message)
+                message = str(message)
                 message = '\x16' + message + '\x16'
             else:
                 pass
@@ -197,8 +197,8 @@ class Bot(asynchat.async_chat):
     def underline(self, message):
         try:
             if self.config.textstyles:
-			    message = str(message)
-                message = '\x1f' + message + '\x1f'
+                 message = str(message)
+                 message = '\x1f' + message + '\x1f'
             else:
                 pass
             return message
@@ -364,7 +364,7 @@ class Bot(asynchat.async_chat):
 
     def error(self, origin):
         try:
-            import traceback
+            #import traceback
             trace = traceback.format_exc()
             print trace
             lines = list(reversed(trace.splitlines()))
@@ -382,9 +382,9 @@ class Bot(asynchat.async_chat):
 
 class TestBot(Bot):
     def f_ping(self, origin, match, args):
-        delay = m.group(1)
+        delay = match.group(1)
         if delay is not None:
-            import time
+            #import time
             time.sleep(int(delay))
             self.msg(origin.sender, 'pong (%s)' % delay)
         else: self.msg(origin.sender, 'pong')
