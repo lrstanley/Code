@@ -9,6 +9,7 @@ http://code.liamstanley.net/
 import sys, re, time, traceback
 import socket, asyncore, asynchat
 import os, codecs
+import str
 
 IRC_CODES = ('251', '252', '254', '255', '265', '266', '250', '333', '353', '366', '372', '375', '376', 'QUIT', 'NICK')
 cwd = os.getcwd()
@@ -84,40 +85,40 @@ class Bot(asynchat.async_chat):
     def color(self,color,response):
         response = response.lower()
         if color == 'white':
-            response = '\x0300' + str(response) + '\x03'
-        elif color == 'black':
-            response = '\x0301' + response + '\x03'
+            colorcode = 00
+        elif color == 'black' or color == 'blank' or color == 'clear' or color == 'transparent':
+            colorcode = 01
         elif color == 'blue' or color == 'navy':
-            response = '\x0302' + response + '\x03'
+            colorcode = 02
         elif color == 'green':
-            response = '\x0303' + response + '\x03'
+            colorcode = 03
         elif color == 'red':
-            response = '\x0304' + response + '\x03'
+            colorcode = 04
         elif color == 'brown' or color == 'maroon':
-            response = '\x0305' + response + '\x03'
+            colorcode = 05
         elif color == 'purple':
-            response = '\x0306' + response + '\x03'
+            colorcode = 06
         elif color == 'orange' or color == 'olive' or color == 'gold':
-            response = '\x0307' + response + '\x03'
+            colorcode = 07
         elif color == 'yellow':
-            response = '\x0308' + response + '\x03'
+            colorcode = 08
         elif color == 'lightgreen' or color == 'lime':
-            response = '\x0309' + response + '\x03'
+            colorcode = 09
         elif color == 'teal':
-            response = '\x0310' + response + '\x03'
+            colorcode = 10
         elif color == 'cyan':
-            response = '\x0311' + response + '\x03'
+            colorcode = 11
         elif color == 'lightblue' or color == 'royal':
-            response = '\x0312' + response + '\x03'
+            colorcode = 12
         elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
-            response = '\x0313' + response + '\x03'
+            colorcode = 13
         elif color == 'grey':
-            response = '\x0314' + response + '\x03'
+            colorcode = 14
         elif color == 'blightgrey' or color == 'silver':
-            response = '\x0315' + response + '\x03'
-        elif color == 'black':
-            response = '\x0316' + response + '\x03'
-        return response
+            colorcode = 15
+        response = '\x03' + str(colorcode) + str(response) + '\x03'
+        return response # note, after color-ifying, variables are turned into strings.
+                        # should be executed RIGHT BEFORE code.say or code.reply.
 
     def __write(self, args, text=None, raw=False):
         # print '%r %r %r' % (self, args, text)
