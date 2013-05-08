@@ -89,36 +89,36 @@ class Bot(asynchat.async_chat):
                 if color == 'white':
                     colorcode = 00
                 elif color == 'black' or color == 'blank' or color == 'clear' or color == 'transparent':
-                    colorcode = 01
+                    colorcode = '01'
                 elif color == 'blue' or color == 'navy':
-                    colorcode = 02
+                    colorcode = '02'
                 elif color == 'green':
-                    colorcode = 03
+                    colorcode = '03'
                 elif color == 'red':
-                    colorcode = 04
+                    colorcode = '04'
                 elif color == 'brown' or color == 'maroon':
-                    colorcode = 05
+                    colorcode = '05'
                 elif color == 'purple':
-                    colorcode = 06
+                    colorcode = '06'
                 elif color == 'orange' or color == 'olive' or color == 'gold':
-                    colorcode = 07
+                    colorcode = '07'
                 elif color == 'yellow':
-                    colorcode = 08
+                    colorcode = '08' #quite a fucking
                 elif color == 'lightgreen' or color == 'lime':
-                    colorcode = 09
+                    colorcode = '09' #odd bug. wtf mate.
                 elif color == 'teal':
-                    colorcode = 10
+                    colorcode = '10'
                 elif color == 'cyan':
-                    colorcode = 11
+                    colorcode = '11'
                 elif color == 'lightblue' or color == 'royal':
-                    colorcode = 12
+                    colorcode = '12'
                 elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
-                    colorcode = 13
+                    colorcode = '13'
                 elif color == 'grey':
-                    colorcode = 14
+                    colorcode = '14'
                 elif color == 'blightgrey' or color == 'silver':
-                    colorcode = 15
-                response = '\x03' + str(colorcode) + str(response) + '\x03'
+                    colorcode = '15'
+                response = '\x03' + colorcode + str(response) + '\x03'
             else:
                 return response
             return response # note, after color-ifying, variables are turned into strings.
