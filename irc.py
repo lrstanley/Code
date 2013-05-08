@@ -84,7 +84,7 @@ class Bot(asynchat.async_chat):
     def color(self,color,response):
         response = response.lower()
         try:
-            if self.colors:
+            if self.config.colors:
                 if color == 'white':
                     colorcode = 00
                 elif color == 'black' or color == 'blank' or color == 'clear' or color == 'transparent':
