@@ -132,7 +132,7 @@ class Bot(asynchat.async_chat):
                         message = '\x03' + findcolor(color[0]) + message + '\x03'
                 else:
                     message = message #wot, huehue
-            return message
+                return message
         except:
             return message
 
