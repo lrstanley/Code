@@ -178,9 +178,9 @@ class Code(irc.Bot):
 
         return CodeWrapper(self)
 
-    def input(self, origin, text, bytes, match, event, args, colors):
+    def input(self, origin, text, bytes, match, event, args):
         class CommandInput(unicode):
-            def __new__(cls, text, origin, bytes, match, event, args, colors):
+            def __new__(cls, text, origin, bytes, match, event, args):
                 s = unicode.__new__(cls, text)
                 s.sender = origin.sender
                 s.nick = origin.nick
@@ -207,7 +207,7 @@ class Code(irc.Bot):
                 s.host = origin.host
                 return s
 
-        return CommandInput(text, origin, bytes, match, event, args, colors)
+        return CommandInput(text, origin, bytes, match, event, args)
 
     def call(self, func, origin, code, input):
         nick = (input.nick).lower()
