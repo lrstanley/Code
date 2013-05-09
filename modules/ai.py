@@ -42,7 +42,7 @@ def on(code, input):
 on.commands = ['on']
 on.priority = 'high'
 
-def state(code), input:
+def state(code, input):
     global aistate
     if aistate == True:
         code.reply(color.bold(code.color('green', 'It is on.')))
