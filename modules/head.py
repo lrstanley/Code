@@ -34,7 +34,7 @@ def meta(code, input):
    if not isinstance(info, list): 
       try: info = dict(info)
       except TypeError: 
-         return code.reply('Try .%s http://example.org/ %s' % (code.color('purple', 'meta'), code.color('blue', '[optional meta]'))
+         return code.reply('Try .%s http://example.org/ %s' % (code.color('purple', 'meta'), code.color('blue', '[optional meta]')))
       info['Status'] = '200'
    else: 
       newInfo = dict(info[0])
