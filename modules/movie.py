@@ -36,7 +36,7 @@ def movie(code, input):
             code.debug('movie', str(data), 'warning')
             message = '[MOVIE] Got an error from imdbapi'
     else:
-        message = code.color('blue', code.bold('[MOVIE] Title: ') + data['Title'] + \
+        message = code.color('blue', code.bold('[MOVIE] Title: ')) + data['Title'] + \
                    code.color('blue', code.bold(' | Year: ')) + data['Year'] + \
                   code.color('blue', code.bold(' | Rating: ')) + data['imdbRating'] + \
                   code.color('blue', code.bold(' | Genre: ')) + data['Genre'] + \
