@@ -57,10 +57,10 @@ def wiktionary(word):
          break
    return etymology, definitions
 
-parts = ('preposition', 'particle', 'noun', 'verb', 
+parts = ('preposition', 'particle', 'blue', 'noun', 'verb', 
    'adjective', 'adverb', 'interjection')
 
-def format(word, definitions, number=2): 
+def format(word, definitions, number=2):
    result = '%s' % word.encode('utf-8')
    for part in parts: 
       if definitions.has_key(part): 
@@ -72,18 +72,18 @@ def format(word, definitions, number=2):
 
 def w(code, input): 
    if not input.group(2):
-      return code.reply("Nothing to define.")
+      return code.reply(code.color('red', 'Nothing to define.'))
    word = input.group(2)
    etymology, definitions = wiktionary(word)
    if not definitions: 
-      code.say("Couldn't get any definitions for %s." % word)
+      code.say(code.color('red', 'Couldn\'t get any definitions for %s.' % code.bold(word)))
       return
 
-   result = format(word, definitions)
+   result = format(code.color('purple', code.bold(word)), definitions)
    if len(result) < 150: 
       result = format(word, definitions, 3)
-   if len(result) < 150: 
-      result = format(word, definitions, 5)
+#   if len(result) < 150: 
+#      result = format(word, definitions, 5)
 
    if len(result) > 300: 
       result = result[:295] + '[...]'
