@@ -316,7 +316,7 @@ def show_title_auto(code, input):
 
         useBitLy = doUseBitLy(returned_title, orig)
 
-        reg_format = '%s  - %s'
+        reg_format = '%s - %s'
         response = str()
 
         if status:
@@ -352,9 +352,9 @@ def show_title_demand(code, input):
             continue
 
         if status:
-            response = '[ %s ]' % (returned_title)
+            response = '%s - %s' % (code.color('blue', code.bold(returned_title)), getTLD(orig))
         else:
-            response = '(%s)' % (returned_title)
+            response = '(%s) - (%s)' % (code.color('blue', code.bold(returned_title)), getTLD(orig))
         code.reply(response)
 show_title_demand.commands = ['title']
 show_title_demand.priority = 'high'
