@@ -1,4 +1,4 @@
-Code the flexible Python IRC Bot
+Code the flexible Python IRC Bot 
 ================================
 
 Build State: [![Build Status](http://build.liamstanley.net/job/Code/badge/icon)](http://build.liamstanley.net/job/Code/)
