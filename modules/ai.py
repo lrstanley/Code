@@ -42,7 +42,7 @@ def on(code, input):
 on.commands = ['on']
 on.priority = 'high'
 
-def state(code):
+def state(code), input:
     global aistate
     if aistate == True:
         code.reply(color.bold(code.color('green', 'It is on.')))
@@ -181,17 +181,17 @@ def ping_reply (code,input):
 ping_reply.rule = '(?i)($nickname|code)\:\s+(ping)\s*'
 ping_reply.rate = 30
 
-def love (code):
+def love (code, input):
     code.reply('I love you too.')
 love.rule = '(?i)i.*love.*(code|$nickname).*'
 love.rate = 30
 
-def love2 (code):
+def love2 (code, input):
     code.reply('I love you too.')
 love2.rule = '(?i)(code|$nickname)\:\si.*love.*'
 love2.rate = 30
 
-def love3 (code):
+def love3 (code, input):
     code.reply('I love you too.')
 love3.rule = '(?i)(code|$nickname)\,\si.*love.*'
 love3.rate = 30
