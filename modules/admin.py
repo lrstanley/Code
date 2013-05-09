@@ -36,9 +36,9 @@ def quit(code, input):
     # Can only be done in privmsg by the owner
     if input.sender.startswith('#'): return
     if input.owner:
-        code.write(['QUIT'])
+        code.write(['QUIT'], 'Terminating Bot.')
         __import__('os')._exit(0)
-quit.commands = ['quit', 'terminate']
+quit.commands = ['quit', 'terminate', 'shutdown', 'stop']
 quit.priority = 'low'
 
 def msg(code, input):

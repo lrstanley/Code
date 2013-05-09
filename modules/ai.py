@@ -24,30 +24,30 @@ random.seed()
 
 def off(code, input):
     if input.nick == code.config.owner:
-        code.reply("Feature has been disabled.")
+        code.reply(code.bold(code.color('red', 'Feature has been disabled.')))
         global aistate
         aistate = False
     else:
-        code.reply("You are not authorized to disable this feature.")
+        code.reply(code.bold(code.color('red', 'You are not authorized to disable this feature.')))
 off.commands = ['off']
 off.priority = 'high'
 
 def on(code, input):
     if input.nick == code.config.owner:
-        code.reply("Feature has been enabled.")
+        code.reply(code.bold(code.color('green', 'Feature has been enabled.')))
         global aistate
         aistate = True
     else:
-        code.reply("You are not authorized to enable this feature.")
+        code.reply(color.bold(code.color('red', 'You are not authorized to enable this feature.')))
 on.commands = ['on']
 on.priority = 'high'
 
-def state(code, input):
+def state(code):
     global aistate
     if aistate == True:
-        code.reply("It is on.")
+        code.reply(color.bold(code.color('green', 'It is on.')))
     else:
-        code.reply("It is off.")
+        code.reply(color.bold(code.color('red', 'It is off.')))
 state.commands = ['state']
 state.priority = 'high'
 
@@ -65,10 +65,10 @@ def welcomemessage(code, input):
        except:
            excludeuser = ''
        global aistate
-       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'" + input.nick + "'") > -1, lastuser.find(input.nick) > -1] ): #shut up, im tired. -.-
+       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'%s'") % (input.nick) > -1, lastuser.find(input.nick) > -1] ): #shut up, im tired. -.-
            return
-       elif greetchan.find("'" + input.sender + "'") > -1:
-          code.say(random.choice(greeting) + " " + input.nick + ', welcome to ' +  input.sender + '!')
+       elif greetchan.find("'%s'") % (input.sender) > -1:
+          code.say('%s %s, welcome to %s!') % (random.choice(greeting), input.nick, code.bold(input.sender))
           lastuser = input.nick
        else: return
    except:
@@ -95,7 +95,7 @@ def hau(code, input):
     greet_user = input.nick
     if aistate == True and greet_user == input.nick:
         time.sleep(random.randint(0,1))
-        code.reply("How are you?")
+        code.reply('How are you?')
         conversation = True
 hau.rule = r'(?i)(hey|hi|hello)\b.*(code|$nickname)\b.*$'
 
@@ -108,7 +108,7 @@ def gau(code, input):
     global conversation
     global greet_user
     if aistate == True and conversation == True and greet_user == input.nick:
-        randmsg = random.choice(["That's good to hear!", "That's great to hear!"])
+        randmsg = random.choice(['That\'s good to hear!', 'That\'s great to hear!'])
         time.sleep(random.randint(0,1))
         code.reply(randmsg)
         conversation = False
@@ -118,10 +118,10 @@ def bad(code, input):
     global aistate
     global conversation
     global greet_user
-    if input.sender == "#pyohio":
+    if input.sender == '#pyohio':
         return
     if aistate == True and conversation == True and greet_user == input.nick:
-        randmsg = random.choice(["Sorry to hear about that."])
+        randmsg = random.choice(['Sorry to hear about that.'])
         time.sleep(random.randint(0,1))
         code.reply(randmsg)
         conversation = False
@@ -134,8 +134,8 @@ def ty(code, input):
     time.sleep(human)
     mystr = input.group()
     mystr = str(mystr)
-    if (mystr.find(" no ") == -1) and (mystr.find("no ") == -1) and (mystr.find(" no") == -1):
-        code.reply("You're welcome.")
+    if (mystr.find(' no ') == -1) and (mystr.find('no ') == -1) and (mystr.find(' no') == -1):
+        code.reply('You\'re welcome.')
 ty.rule = '(?i).*(thank).*(you).*(code|$nickname).*$'
 ty.priority = 'high'
 ty.rate = 30
@@ -155,7 +155,7 @@ def random_resp(code, input):
     human = random.random()
     if 0 <= human <= 0.025:
         strinput = input.group()
-        nick = code.nick + ":"
+        nick = code.nick + ':'
         strinput = strinput.split(nick)
         code.reply(strinput[1][1:])
 random_resp.rule = r'(?i)$nickname\:\s+(.*)'
@@ -163,36 +163,36 @@ random_resp.rule = r'(?i)$nickname\:\s+(.*)'
 def yesno(code,input):
     rand = random.uniform(0,5)
     text = input.group()
-    text = text.split(":")
+    text = text.split(':')
     text = text[1].split()
     time.sleep(rand)
     if text[0] == 'yes':
-        code.reply("no")
+        code.reply('no')
     elif text[0] == 'no':
-        code.reply("yes")
+        code.reply('yes')
 yesno.rule = '(code|$nickname)\:\s+(yes|no)$'
 yesno.rate = 15
 
 def ping_reply (code,input):
-    text = input.group().split(":")
+    text = input.group().split(':')
     text = text[1].split()
     if text[0] == 'PING' or text[0] == 'ping':
-        code.reply("PONG")
+        code.reply('PONG')
 ping_reply.rule = '(?i)($nickname|code)\:\s+(ping)\s*'
 ping_reply.rate = 30
 
-def love (code, input):
-    code.reply("I love you too.")
+def love (code):
+    code.reply('I love you too.')
 love.rule = '(?i)i.*love.*(code|$nickname).*'
 love.rate = 30
 
-def love2 (code, input):
-    code.reply("I love you too.")
+def love2 (code):
+    code.reply('I love you too.')
 love2.rule = '(?i)(code|$nickname)\:\si.*love.*'
 love2.rate = 30
 
-def love3 (code, input):
-    code.reply("I love you too.")
+def love3 (code):
+    code.reply('I love you too.')
 love3.rule = '(?i)(code|$nickname)\,\si.*love.*'
 love3.rate = 30
 

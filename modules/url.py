@@ -316,14 +316,14 @@ def show_title_auto(code, input):
 
         useBitLy = doUseBitLy(returned_title, orig)
 
-        reg_format = '[ %s ] - %s'
+        reg_format = '%s  - %s'
         response = str()
 
         if status:
             if useBitLy:
-                response = reg_format % (returned_title, bitly_link)
+                response = reg_format % (code.color('blue', code.bold(returned_title)), bitly_link)
             else:
-                response = reg_format % (returned_title, getTLD(orig))
+                response = reg_format % (code.color('blue', code.bold(returned_title)), getTLD(orig))
         elif len(orig) > BITLY_TRIGGER_LEN_NOTITLE:
             #response = '(%s) - %s' % (returned_title, bitly_link)
             if useBitLy:
