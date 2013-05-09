@@ -14,8 +14,6 @@ def lmgtfy(code, input): #needs more work for utf-8 encoding. but, meh.
     lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy)
     lmgtfy = lmgtfy.replace(".", " ")
     lmgtfy = lmgtfy.replace(" ", "+")
-    # http://stackoverflow.com/questions/1007481/how-do-i-replace-whitespaces-with-underscore-and-vice-versa
-    # http://paste.liamstanley.net/index.php?1d
     while lmgtfy.find('++') > -1:
         lmgtfy = lmgtfy.replace("++", "+")
         lmgtfy = lmgtfy.strip("+")

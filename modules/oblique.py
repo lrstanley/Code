@@ -37,16 +37,16 @@ def service(code, input, command, args):
     if isinstance(info, list):
         info = info[0]
     if not 'text/plain' in info.get('content-type', '').lower():
-        return code.reply("Sorry, the service didn't respond in plain text.")
+        return code.reply(code.color('red', 'Sorry, the service didn\'t respond in plain text.'))
     bytes = web.get(uri)
     lines = bytes.splitlines()
     if not lines:
-        return code.reply("Sorry, the service didn't respond any output.")
+        return code.reply(code.color('red', 'Sorry, the service didn\'t respond any output.'))
     try: line = lines[0].encode('utf-8')[:350]
     except: line = lines[0][:250]
     if line.find('ENOTFOUND') > -1:
         if input.group(1) == 'urban':
-            line = "I'm sorry, that definition wasn't found."
+            line = "I'm sorry, that definition %s found." % code.bold('wasn\'t')
             code.say(line)
     else:
         code.say(line)
@@ -75,14 +75,14 @@ def o(code, input):
     if (not o.services) or (text == 'refresh'):
         length, added = refresh(code)
         if text == 'refresh':
-            msg = 'Okay, found %s services.' % length
+            msg = 'Okay, found %s services.' % code.bold(length)
             if added:
                 msg += ' Added: ' + ', '.join(sorted(added)[:5])
                 if len(added) > 5: msg += ', &c.'
             return code.reply(msg)
 
     if not text:
-        return code.reply('Try %s for details.' % o.serviceURI)
+        return code.reply('Try %s for details.' % code.bold(o.serviceURI))
 
     if ' ' in text:
         command, args = text.split(' ', 1)
@@ -90,11 +90,11 @@ def o(code, input):
     command = command.lower()
 
     if command == 'service':
-        msg = o.services.get(args, 'No such service!')
+        msg = o.services.get(args, code.bold('No such service!'))
         return code.reply(msg)
 
     if not o.services.has_key(command):
-        return code.reply('Service not found in %s' % o.serviceURI)
+        return code.reply('Service not found in %s' % code.bold(o.serviceURI))
 
     if hasattr(code.config, 'external'):
         default = code.config.external.get('*')
@@ -102,9 +102,9 @@ def o(code, input):
         if manifest:
             commands = set(manifest)
             if (command not in commands) and (manifest[0] != '!'):
-                return code.reply('Sorry, %s is not whitelisted' % command)
+                return code.reply('Sorry, %s is not whitelisted' % code.bold(command))
             elif (command in commands) and (manifest[0] == '!'):
-                return code.reply('Sorry, %s is blacklisted' % command)
+                return code.reply('Sorry, %s is blacklisted' % code.bold(command))
     service(code, input, command, args)
 o.commands = ['o', 'urban', 'whois', 'flip']
 o.example = '.o servicename arg1 arg2 arg3'

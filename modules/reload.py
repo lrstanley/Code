@@ -24,14 +24,14 @@ def f_reload(code, input):
       return code.reply('done')
 
    if not sys.modules.has_key(name): 
-      return code.reply('%s: no such module!' % name)
+      return code.reply('%s: no such module!' % code.bold(name))
 
    # Thanks to moot for prodding me on this
    path = sys.modules[name].__file__
    if path.endswith('.pyc') or path.endswith('.pyo'): 
       path = path[:-1]
    if not os.path.isfile(path): 
-      return code.reply('Found %s, but not the source file' % name)
+      return code.reply('Found %s, but not the source file' % code.bold(name))
 
    module = imp.load_source(name, path)
    sys.modules[name] = module
@@ -44,7 +44,7 @@ def f_reload(code, input):
    code.register(vars(module))
    code.bind_commands()
 
-   code.reply('%r (version: %s)' % (module, modified))
+   code.reply('%r (version: %s)' % (code.bold(module), code.color('blue', modified)))
 f_reload.name = 'reload'
 f_reload.rule = ('$nick', ['reload'], r'(\S+)?')
 f_reload.priority = 'low'

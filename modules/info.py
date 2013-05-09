@@ -22,15 +22,15 @@ doc.priority = 'low'
 def commands(code, input): 
    # This function only works in private message
    if input.sender.startswith('#'):
-       code.say(('%s: Please query me that command.') % input.nick)
+       code.say(('%s: Please %s me that command.') % (input.nick, code.bold('query')))
    else:
 #depricated method, inaccurate
 #   names = ', '.join(sorted(code.doc.iterkeys()))
 #   code.say('Commands I recognise: ' + names + '.')
       code.say(('The list of commands for %s is extensive, so they are now ' +
-                  'located here: https://github.com/Liamraystanley/Code/wiki#features') % code.nick)
-      code.say(('For help, do \'%s: help example?\' where example is the ' + 
-                  'name of the command you want help for.') % code.nick)
+                  'located here: https://github.com/Liamraystanley/Code/wiki#features') % code.bold(code.nick))
+      code.say(('For help, do \'%s: %s\' where example is the ' + 
+                  'name of the command you want help for.') % (code.nick, code.color('green', 'help example?')))
 commands.commands = ['commands', 'command', 'cmd', 'cmds']
 commands.priority = 'low'
 
@@ -40,10 +40,10 @@ def help(code, input):
    except: #revert to default - The Code homepage.
       website = 'http://code.liamstanley.net'
    response = (
-      'Hi, I\'m a bot. Say ".commands" to me in private for a list ' + 
+      'Hi, I\'m a bot. Say \'%s\' to me in private for a list ' + 
       'of my commands, or see ' + website + ' for more general details.' + 
       ' %s is my owner.'
-   ) % code.config.owner
+   ) % (code.color('purple', '.commands'), code.color('gold', code.config.owner))
    code.reply(response)
 #old regex method
 #help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
@@ -90,19 +90,19 @@ def stats(code, input):
    charank = sorted([(b, a) for (a, b) in channels.iteritems()], reverse=True)
 
    # most heavily used commands
-   creply = 'most used commands: '
+   creply = code.color('green', 'most used commands: ')
    for count, command in comrank[:10]: 
       creply += '%s (%s), ' % (command, count)
    code.say(creply.rstrip(', '))
 
    # most heavy users
-   reply = 'power users: '
+   reply = code.color('blue', 'power users: ')
    for count, user in userank[:10]: 
       reply += '%s (%s), ' % (user, count)
    code.say(reply.rstrip(', '))
 
    # most heavy channels
-   chreply = 'power channels: '
+   chreply = code.color('purple', 'power channels: ')
    for count, channel in charank[:3]: 
       chreply += '%s (%s), ' % (channel, count)
    code.say(chreply.rstrip(', '))

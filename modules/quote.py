@@ -13,11 +13,11 @@ quoteuri = 'http://www.leonatkinson.com/random/index.php/rest.html?method=advice
 r_paragraph = re.compile(r'<quote>.*?</quote>')
 
 
-def getquote(jenni, input):
+def getquote(code, input):
     page = web.get(quoteuri)
     paragraphs = r_paragraph.findall(page)
     line = re.sub(r'<[^>]*?>', '', unicode(paragraphs[0]))
-    jenni.say(line.lower().capitalize() + ".")
+    code.say(code.bold(line.lower().capitalize() + "."))
 getquote.commands = ['quote']
 getquote.thread = False
 getquote.rate = 30

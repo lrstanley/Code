@@ -90,7 +90,7 @@ def f_etymology(self, origin, match, args):
 
    try: result = etymology(word.encode('iso-8859-1'))
    except IOError: 
-      msg = "Fuck, Can't connect to etymonline.com (%s)" % (etyuri % word)
+      msg = 'Fuck, Can\'t connect to etymonline.com (%s)' % (etyuri % word)
       self.msg(origin.sender, msg)
       return
    except AttributeError: 

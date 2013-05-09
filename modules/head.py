@@ -28,13 +28,13 @@ def meta(code, input):
    # uri = uri.replace('#!', '?_escaped_fragment_=')
 
    try: info = web.meta(uri)
-   except IOError: return code.say("Can't connect to %s" % uri)
+   except IOError: return code.say("Can't %s to %s" % (code.bold('connect'), uri))
    except httplib.InvalidURL: return code.say("Not a valid URI, sorry.")
 
    if not isinstance(info, list): 
       try: info = dict(info)
       except TypeError: 
-         return code.reply('Try .meta http://example.org/ [optional meta]')
+         return code.reply('Try .%s http://example.org/ %s' % (code.color('purple', 'meta'), code.color('blue', '[optional meta]'))
       info['Status'] = '200'
    else: 
       newInfo = dict(info[0])
@@ -59,7 +59,7 @@ def meta(code, input):
       if info.has_key(metaerlower): 
          code.say(metaer + ': ' + info.get(metaerlower))
       else: 
-         msg = 'There was no %s metaer in the response.' % metaer
+         msg = 'There was no %s metaer in the response.' % code.bold(metaer)
          code.say(msg)
 meta.commands = ['meta']
 meta.example = '.meta http://www.w3.org/'

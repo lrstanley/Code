@@ -61,15 +61,15 @@ def dcalc(code, input):
          result += ' ' + q.split(' in ', 1)[1]
 
       code.say(q + ' = ' + result[:350])
-   else: code.reply("Sorry, can't calculate that.")
-   code.say('Note that .dcalc/.cd is deprecated, consider using .calc')
+   else: code.reply(code.color('red', 'Sorry, can\'t calculate that.'))
+   code.say(code.color('blue', 'Note that .dcalc/.cd is deprecated, consider using .calc'))
 dcalc.commands = ['dcalc', 'dc']
 dcalc.example = '.dcalc 5 + 3'
 
 def calc(code, input): 
    """Google calculator."""
    if not input.group(2):
-      return code.reply("Nothing to calculate.")
+      return code.reply(code.color('red', 'Nothing to calculate.'))
    q = input.group(2).encode('utf-8')
    q = q.replace('\xcf\x95', 'phi') # utf-8 U+03D5
    q = q.replace('\xcf\x80', 'pi') # utf-8 U+03C0
@@ -86,7 +86,7 @@ def calc(code, input):
       answer = answer.replace('</sup>', ')')
       answer = web.decode(answer)
       code.say(answer)
-   else: code.say('Sorry, no result.')
+   else: code.say(code.color('red', 'Sorry, no result.'))
 calc.commands = ['c', 'calc', 'calculate']
 calc.example = '.calc 5 + 3'
 
@@ -100,7 +100,7 @@ def py(code, input):
        else:
            code.reply('Sorry, no result.')
    except Exception, e:
-       code.reply('The server did not return an answer.')
+       code.reply(code.color('red', 'The server did not return an answer.'))
        print '[.py]', e
 py.commands = ['py', 'python']
 py.example = '.py print(int(1.0) + int(3))'

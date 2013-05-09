@@ -108,7 +108,7 @@ def u(code, input):
          result = codepoint_simple(arg)
          if result is not None: 
             code.say(result)
-         else: code.reply("Sorry, no results for %r." % arg)
+         else: code.reply(code.color('red', 'Sorry, no results for %r.' % arg))
    else: 
       text = arg.decode('utf-8')
       # look up less than three podecoints
@@ -118,7 +118,7 @@ def u(code, input):
       # look up more than three podecoints
       elif len(text) <= 10: 
          code.reply(' '.join('U+%04X' % ord(c) for c in text))
-      else: code.reply('Sorry, your input is too long!')
+      else: code.reply(code.color('red', 'Sorry, your input is too long!'))
 u.commands = ['u']
 u.example = '.u 203D'
 

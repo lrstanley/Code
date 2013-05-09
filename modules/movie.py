@@ -37,10 +37,10 @@ def movie(code, input):
             message = '[MOVIE] Got an error from imdbapi'
     else:
         message = '[MOVIE] Title: ' + data['Title'] + \
-                  ' | Year: ' + data['Year'] + \
-                  ' | Rating: ' + data['imdbRating'] + \
-                  ' | Genre: ' + data['Genre'] + \
-                  ' | IMDB Link: http://imdb.com/title/' + data['imdbID']
+                   code.color('blue', ' | Year: ') + data['Year'] + \
+                  code.color('blue', ' | Rating: ') + data['imdbRating'] + \
+                  code.color('blue', ' | Genre: ') + data['Genre'] + \
+                  code.color('blue', ' | IMDB Link: ') + 'http://imdb.com/title/' + data['imdbID']
     code.say(message)
 movie.commands = ['movie', 'imdb']
 movie.example = '.movie Movie Title'

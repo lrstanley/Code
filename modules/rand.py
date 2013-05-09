@@ -12,7 +12,7 @@ import re
 def rand(code, input):
     """.rand <arg1> <arg2> - Generates a random integer between <arg1> and <arg2>."""
     if input.group(2) == " " or not input.group(2):
-        code.say("I'm sorry, " + str(input.nick) + ", but you must enter at least one number.")
+        code.say("I'm sorry, " + str(input.nick) + ', but you must enter at least one number.')
     else:
         random.seed()
         li_integers = input.group(2)
@@ -31,9 +31,9 @@ def rand(code, input):
                     a = li_integers_str
                     a = int(a)
                     randinte = random.randint(0, a)
-                code.say(str(input.nick) + ": your random integer is: " + str(randinte))
+                code.say(str(input.nick) + code.color('lime', ': your random integer is: ') + str(randinte))
             else:
-                code.reply("lolwut")
+                code.reply(code.bold('lolwut'))
         else:
             ln = li_integers.split()
             if len(ln) == 2:
@@ -50,9 +50,9 @@ def rand(code, input):
                     randinte = random.randint(a, b)
                 else:
                     randinte = random.randint(b, a)
-                code.say(str(input.nick) + ": your random integer is: " + str(randinte))
+                code.say(str(input.nick) + ': your random integer is: ' + str(randinte))
             else:
-                code.reply("I'm not sure what you want me to do!")
+                code.reply(code.color('red', 'I\'m not sure what you want me to do!'))
 
 rand.commands = ['rand']
 rand.priority = 'medium'
