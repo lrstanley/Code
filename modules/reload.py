@@ -44,7 +44,7 @@ def f_reload(code, input):
    code.register(vars(module))
    code.bind_commands()
 
-   code.reply('%r (version: %s)' % (code.bold(module), code.color('blue', modified)))
+   code.reply('%r (version: %s)' % (module, modified)) # no colorcodes, weird shit happens!
 f_reload.name = 'reload'
 f_reload.rule = ('$nick', ['reload'], r'(\S+)?')
 f_reload.priority = 'low'
