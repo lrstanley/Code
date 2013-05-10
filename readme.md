@@ -58,7 +58,7 @@ The `nohup` and `&` play a crucial part in forking itself to the background. If 
 Another method of forking it into the background, is by using the well-known linux program called screen.
 
     screen python ./code
-    
+
 This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit the screen safely, hit `CTRL+A` then `CTRL+D`.
 To log back into, and view the playback of Code, type `screen -r`.
 
@@ -82,49 +82,51 @@ Edit the file located in your Documents folder, which should be located at:
 `default.py` might be located in the same spot as the UNIX location listed above.
 You should see a file like this:
 
-    # Code Copyright (C) 2012-2013 Liam Stanley
-    # Uncomment things you wish to add to the file
-    # lines with "#" in front of them are comments
+```python
+# Code Copyright (C) 2012-2013 Liam Stanley
+# Uncomment things you wish to add to the file
+# lines with "#" in front of them are comments
 
-    # irc bot nickname
-    nick = 'code'
-    # irc server host
-    host = 'irc.example.net'
-    # port to use to connect
-    port = '6667'
-    #channels to auto-join
-    channels = ['#example', '#test']
-    #your nickname for use in admin functions
-    owner = 'yournickname'
-    # website to show for help documentation
-    website = 'http://code.liamstanley.net'
+# irc bot nickname
+nick = 'code'
+# irc server host
+host = 'irc.example.net'
+# port to use to connect
+port = '6667'
+#channels to auto-join
+channels = ['#example', '#test']
+#your nickname for use in admin functions
+owner = 'yournickname'
+# website to show for help documentation
+website = 'http://code.liamstanley.net'
 
-    # password is the Nickserv password, serverpass is the server password
-    # password = 'example'
-    # serverpass = 'serverpass'
+# password is the Nickserv password, serverpass is the server password
+# password = 'example'
+# serverpass = 'serverpass'
 
-    # These are people who will be able to use admin.py's functions...
-    admins = [owner, 'someoneyoutrust']
-    # But admin.py is disabled by default, as follows:
-    exclude = ['admin', 'mcbot', 'rss', 'twss']
+# These are people who will be able to use admin.py's functions...
+admins = [owner, 'someoneyoutrust']
+# But admin.py is disabled by default, as follows:
+exclude = ['admin', 'mcbot', 'rss', 'twss']
 
-    # If you want to enumerate a list of modules rather than disabling
-    # some, use "enable = ['example']", which takes precedent over exclude
-    # 
-    # enable = []
+# If you want to enumerate a list of modules rather than disabling
+# some, use "enable = ['example']", which takes precedent over exclude
+# 
+# enable = []
 
-    # Directories to load user modules from
-    # e.g. /path/to/my/modules
-    extra = []
+# Directories to load user modules from
+# e.g. /path/to/my/modules
+extra = []
 
-    # Services to load: maps channel names to white or black lists
-    external = { 
-      '#ponycode': ['!'], # allow all
-      '#L': [], # allow none
-      '*': ['!'] # default whitelist, allow all
-    }
+# Services to load: maps channel names to white or black lists
+external = { 
+  '#ponycode': ['!'], # allow all
+  '#L': [], # allow none
+  '*': ['!'] # default whitelist, allow all
+}
 
-    # EOF
+# EOF
+```
 
 you should uncomment, and replace the necessary items (like serverpass & nickservpass) to run your bot. 
 
@@ -137,13 +139,17 @@ Changing Prefix:
 
 If you wish to change the command prefix from "." to another item Edit /code/code and find this: 
 
+```python
     if not hasattr(module, 'prefix'):
         module.prefix = r'\.'
+```
 
 And change it to: 
 
+```python
     if not hasattr(module, 'prefix'):
         module.prefix = r'\(CustomPrefix)'
+```
 
 Licensing
 ---------
