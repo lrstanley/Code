@@ -83,7 +83,7 @@ def f_remind(code, input):
     whogets = list()
     for tellee in tellee.split(','):
         if len(tellee) > 20:
-            code.say("Nickname %s is too long." % (tellee))
+            code.say("Nickname %s is too long." % (code.bold(tellee)))
             continue
         if not tellee.lower() in (teller.lower(), code.nick): # @@
             warn = False
@@ -156,7 +156,7 @@ def message(code, input):
         code.say(line)
 
     if reminders[maximum:]:
-        code.say('Further messages sent privately')
+        code.say(code.bold('Further messages sent privately'))
         for line in reminders[maximum:]:
             code.msg(tellee, line)
 
