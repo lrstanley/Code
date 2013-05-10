@@ -20,10 +20,14 @@ def slap(code, input):
     if text[1] in code.config.admins:
         if (input.nick not in code.config.admins):
             text[1] = input.nick
-    verb = random.choice(('slaps', 'kicks', 'destroys', 'annihilates', 'punches', 'roundhouse kicks', 'rusty hooks', 'pwns', 'owns', 'karate chops', 'kills', 'disintegrates', 'demolishes', 'Pulverizes'))
-    afterfact = random.choice(('till they die', 'till they leave the channel', 'till they choke on bitter defeat', 'till they crawl in a hole and die', 'till they disintegrate into mid air', 'into a pancake'))
+    verb = random.choice(('slaps', 'kicks', 'destroys', 'annihilates', 'punches', \
+    'roundhouse kicks', 'rusty hooks', 'pwns', 'owns', 'karate chops', 'kills', \
+    'disintegrates', 'demolishes', 'Pulverizes'))
+    afterfact = random.choice(('to death', 'out of the channel', \
+    'into a hole, till death', 'into mid-air disintegration', \
+    'into a pancake'))
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', verb, text[1], afterfact, '\x01'])
-slap.commands = ['slap']
+slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
 slap.rate = 60
 
