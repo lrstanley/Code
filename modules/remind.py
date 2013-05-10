@@ -103,7 +103,7 @@ r_command = re.compile(p_command)
 def remind(code, input):
     m = r_command.match(input.bytes)
     if not m:
-        return code.reply('Sorry, didn\'t understand the input.')
+        return code.reply(code.color('red', 'Sorry, didn\'t understand the input.'))
     length, scale, message = m.groups()
 
     length = float(length)
@@ -125,11 +125,11 @@ def remind(code, input):
     if duration >= 60:
         w = ''
         if duration >= 3600 * 12:
-            w += time.strftime(' on %d %b %Y', time.gmtime(t))
-        w += time.strftime(' at %H:%MZ', time.gmtime(t))
-        code.reply('Okay, will remind%s' % w)
+            w += time.strftime(' on %d %b %Y', code.bold(time.gmtime(t)))
+        w += time.strftime(' at %H:%MZ', code.bold(time.gmtime(t)))
+        code.reply('Okay, will remind%s' % code.bold(w))
     else: code.reply('Okay, will remind in %s secs' % code.bold(duration))
-remind.commands = ['in']
+remind.commands = ['in', 'remind']
 remind.rate = 30
 
 if __name__ == '__main__':
