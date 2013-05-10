@@ -128,7 +128,7 @@ def bing(code, input):
         lang = lang[1:]
     else: lang = 'en-GB'
     if not query:
-        return code.reply('.bing what?')
+        return code.reply('%s what?') % code.bold('.bing')
 
     query = query.encode('utf-8')
     uri = bing_search(query, lang)
@@ -137,7 +137,7 @@ def bing(code, input):
         if not hasattr(code.bot, 'last_seen_uri'):
             code.bot.last_seen_uri = {}
         code.bot.last_seen_uri[input.sender] = uri
-    else: code.reply("No results found for '%s'." % query)
+    else: code.reply("No results found for '%s'." % code.bold(query))
 bing.commands = ['bing']
 bing.example = '.bing swhack'
 bing.rate = 30
@@ -154,7 +154,7 @@ def duck_search(query):
 
 def duck(code, input):
     query = input.group(2)
-    if not query: return code.reply('.ddg what?')
+    if not query: return code.reply('%s what?') % code.bold('.ddg')
 
     query = query.encode('utf-8')
     uri = duck_search(query)
@@ -163,34 +163,38 @@ def duck(code, input):
         if not hasattr(code.bot, 'last_seen_uri'):
             code.bot.last_seen_uri = {}
         code.bot.last_seen_uri[input.sender] = uri
-    else: code.reply("No results found for '%s'." % query)
-duck.commands = ['search','duck', 'ddg']
+    else: code.reply("No results found for '%s'." % code.bold(query))
+duck.commands = ['duck', 'ddg']
 duck.rate = 30
 
 def search(code, input):
     if not input.group(2):
-        return code.reply('.search for what?')
+        return code.reply('%s for what?') % code.italic('.search')
     query = input.group(2).encode('utf-8')
     gu = google_search(query) or '-'
     bu = bing_search(query) or '-'
     du = duck_search(query) or '-'
 
     if (gu == bu) and (bu == du):
-        result = '%s (g, b, d)' % gu
+        result = '%s %s' % (gu, code.bold(code.color('blue', '(Google, Bing, Duck)')))
     elif (gu == bu):
-        result = '%s (g, b), %s (d)' % (gu, du)
+        result = '%s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google, Bing)')), \
+        du, code.bold(code.color('blue', '(Duck)')))
     elif (bu == du):
-        result = '%s (b, d), %s (g)' % (bu, gu)
+        result = '%s %s, %s %s' % (bu, code.bold(code.color('blue', '(Bing, Duck)')), \
+        gu, code.bold(code.color('blue', '(Google)')))
     elif (gu == du):
-        result = '%s (g, d), %s (b)' % (gu, bu)
+        result = '%s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google, Duck)')), \
+        bu, code.bold(code.color('blue', '(Bing)')))
     else:
-        if len(gu) > 250: gu = '(extremely long link)'
-        if len(bu) > 150: bu = '(extremely long link)'
-        if len(du) > 150: du = '(extremely long link)'
-        result = '%s (g), %s (b), %s (d)' % (gu, bu, du)
+        if len(gu) > 250: gu = code.bold('(extremely long link)')
+        if len(bu) > 150: bu = code.bold('(extremely long link)')
+        if len(du) > 150: du = code.bold('(extremely long link)')
+        result = '%s %s, %s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google)')), \
+        bu, code.bold(code.color('blue', '(Bing)')), du, code.bold(code.color('blue', '(Duck)')))
 
     code.reply(result)
-search.commands = ['google']
+search.commands = ['search', 'google', 'g']
 search.rate = 30
 
 def suggest(code, input):
@@ -201,8 +205,8 @@ def suggest(code, input):
     answer = web.get(uri + web.urllib.quote(query).replace('+', '%2B'))
     if answer:
         code.say(answer)
-    else: code.reply('Sorry, no result.')
-suggest.commands = ['suggest']
+    else: code.reply(code.color('red', 'Sorry, no result.'))
+suggest.commands = ['suggest', 'sugg']
 suggest.rate = 30
 
 if __name__ == '__main__':
