@@ -159,7 +159,7 @@ def duck(code, input):
             code.bot.last_seen_uri = {}
         code.bot.last_seen_uri[input.sender] = uri
     else: code.reply("No results found for '%s'." % code.bold(query))
-duck.commands = ['duck', 'ddg']
+duck.commands = ['duck', 'ddg', 'search', 'google'] #google function below is broken, this will suffice for now :/
 duck.rate = 30
 
 def search(code, input):
@@ -185,17 +185,21 @@ def search(code, input):
         result = '%s %s, %s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google)')), bu, code.bold(code.color('blue', '(Bing)')), du, code.bold(code.color('blue', '(Duck)')))
 
     code.reply(result)
-search.commands = ['search', 'google', 'g']
+search.commands = ['all']
 search.rate = 30
 
 def suggest(code, input):
     if not input.group(2):
-        return code.reply("No query term.")
+        return code.reply('No query term.')
     query = input.group(2).encode('utf-8')
     uri = 'http://websitedev.de/temp-bin/suggest.pl?q='
     answer = web.get(uri + web.urllib.quote(query).replace('+', '%2B'))
     if answer:
-        code.say(answer)
+        if answer.find('No suggestions for ') > -1:
+            answer = code.color('red', 'Sorry, no result.')
+            code.reply(answer)
+        else:
+            code.reply(answer)
     else: code.reply(code.color('red', 'Sorry, no result.'))
 suggest.commands = ['suggest', 'sugg']
 suggest.rate = 30
