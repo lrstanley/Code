@@ -13,7 +13,7 @@ def seen(code, input):
    """.seen <nick> - Reports when <nick> was last seen."""
    nick = input.group(2)
    if not nick:
-      return code.reply("Need a nickname to search for...")
+      return code.reply('Need a %s to search for...') % code.bold('nickname')
    nick = nick.lower()
 
    if not hasattr(code, 'seen'): 
@@ -23,9 +23,9 @@ def seen(code, input):
       channel, t = code.seen[nick]
       t = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime(t))
 
-      msg = "I last saw %s at %s on %s" % (nick, t, channel)
+      msg = "I last saw %s at %s on %s" % (code.color('blue', nick), code.bold(t), code.bold(channel))
       code.reply(msg)
-   else: code.reply("Sorry, I haven't seen %s around." % nick)
+   else: code.reply('Sorry, I haven\'t seen %s around.' % code.color('blue', nick))
 seen.rule = (['seen'], r'(\S+)')
 
 @deprecated
