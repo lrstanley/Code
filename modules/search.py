@@ -123,13 +123,9 @@ def bing_search(query, lang='en-GB'):
 def bing(code, input):
     """Queries Bing for the specified input."""
     query = input.group(2)
-    if query.startswith(':'):
-        lang, query = query.split(' ', 1)
-        lang = lang[1:]
-    else: lang = 'en-GB'
+    lang = 'en-GB'
     if not query:
-        return code.reply('%s what?') % code.bold('.bing')
-
+        if not query: return code.reply('%s what?') % code.bold('.bing')
     query = query.encode('utf-8')
     uri = bing_search(query, lang)
     if uri:
@@ -155,7 +151,6 @@ def duck_search(query):
 def duck(code, input):
     query = input.group(2)
     if not query: return code.reply('%s what?') % code.bold('.ddg')
-
     query = query.encode('utf-8')
     uri = duck_search(query)
     if uri:
@@ -178,20 +173,16 @@ def search(code, input):
     if (gu == bu) and (bu == du):
         result = '%s %s' % (gu, code.bold(code.color('blue', '(Google, Bing, Duck)')))
     elif (gu == bu):
-        result = '%s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google, Bing)')), \
-        du, code.bold(code.color('blue', '(Duck)')))
+        result = '%s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google, Bing)')), du, code.bold(code.color('blue', '(Duck)')))
     elif (bu == du):
-        result = '%s %s, %s %s' % (bu, code.bold(code.color('blue', '(Bing, Duck)')), \
-        gu, code.bold(code.color('blue', '(Google)')))
+        result = '%s %s, %s %s' % (bu, code.bold(code.color('blue', '(Bing, Duck)')), gu, code.bold(code.color('blue', '(Google)')))
     elif (gu == du):
-        result = '%s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google, Duck)')), \
-        bu, code.bold(code.color('blue', '(Bing)')))
+        result = '%s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google, Duck)')), bu, code.bold(code.color('blue', '(Bing)')))
     else:
         if len(gu) > 250: gu = code.bold('(extremely long link)')
         if len(bu) > 150: bu = code.bold('(extremely long link)')
         if len(du) > 150: du = code.bold('(extremely long link)')
-        result = '%s %s, %s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google)')), \
-        bu, code.bold(code.color('blue', '(Bing)')), du, code.bold(code.color('blue', '(Duck)')))
+        result = '%s %s, %s %s, %s %s' % (gu, code.bold(code.color('blue', '(Google)')), bu, code.bold(code.color('blue', '(Bing)')), du, code.bold(code.color('blue', '(Duck)')))
 
     code.reply(result)
 search.commands = ['search', 'google', 'g']
