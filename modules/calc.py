@@ -92,7 +92,7 @@ def calc(code, input):
           endword = alist[len(alist-1)]
           number = answer.replace(endword, '')
           number = number.strip(' ')
-          code.say(code.bold(number) + ' ' + code.color('blue', endword))
+          code.say(number + ' ' + endword) #ascii is soo derp.
       else:
           answer.replace(' ', ',')
           code.say(answer)
