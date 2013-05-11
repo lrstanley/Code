@@ -94,11 +94,11 @@ def calc(code, input):
           number = answer[0:fletter-1]
           words = answer[fletter:len(answer)]
           number.strip()
-          number.replace(" ", ",")
+          cnumb = number.join(number.split())
           words = ' ' + words.strip()
           #[17:02:55] <Avaris> Liam-: next(i for i, c in enumerate(s) if c.isalpha())
           #[17:03:59] <Avaris> (throws StopIteration if there is no letter in the original string)
-          code.say(code.bold(number) + code.color('blue', words))
+          code.say(code.bold(cnumb) + code.color('blue', words))
       except:
           answer.strip()
           code.say(answer)
