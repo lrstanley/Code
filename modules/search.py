@@ -125,7 +125,7 @@ def bing(code, input):
     query = input.group(2)
     lang = 'en-GB'
     if not query:
-        if not query: return code.reply('%s what?') % code.bold('.bing')
+        if not query: return code.reply('.bing what?')
     query = query.encode('utf-8')
     uri = bing_search(query, lang)
     if uri:
@@ -150,7 +150,7 @@ def duck_search(query):
 
 def duck(code, input):
     query = input.group(2)
-    if not query: return code.reply('%s what?') % code.bold('.ddg')
+    if not query: return code.reply('.ddg what?')
     query = query.encode('utf-8')
     uri = duck_search(query)
     if uri:
@@ -164,7 +164,7 @@ duck.rate = 30
 
 def search(code, input):
     if not input.group(2):
-        return code.reply('%s for what?') % code.italic('.search')
+        return code.reply('.search for what?')
     query = input.group(2).encode('utf-8')
     gu = google_search(query) or '-'
     bu = bing_search(query) or '-'
