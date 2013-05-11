@@ -41,6 +41,18 @@ def quit(code, input):
 quit.commands = ['quit', 'terminate', 'shutdown', 'stop']
 quit.priority = 'low'
 
+def nick(code, input):
+    """Change nickname dynamically. This is an owner-only command."""
+    if input.sender.startswith('#'): return
+    if input.owner:
+        try:
+            nickname = input.group(2)
+            code.write(['NICK'], nickname) #WARNING! No stripping of breakable chars yet!
+        except:
+            code.reply(input.nick + ': Failed to set username!')
+nick.commands = ['name', 'nick', 'nickname']
+nick.priority = 'low'
+
 def msg(code, input):
     # Can only be done in privmsg by an admin
     if input.sender.startswith('#'): return
