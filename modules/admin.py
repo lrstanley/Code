@@ -49,8 +49,8 @@ def nick(code, input):
             code.changenick(input.group(2))
         except:
             code.msg(input.nick, 'Failed to set username!')
-   else:
-       return
+    else:
+        return
 nick.commands = ['name', 'nick', 'nickname']
 nick.priority = 'low'
 
