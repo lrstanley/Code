@@ -88,9 +88,9 @@ def calc(code, input):
       answer = web.decode(answer)
       if any(c.isalpha() for c in answer):
           #re.split('(\d+)',answer)
-          #answer = answer[::-1]
+          arev = answer[::-1]
           alist = answer.split()
-          endword = alist[len(alist-1)]
+          endword = arev[0]
           number = answer.replace(endword, '')
           number = number.strip(' ')
           code.say(code.bold(number) + ' ' + code.color('blue', endword))
