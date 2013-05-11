@@ -266,6 +266,16 @@ class Bot(asynchat.async_chat):
         self.write(('NICK', self.nick))
         self.write(('USER', self.user, '+iw', self.nick), self.name)
 
+    def changenick(self, nick):
+        chars = set('`+=;,<>?')
+        if not any((c in chars) for c in nick) and nick[0] != '-' and \
+        len(nick) =< 1 and len(nick) =< 16:
+            self.write(('NICK', self.nick))
+            self.nick = nick
+            return True
+        else:
+            return False
+
     def handle_close(self):
         self.close()
         print >> sys.stderr, 'Closed!'
