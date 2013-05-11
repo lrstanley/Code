@@ -85,7 +85,17 @@ def calc(code, input):
       answer = answer.replace('<sup>', '^(')
       answer = answer.replace('</sup>', ')')
       answer = web.decode(answer)
-      code.say(answer)
+      if any(c.isalpha() for c in answer):
+          #re.split('(\d+)',answer)
+          #answer = answer[::-1]
+          alist = answer.split()
+          endword = alist[len(alist-1)]
+          number = answer.replace(endword, '')
+          number = number.strip(' ')
+          code.say(code.bold(number) + ' ' + code.color('blue', endword))
+      else:
+          answer.replace(' ', ',')
+          code.say(answer)
    else: code.say(code.color('red', 'Sorry, no result.'))
 calc.commands = ['c', 'calc', 'calculate']
 calc.example = '.calc 5 + 3'
