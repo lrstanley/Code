@@ -90,6 +90,7 @@ def calc(code, input):
           #re.split('(\d+)',answer)
           try:
               answer = answer.replace('U.S. dollars','USD')
+          except: pass
           arev = answer[::-1]
           alist = answer.split()
           endword = arev[0]
