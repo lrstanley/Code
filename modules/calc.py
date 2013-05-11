@@ -88,6 +88,8 @@ def calc(code, input):
       answer = web.decode(answer)
       if any(c.isalpha() for c in answer):
           #re.split('(\d+)',answer)
+          try:
+              answer = answer.replace('U.S. dollars','USD')
           arev = answer[::-1]
           alist = answer.split()
           endword = arev[0]
