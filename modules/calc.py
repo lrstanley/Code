@@ -86,7 +86,6 @@ def calc(code, input):
       answer = answer.replace('<sup>', '^(')
       answer = answer.replace('</sup>', ')')
       answer = web.decode(answer)
-      answer = answer.encode('ascii','ignore') #lets try ascii encoding, and strip everything non-ascii!
       if any(c.isalpha() for c in answer):
           #re.split('(\d+)',answer)
           #answer = answer[::-1]

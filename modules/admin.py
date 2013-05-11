@@ -47,6 +47,7 @@ def nick(code, input):
     if input.owner:
         try:
             if code.changenick(input.group(2)):
+                code.changenick(input.group(2)) #have to do command twice, solution?
                 pass
             else:
                 code.say('Failed to change username!')

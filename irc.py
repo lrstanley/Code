@@ -271,7 +271,7 @@ class Bot(asynchat.async_chat):
         if not any((c in chars) for c in nick) and nick[0] != '-' and \
         len(nick) > 1 and len(nick) < 17:
             self.write(('NICK', self.nick))
-            self.nick = nick
+            self.nick = nick.encode('ascii','ignore')
             return True
         else:
             return None
