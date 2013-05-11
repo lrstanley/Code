@@ -86,21 +86,21 @@ def calc(code, input):
       answer = answer.replace('<sup>', '^(')
       answer = answer.replace('</sup>', ')')
       answer = web.decode(answer)
-      code.say(answer)
+      answer.encode('ascii','ignore')
       #if any(c.isalpha() for c in answer):
       try:
           #firstchar = re.search(r'(\d )+ (.*)',answer)
           fletter = next(i for i, c in enumerate(answer) if c.isalpha())
-          number = answer[0:fletter-2]
-          words = answer[fletter:len(answer)-1]
-          number = number.strip()
-          number = number.replace(' ', ',')
+          number = answer[0:fletter-1]
+          words = answer[fletter:len(answer)]
+          number.strip()
+          number.replace(" ", ",")
           words = ' ' + words.strip()
           #[17:02:55] <Avaris> Liam-: next(i for i, c in enumerate(s) if c.isalpha())
           #[17:03:59] <Avaris> (throws StopIteration if there is no letter in the original string)
           code.say(code.bold(number) + code.color('blue', words))
       except:
-          answer.replace(' ', ',')
+          answer.strip()
           code.say(answer)
    else: code.say(code.color('red', 'Sorry, no result.'))
 calc.commands = ['c', 'calc', 'calculate']
