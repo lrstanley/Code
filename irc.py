@@ -269,12 +269,12 @@ class Bot(asynchat.async_chat):
     def changenick(self, nick):
         chars = set('`+=;,<>?')
         if not any((c in chars) for c in nick) and nick[0] != '-' and \
-        len(nick) > 1 and len(nick) < 17:
+        len(nick) > 1 and len(nick) < 1:
             self.write(('NICK', self.nick))
             self.nick = nick
             return True
         else:
-            return False
+            return None
 
     def handle_close(self):
         self.close()

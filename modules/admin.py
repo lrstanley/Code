@@ -46,9 +46,12 @@ def nick(code, input):
     #if input.sender.startswith('#'): return
     if input.owner:
         try:
-            code.changenick(input.group(2))
+            if code.changenick(input.group(2)):
+                pass
+            else:
+                code.say('Failed to change username!')
         except:
-            code.msg(input.nick, 'Failed to set username!')
+            code.say('Failed to change username!')
     else:
         return
 nick.commands = ['name', 'nick', 'nickname']
