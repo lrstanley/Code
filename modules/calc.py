@@ -9,6 +9,7 @@ http://code.liamstanley.net/
 
 import re
 import web
+import unicodedata
 
 r_result = re.compile(r'(?i)<A NAME=results>(.*?)</A>')
 r_tag = re.compile(r'<\S+.*?>')
@@ -85,6 +86,7 @@ def calc(code, input):
       answer = answer.replace('<sup>', '^(')
       answer = answer.replace('</sup>', ')')
       answer = web.decode(answer)
+      answer = answer.encode('ascii','ignore') #lets try ascii encoding, and strip everything non-ascii!
       if any(c.isalpha() for c in answer):
           #re.split('(\d+)',answer)
           #answer = answer[::-1]
@@ -92,7 +94,7 @@ def calc(code, input):
           endword = alist[len(alist-1)]
           number = answer.replace(endword, '')
           number = number.strip(' ')
-          code.say(number + ' ' + endword) #ascii is soo derp.
+          code.say(code.bold(number) + ' ' + code.color('blue', endword))
       else:
           answer.replace(' ', ',')
           code.say(answer)
