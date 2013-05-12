@@ -15,15 +15,15 @@ def sexymeter(code, input):
     if len(text) < 2: return
     try:
         if text[1] == code.nick.lower():
-            code.say('I rated %s on a scale of 1-100 of sexiness. Result: %s.') % (code.bold('myself'), code.bold('100'))
+            code.say('I rated %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold('myself'), code.bold('100')))
         else:
             rand = str(random.randint(1,100))
             nick = text[1]
-            code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.') % (code.bold(nick), code.bold(rand))
+            code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
     except:
         rand = str(random.randint(1,100))
         nick = input.nick
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.') % (code.bold(nick), code.bold(rand))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
 sexymeter.commands = ['sm', 'sexymeter']
 sexymeter.priority = 'low'
 sexymeter.example = '.sexymeter Code'
