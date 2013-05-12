@@ -6,8 +6,8 @@ fun.py - Fun Module
 http://code.liamstanley.net/
 """
 
-from random import randint
-from random
+import random
+#from random import randint
 
 def sexymeter(code, input):
     """.sexymeter <target> - rates <target> on sexiness"""
@@ -17,11 +17,11 @@ def sexymeter(code, input):
         if text[1] == code.nick.lower():
             code.say('I rated %s on a scale of 1-100 of sexiness. Result: %s.') % (code.bold('myself'), code.bold('100'))
         else:
-            rand = randint(1,100)
+            rand = random.randint(1,100)
             nick = text[1]
             code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.') % (code.bold(nick), code.bold(rand))
     except:
-        rand = randint(1,100)
+        rand = random.randint(1,100)
         nick = input.nick
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.') % (code.bold(nick), code.bold(rand))
 sexymeter.commands = ['sm', 'sexymeter']
