@@ -6,18 +6,6 @@ tell.py - Code tell Module
 http://code.liamstanley.net/
 """
 
-#!/usr/bin/env python
-"""
-tell.py - code Tell and Ask Module
-Copyright 2012-2013, Michael Yanovich (yanovich.net)
-Copyright 2008, Sean B. Palmer (inamidst.com)
-Licensed under the Eiffel Forum License 2.
-
-More info:
- * code: https://github.com/myano/code/
- * Phenny: http://inamidst.com/phenny/
-"""
-
 import os, re, time, random
 import web
 
