@@ -44,12 +44,15 @@ def service(code, input, command, args):
         return code.reply(code.color('red', 'Sorry, the service didn\'t respond any output.'))
     try: line = lines[0].encode('utf-8')[:350]
     except: line = lines[0][:250]
-    if line.find('ENOTFOUND') > -1:
-        if input.group(1) == 'urban':
+    if input.group(1) == 'urban':
+        if line.find('ENOTFOUND') > -1:
             line = "I'm sorry, that definition %s found." % code.bold('wasn\'t')
             code.say(line)
-    else:
-        code.say(line)
+        elif line.find('Traceback (most recent call last)') > -1:
+            line = code.color('red', 'Failed to search for that definition. Please try again.')
+            code.say(line)
+        else:
+            code.say(line)
 
 def refresh(code):
     if hasattr(code.config, 'services'):
