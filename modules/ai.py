@@ -45,9 +45,9 @@ on.priority = 'high'
 def state(code, input):
     global aistate
     if aistate == True:
-        code.say(color.bold(code.color('green', 'It is on.')))
+        code.say(code.bold(code.color('green', 'It is on.')))
     else:
-        code.say(color.bold(code.color('red', 'It is off.')))
+        code.say(code.bold(code.color('red', 'It is off.')))
 state.commands = ['state', 'aistate']
 state.priority = 'high'
 
