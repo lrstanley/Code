@@ -45,10 +45,10 @@ on.priority = 'high'
 def state(code, input):
     global aistate
     if aistate == True:
-        code.reply(color.bold(code.color('green', 'It is on.')))
+        code.say(color.bold(code.color('green', 'It is on.')))
     else:
-        code.reply(color.bold(code.color('red', 'It is off.')))
-state.commands = ['state']
+        code.say(color.bold(code.color('red', 'It is off.')))
+state.commands = ['state', 'aistate']
 state.priority = 'high'
 
 ## Functions that do not rely on "AISTATE"
@@ -65,10 +65,11 @@ def welcomemessage(code, input):
        except:
            excludeuser = ''
        global aistate
-       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'%s'") % (input.nick) > -1, lastuser.find(input.nick) > -1] ): #shut up, im tired. -.-
+       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'%s'") % (input.nick) > -1, \
+                lastuser.find(input.nick) > -1] ): #shut up, im tired. -.-
            return
        elif greetchan.find("'%s'") % (input.sender) > -1:
-          code.say('%s %s, welcome to %s!') % (random.choice(greeting), input.nick, code.bold(input.sender))
+          code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, code.bold(input.sender)))
           lastuser = input.nick
        else: return
    except:
