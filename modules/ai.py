@@ -38,7 +38,7 @@ def on(code, input):
         global aistate
         aistate = True
     else:
-        code.reply(color.bold(code.color('red', 'You are not authorized to enable this feature.')))
+        code.reply(code.bold(code.color('red', 'You are not authorized to enable this feature.')))
 on.commands = ['on']
 on.priority = 'high'
 
