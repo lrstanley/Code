@@ -16,12 +16,13 @@ def sexymeter(code, input):
     try:
         nick = text[1]
         rand = str(random.randint(1,100))
-        if len(nick) > 20: return
+        if len(nick) > 20: 
+            code.say(input.nick + code.color('red', ': The syntax is .sexymeter <name>.'))
         if nick.lower() == code.nick.lower():
             nick = 'myself'
             rand = '100'
         elif text[1].lower() in map(str.lower,code.config.admins):
-            nick = input.nick
+            rand = '100'
         else:
             nick = text[1]
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
