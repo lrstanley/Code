@@ -36,7 +36,7 @@ def sexymeter(code, input):
 sexymeter.commands = ['sm', 'sexymeter']
 sexymeter.priority = 'low'
 sexymeter.example = '.sexymeter Code'
-#sexymeter.rate = 60 because taq is a ugly mofo.
+sexymeter.rate = 30
 
 def slap(code, input):
     """.slap <target> - Slaps <target>"""
@@ -59,7 +59,7 @@ def slap(code, input):
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', verb, text[1], afterfact, '\x01'])
 slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
-slap.rate = 60
+slap.rate = 30
 if __name__ == '__main__':
     print __doc__.strip()
 
