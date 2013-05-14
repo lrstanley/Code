@@ -15,15 +15,23 @@ def sexymeter(code, input):
     if len(text) > 2: return
     try:
         nick = text[1]
+        rand = str(random.randint(1,100))
         if len(nick) > 20: return
-        if nick.lower() == code.nick.lower() or input.admin:
-            code.say('I rated %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold('myself'), code.bold('100')))
+        if nick.lower() == code.nick.lower():
+            nick = 'myself'
+            rand = '100'
+        elif text[1].lower() in map(str.lower,code.config.admins):
+            nick = input.nick
+        else:
+            nick = text[1]
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
+    except:
+        nick = input.nick
+        if input.admin:
+            rand = '100'
         else:
             rand = str(random.randint(1,100))
-            code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
-    except:
-        rand = str(random.randint(1,100))
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(input.nick), code.bold(rand)))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
 sexymeter.commands = ['sm', 'sexymeter']
 sexymeter.priority = 'low'
 sexymeter.example = '.sexymeter Code'
