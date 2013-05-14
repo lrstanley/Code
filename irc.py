@@ -271,7 +271,10 @@ class Bot(asynchat.async_chat):
         if not any((c in chars) for c in nick) and nick[0] != '-' and \
         len(nick) > 1 and len(nick) <= 20:
             self.write(('NICK', self.nick))
-            self.nick = nick.encode('ascii','ignore')
+            self.nick = nick.encode('ascii','ignore') # we can't tell yet if the
+                                                      # nick successfully changed,
+                                                      # so this variable will get
+                                                      # messed up, if unsuccessful.
             return True
         else:
             return None
