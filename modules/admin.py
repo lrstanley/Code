@@ -90,6 +90,17 @@ def me(code, input):
 me.rule = (['me', 'action'], r'(#?\S+) (.*)')
 me.priority = 'low'
 
+def announce(code, input):
+    """Send an announcement to all channels the bot is in"""
+    if not input.admin:
+        code.reply('Sorry, I can\'t let you do that')
+        return
+    print code.config.channels
+    for channel in code.config.channels:
+        code.msg(channel, code.color('purple', code.bold('[ANNOUNCMENT] ')) + input.group(2))
+announce.commands = ['announce', 'broadcast']
+announce.example = '.announce Some important message here'
+
 def defend_ground(code, input):
     """
     This function monitors all kicks across all channels code is in. If he

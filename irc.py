@@ -62,8 +62,8 @@ class Bot(asynchat.async_chat):
         self.buffer = ''
 
         self.nick = nick
-        self.user = nick
-        self.name = name
+        self.user = 'code'
+        self.name = 'Code, the Python IRC Bot - http://code.liamstanley.net'
         self.password = password
 
         self.verbose = True
@@ -157,6 +157,8 @@ class Bot(asynchat.async_chat):
             return str(colorcode)
 
     def color(self, color, message):
+        '''color forground/background encoding IRC messages, if false
+           in config, returns clean'''
         try:
             if self.config.textstyles:
                 try:
@@ -173,6 +175,7 @@ class Bot(asynchat.async_chat):
             return message
 
     def bold(self, message):
+        '''bold encoding IRC messages, if false in config, returns clean'''
         try:
             if self.config.textstyles:
                 message = str(message)
@@ -184,6 +187,7 @@ class Bot(asynchat.async_chat):
             return message
 			
     def italic(self, message):
+        '''italicize encoding IRC messages, if false in config, returns clean'''
         try:
             if self.config.textstyles:
                 message = str(message)
@@ -195,6 +199,7 @@ class Bot(asynchat.async_chat):
             return message
 
     def underline(self, message):
+        '''underlined encoding IRC messages, if false in config, returns clean'''
         try:
             if self.config.textstyles:
                  message = str(message)
@@ -204,6 +209,22 @@ class Bot(asynchat.async_chat):
             return message
         except:
             return message
+
+    def quit(self, message):
+        '''Disconnect from IRC and close the bot'''
+        self.write(['QUIT'], message)
+        self.hasquit = True
+
+    def part(self, channel):
+        '''Part a channel'''
+        self.write(['PART'], channel)
+
+    def join(self, channel, password=None):
+        '''Join a channel'''
+        if password is None:
+            self.write(['JOIN'], channel)
+        else:
+            self.write(['JOIN', channel, password])
 
     def __write(self, args, text=None, raw=False):
         # print '%r %r %r' % (self, args, text)
@@ -373,7 +394,11 @@ class Bot(asynchat.async_chat):
         self.sending.release()
 
     def notice(self, dest, text):
+        '''Send an IRC NOTICE to a user or a channel. See IRC protocol
+           documentation for more information'''
         self.write(('NOTICE', dest), text)
+
+
 
     def error(self, origin):
         try:
