@@ -9,7 +9,7 @@ forked from Willie:
   -https://github.com/embolalia/willie/blob/master/code/modules/youtube.py
 """
 
-import code.web as web
+import web
 import re
 from HTMLParser import HTMLParser
 
