@@ -27,7 +27,7 @@ def version(code, input):
     #date.split()
     date.replace('Date:   ','')
     code.say(str(input.nick) + ": running version:")
-    code.say('  ' + code.bold('Commit: ') + commit[)
+    code.say('  ' + code.bold('Commit: ') + commit)
     code.say('  ' + code.bold('Author: ') + author)
     code.say('  ' + code.bold('Date: ') + date)
     code.say('  ' + code.bold('Source: ') + 'https://github.com/Liamraystanley/Code/')
