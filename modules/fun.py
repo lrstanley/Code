@@ -36,7 +36,7 @@ def slap(code, input):
         if (input.nick not in code.config.admins):
             text[1] = input.nick
         else: text[1] = 'himself'
-    if text[1] in code.config.admins:
+    if text[1].lower() in code.config.admins.lower():
         if (input.nick not in code.config.admins):
             text[1] = input.nick
 
