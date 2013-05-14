@@ -50,5 +50,23 @@ f_reload.rule = ('$nick', ['reload'], r'(\S+)?')
 f_reload.priority = 'low'
 f_reload.thread = False
 
+
+if sys.version_info >= (2, 7):
+    def update(code, input):
+        if not input.admin:
+            return
+
+        """Pulls the latest versions of all modules from Git"""
+        proc = subprocess.Popen('/usr/bin/git pull',
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, shell=True)
+        code.reply(proc.communicate()[0])
+
+        f_reload(code, input)
+else:
+    def update(code, input):
+        code.say('You need to run me on Python 2.7 to do that.')
+update.rule = ('$nick', ['update'], r'(.+)')
+
 if __name__ == '__main__': 
    print __doc__.strip()
