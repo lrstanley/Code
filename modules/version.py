@@ -20,16 +20,16 @@ def git_info():
 
 def version(code, input):
     commit, author, date = git_info()
-    #commit.split()
-    commit.replace('commit ','')
-    #author.split()
-    author.replace('Author: ','')
-    #date.split()
-    date.replace('Date:   ','')
+    commit.replace('commit', '').encode('ascii','ignore')
+    commit.strip()
+    author.split(':').encode('ascii','ignore')
+    author[1].strip()
+    date.split(':').encode('ascii','ignore')
+    date[1].strip()
     code.say(str(input.nick) + ": running version:")
     code.say('  ' + code.bold('Commit: ') + commit)
-    code.say('  ' + code.bold('Author: ') + author)
-    code.say('  ' + code.bold('Date: ') + date)
+    code.say('  ' + code.bold('Author: ') + author[1])
+    code.say('  ' + code.bold('Date') + date[1])
     code.say('  ' + code.bold('Source: ') + 'https://github.com/Liamraystanley/Code/')
 version.commands = ['version']
 version.priority = 'medium'
