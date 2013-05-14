@@ -95,8 +95,8 @@ def announce(code, input):
     if not input.admin:
         code.reply('Sorry, I can\'t let you do that')
         return
-    print code.config.channels
-    for channel in code.config.channels:
+    print code.channels
+    for channel in code.channels:
         code.msg(channel, code.color('purple', code.bold('[ANNOUNCMENT] ')) + input.group(2))
 announce.commands = ['announce', 'broadcast']
 announce.example = '.announce Some important message here'
