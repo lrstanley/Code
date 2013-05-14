@@ -12,9 +12,10 @@ import random
 def sexymeter(code, input):
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
-    if len(text) < 2: return
-    nick = text[1]
+    if len(text) > 2: return
     try:
+        nick = text[1]
+        if len(nick) > 20: return
         if nick.lower() == code.nick.lower() or input.admin:
             code.say('I rated %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold('myself'), code.bold('100')))
         else:
