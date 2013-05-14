@@ -32,10 +32,10 @@ def slap(code, input):
     """.slap <target> - Slaps <target>"""
     text = input.group().split()
     if len(text) < 2 or text[1].startswith('#'): return
-    if text[1] == code.nick or text[1].lower() == 'everyone' or text[1].lower() == 'himself':
+    if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or text[1].lower() == 'himself':
         if (input.nick not in code.config.admins):
             text[1] = input.nick
-        else: text[1] = 'himself'
+        else: text[1].lower() = 'himself'
     if text[1] in code.config.admins:
         if (input.nick not in code.config.admins):
             text[1] = input.nick
