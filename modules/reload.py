@@ -6,7 +6,7 @@ reload.py - Code Module Reloader Module
 http://code.liamstanley.net/
 """
 
-import sys, os.path, time, imp
+import sys, os.path, time, imp, subprocess
 import irc
 
 def f_reload(code, input): 
