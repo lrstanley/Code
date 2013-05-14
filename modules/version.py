@@ -20,11 +20,14 @@ def git_info():
 
 def version(code, input):
     commit, author, date = git_info()
-
+    commit.split()
+    author.split()
+    date.split()
     code.say(str(input.nick) + ": running version:")
-    code.say("  " + commit)
-    code.say("  " + author)
-    code.say("  " + date)
+    code.say('  ' + code.bold('Commit: ') + commit[1].lstrip())
+    code.say('  ' + code.bold('Author: ') + author[1:len(author)-1].lstrip())
+    code.say('  ' + code.bold('Date') + date[1:len(date)-1].lstrip())
+    code.say('  ' + code.bold('Source: ') + 'https://github.com/Liamraystanley/Code/')
 version.commands = ['version']
 version.priority = 'medium'
 version.rate = 30
@@ -51,8 +54,8 @@ ctcp_source.rate = 20
 
 def ctcp_ping(code, input):
     text = input.group()
-    text = text.replace("PING ", "")
-    text = text.replace("\x01", "")
+    text = text.replace('PING ', '')
+    text = text.replace('\x01', '')
     code.write(('NOTICE', input.nick),
             '\x01PING {0}\x01'.format(text))
 ctcp_ping.rule = '\x01PING\s(.*)\x01'
@@ -61,7 +64,7 @@ ctcp_ping.rate = 10
 
 def ctcp_time(code, input):
     dt = datetime.now()
-    current_time = dt.strftime("%A, %d. %B %Y %I:%M%p")
+    current_time = dt.strftime('%A, %d. %B %Y %I:%M%p')
     code.write(('NOTICE', input.nick),
             '\x01TIME {0}\x01'.format(current_time))
 ctcp_time.rule = '\x01TIME\x01'

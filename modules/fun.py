@@ -13,21 +13,20 @@ def sexymeter(code, input):
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
     if len(text) < 2: return
+    nick = text[1]
     try:
-        if input.group(1) == code.nick:
+        if nick.lower() == code.nick.lower() or input.admin:
             code.say('I rated %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold('myself'), code.bold('100')))
         else:
             rand = str(random.randint(1,100))
-            nick = text[1]
             code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
     except:
         rand = str(random.randint(1,100))
-        nick = input.nick
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(input.nick), code.bold(rand)))
 sexymeter.commands = ['sm', 'sexymeter']
 sexymeter.priority = 'low'
 sexymeter.example = '.sexymeter Code'
-sexymeter.rate = 60
+#sexymeter.rate = 60 because taq is a ugly mofo.
 
 def slap(code, input):
     """.slap <target> - Slaps <target>"""
