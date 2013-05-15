@@ -364,7 +364,6 @@ def f_weather(self, origin, match, args):
             'FC': 'Tornado',
             'SS': 'Sandstorm',
             'DS': 'Duststorm',
-            # ? Cf. http://swhack.com/logs/2007-10-05#T07-58-56
             'TS': 'Thunderstorm',
             'SH': 'Showers'
         }
@@ -416,7 +415,7 @@ def fucking_weather(code, input):
     """.fw (ZIP|City, State) -- provide a ZIP code or a city state pair to hear about the fucking weather"""
     text = input.group(2)
     if not text:
-        code.reply("INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.")
+        code.reply(code.bold('INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.'))
         return
     new_text = str()
     for x in text:
@@ -432,16 +431,16 @@ def fucking_weather(code, input):
     remarks = re_mark.findall(page)
     response = str()
     if temps:
-        response += temps[0] + " FUCKING DEGREES?! "
+        response += temps[0] + code.bold(code.color('red', ' FUCKING DEGREES?!'))
     if remarks:
         response += remarks[0]
     else:
-        response += "I CAN'T FIND THAT SHIT."
+        response += code.color('red', code.bold('I CAN\'T FIND THAT SHIT.'))
     conditions = re_condition.findall(page)
     if conditions:
-        response += " " + conditions[0]
+        response += " " + code.bold(conditions[0]) #B-B-B-BOLD!
     code.reply(response)
-fucking_weather.commands = ['fucking_weather', 'fw']
+fucking_weather.commands = ['fuckingweather', 'fw']
 fucking_weather.priority = 'low'
 
 
