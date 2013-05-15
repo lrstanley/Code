@@ -53,32 +53,6 @@ state.priority = 'high'
 
 ## Functions that do not rely on "AISTATE"
 
-#to be set in config
-def welcomemessage(code, input):
-   global lastuser
-   try:
-       greetchan = code.config.greetchans
-       greetchan = str(greetchan)
-       try:
-           excludeuser = code.config.excludeusers
-           excludeuser = str(excludeuser)
-       except:
-           excludeuser = ''
-       global aistate
-       if any( [aistate == False, input.nick == code.nick, excludeuser.find("'%s'") % (input.nick) > -1, \
-                lastuser.find(input.nick) > -1] ): #shut up, im tired. -.-
-           return
-       elif greetchan.find("'%s'") % (input.sender) > -1:
-          code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, code.bold(input.sender)))
-          lastuser = input.nick
-       else: return
-   except:
-       return
-welcomemessage.event = 'JOIN'
-welcomemessage.rule = r'.*'
-welcomemessage.priority = 'medium'
-welcomemessage.thread = False
-
 def goodbye(code, input):
     byemsg = random.choice(('Bye', 'Goodbye', 'Seeya', 'Ttyl'))
     punctuation = random.choice(('!', ' '))
@@ -88,6 +62,34 @@ goodbye.thread = False
 goodbye.rate = 30
 
 ## Functions that do rely on "AISTATE"
+
+#to be set in config
+def welcomemessage(code, input):
+   global lastuser #doesn't sent a message if the last user that joined is the same
+   try:
+       greetchan = code.config.greetchans
+       greetchan = str(greetchan)
+       try:
+           excludeuser = code.config.excludeusers
+           excludeuser = str(excludeuser)
+       except:
+           excludeuser = ''
+       global aistate
+       if any( [aistate == False, input.nick == code.nick, \
+                excludeuser.find("'%s'" % (input.nick)) > -1, \
+                lastuser.find(input.nick) > -1] ):
+           return
+       elif greetchan.find("'%s'" % (input.sender)) > -1:
+          code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
+                   code.bold(input.sender)))
+          lastuser = input.nick
+       else: return
+   except:
+       return
+welcomemessage.event = 'JOIN'
+welcomemessage.rule = r'.*'
+welcomemessage.priority = 'medium'
+welcomemessage.thread = False
 
 def hau(code, input):
     global aistate
@@ -135,7 +137,8 @@ def ty(code, input):
     time.sleep(human)
     mystr = input.group()
     mystr = str(mystr)
-    if (mystr.find(' no ') == -1) and (mystr.find('no ') == -1) and (mystr.find(' no') == -1):
+    if (mystr.find(' no ') == -1) and (mystr.find('no ') == -1) and \
+        (mystr.find(' no') == -1):
         code.reply('You\'re welcome.')
 ty.rule = '(?i).*(thank).*(you).*(code|$nickname).*$'
 ty.priority = 'high'
@@ -152,7 +155,8 @@ ty4.rule = '(?i).*(thanks).*(code|$nickname).*'
 ty4.rate = 40
 
 def random_resp(code, input):
-    # This randomly takes what someone says in the form of "code: <message>" and just spits it back out at the user that said it.
+    # This randomly takes what someone says in the form of "code: <message>" and
+    #just spits it back out at the user that said it.
     human = random.random()
     if 0 <= human <= 0.025:
         strinput = input.group()
