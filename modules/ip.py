@@ -21,10 +21,12 @@ def ip_lookup(code, input):
     txt = input.group(2)
     if not txt:
         return code.reply(code.color('red', 'No search term!'))
-    elif txt.find('192.16.8.0.') > -1 or txt.find('127.0.0.') > -1 or not txt.find('.') > -1:
+    elif txt.find('192.168.0.') > -1 or txt.find('127.0.0.') > -1:
         return code.reply(code.color('red', 'That IP is blacklisted!'))
+    elif not txt.find('.') > -1 or not txt.find(':') > -1:
+        return code.reply(code.color('red','Incorrect input!'))
     txt = uc.encode(txt)
-    query = uc.decode(txt)
+    query = uc.decode(txt) 
     response = ''
     #response = '[' + code.color('blue', 'IP/Host Lookup ') + '] '
     page = web.get(base + txt)
