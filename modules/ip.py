@@ -20,16 +20,19 @@ re_ip = re.compile('(?i)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 def ip_lookup(code, input):
     txt = input.group(2)
     if not txt:
-        return code.reply("No search term!")
+        return code.reply(code.color('red', 'No search term!'))
+    elif txt.find(any( ['127.0.0.', '192.16.8.0.'] )) > -1 or not txt.find('.') > -1:
+        return code.reply(code.color('red', 'That IP is blacklisted!'))
     txt = uc.encode(txt)
     query = uc.decode(txt)
-    response = '[' + code.color('blue', 'IP/Host Lookup ') + '] '
+    response = ''
+    #response = '[' + code.color('blue', 'IP/Host Lookup ') + '] '
     page = web.get(base + txt)
     try:
         results = json.loads(page)
     except:
         print str(page)
-        return code.reply('Did not receive proper JSON from %s' % code.bold(base))
+        return code.color('red', code.reply('Couldn\'t receive information for %s' % code.bold(txt)))
     if results:
         print 'query', str(query)
         print 'matches', re_ip.findall(query)
@@ -38,25 +41,25 @@ def ip_lookup(code, input):
             try:
                 hostname = socket.gethostbyaddr(query)[0]
             except:
-                hostname = code.bold('Unknown Host')
+                hostname = code.bold(code.color('red', 'Unknown Host'))
             response += code.color('blue', 'Hostname: ') + str(hostname)
         else:
             ## Host name
-            response += 'IP: ' + results['ip']
-        spacing = ' |'
+            response += code.bold(code.color('blue','IP: ')) + results['ip']
+        spacing = ' ' + code.bold('|')
         for param in results:
             if not results[param]:
-                results[param] = 'N/A'
+                results[param] = code.bold(code.color('red', 'N/A'))
         if 'city' in results:
-            response += '%s %s %s' % (spacing, code.color('blue', 'City:'), results['city'])
+            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'City:')), results['city'])
         if 'region_name' in results:
-            response += '%s %s %s' % (spacing, code.color('blue', 'State:'), results['region_name'])
+            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'State:')), results['region_name'])
         if 'country_name' in results:
-            response += '%s %s %s' % (spacing, code.color('blue', 'Country:'), results['country_name'])
+            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Country:')), results['country_name'])
         if 'zip' in results:
-            response += '%s %s %s' % (spacing, code.color('blue', 'ZIP:'), results['zip'])
-        response += '%s %s %s' % (spacing, code.color('blue', 'Latitude:'), results['latitude'])
-        response += '%s %s %s' % (spacing, code.color('blue', 'Longitude:'), results['longitude'])
+            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'ZIP:')), results['zip'])
+        response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Latitude:')), results['latitude'])
+        response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Longitude:')), results['longitude'])
     code.reply(response)
 ip_lookup.commands = ['ip', 'iplookup', 'host', 'whois']
 ip_lookup.example = ".iplookup 8.8.8.8"
