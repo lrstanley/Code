@@ -63,7 +63,7 @@ class Bot(asynchat.async_chat):
 
         self.nick = nick
         self.user = 'code'
-        self.name = 'Code, the Python IRC Bot - http://code.liamstanley.net'
+        self.name = name
         self.password = password
 
         self.verbose = True
