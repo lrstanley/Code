@@ -23,7 +23,7 @@ def ip_lookup(code, input):
         return code.reply(code.color('red', 'No search term!'))
     txt = uc.encode(txt)
     query = uc.decode(txt)
-    elif txt.find(any( ['127.0.0.', '192.16.8.0.'] )) > -1 or not txt.find('.') > -1:
+    if txt.find(any( ['127.0.0.', '192.16.8.0.'] )) > -1 or not txt.find('.') > -1:
         return code.reply(code.color('red', 'That IP is blacklisted!'))
     response = ''
     #response = '[' + code.color('blue', 'IP/Host Lookup ') + '] '
