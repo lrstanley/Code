@@ -64,7 +64,7 @@ about.rate = 60
 
 
 def issue(code, input):
-   code.reply('Having an issue with ' + code.bold(code.nick)) + '? Post a bug report here:')
+   code.reply('Having an issue with ' + code.bold(code.nick) + '? Post a bug report here:')
    code.say('https://github.com/Liamraystanley/Code/issues/new')
 issue.commands = ['report', 'issue', 'makeissue', 'bug', 'bugreport', 'makebug', 'issues', 'createissue']
 issue.priority = 'low'
