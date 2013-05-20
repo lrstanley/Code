@@ -49,7 +49,7 @@ def help(code, input):
 #help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
 help.commands = ['help', 'support']
 help.priority = 'low'
-
+help.rate = 30
 
 def about(code, input):
    response = (
@@ -60,7 +60,15 @@ def about(code, input):
    code.reply(response)
 about.commands = ['about', 'liam']
 about.priority = 'low'
+about.rate = 60
 
+
+def issue(code, input):
+   code.reply('Having an issue with ' + code.bold(code.nick)) + '? Post a bug report here:')
+   code.say('https://github.com/Liamraystanley/Code/issues/new')
+issue.commands = ['report', 'issue', 'makeissue', 'bug', 'bugreport', 'makebug', 'issues', 'createissue']
+issue.priority = 'low'
+issue.rate = 60
 
 def stats(code, input): 
    """Show information on command usage patterns."""
