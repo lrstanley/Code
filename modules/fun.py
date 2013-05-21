@@ -28,8 +28,8 @@ def sexymeter(code, input):
     if len(text) > 2: return
     try:
         nick = text[1]
-        hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt']
-        notuser = ['taq', 'taq|away', 'retro', 'retro|away']
+        hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
+        notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
         rand = str(random.randint(1,100))
