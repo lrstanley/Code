@@ -28,10 +28,10 @@ def sexymeter(code, input):
     if len(text) > 2: return
     try:
         nick = text[1]
-        hotuser = []
-        notuser = []
-        ishot = nick in hotuser
-        isnot = nick in notuser
+        hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt']
+        notuser = ['taq', 'taq|away', 'retro', 'retro|away']
+        ishot = nick.lower() in hotuser
+        isnot = nick.lower() in notuser
         rand = str(random.randint(1,100))
         if len(nick) > 20: 
             code.say(input.nick + code.color('red', ': The syntax is .sexymeter <name>.'))
