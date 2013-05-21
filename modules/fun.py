@@ -10,6 +10,7 @@ import random
 #from random import randint
 
 def sexycomment(rand):
+    """finds a random comment dependant on what the rating was."""
     rand = int(rand)
     high = ['Now that\'s sexy!', 'Damn!', 'Nice!', 'Sweet!', 'Very sexy!', 'You\'re on fire!']
     medium = ['You could do better..', 'Nice man..', 'That\'s alright..', 'Not as sexy as me!']
@@ -40,7 +41,7 @@ def sexymeter(code, input):
             nick = 'myself'
             rand = '100'
         elif text[1].lower() in map(str.lower,code.config.admins):
-            rand = '100'
+            rand = str(random.randint(81,100))
         elif nick.lower() == 'myself' or nick.lower() == 'me':
             nick = input.nick
         elif ishot:
@@ -50,7 +51,7 @@ def sexymeter(code, input):
         else:
             nick = text[1]
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
-            code.bold(rand), sexycomment(rand)))
+            code.bold(rand), code.bold(sexycomment(rand))))
     except:
         nick = input.nick
         if input.admin:
@@ -58,7 +59,7 @@ def sexymeter(code, input):
         else:
             rand = str(random.randint(1,100))
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
-            code.bold(rand), sexycomment(rand)))
+            code.bold(rand), code.bold(sexycomment(rand))))
 sexymeter.commands = ['sm', 'sexymeter']
 sexymeter.priority = 'low'
 sexymeter.example = '.sexymeter Code'

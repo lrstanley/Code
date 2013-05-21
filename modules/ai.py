@@ -16,8 +16,7 @@ owner_gone = True
 greet_user = ''
 global lastuser
 lastuser = ''
-greeting = ['Hello', 'Hallo', 'Hi', 'Ohaider', 'Ello', 'Ohai', 'Hiya']
-
+greeting = ['Hello', 'Hi', 'Ello']
 random.seed()
 
 ## Functions that deal with the state of AI being on or off.
@@ -43,6 +42,7 @@ on.commands = ['on']
 on.priority = 'high'
 
 def state(code, input):
+    """check the AI state of Code"""
     global aistate
     if aistate == True:
         code.say(code.bold(code.color('green', 'It is on.')))
@@ -54,6 +54,7 @@ state.priority = 'high'
 ## Functions that do not rely on "AISTATE"
 
 def goodbye(code, input):
+    """Goodbye!"""
     byemsg = random.choice(('Bye', 'Goodbye', 'Seeya', 'Ttyl'))
     punctuation = random.choice(('!', ' '))
     code.say(byemsg + ' ' + input.nick + punctuation)
@@ -65,33 +66,37 @@ goodbye.rate = 30
 
 #to be set in config
 def welcomemessage(code, input):
-   global lastuser #doesn't sent a message if the last user that joined is the same
-   try:
-       greetchan = code.config.greetchans
-       greetchan = str(greetchan)
-       try:
-           excludeuser = code.config.excludeusers
-           excludeuser = str(excludeuser)
-       except:
-           excludeuser = ''
-       global aistate
-       if any( [aistate == False, input.nick == code.nick, \
-                excludeuser.find("'%s'" % (input.nick)) > -1, \
-                lastuser.find(input.nick) > -1] ):
-           return
-       elif greetchan.find("'%s'" % (input.sender)) > -1:
-          code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
-                   code.bold(input.sender)))
-          lastuser = input.nick
-       else: return
-   except:
-       return
+    """sends a welcome message on join to users on join, unless in exclude list"""
+    global lastuser #doesn't sent a message if the last user that joined is the same
+    try:
+        greetchan = code.config.greetchans
+        greetchan = str(greetchan)
+        try:
+            excludeuser = code.config.excludeusers
+            excludeuser = str(excludeuser)
+        except:
+            excludeuser = ''
+        global aistate
+        if any( [aistate == False, input.nick == code.nick, \
+                 excludeuser.find("'%s'" % (input.nick)) > -1, \
+                 lastuser.find(input.nick) > -1] ):
+            return
+        elif greetchan.find("'%s'" % (input.sender)) > -1:
+            code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
+                    code.bold(input.sender)))
+            lastuser = input.nick
+        else: return
+    except: return
 welcomemessage.event = 'JOIN'
 welcomemessage.rule = r'.*'
 welcomemessage.priority = 'medium'
 welcomemessage.thread = False
 
-def hau(code, input):
+def howareyou(code, input):
+    """How are you? auto reply module"""
+    text = input.group().split()
+    text.lower()
+    if len(text) > 2 and not text.find(code.nick.lower()) > -1: return
     global aistate
     global conversation
     global greet_user
@@ -100,11 +105,11 @@ def hau(code, input):
         time.sleep(random.randint(0,1))
         code.reply('How are you?')
         conversation = True
-hau.rule = r'(?i)(hey|hi|hello)\b.*(code|$nickname)\b.*$'
+howareyou.rule = r'(?i)(hey|hi|hello)\b.*(code|$nickname)\b.*$'
 
-def hau2(code, input):
-    hau(code,input)
-hau2.rule = r'(?i)(code|$nickname)\b.*(hey|hi|hello)\b.*$'
+def howareyou2(code, input):
+    howareyou(code,input)
+howareyou2.rule = r'(?i)(code|$nickname)\b.*(hey|hi|hello)\b.*$'
 
 def gau(code, input):
     global aistate
@@ -178,7 +183,7 @@ def yesno(code,input):
 yesno.rule = '(code|$nickname)\:\s+(yes|no)$'
 yesno.rate = 15
 
-def ping_reply (code,input):
+def ping_reply(code,input):
     text = input.group().split(':')
     text = text[1].split()
     if text[0] == 'PING' or text[0] == 'ping':
@@ -186,17 +191,17 @@ def ping_reply (code,input):
 ping_reply.rule = '(?i)($nickname|code)\:\s+(ping)\s*'
 ping_reply.rate = 30
 
-def love (code, input):
+def love(code, input):
     code.reply('I love you too.')
 love.rule = '(?i)i.*love.*(code|$nickname).*'
 love.rate = 30
 
-def love2 (code, input):
+def love2(code, input):
     code.reply('I love you too.')
 love2.rule = '(?i)(code|$nickname)\:\si.*love.*'
 love2.rate = 30
 
-def love3 (code, input):
+def love3(code, input):
     code.reply('I love you too.')
 love3.rule = '(?i)(code|$nickname)\,\si.*love.*'
 love3.rate = 30
