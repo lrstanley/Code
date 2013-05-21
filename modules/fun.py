@@ -9,6 +9,19 @@ http://code.liamstanley.net/
 import random
 #from random import randint
 
+def sexycomment(rand):
+    rand = int(rand)
+    high = ['Now that\'s sexy!', 'Damn!', 'Nice!', 'Sweet!', 'Very sexy!', 'You\'re on fire!']
+    medium = ['You could do better..', 'Nice man..', 'That\'s alright..', 'Not as sexy as me!']
+    low = ['Try harder next time...', 'Ouch.', 'Uhh...', 'You don\'t even match me!', 'HA!', 'Oh man! DX']
+    if rand > 80:
+        response = random.choice(high)
+    elif rand < 81 and rand > 50:
+        response = random.choice(medium)
+    else:
+        response = random.choice(low)
+    return response
+
 def sexymeter(code, input):
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
