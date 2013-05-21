@@ -28,6 +28,10 @@ def sexymeter(code, input):
     if len(text) > 2: return
     try:
         nick = text[1]
+        hotuser = []
+        notuser = []
+        ishot = nick in hotuser
+        isnot = nick in notuser
         rand = str(random.randint(1,100))
         if len(nick) > 20: 
             code.say(input.nick + code.color('red', ': The syntax is .sexymeter <name>.'))
@@ -39,16 +43,22 @@ def sexymeter(code, input):
             rand = '100'
         elif nick.lower() == 'myself' or nick.lower() == 'me':
             nick = input.nick
+        elif ishot:
+            rand = str(random.randint(81,100))
+        elif isnot:
+            rand = str(random.randint(0,20))
         else:
             nick = text[1]
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
+            code.bold(rand), sexycomment(rand)))
     except:
         nick = input.nick
         if input.admin:
             rand = '100'
         else:
             rand = str(random.randint(1,100))
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s.' % (code.bold(nick), code.bold(rand)))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
+            code.bold(rand), sexycomment(rand)))
 sexymeter.commands = ['sm', 'sexymeter']
 sexymeter.priority = 'low'
 sexymeter.example = '.sexymeter Code'
