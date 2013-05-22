@@ -88,7 +88,7 @@ def collectlines(code, input):
     search_dict[channel][nick] = templist
     save_db(search_dict)
 collectlines.rule = r'.*'
-collectlines.priority = 'high'
+collectlines.priority = 'low'
 
 def findandreplace(code, input):
     # don't bother in PM
@@ -149,7 +149,7 @@ def findandreplace(code, input):
 # Matches optional whitespace + 's' + optional whitespace + separator character
 findandreplace.rule = r'(?u)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w])(.*)' # May work for both this and "meant" (requires input.group(i+1))
 findandreplace.priority = 'high'
-#findandreplace.rate = 30
+findandreplace.rate = 30
 
 
 if __name__ == '__main__':
