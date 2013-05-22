@@ -24,13 +24,13 @@ def sexycomment(rand):
     return response
 
 def sexymeter(code, input):
+    hotuser = [input.admin, 'amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
+    notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
     if len(text) > 2: return
     try:
         nick = text[1]
-        hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
-        notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
         rand = str(random.randint(1,100))
@@ -54,8 +54,12 @@ def sexymeter(code, input):
             code.bold(rand), code.bold(sexycomment(rand))))
     except:
         nick = input.nick
-        if input.admin:
+        ishot = nick.lower() in hotuser
+        isnot = nick.lower() in notuser
+        if ishot:
             rand = str(random.randint(81,100))
+        elif isnot:
+            rand = str(random.randint(0,20))
         else:
             rand = str(random.randint(1,100))
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
