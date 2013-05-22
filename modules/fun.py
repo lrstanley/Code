@@ -24,7 +24,8 @@ def sexycomment(rand):
     return response
 
 def sexymeter(code, input):
-    hotuser = [input.admin.lower(), 'amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
+    adminplus = input.admin.lower()
+    hotuser = [adminplus, 'amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
     notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
