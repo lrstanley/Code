@@ -55,13 +55,13 @@ def sexymeter(code, input):
     except:
         nick = input.nick
         if input.admin:
-            rand = '100'
+            rand = str(random.randint(81,100))
         else:
             rand = str(random.randint(1,100))
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
             code.bold(rand), code.bold(sexycomment(rand))))
 sexymeter.commands = ['sm', 'sexymeter']
-sexymeter.priority = 'low'
+sexymeter.priority = 'medium'
 sexymeter.example = '.sexymeter Code'
 sexymeter.rate = 30
 
