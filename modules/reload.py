@@ -61,13 +61,13 @@ if sys.version_info >= (2, 7):
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE, shell=True)
         code.reply(proc.communicate()[0])
-        if len(input.group()) > 2:
+        if len(input.group()) > 1:
             f_reload(code, input)
         else: return
 else:
     def update(code, input):
         code.say('You need to run me on Python 2.7 to do that.')
-update.rule = ('$nick', ['update'], r'(.+)')
+update.rule = ('$nick', ['update']) #(, r'(.+)')
 
 if __name__ == '__main__': 
    print __doc__.strip()
