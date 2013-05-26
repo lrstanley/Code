@@ -15,10 +15,16 @@ def sexycomment(rand):
     high = ['Now that\'s sexy!', 'Damn!', 'Nice!', 'Sweet!', 'Very sexy!', 'You\'re on fire!']
     medium = ['You could do better..', 'Nice man..', 'That\'s alright..', 'Not as sexy as me!']
     low = ['Try harder next time...', 'Ouch.', 'Uhh...', 'You don\'t even match me!', 'HA!', 'Oh man! DX']
+    if rand == 100:
+        response = 'You\'re perfect!'
     if rand > 80:
         response = random.choice(high)
+    elif rand == 69:
+        response = 'It\'s getting sexy in here!'
     elif rand < 81 and rand > 50:
         response = random.choice(medium)
+    elif rand == 0:
+        response = 'Wow.. You\'re not even on the scale. :('
     else:
         response = random.choice(low)
     return response
@@ -33,7 +39,7 @@ def sexymeter(code, input):
         nick = text[1]
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
-        rand = str(random.randint(1,100))
+        rand = str(random.randint(0,100))
         if len(nick) > 20: 
             code.say(input.nick + code.color('red', ': The syntax is .sexymeter <name>.'))
             return
@@ -61,10 +67,10 @@ def sexymeter(code, input):
         elif isnot:
             rand = str(random.randint(0,20))
         else:
-            rand = str(random.randint(1,100))
+            rand = str(random.randint(0,100))
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
             code.bold(rand), code.bold(sexycomment(rand))))
-sexymeter.commands = ['sm', 'sexymeter']
+sexymeter.commands = ['sm', 'sexymeter', 'um', 'uglymeter']
 sexymeter.priority = 'medium'
 sexymeter.example = '.sexymeter Code'
 sexymeter.rate = 30
