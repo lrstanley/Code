@@ -67,7 +67,8 @@ if sys.version_info >= (2, 7):
 else:
     def update(code, input):
         code.say('You need to run me on Python 2.7 to do that.')
-update.rule = ('$nick', ['update']) #(, r'(.+)')
+#update.rule = ('$nick', ['update'], r'(.+)')
+update.commands = ['update']
 
 if __name__ == '__main__': 
    print __doc__.strip()
