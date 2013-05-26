@@ -150,7 +150,7 @@ def duck_search(query):
 
 def duck(code, input):
     query = input.group(2)
-    if not query: return code.reply('.ddg what?')
+    if not query: return code.reply('.search what?')
     query = query.encode('utf-8')
     uri = duck_search(query)
     if uri:
