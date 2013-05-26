@@ -60,13 +60,11 @@ if sys.version_info >= (2, 7):
         proc = subprocess.Popen('/usr/bin/git pull',
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE, shell=True)
-        code.reply(proc.communicate()[0])
-        if len(input.group()) > 1:
-            f_reload(code, input)
-        else: return
+        code.say('Git: ' + code.bold(proc.communicate()[0]))
+        f_reload(code, input)
 else:
     def update(code, input):
-        code.say('You need to run me on Python 2.7 to do that.')
+        code.say('You need to run me on %s to do that.' % code.bold(code.color('red', 'Python 2.7')))
 #update.rule = ('$nick', ['update'], r'(.+)')
 update.commands = ['update']
 
