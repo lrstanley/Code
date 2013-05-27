@@ -73,7 +73,7 @@ def format(word, definitions, number=2):
 def w(code, input): 
    if not input.group(2):
       return code.reply(code.color('red', 'Nothing to define.'))
-   word = input.group(2)
+   word = input.group(2).lower()
    etymology, definitions = wiktionary(word)
    if not definitions: 
       code.say(code.color('red', 'Couldn\'t get any definitions for %s.' % code.bold(word)))
