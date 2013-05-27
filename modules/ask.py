@@ -24,7 +24,8 @@ def ask(code, input):
         if len(list_choices) == 1:
             code.reply(random.choice(['yes', 'no']))
         else:
-            choices.rstrip("?")
+            choices = choices.replace('?','')
+            choices = choices.replace('!','')
             code.reply((random.choice(list_choices)).encode('utf-8'))
 ask.commands = ['ask']
 ask.priority = 'low'
