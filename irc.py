@@ -281,7 +281,7 @@ class Bot(asynchat.async_chat):
 
     def handle_connect(self):
         if self.verbose:
-            print >> sys.stderr, 'connected!'
+            print >> sys.stderr, 'Connected!'
         if self.password:
             self.write(('PASS', self.password))
         self.write(('NICK', self.nick))
