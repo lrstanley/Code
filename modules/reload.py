@@ -25,7 +25,7 @@ def f_reload(code, input):
         code.variables = None
         code.commands = None
         code.setup()
-        return code.reply('Reloaded all modules.')
+        return code.reply(code.bold('Reloaded all modules.'))
 
     # if a user supplies the module with the extension
     if name.endswith('.py'):
