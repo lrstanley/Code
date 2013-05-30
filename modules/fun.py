@@ -98,7 +98,7 @@ slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
 slap.rate = 30
 
-def magic(code):
+def magic(code, input):
     """.8ball - Use the Magic 8 Ball"""
     luck = str(random.randint(1,4))
     if luck == '1' or luck == '2':
