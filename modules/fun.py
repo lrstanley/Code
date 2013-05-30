@@ -97,6 +97,33 @@ def slap(code, input):
 slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
 slap.rate = 30
+
+def (code):
+    """.8ball - Use the Magic 8 Ball"""
+    luck = str(random.randint(1,4))
+    if luck == '1' or luck == '2':
+        # chance: 50% - Affirmative/Green/Bold
+        response = random.choice(('It is certain.', 'It is decidedly so.', \
+                       'Without a doubt.', 'Yes, definitely.', 'You may rely on it.', \
+                       'As I see it yes.', 'Most likely.', 'Outlook good.', 'Yes.', \
+                       'Signs point to yes.'))
+        response = code.color('green', response)
+    elif luck == '3':
+        # chance: 25% - Negative/Red/Bold
+        response = random.choice(('Don\'t count on it.', 'My reply is no.', \
+                       'My sources say no.', 'Outlook not so good.', 'Very doubtful.'))
+        response = code.color('red', response)
+    else:
+        # chance 25% - Non-Committal/Yellow/Bold
+        response = random.choice(('Reply hazy, try again.', 'Ask again later', \
+                       'Better not tell you now.', 'Cannot predict now.', \
+                       'Concentrate and ask again.'))
+        response = code.color('yellow', response)
+    code.reply('*Shakes Magic 8 Ball...* ' + code.bold(response))
+magic.commands = ['8ball', '8b', 'luck', 'eightball']
+magic.priority = 'medium'
+magic.rate = 30
+
 if __name__ == '__main__':
     print __doc__.strip()
 
