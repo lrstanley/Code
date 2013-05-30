@@ -122,35 +122,8 @@ class Bot(asynchat.async_chat):
             elif color == 'grey':
                 colorcode = '14'
             elif color == 'lightgrey' or color == 'silver':
-                colorcode = '01'
-            elif color == 'blue' or color == 'navy':
-                colorcode = '02'
-            elif color == 'green':
-                colorcode = '03'
-            elif color == 'red':
-                colorcode = '04'
-            elif color == 'brown' or color == 'maroon':
-                colorcode = '05'
-            elif color == 'purple':
-                colorcode = '06'
-            elif color == 'orange' or color == 'olive' or color == 'gold':
-                colorcode = '07'
-            elif color == 'yellow':
-                colorcode = '08' #quite a fucking
-            elif color == 'lightgreen' or color == 'lime':
-                colorcode = '09' #odd bug. wtf mate.
-            elif color == 'teal':
-                colorcode = '10'
-            elif color == 'cyan':
-                colorcode = '11'
-            elif color == 'lightblue' or color == 'royal':
-                colorcode = '12'
-            elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
-                colorcode = '13'
-            elif color == 'grey':
-                colorcode = '14'
-            elif color == 'lightgrey' or color == 'silver':
                 colorcode = '15'
+            # not sure how i managed to overlap that. weird much?
             return str(colorcode)
         except:
             colorcode = ''
