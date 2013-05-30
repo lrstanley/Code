@@ -73,7 +73,7 @@ def sexymeter(code, input):
 sexymeter.commands = ['sm', 'sexymeter', 'um', 'uglymeter']
 sexymeter.priority = 'medium'
 sexymeter.example = '.sexymeter Code'
-sexymeter.rate = 30
+sexymeter.rate = 20
 
 def slap(code, input):
     """.slap <target> - Slaps <target>"""
@@ -96,7 +96,7 @@ def slap(code, input):
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', verb, text[1], afterfact, '\x01'])
 slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
-slap.rate = 30
+slap.rate = 20
 
 def magic(code, input):
     """.8ball - Use the Magic 8 Ball"""
@@ -115,14 +115,14 @@ def magic(code, input):
         response = code.color('red', response)
     else:
         # chance 25% - Non-Committal/Yellow/Bold
-        response = random.choice(('Reply hazy, try again.', 'Ask again later', \
+        response = random.choice(('Reply hazy, try again.', 'Ask again later.', \
                        'Better not tell you now.', 'Cannot predict now.', \
                        'Concentrate and ask again.'))
         response = code.color('yellow', response)
     code.reply('*Shakes Magic 8 Ball...* ' + code.bold(response))
-magic.commands = ['8ball', '8b', 'luck', 'eightball']
+magic.commands = ['8ball', '8b', 'luck', 'eightball', 'magic8']
 magic.priority = 'medium'
-magic.rate = 30
+magic.rate = 15
 
 if __name__ == '__main__':
     print __doc__.strip()
