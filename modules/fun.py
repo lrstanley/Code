@@ -29,6 +29,30 @@ def sexycomment(rand):
         response = random.choice(low)
     return response
 
+def roulette(code, input):
+    chance = str(random.randint(1,6))
+    text = input.group().split()
+    if (input.nick in code.config.admins):
+        try:
+            nick = text[1]
+            if nick.lower() == 'myself' or nick.lower() == 'me':
+                nick = input.nick
+            elif nick.lower() == code.nick.lower() or nick.lower() == 'himself':
+                nick = 'himself'
+        except:
+            nick = input.nick
+    else:
+        nick = input.nick
+    if chance == '1':
+        response = code.color('red', code.bold('dies :o'))
+    else:
+        response = code.color('green', code.bold('is ok, the chamber was empty!'))
+    code.say('*Points gun at %s, and pulls the trigger... %s %s' % (nick, nick, response))
+roulette.commands = ['rr', 'russianroulette', 'roulette']
+roulette.priority = 'medium'
+roulette.example = '.roulette'
+roulette.rate = 20
+
 def sexymeter(code, input):
     hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
     notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
@@ -101,6 +125,7 @@ slap.rate = 20
 def magic(code, input):
     """.8ball - Use the Magic 8 Ball"""
     luck = str(random.randint(1,4))
+    # http://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers
     if luck == '1' or luck == '2':
         # chance: 50% - Affirmative/Green/Bold
         response = random.choice(('It is certain.', 'It is decidedly so.', \
@@ -119,9 +144,10 @@ def magic(code, input):
                        'Better not tell you now.', 'Cannot predict now.', \
                        'Concentrate and ask again.'))
         response = code.color('yellow', response)
-    code.reply('*Shakes Magic 8 Ball...* ' + code.bold(response))
+    code.say('*%s shakes the Magic 8 Ball...* %s' % (code.nick, code.bold(response)))
 magic.commands = ['8ball', '8b', 'luck', 'eightball', 'magic8']
 magic.priority = 'medium'
+magic.example = '.8ball will i feel better tomorrow?'
 magic.rate = 15
 
 if __name__ == '__main__':
