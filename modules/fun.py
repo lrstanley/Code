@@ -155,7 +155,7 @@ magic.example = '.8ball will i feel better tomorrow?'
 magic.rate = 15
 
 def rps(code, input):
-    """.rps <rock/paper/scissors> - Play some RockPaperScissors with Code!"""
+    """.(rock/paper/scissors) - Play some Rock-Paper-Scissors with Code!"""
     text = input.group().lower()
     text = text.split()
     cpu = random.randint(1,3)
