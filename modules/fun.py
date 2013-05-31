@@ -30,6 +30,7 @@ def sexycomment(rand):
     return response
 
 def roulette(code, input):
+    """.roulette - Play a little gruesome russian roulette."""
     chance = str(random.randint(1,6))
     text = input.group().split()
     if (input.nick in code.config.admins):
@@ -37,17 +38,21 @@ def roulette(code, input):
             nick = text[1]
             if nick.lower() == 'myself' or nick.lower() == 'me':
                 nick = input.nick
+                nicktwo = nick
             elif nick.lower() == code.nick.lower() or nick.lower() == 'himself':
                 nick = 'himself'
+                nicktwo = code.nick
         except:
             nick = input.nick
+            nicktwo = nick
     else:
         nick = input.nick
+        nicktwo = nick
     if chance == '1':
         response = code.color('red', code.bold('dies :o'))
     else:
-        response = code.color('green', code.bold('is ok, the chamber was empty!'))
-    code.say('*Points gun at %s, and pulls the trigger... %s %s' % (nick, nick, response))
+        response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
+    code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nicktwo, response))
 roulette.commands = ['rr', 'russianroulette', 'roulette']
 roulette.priority = 'medium'
 roulette.example = '.roulette'
