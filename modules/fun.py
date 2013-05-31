@@ -171,7 +171,7 @@ def rps(code, input):
                # 1=tie, 2=win, 3=loss
     syntax = 'The syntax is \'.rps rock/paper/scissors\''
     if input.group(1) == 'rock' or input.group(1) == 'paper' or input.group(1) == 'scissors':
-        text[1] = input.group(1)
+        text.append(input.group(1))
     if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
         if text[1] == 'rock':
             if cpu == 1:
