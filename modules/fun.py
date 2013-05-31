@@ -38,21 +38,16 @@ def roulette(code, input):
             nick = text[1]
             if nick.lower() == 'myself' or nick.lower() == 'me':
                 nick = input.nick
-                nicktwo = nick
             elif nick.lower() == code.nick.lower() or nick.lower() == 'himself':
                 nick = 'himself'
-                nicktwo = code.nick
+                code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, \
+                         code.nick, response))
+                return
         except:
             nick = input.nick
-            nicktwo = nick
     else:
         nick = input.nick
-        nicktwo = nick
-    if chance == '1':
-        response = code.color('red', code.bold('dies!')) + ' :O'
-    else:
-        response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
-    code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nicktwo, response))
+    code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nick, response))
 roulette.commands = ['rr', 'russianroulette', 'roulette']
 roulette.priority = 'medium'
 roulette.example = '.roulette'
