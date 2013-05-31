@@ -169,8 +169,8 @@ def rps(code, input):
         state = 'lost'
         color = 'red'
                # 1=tie, 2=win, 3=loss
-    syntax = 'The syntax is \'.(rock/paper/scissors)'
-    if len(input.group()) > 2:
+    syntax = 'The syntax is .(rock/paper/scissors)'
+    if len(input.group()) != 2:
         return code.reply(code.color('red', syntax))
     if input.group(1) == 'rock' or input.group(1) == 'paper' or input.group(1) == 'scissors':
         text.append(input.group(1))
