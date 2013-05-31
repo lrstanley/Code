@@ -49,7 +49,7 @@ def roulette(code, input):
         nick = input.nick
         nicktwo = nick
     if chance == '1':
-        response = code.color('red', code.bold('dies :o'))
+        response = code.color('red', code.bold('dies!')) + ' :O'
     else:
         response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
     code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nicktwo, response))
