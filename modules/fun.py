@@ -169,7 +169,7 @@ def rps(code, input):
     if text[0] == 'rock' or text[0] == 'paper' or text[0] == 'scissors':
         text.append(text[0])
     syntax = 'The syntax is \'.rps rock/paper/scissors\'. Testing: ' + text[0]
-    elif len(text) == 1:
+    if len(text) == 1:
         return code.reply(code.color('red', syntax))
     elif text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
         if text[1] == 'rock':
