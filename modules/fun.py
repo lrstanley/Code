@@ -170,9 +170,9 @@ def rps(code, input):
         text[0].strip('.')
         text.append(text[0])
     syntax = 'The syntax is \'.rps rock/paper/scissors\''
-    if len(text) == 1:
-        return code.reply(code.color('red', syntax))
-    elif text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
+#    if len(text) == 1:
+#        return code.reply(code.color('red', syntax))
+    if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
         if text[1] == 'rock':
             if cpu == 1:
                 response = 'rock'
