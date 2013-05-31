@@ -154,6 +154,53 @@ magic.priority = 'medium'
 magic.example = '.8ball will i feel better tomorrow?'
 magic.rate = 15
 
+def rps(code, input):
+    """.rps <rock/paper/scissors> - Play some RockPaperScissors with Code!"""
+    text = input.group().lower()
+    text = text.split()
+    cpu = random.randint(1,3)
+    if cpu == 1:
+        state = 'had a draw'
+    elif cpu == 2:
+        'won!'
+    else:
+        'lost!'
+               # 1=tie, 2=win, 3=loss
+    if text[0] == 'rock' or text[0] == 'paper' or text[0] == 'scissors':
+        text.append(text[0])
+    syntax = 'The syntax is \'.rps rock/paper/scissors\''
+    if len(text) < 2:
+        return code.reply(code.color('red', syntax))
+    elif text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
+        if text[1] == 'rock':
+            if cpu == 1:
+                response = 'rock'
+            elif cpu == 2:
+                response = 'scissors'
+            else:
+                response = 'paper'
+        elif text[1] == 'paper':
+            if cpu == 1:
+                response = 'paper'
+            elif cpu == 2:
+                response = 'rock'
+            else:
+                response = 'scissors'
+        elif text[1] == 'scissors':
+            if cpu == 1:
+                response = 'scissors'
+            elif cpu == 2:
+                response = 'paper'
+            else:
+                response = 'rock'
+        code.say('*Rock... Paper... Scissors!* You %s %s had %s' % (code.bold(state), code.nick, code.bold(response)))
+        return
+    else: return code.reply(code.color('red', syntax))
+rps.commands = ['rock', 'paper', 'scissors', 'rps']
+rps.example = '.rock'
+rps.rate = 15
+
+
 if __name__ == '__main__':
     print __doc__.strip()
 

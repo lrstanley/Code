@@ -94,8 +94,8 @@ welcomemessage.thread = False
 
 def howareyou(code, input):
     """How are you? auto reply module"""
-    text = input.group().split()
-    text.lower()
+    text = input.group().lower()
+    text = text.split()
     if len(text) > 2 and not text.find(code.nick.lower()) > -1: return
     global aistate
     global conversation
