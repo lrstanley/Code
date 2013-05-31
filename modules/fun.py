@@ -167,7 +167,7 @@ def rps(code, input):
         'lost!'
                # 1=tie, 2=win, 3=loss
     if text[0] == '.rock' or text[0] == '.paper' or text[0] == '.scissors':
-        text.strip('.')
+        text[0].strip('.')
         text.append(text[0])
     syntax = 'The syntax is \'.rps rock/paper/scissors\''
     if len(text) == 1:
