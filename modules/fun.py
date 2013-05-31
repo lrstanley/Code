@@ -32,6 +32,10 @@ def sexycomment(rand):
 def roulette(code, input):
     """.roulette - Play a little gruesome russian roulette."""
     chance = str(random.randint(1,6))
+    if chance == '1':
+        response = code.color('red', code.bold('dies!')) + ' :O'
+    else:
+        response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
     text = input.group().split()
     if (input.nick in code.config.admins):
         try:
