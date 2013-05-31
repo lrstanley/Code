@@ -162,9 +162,9 @@ def rps(code, input):
     if cpu == 1:
         state = 'had a draw'
     elif cpu == 2:
-        state = 'won!'
+        state = 'won'
     else:
-        state = 'lost!'
+        state = 'lost'
                # 1=tie, 2=win, 3=loss
     syntax = 'The syntax is \'.rps rock/paper/scissors\''
     if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
@@ -189,7 +189,7 @@ def rps(code, input):
                 response = 'paper'
             else:
                 response = 'rock'
-        code.say('*Rock... Paper... Scissors!* You %s %s had %s' % (code.bold(state), code.nick, code.bold(response)))
+        code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.bold(state), code.nick, code.bold(response)))
         return
     else: return code.reply(code.color('red', syntax))
 rps.commands = ['rock', 'paper', 'scissors', 'rps']
