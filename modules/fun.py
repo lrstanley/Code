@@ -171,42 +171,33 @@ def rps(code, input):
                # 1=tie, 2=win, 3=loss
     syntax = 'The syntax is .(rock/paper/scissors)'
     try:
-        if input.group(1) == 'rock' or input.group(1) == 'paper' or \
-           input.group(1) == 'scissors':
-            #text.append(text[1])
-            text[1] = text[0]
-        elif input.group(1) == 'rps':
-            check = input.group(2) # check if there is a 2nd word, else fail
-        if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors' or \
-           text[1] == 'r' or text[1] == 'p' or text[1] == 's':
-            if text[1] == 'rock' or text[1] == 'r':
-                if cpu == 1:
-                    response = 'rock'
-                elif cpu == 2:
-                    response = 'scissors'
-                else:
-                    response = 'paper'
-            elif text[1] == 'paper' or text[1] == 'p':
-                if cpu == 1:
-                    response = 'paper'
-                elif cpu == 2:
-                    response = 'rock'
-                else:
-                    response = 'scissors'
-            elif text[1] == 'scissors' or text[1] == 's':
-                if cpu == 1:
-                    response = 'scissors'
-                elif cpu == 2:
-                    response = 'paper'
-                else:
-                    response = 'rock'
-            code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
-                  code.bold(state)), code.nick, code.bold(response)))
-            return
-        else: raise Exception("Fail!")
+        if text[0] == 'rock' or text[0] == 'r':
+            if cpu == 1:
+                response = 'rock'
+            elif cpu == 2:
+                response = 'scissors'
+            else:
+                response = 'paper'
+        elif text[0] == 'paper' or text[0] == 'p':
+            if cpu == 1:
+                response = 'paper'
+            elif cpu == 2:
+                response = 'rock'
+            else:
+                response = 'scissors'
+        elif text[0] == 'scissors' or text[0] == 's':
+            if cpu == 1:
+                response = 'scissors'
+            elif cpu == 2:
+                response = 'paper'
+            else:
+                response = 'rock'
+        code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
+              code.bold(state)), code.nick, code.bold(response)))
+        return
     except: return code.reply(code.color('red', syntax))
-rps.commands = ['rps', 'rock', 'paper', 'scissors']
-rps.example = '.rps'
+rps.commands = ['rock', 'paper', 'scissors']
+rps.example = '.rock'
 rps.rate = 15
 
 if __name__ == '__main__':
