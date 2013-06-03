@@ -74,6 +74,7 @@ say_it.rule = r"(.*)"
 say_it.priority = 'low'
 
 def add_twss(code, input):
+    if not input.admin: return
     print last
     with open('modules/twss_ua.txt', 'a') as f:
         f.write(re.sub(r'[^\w\s]', '', last.lower()) + '\n')
