@@ -170,24 +170,26 @@ def rps(code, input):
         color = 'red'
                # 1=tie, 2=win, 3=loss
     syntax = 'The syntax is .(rock/paper/scissors)'
+    if input.group(1) == 'rps' and len(input.group()) != 2:
+        return code.reply(code.color('red', syntax))
     if input.group(1) == 'rock' or input.group(1) == 'paper' or input.group(1) == 'scissors':
         text.append(input.group(1))
     if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors':
-        if text[1] == 'rock':
+        if text[1] == 'rock' or text[1] == 'r':
             if cpu == 1:
                 response = 'rock'
             elif cpu == 2:
                 response = 'scissors'
             else:
                 response = 'paper'
-        elif text[1] == 'paper':
+        elif text[1] == 'paper' or text[1] == 'p':
             if cpu == 1:
                 response = 'paper'
             elif cpu == 2:
                 response = 'rock'
             else:
                 response = 'scissors'
-        elif text[1] == 'scissors':
+        elif text[1] == 'scissors' or text[1] == 's':
             if cpu == 1:
                 response = 'scissors'
             elif cpu == 2:
