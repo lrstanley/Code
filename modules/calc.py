@@ -108,9 +108,9 @@ calc.example = '.calc 5 + 3'
 
 def py(code, input):
    try:
-       text = input.group(2)
-   except: return code.reply('Please enter an input.')
-   query = input.group(2).encode('utf-8')
+       query = input.group(2).encode('utf-8')
+   except: 
+       return code.reply('Please enter an input.')
    uri = 'http://tumbolia.appspot.com/py/'
    try:
        answer = web.get(uri + web.urllib.quote(query))
