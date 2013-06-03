@@ -75,6 +75,7 @@ say_it.priority = 'low'
 
 def add_twss(code, input):
     if not input.admin: return
+    if len(last) < 5: return
     print last
     with open('modules/twss_ua.txt', 'a') as f:
         f.write(re.sub(r'[^\w\s]', '', last.lower()) + '\n')
