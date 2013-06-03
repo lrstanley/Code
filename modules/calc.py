@@ -117,7 +117,7 @@ def py(code, input):
        if answer:
            code.say(answer)
        else:
-           code.reply('Sorry, no result.')
+           code.reply('Sorry, no %s' % code.bold('result'))
    except Exception, e:
        code.reply(code.color('red', 'The server did not return an answer.'))
        print '[.py]', e
@@ -126,7 +126,7 @@ py.example = '.py print(int(1.0) + int(3))'
 
 def wa(code, input): 
    if not input.group(2):
-      return code.reply("No search term.")
+      return code.reply('No search term.')
    query = input.group(2).encode('utf-8')
    uri = 'http://tumbolia.appspot.com/wa/'
    answer = web.get(uri + web.urllib.quote(query.replace('+', '%2B')))
