@@ -1,29 +1,29 @@
 #/bin/bash
-echo "------------------------------------------------------"
-echo "         Code Copyright Liam Stanley 2012-2013        "
-echo "This way of debugging Code is still under development."
-echo "         -----------------------------------          "
-echo "If you get Python not found errors, add Python to     "
-echo "Your PATH variable, or edit this file to point to it."
-echo "------------------------------------------------------"
-echo "-------------------------------------"
-echo "Compiling all in $PWD starting now..."
-echo "-------------------------------------"
-python -m compileall $PWD/*.py || { echo 'Compiling method failed...' ; exit 1; }
-echo "-------------------------------"
-echo "Compiling ./code in $PWD now..."
-echo "-------------------------------"
-python -m py_compile $PWD/code || { echo 'Compiling method failed...' ; exit 1; }
-echo "---------------------------------------------"
-echo "Compiling all modules in $PWD starting now..."
-echo "---------------------------------------------"
-python -m compileall $PWD/modules/*.py || { echo 'Compiling method failed...' ; exit 1; }
-echo "-----------------------------------"
-echo "Cleaning up $PWD of all binaries..."
-echo "-----------------------------------"
-rm -rfv $PWD/*.pyc || { echo 'Failed to remove binaries. oh well...' ; }
-rm -rfv $PWD/modules/*.pyc || { echo 'Failed to remove binaries. oh well...' ; }
-rm -rfv $PWD/codec || { echo 'Failed to remove binaries. oh well...' ; }
-echo "-------------------------------------------"
-echo "If no errors resided, then were good to go!"
-echo "-------------------------------------------"
+echo "------------------------------------------------------" >> debug-log.txt
+echo "         Code Copyright Liam Stanley 2012-2013        " >> debug-log.txt
+echo "This way of debugging Code is still under development." >> debug-log.txt
+echo "         -----------------------------------          " >> debug-log.txt
+echo "If you get Python not found errors, add Python to     " >> debug-log.txt
+echo "Your PATH variable, or edit this file to point to it." >> debug-log.txt
+echo "------------------------------------------------------" >> debug-log.txt
+echo "-------------------------------------" >> debug-log.txt
+echo "Compiling all in $PWD starting now..." >> debug-log.txt
+echo "-------------------------------------" >> debug-log.txt
+python -m compileall $PWD/*.py >> debug-log.txt || { echo 'Compiling method failed...' >> debug-log.txt ; exit 1; }
+echo "-------------------------------" >> debug-log.txt
+echo "Compiling ./code in $PWD now..." >> debug-log.txt
+echo "-------------------------------" >> debug-log.txt
+python -m py_compile $PWD/code >> debug-log.txt || { echo 'Compiling method failed...' >> debug-log.txt ; exit 1; }
+echo "---------------------------------------------" >> debug-log.txt
+echo "Compiling all modules in $PWD starting now..." >> debug-log.txt
+echo "---------------------------------------------" >> debug-log.txt
+python -m compileall $PWD/modules/*.py >> debug-log.txt || { echo 'Compiling method failed...' >> debug-log.txt ; exit 1; }
+echo "-----------------------------------" >> debug-log.txt
+echo "Cleaning up $PWD of all binaries..." >> debug-log.txt
+echo "-----------------------------------" >> debug-log.txt
+rm -rfv $PWD/*.pyc >> debug-log.txt || { echo 'Failed to remove binaries. oh well...' >> debug-log.txt ; }
+rm -rfv $PWD/modules/*.pyc >> debug-log.txt || { echo 'Failed to remove binaries. oh well...' >> debug-log.txt ; }
+rm -rfv $PWD/codec >> debug-log.txt || { echo 'Failed to remove binaries. oh well...' >> debug-log.txt ; }
+echo "-------------------------------------------" >> debug-log.txt
+echo "If no errors resided, then were good to go!" >> debug-log.txt
+echo "-------------------------------------------" >> debug-log.txt
