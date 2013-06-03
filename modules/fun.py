@@ -126,6 +126,20 @@ slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
 slap.rate = 20
 
+def hug(code, input):
+    """.hug <target> - Hugs <target>"""
+    text = input.group().split()
+    if len(text) < 2 or text[1].startswith('#'): return
+    if text[1].lower() == code.nick.lower() or text[1].lower() == 'himself':
+        if (input.nick not in code.config.admins):
+            text[1] = input.nick
+        else: text[1] = 'himself'
+    hugtype = random.choice(('real tight', 'strongly', 'like a bear', 'tight', ''))
+    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', 'hugs ', text[1], hugtype, '\x01'])
+hug.commands = ['hug', 'hugs']
+hug.priority = 'low'
+hug.rate = 5
+
 def magic(code, input):
     """.8ball - Use the Magic 8 Ball"""
     luck = str(random.randint(1,4))
