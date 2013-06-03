@@ -135,7 +135,7 @@ def hug(code, input):
             text[1] = input.nick
         else: text[1] = 'himself'
     hugtype = random.choice(('real tight', 'strongly', 'like a bear', 'tight', ''))
-    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', 'hugs ', text[1], hugtype, '\x01'])
+    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', 'hugs', text[1], hugtype, '\x01'])
 hug.commands = ['hug', 'hugs']
 hug.priority = 'low'
 hug.rate = 5
