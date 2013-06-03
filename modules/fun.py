@@ -62,7 +62,19 @@ def sexymeter(code, input):
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
     if len(text) > 2: return
-    if text[1]:
+    if not text[1]:
+        nick = input.nick
+        ishot = nick.lower() in hotuser
+        isnot = nick.lower() in notuser
+        if ishot or input.admin:
+            rand = str(random.randint(81,100))
+        elif isnot:
+            rand = str(random.randint(0,20))
+        else:
+            rand = str(random.randint(0,100))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
+            code.bold(rand), code.bold(sexycomment(rand))))
+    else:
         nick = text[1]
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
@@ -83,18 +95,6 @@ def sexymeter(code, input):
             rand = str(random.randint(0,20))
         else:
             nick = text[1]
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
-            code.bold(rand), code.bold(sexycomment(rand))))
-    else:
-        nick = input.nick
-        ishot = nick.lower() in hotuser
-        isnot = nick.lower() in notuser
-        if ishot or input.admin:
-            rand = str(random.randint(81,100))
-        elif isnot:
-            rand = str(random.randint(0,20))
-        else:
-            rand = str(random.randint(0,100))
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
             code.bold(rand), code.bold(sexycomment(rand))))
 sexymeter.commands = ['sm', 'sexymeter', 'um', 'uglymeter']
