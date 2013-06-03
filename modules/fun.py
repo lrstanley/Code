@@ -207,9 +207,15 @@ rps.rate = 15
 def rps_alias(code, input):
     text = input.group().lower()
     text = text.split()
-    text.append(input.group(1))
+    input = [input.group(0), input.group(1)]
+    #text.append(input.group(1))
     rps(code, input)
 rps_alias.commands = ['rock', 'paper', 'scissors']
+
+def test(code, input):
+    sp = ' '
+    code.reply(input.group(0), sp, input.group(1), sp, input.group(2), sp, input.group(3))
+test.commands = ['test']
 
 if __name__ == '__main__':
     print __doc__.strip()
