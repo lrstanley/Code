@@ -204,9 +204,10 @@ def rps(code, input):
                 response = 'paper'
             else:
                 response = 'rock'
+        else: 
+            return code.reply(code.color('red', syntax))
         return code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
               code.bold(state)), code.nick, code.bold(response)))
-    else: return code.reply(code.color('red', syntax))
 rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
 rps.example = '.rock'
 rps.rate = 15
