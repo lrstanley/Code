@@ -171,7 +171,11 @@ def rps(code, input):
                # 1=tie, 2=win, 3=loss
     syntax = 'The syntax is .(rock/paper/scissors)'
     try:
-        check = input.group(2) # check if there is a 2nd word, else fail
+        if input.group(1) == 'rock' or input.group(1) == 'paper' or \
+           input.group(1) == 'scissors':
+            text.append(text[1])
+        elif input.group(1) == 'rps':
+            check = input.group(2) # check if there is a 2nd word, else fail
         if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors' or \
            text[1] == 'r' or text[1] == 'p' or text[1] == 's':
             if text[1] == 'rock' or text[1] == 'r':
@@ -200,21 +204,15 @@ def rps(code, input):
             return
         else: raise Exception("Fail!")
     except: return code.reply(code.color('red', syntax))
-rps.commands = ['rps']
+rps.commands = ['rps', 'rock', 'paper', 'scissors']
 rps.example = '.rps'
 rps.rate = 15
 
-def rps_alias(code, input):
-    text = input.group().lower()
-    text = text.split()
-    input = [input.group(0), input.group(1)]
-    #text.append(input.group(1))
-    rps(code, input)
-rps_alias.commands = ['rock', 'paper', 'scissors']
-
 def test(code, input):
     sp = ' '
-    code.reply(input.group(1), sp, input.group(2), sp, input.group(3), sp, input.group(4))
+    text = input.group().lower()
+    text = text.split()
+    code.reply(text)
 test.commands = ['test']
 
 if __name__ == '__main__':
