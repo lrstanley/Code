@@ -106,7 +106,10 @@ def calc(code, input):
 calc.commands = ['c', 'calc', 'calculate']
 calc.example = '.calc 5 + 3'
 
-def py(code, input): 
+def py(code, input):
+   try:
+       text = input.group(2)
+   except: return code.reply('Please enter an input.')
    query = input.group(2).encode('utf-8')
    uri = 'http://tumbolia.appspot.com/py/'
    try:
