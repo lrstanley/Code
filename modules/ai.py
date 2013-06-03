@@ -7,6 +7,7 @@ http://code.liamstanley.net/
 """
 
 import random, time
+import difflib
 
 aistate = True
 conversation = False
@@ -65,6 +66,10 @@ goodbye.rate = 30
 ## Functions that do rely on "AISTATE"
 
 #to be set in config
+def similar(a, b):
+    seq=difflib.SequenceMatcher(a=a.lower(), b=b.lower())
+    return seq.ratio()
+
 def welcomemessage(code, input):
     """sends a welcome message on join to users on join, unless in exclude list"""
     global lastuser #doesn't sent a message if the last user that joined is the same
@@ -79,7 +84,7 @@ def welcomemessage(code, input):
         global aistate
         if any( [aistate == False, input.nick == code.nick, \
                  excludeuser.find("'%s'" % (input.nick)) > -1, \
-                 lastuser.find(input.nick) > -1] ):
+                 similar(lastuser, input.nick) > 0.70] ):
             return
         elif greetchan.find("'%s'" % (input.sender)) > -1:
             code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
