@@ -38,16 +38,15 @@ def roulette(code, input):
         response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
     text = input.group().split()
     if (input.nick in code.config.admins):
-        try:
+        if text[1]:
             nick = text[1]
             if nick.lower() == 'myself' or nick.lower() == 'me':
                 nick = input.nick
             elif nick.lower() == code.nick.lower() or nick.lower() == 'himself':
                 nick = 'himself'
-                code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, \
+                return code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, \
                          code.nick, response))
-                return
-        except:
+        else:
             nick = input.nick
     else:
         nick = input.nick
@@ -63,7 +62,7 @@ def sexymeter(code, input):
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
     if len(text) > 2: return
-    try:
+    if text[1]:
         nick = text[1]
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
@@ -86,7 +85,7 @@ def sexymeter(code, input):
             nick = text[1]
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
             code.bold(rand), code.bold(sexycomment(rand))))
-    except:
+    else:
         nick = input.nick
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
@@ -184,7 +183,6 @@ def rps(code, input):
         color = 'red'
                # 1=tie, 2=win, 3=loss
     syntax = 'The syntax is .(rock/paper/scissors)'
-    try:
         if input.group(1) == 'rock' or input.group(1) == 'r':
             if cpu == 1:
                 response = 'rock'
@@ -206,10 +204,9 @@ def rps(code, input):
                 response = 'paper'
             else:
                 response = 'rock'
-        code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
+        return code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
               code.bold(state)), code.nick, code.bold(response)))
-        return
-    except: return code.reply(code.color('red', syntax))
+    else: return code.reply(code.color('red', syntax))
 rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
 rps.example = '.rock'
 rps.rate = 15

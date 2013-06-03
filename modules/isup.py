@@ -14,6 +14,7 @@ def isup(code,input):
     """Is it down for everyone, or just me?"""
     synerr = input.nick + ': The syntax is \'.isup <uri>\' e.g, \'.isup http://google.com\''
     try:
+        if not input.group(2): return code.reply('Please enter an input.')
         domain = input.group(2)
         chars = set('~`!@$%^&*()+=[]{}|;,<>?')
         if not domain.find('.') > -1:
