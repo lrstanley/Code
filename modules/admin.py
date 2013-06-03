@@ -87,7 +87,7 @@ def me(code, input):
         if a and b:
             msg = '\x01ACTION %s\x01' % input.group(3)
             code.msg(input.group(2), msg, x=True)
-me.rule = (['me', 'action'], r'(#?\S+) (.*)')
+me.rule = (['me', 'action'], r'(#?\S+) (.+)')
 me.priority = 'low'
 
 def announce(code, input):
