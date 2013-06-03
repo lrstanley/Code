@@ -62,7 +62,12 @@ def sexymeter(code, input):
     text = input.group().split()
     """.sexymeter <target> - rates <target> on sexiness"""
     if len(text) > 2: return
-    if not text[1]:
+    try:
+        name = text[1]
+        name = True
+    except:
+        name = False
+    if not name:
         nick = input.nick
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
