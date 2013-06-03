@@ -27,3 +27,4 @@ rm -rfv $PWD/codec >> debug-log.txt || { echo 'Failed to remove binaries. oh wel
 echo "-------------------------------------------" >> debug-log.txt
 echo "If no errors resided, then were good to go!" >> debug-log.txt
 echo "-------------------------------------------" >> debug-log.txt
+cat debug-log.txt
