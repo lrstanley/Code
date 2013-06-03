@@ -173,7 +173,8 @@ def rps(code, input):
     try:
         if input.group(1) == 'rock' or input.group(1) == 'paper' or \
            input.group(1) == 'scissors':
-            text.append(text[1])
+            #text.append(text[1])
+            text[1] = text[0]
         elif input.group(1) == 'rps':
             check = input.group(2) # check if there is a 2nd word, else fail
         if text[1] == 'rock' or text[1] == 'paper' or text[1] == 'scissors' or \
@@ -207,13 +208,6 @@ def rps(code, input):
 rps.commands = ['rps', 'rock', 'paper', 'scissors']
 rps.example = '.rps'
 rps.rate = 15
-
-def test(code, input):
-    sp = ' '
-    text = input.group().lower()
-    text = text.split()
-    code.reply(text)
-test.commands = ['test']
 
 if __name__ == '__main__':
     print __doc__.strip()
