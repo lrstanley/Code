@@ -6,7 +6,7 @@ twss.py - Code 'That's what she said' Module
 http://code.liamstanley.net/
 """
 
-#import urllib2
+import urllib2
 import urllib
 import re
 import os
@@ -25,7 +25,7 @@ elif not os.path.exists('modules/twss.txt'):
     print 'Downloading "That\'s What She Said" library from http://liamstanley.net/twss.txt now...'
     urllib.urlretrieve ('http://liamstanley.net/twss.txt', 'modules/twss.txt')
 
-#    f = open('modules/twss.txt', 'w')
+    f = open('modules/twss.txt', 'w')
 #    url = 'http://www.twssstories.com/best?page='
 #    first_re = re.compile(r"<p>.+TWSS\.*</p>")
 #    inner_re = re.compile(r'".+"')
@@ -70,7 +70,7 @@ def say_it(code, input):
     if re.sub('[^\w\s]', '', formatted) in quotes:
         code.say('That\'s what she said.')
     last = re.sub('[^\w\s]', '', formatted)
-say_it.rule = r'(.*)'
+say_it.rule = r"(.*)"
 say_it.priority = 'low'
 
 def add_twss(code, input):
