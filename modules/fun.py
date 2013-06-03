@@ -214,7 +214,7 @@ rps_alias.commands = ['rock', 'paper', 'scissors']
 
 def test(code, input):
     sp = ' '
-    code.reply(input.group(0), sp, input.group(1), sp, input.group(2), sp, input.group(3))
+    code.reply(input.group(1), sp, input.group(2), sp, input.group(3), sp, input.group(4))
 test.commands = ['test']
 
 if __name__ == '__main__':
