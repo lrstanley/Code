@@ -205,6 +205,8 @@ rps.example = '.rps'
 rps.rate = 15
 
 def rps_alias(code, input):
+    text = input.group().lower()
+    text = text.split()
     text.append(input.group(1))
     rps(code, input)
 rps_alias.commands = ['rock', 'paper', 'scissors']
