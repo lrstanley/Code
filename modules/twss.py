@@ -14,8 +14,14 @@ import sys
 
 
 last = "DEBUG_ME" # Dont find this in terminal, you might want to flip shit.
-
-if not os.path.exists('modules/twss.txt'):
+if os.path.exists('modules/twss.txt'):
+    num_lines = sum(1 for line in open('modules/twss.txt'))
+    if num_lines < 2000:
+        os.remove('modules/twss.txt')
+        print 'Downloading "That\'s What She Said" library from http://liamstanley.net/twss.txt now...'
+        urllib.urlretrieve ('http://liamstanley.net/twss.txt', 'twss.txt')
+    else: pass
+elif not os.path.exists('modules/twss.txt'):
     print 'Downloading "That\'s What She Said" library from http://liamstanley.net/twss.txt now...'
     urllib.urlretrieve ('http://liamstanley.net/twss.txt', 'twss.txt')
 
@@ -50,7 +56,6 @@ if not os.path.exists('modules/twss.txt'):
 #                 lowercase = inner_re.findall(lowercase)[0]
 #             f.write(re.sub('[^\w\s]', '', lowercase) + '\n')
 #    f.close()
-
 
 def say_it(code, input):
     global last
