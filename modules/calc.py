@@ -107,10 +107,9 @@ calc.commands = ['c', 'calc', 'calculate']
 calc.example = '.calc 5 + 3'
 
 def py(code, input):
-   try:
-       query = input.group(2).encode('utf-8')
-   except: 
+   if not input.group(2):
        return code.reply('Please enter an %s' % code.bold('input'))
+   query = input.group(2).encode('utf-8')
    uri = 'http://tumbolia.appspot.com/py/'
    try:
        answer = web.get(uri + web.urllib.quote(query))
