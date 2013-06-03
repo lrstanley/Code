@@ -196,7 +196,7 @@ def rps(code, input):
               code.bold(state)), code.nick, code.bold(response)))
         return
     except: return code.reply(code.color('red', syntax))
-rps.commands = ['rock', 'paper', 'scissors']
+rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
 rps.example = '.rock'
 rps.rate = 15
 
