@@ -138,8 +138,9 @@ def hug(code, input):
         if (input.nick not in code.config.admins):
             text[1] = input.nick
         else: text[1] = 'himself'
+    types = random.choice(('hugs', 'snuggles'))
     hugtype = random.choice(('real tight', 'strongly', 'like a bear', 'tight', ''))
-    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', 'hugs', text[1], hugtype, '\x01'])
+    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', types, text[1], hugtype, '\x01'])
 hug.commands = ['hug', 'hugs']
 hug.priority = 'low'
 hug.rate = 5
