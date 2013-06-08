@@ -75,18 +75,16 @@ def welcomemessage(code, input):
     global lastuser #doesn't sent a message if the last user that joined is the same
     try:
         greetchan = code.config.greetchans
-        greetchan = str(greetchan)
         try:
             excludeuser = code.config.excludeusers
-            excludeuser = str(excludeuser)
         except:
-            excludeuser = ''
+            excludeuser = None
         global aistate
         if any( [aistate == False, input.nick == code.nick, \
-                 excludeuser.find("'%s'" % (input.nick)) > -1, \
+                 input.nick in excludeuser, \
                  similar(lastuser, input.nick) > 0.70] ):
             return
-        elif greetchan.find("'%s'" % (input.sender)) > -1:
+        elif input.sender in greetchan > -1:
             code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
                     code.bold(input.sender)))
             lastuser = input.nick
