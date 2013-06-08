@@ -81,10 +81,10 @@ def welcomemessage(code, input):
             excludeuser = None
         global aistate
         if any( [aistate == False, input.nick == code.nick, \
-                 input.nick in excludeuser, \
+                 input.nick.lower() in excludeuser.lower(), \
                  similar(lastuser, input.nick) > 0.70] ):
             return
-        elif input.sender in greetchan > -1:
+        elif input.sender.lower() in greetchan.lower() > -1:
             code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
                     code.bold(input.sender)))
             lastuser = input.nick
