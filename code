@@ -37,6 +37,10 @@ def create_default_config(fn):
    # channels to auto-join
    channels = ['#example', '#test']
    
+   # prefix for Codes commands, nothing complex. e.g one of these:
+   # . : ; " ' , < > - _ + = ! $ ^ *
+   prefix = '.'
+
    # channels to greet users on channel join
    # e.g "Hello Code, welcome to #Lounge!"
    # uncomment to enable (remember this wont work with ai.py disabled.)
@@ -79,7 +83,7 @@ def create_default_config(fn):
        '##channel2': ['some/other/hostmask'],
    }
         
-   # Channel code will report all private messages sent to her to.
+   # Channel code will report all private messages sent to him to.
    # This includes server notices.
    #logchan_pm = '#code-log'
 
@@ -174,7 +178,7 @@ def main(argv=None):
         module.filename = config_name
 
         if not hasattr(module, 'prefix'):
-            module.prefix = r'\.'
+            module.prefix = (r'\%s' % (module.prefix))
 
         if not hasattr(module, 'name'): 
            module.name = 'Code: Python IRC Bot - http://code.liamstanley.net'
