@@ -77,13 +77,14 @@ def welcomemessage(code, input):
         greetchan = code.config.greetchans
         try:
             excludeuser = code.config.excludeusers
+            excludeuser = excludeuser.lower()
         except:
-            excludeuser = 'none'
+            excludeuser = ''
         global aistate
-        if any( [aistate == False, input.nick == code.nick, input.nick.lower() in excludeuser.lower(), \
+        if any( [aistate == False, input.nick == code.nick, input.nick.lower() in excludeuser, \
                  similar(lastuser, input.nick) > 0.70] ):
             return
-        elif input.sender.lower() in greetchan.lower() > -1:
+        elif input.sender in greetchan:
             code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
                     code.bold(input.sender)))
             lastuser = input.nick
