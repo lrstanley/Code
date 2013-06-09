@@ -178,7 +178,7 @@ def main(argv=None):
         module.filename = config_name
 
         if not hasattr(module, 'prefix'):
-            module.prefix = (r'\%s' % (module.prefix))
+            module.prefix = (r'\.')
 
         if not hasattr(module, 'name'): 
            module.name = 'Code: Python IRC Bot - http://code.liamstanley.net'
