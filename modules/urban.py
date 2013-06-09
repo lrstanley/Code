@@ -28,7 +28,8 @@ def urban(code, input):
     except urllib2.HTTPError as e:
         return code.reply(code.color('red', 'urbandictionary.com did not respond correctly, is it down?'))
     response = response.split('<div class="definition">', 1)
-    response = response[1]
+    try: response = response[1]
+    except: return code.say('I\'m sorry, that definition %s found.' % (code.bold('wasn\'t')))
     response = response.split('</div><div class="example">', 1)
     do = response[0]
     do = re.sub(r'\<.*?\>', '', do)
