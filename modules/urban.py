@@ -24,7 +24,7 @@ def urban(code, input):
         word = word.strip('+')
     try:
         response = urllib2.urlopen(uri % (word))
-        response = response.read().replace("\t", " ").replace("\r", " ").replace("\n", " ")
+        response = response.read().replace("\t", " ").replace("\r", " ").replace("\n", " ").decode('utf-8')
     except urllib2.HTTPError as e:
         return code.reply(code.color('red', 'urbandictionary.com did not respond correctly, is it down?'))
     response = response.split('<div class="definition">', 1)
