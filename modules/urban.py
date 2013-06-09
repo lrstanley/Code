@@ -34,21 +34,21 @@ def urban(code, input):
     do = response[0]
     do = re.sub(r'\<.*?\>', '', do)
     do = h.unescape(do)
+    response = response[1]
+    response = response.split('<div class="definition">', 1)
     try: response = response[1]
     except: return code.say(do)
-    response = response.split('<div class="definition">', 1)
-    response = response[1]
     response = response.split('</div><div class="example">', 1)
     dt = response[0]
     dt = re.sub(r'\<.*?\>', '', dt)
     dt = h.unescape(dt)
+    response = response[1]
+    response = response.split('<div class="definition">', 1)
     try: response = response[1]
     except:
         if (len(do) + len(dt)) > 500:
             return code.say(do)
         else: return code.say(do + code.bold(code.color('blue', ' | ')) + dt)
-    response = response.split('<div class="definition">', 1)
-    response = response[1]
     response = response.split('</div><div class="example">', 1)
     dth = response[0]
     dth = re.sub(r'\<.*?\>', '', dth)
