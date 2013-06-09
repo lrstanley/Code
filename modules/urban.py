@@ -55,7 +55,7 @@ def urban(code, input):
     if (len(do) + len(dt) + len(dth)) > 500:
         return code.say(do + code.bold(code.color('blue', ' | ')) + dt)
     else: return code.say(do + code.bold(code.color('blue', ' | ')) + dt + code.bold(code.color('blue', ' | ')) + dth)
-urban.commands = ['ut']
+urban.commands = ['urban', 'ur', 'urbandictionary']
 urban.example = '.urban pineapples'
 
 
