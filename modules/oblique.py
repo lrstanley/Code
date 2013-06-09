@@ -105,7 +105,7 @@ def o(code, input):
             elif (command in commands) and (manifest[0] == '!'):
                 return code.reply('Sorry, %s is blacklisted' % code.bold(command))
     service(code, input, command, args)
-o.commands = ['o', 'whois', 'flip']
+o.commands = ['o', 'whois']
 o.example = '.o servicename arg1 arg2 arg3'
 o.services = {}
 o.serviceURI = None
