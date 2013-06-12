@@ -11,19 +11,19 @@ import urllib2
 import HTMLParser
 h = HTMLParser.HTMLParser()
 
-def fml_catch(code, input):
+def fml(code, input):
     r = urllib2.urlopen('http://m.fmylife.com/random/').read()# Mobile version, as it loads faster
     r = r.replace('\t', '').replace('\r', '').replace('\n', '').decode('utf-8')
-    response = r.split('<p class="text">', 1)[1].split('</p>', 1)[0]
-    isfml = r.split('sucks</a> <strong>', 1)[1].split('</strong>', 1)[0].strip()
-    notfml = r.split('it</a> <strong>', 1)[1].split('</strong>', 1)[0].strip()
-    response = re.sub(r'\<.*?\>', '', response).strip()
-    if len(response) > 490: return code.say(response) # getting too long: ignore isfml/isnot
-    response = h.unescape('%s +%s/-%s' % (response, code.bold(isfml), code.bold(notfml)))
-    code.say(response)
-fml_catch.commands = ['fml']
-fml_catch.example = '.fml'
-fml_catch.rate = 20
+    fml = re.compile(r'<p class="text">.*?</p>').findall(r)
+    fml_lvl = re.compile(r'</a> <strong>.*?</strong>').findall(r)
+    fml = re.sub(r'\<.*?\>', '', fml[0]).strip().rstrip(' FML')
+    isfml = re.sub(r'\<.*?\>', '', fml_lvl[0]).strip()
+    notfml = re.sub(r'\<.*?\>', '', fml_lvl[1]).strip()
+    if len(fml) > 490: return code.say(response) # getting too long: ignore isfml/isnot
+    code.say(h.unescape('%s %s +%s/-%s' % (fml, code.color('red', 'FML'), code.bold(isfml), code.bold(notfml))))
+fml.commands = ['fml']
+fml.example = '.fml'
+fml.rate = 20
 
 
 if __name__ == '__main__':
