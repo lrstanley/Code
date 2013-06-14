@@ -8,6 +8,13 @@ http://code.liamstanley.net/
 
 import os
 
+def listmods(code, input):
+    if not input.admin: return
+    code.say('Modules: ' + ', '.join(sorted(input.modules)) + '.')
+listmods.commands = ['modules']
+listmods.priority = 'high'
+listmods.rate = 20
+
 def join(code, input):
     """Join the specified channel. This is an admin-only command."""
     # Can only be done in privmsg by an admin

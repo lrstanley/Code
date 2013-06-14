@@ -188,12 +188,17 @@ yesno.rule = '(code|$nickname)\:\s+(yes|no)$'
 yesno.rate = 15
 
 def ping_reply(code,input):
-    text = input.group().split(':')
+    text = input.group().lower().split(':')
     text = text[1].split()
-    if text[0] == 'PING' or text[0] == 'ping':
+    if text[0] == 'ping':
         code.reply('PONG')
 ping_reply.rule = '(?i)($nickname|code)\:\s+(ping)\s*'
 ping_reply.rate = 30
+
+def ping_reply_cmd(code, input):
+    ping_reply(code, input)
+ping_reply_cmd.commands = ['ping', 'pong']
+ping_reply_cmd.rate = 30
 
 def love(code, input):
     code.reply('I love you too.')
@@ -209,6 +214,19 @@ def love3(code, input):
     code.reply('I love you too.')
 love3.rule = '(?i)(code|$nickname)\,\si.*love.*'
 love3.rate = 30
+
+def hello(code, input): 
+   greeting = random.choice(('Hi', 'Hey', 'Hello', 'sup', 'Ohai', 'Erro', 'Ello', 'Ohaider'))
+   punctuation = random.choice(('', '!'))
+   code.say(greeting + ' ' + input.nick + punctuation)
+hello.rule = r'(?i)(hi|hello|hey|sup|ello|erro|ohai) $nickname[ \t]*$'
+
+def interjection(code, input): 
+   code.say(input.nick + '!')
+interjection.rule = r'$nickname!'
+interjection.priority = 'high'
+interjection.thread = False
+
 
 if __name__ == '__main__':
     print __doc__.strip()
