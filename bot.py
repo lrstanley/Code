@@ -59,6 +59,7 @@ class Code(irc.Bot):
 
         global modules
         excluded_modules = getattr(self.config, 'exclude', [])
+        excluded_modules.append('minecraft_query')
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
             if name in excluded_modules: continue
