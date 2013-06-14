@@ -10,6 +10,7 @@ import time, sys, os, re, threading, imp
 import irc
 
 home = os.getcwd()
+modules = []
 
 def decode(bytes):
     try: text = bytes.decode('utf-8')
@@ -56,9 +57,8 @@ class Code(irc.Bot):
                   if n.endswith('.py') and not n.startswith('_'): 
                      filenames.append(os.path.join(fn, n))
 
-        modules = []
+        global modules
         excluded_modules = getattr(self.config, 'exclude', [])
-        excluded_modules.append('minecraft_query')
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
             if name in excluded_modules: continue
@@ -191,7 +191,9 @@ class Code(irc.Bot):
                 s.group = match.group
                 s.groups = match.groups
                 s.args = args
-                s.textstyles = self.config.textstyles #needed mate, which means if someone removes this from the config, the bot won't start :<
+                s.textstyles = self.config.textstyles
+                global modules
+                s.modules = modules
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:
