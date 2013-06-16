@@ -28,7 +28,7 @@ class Origin(object):
         self.sender = mappings.get(target, target)
 
 def create_logdir():
-    try: os.mkdir(cwd + "/logs")
+    try: os.mkdir(cwd + '/logs')
     except Exception, e:
         print >> sys.stderr, 'There was a problem creating the logs directory.'
         print >> sys.stderr, e.__class__, str(e)
@@ -36,12 +36,12 @@ def create_logdir():
         sys.exit(1)
 
 def check_logdir():
-    if not os.path.isdir(cwd + "/logs"):
+    if not os.path.isdir(cwd + '/logs'):
         create_logdir()
 
 def log_raw(line):
     check_logdir()
-    f = codecs.open(cwd + "/logs/raw.log", 'a', encoding='utf-8')
+    f = codecs.open(cwd + '/logs/raw.log', 'a', encoding='utf-8')
     f.write(str(time.time()) + "\t")
     temp = line.replace('\n', '')
     try:
@@ -52,7 +52,7 @@ def log_raw(line):
         except UnicodeDecodeError:
             temp = temp.decode('cp1252')
     f.write(temp)
-    f.write("\n")
+    f.write('\n')
     f.close()
 
 class Bot(asynchat.async_chat):
@@ -76,8 +76,8 @@ class Bot(asynchat.async_chat):
         import threading
         self.sending = threading.RLock()
 
-    # def push(self, *args, **kargs):
-    #     asynchat.async_chat.push(self, *args, **kargs)
+    def push(self, *args, **kargs):
+        asynchat.async_chat.push(self, *args, **kargs)
 
     # text styling support
     #Bold            = \x02
@@ -86,102 +86,39 @@ class Bot(asynchat.async_chat):
     #Underline       = \x1f
     #Italicized      = \x16
 
-    # coloring method is a bit shabby.
-    def findcolor(self, color):
-        color = str(color)
-        color = color.lower()
-        try:
-            if color == 'white':
-                colorcode = '00'
-            elif color == 'black' or color == 'blank' or color == 'clear' or color == 'transparent':
-                colorcode = '01'
-            elif color == 'blue' or color == 'navy':
-                colorcode = '02'
-            elif color == 'green':
-                colorcode = '03'
-            elif color == 'red':
-                colorcode = '04'
-            elif color == 'brown' or color == 'maroon':
-                colorcode = '05'
-            elif color == 'purple':
-                colorcode = '06'
-            elif color == 'orange' or color == 'olive' or color == 'gold':
-                colorcode = '07'
-            elif color == 'yellow':
-                colorcode = '08' #quite a fucking
-            elif color == 'lightgreen' or color == 'lime':
-                colorcode = '09' #odd bug. wtf mate.
-            elif color == 'teal':
-                colorcode = '10'
-            elif color == 'cyan':
-                colorcode = '11'
-            elif color == 'lightblue' or color == 'royal':
-                colorcode = '12'
-            elif color == 'lightpurple' or color == 'pink' or color == 'fuchsia':
-                colorcode = '13'
-            elif color == 'grey':
-                colorcode = '14'
-            elif color == 'lightgrey' or color == 'silver':
-                colorcode = '15'
-            # not sure how i managed to overlap that. weird much?
-            return str(colorcode)
-        except:
-            colorcode = ''
-            return str(colorcode)
-
     def color(self, color, message):
         '''color forground/background encoding IRC messages, if false
-           in config, returns clean'''
-        try:
-            if self.config.textstyles:
-                try:
-                    color = str(color)
-                    message = str(message)
-                    color = color.split('/') #split, if two different colors
-                    message = '\x03' + self.findcolor(color[0]) + ',' + self.findcolor(color[1]) + message + '\x03'
-                except: #fail, which means only one color specified
-                    message = '\x03' + self.findcolor(color[0]) + message + '\x03'
-            else:
-                pass
-            return message
-        except:
-            return message
+           in config, returns clean.'''
+        if not self.config.textstyles: return message
+        colors = {'white': '00', 'black': '01', 'blue': '02', 'navy': '02',
+          'green': '03', 'red': '04', 'brown': '05', 'maroon': '05',
+          'purple': '06', 'orange': '07', 'olive': '07', 'gold': '07',
+          'yellow': '08', 'lightgreen': '09', 'lime': '09', 'teal': '10',
+          'cyan': '11', 'lightblue': '12', 'royal': '12', 'lightpurple': '13',
+          'pink': '13', 'fuchsia': '13', 'grey': '14', 'lightgrey': '0', 'silver': '0'}
+        color = str(color).lower()
+        message = str(message)
+        if '/' in color:
+            color = color.split('/')
+            message = '\x03' + colors[color[0]] + ',' + colors[color[1]] + message + '\x03'
+        else: 
+            message = '\x03' + colors[color] + message + '\x03'
+        return message
 
     def bold(self, message):
         '''bold encoding IRC messages, if false in config, returns clean'''
-        try:
-            if self.config.textstyles:
-                message = str(message)
-                message = '\x02' + message + '\x02'
-            else:
-                pass
-            return message
-        except:
-            return message
+        if not self.config.textstyles: return message
+        return ('\x02' + str(message) + '\x02')
 			
     def italic(self, message):
         '''italicize encoding IRC messages, if false in config, returns clean'''
-        try:
-            if self.config.textstyles:
-                message = str(message)
-                message = '\x16' + message + '\x16'
-            else:
-                pass
-            return message
-        except:
-            return message
+        if not self.config.textstyles: return message
+        return ('\x16' + str(message) + '\x16')
 
     def underline(self, message):
         '''underlined encoding IRC messages, if false in config, returns clean'''
-        try:
-            if self.config.textstyles:
-                 message = str(message)
-                 message = '\x1f' + message + '\x1f'
-            else:
-                pass
-            return message
-        except:
-            return message
+        if not self.config.textstyles: return message
+        return ('\x1f' + str(message) + '\x1f')
 
     def quit(self, message):
         '''Disconnect from IRC and close the bot'''
@@ -203,7 +140,7 @@ class Bot(asynchat.async_chat):
         # print '%r %r %r' % (self, args, text)
         try:
             if raw:
-                temp = ' '.join(args)[:510] + " :" + text + '\r\n'
+                temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
                 self.push(temp)
             elif not raw:
                 if text:
@@ -216,7 +153,6 @@ class Bot(asynchat.async_chat):
                 log_raw(temp)
         except IndexError:
             return
-            #the fuck went wrong m8.
             #print "INDEXERROR", text
             #pass
 
@@ -233,8 +169,7 @@ class Bot(asynchat.async_chat):
 
     def safe(self, input, u=False):
         if input:
-            input = input.replace('\n', '')
-            input = input.replace('\r', '')
+            input = input.replace('\n', '').replace('\r', '')
             if u:
                 input = input.encode('utf-8')
         return input
@@ -283,7 +218,7 @@ class Bot(asynchat.async_chat):
             if self.logchan_pm:
                 dlist = data.split()
                 if len(dlist) >= 3:
-                    if "#" not in dlist[2] and dlist[1].strip() not in IRC_CODES:
+                    if '#' not in dlist[2] and dlist[1].strip() not in IRC_CODES:
                         self.msg(self.logchan_pm, data, True)
             if self.logging:
                 log_raw(data)
@@ -389,7 +324,7 @@ class Bot(asynchat.async_chat):
             else: report.append('source unknown')
 
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
-        except: self.msg(origin.sender, "Got an error.")
+        except: self.msg(origin.sender, 'Got an error.')
 
 class TestBot(Bot):
     def f_ping(self, origin, match, args):
