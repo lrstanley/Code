@@ -93,40 +93,83 @@ You should see a file like this:
 
 # irc bot nickname
 nick = 'code'
+
 # irc server host
 host = 'irc.example.net'
+
 # port to use to connect
-port = '6667'
-#channels to auto-join
+port = 6667
+
+# channels to auto-join
 channels = ['#example', '#test']
-#your nickname for use in admin functions
+
+# prefix for Codes commands, nothing complex. e.g one of these:
+# . : ; " ' , < > - _ + = ! $ ^ *
+prefix = '.'
+
+# channels to greet users on channel join
+# e.g "Hello Code, welcome to #Lounge!"
+# uncomment to enable (remember this wont work with ai.py disabled.)
+#greetchans = ['#Example', '#Hugs']
+# exclude users from receiving a welcome message below.
+#excludeusers = ['Serious', 'User']
+
+# your nickname for use in admin functions
+# You can also specify nick@hostmask
+# For example: code@unaffiliated/code
 owner = 'yournickname'
+
 # website to show for help documentation
-website = 'http://code.liamstanley.net'
+#website = 'http://code.liamstanley.net'
 
 # password is the Nickserv password, serverpass is the server password
-# password = 'example'
-# serverpass = 'serverpass'
+#password = 'example'
+#serverpass = 'serverpass'
+
+# would you like color/bolc/italic coded commands? this enables/disables
+# code.color/bold/italic() or any other form of carot notation applied directly by code
+# although, if your module uses raw carot notation, then it won't disable that
+textstyles = True
 
 # These are people who will be able to use admin.py's functions...
 admins = [owner, 'someoneyoutrust']
 # But admin.py is disabled by default, as follows:
-exclude = ['admin', 'mcbot', 'rss', 'twss']
+exclude = ['admin', 'twss']
 
 # If you want to enumerate a list of modules rather than disabling
 # some, use "enable = ['example']", which takes precedent over exclude
-# 
-# enable = []
+#enable = []
+
+# Block modules from specific channels
+# To not block anything for a channel, just don't mention it
+excludes = {
+   '##blacklist': ['!'],
+}
+
+# This allows one to allow specific people to use ".msg channel message here"
+# in specific channels.
+helpers = {
+   '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
+   '##channel2': ['some/other/hostmask'],
+}
+    
+# Channel code will report all private messages sent to him to.
+# This includes server notices.
+#logchan_pm = '#code-log'
+
+# Enable raw logging of everything code sees.
+# logged to the folder 'log'
+logging = False
 
 # Directories to load user modules from
 # e.g. /path/to/my/modules
-extra = []
+extra = ['']
 
 # Services to load: maps channel names to white or black lists
-external = { 
-  '#ponycode': ['!'], # allow all
-  '#L': [], # allow none
-  '*': ['!'] # default whitelist, allow all
+external = {
+   '#liberal': ['!'], # allow all
+   '#conservative': [], # allow none
+   '*': ['!'] # default whitelist, allow all
 }
 
 # EOF
@@ -139,7 +182,7 @@ Customize Even More:
 ____________________
 
 Changing Prefix: 
-(this would be in the config, i jsut haven't gotten aroudn to it yet. sorry!)
+(this would be in the config, i just haven't gotten around to it yet. sorry!)
 
 If you wish to change the command prefix from "." to another item Edit /code/code and find this: 
 
