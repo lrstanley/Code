@@ -39,6 +39,7 @@ def urban(code, input):
     definition = re.compile(r'<div class="definition">.*?</div>').findall(r)
     example = re.compile(r'<div class="example">.*?</div>').findall(r)
     did = len(definition)
+    if did == 0: return code.say('The definition for "%s" wasn\'t found.' % (code.color('purple', ' '.join(parts))))
     if id > did:
         id = did
     definition = re.sub(r'\<.*?\>', '', definition[id-1]).strip()
