@@ -10,54 +10,48 @@ import re
 import HTMLParser
 
 h = HTMLParser.HTMLParser()
-# this is really crappy, due to manually parsing html, but it's better than using oblique.
-# will clean up at a later time
+
+# My present to you.
 def urban(code, input):
-    if not input.group(2): return code.reply(code.color('red', 'Please enter an input.'))
+    if not input.group(2): return code.say(code.color('red', 'Please enter an input.'))
+    # clean and split the input
+    msg = input.group(2).lower().strip()
+    parts = msg.split()
+    if parts[-1].replace('-','').isdigit():
+        if int(parts[-1]) <= 0:
+            id = 1
+        else:
+            id = int(parts[-1].replace('-',''))
+        del parts[-1]
+        query = '+'.join(parts)
+    else:
+        id = 1
+        query = msg.replace(' ', '+')
     uri = 'http://www.urbandictionary.com/define.php?term=%s'
-    word = input.group(2).lower()
-    word = re.sub(r'[^\w\s]', '+', word)
-    word = word.replace('.', '+')
-    word = word.replace(' ', '+')
-    while word.find('++') > -1:
-        word = word.replace('++', '+')
-        word = word.strip('+')
+    query = re.sub(r'[^\w\s]', '+', query)
+    query = query.replace('.', '+')
+    while query.find('++') > -1:
+        query = query.replace('++', '+').strip('+')
     try:
-        response = urllib2.urlopen(uri % (word))
-        response = response.read().replace("\t", " ").replace("\r", " ").replace("\n", " ").decode('utf-8')
+        r = urllib2.urlopen(uri % (query)).read().replace('\t','').replace('\r','').replace('\n',' ').decode('utf-8')
     except urllib2.HTTPError as e:
-        return code.reply(code.color('red', 'urbandictionary.com did not respond correctly, is it down?'))
-    response = response.split('<div class="definition">', 1)
-    try: response = response[1]
-    except: return code.say('I\'m sorry, that definition %s found.' % (code.bold('wasn\'t')))
-    response = response.split('</div><div class="example">', 1)
-    do = response[0]
-    do = re.sub(r'\<.*?\>', '', do)
-    do = h.unescape(do)
-    response = response[1]
-    response = response.split('<div class="definition">', 1)
-    try: response = response[1]
-    except: return code.say(do)
-    response = response.split('</div><div class="example">', 1)
-    dt = response[0]
-    dt = re.sub(r'\<.*?\>', '', dt)
-    dt = h.unescape(dt)
-    response = response[1]
-    response = response.split('<div class="definition">', 1)
-    try: response = response[1]
-    except:
-        if (len(do) + len(dt)) > 500:
-            return code.say(do)
-        else: return code.say(do + code.bold(code.color('blue', ' | ')) + dt)
-    response = response.split('</div><div class="example">', 1)
-    dth = response[0]
-    dth = re.sub(r'\<.*?\>', '', dth)
-    dth = h.unescape(dth)
-    if (len(do) + len(dt) + len(dth)) > 500:
-        return code.say(do + code.bold(code.color('blue', ' | ')) + dt)
-    else: return code.say(do + code.bold(code.color('blue', ' | ')) + dt + code.bold(code.color('blue', ' | ')) + dth)
-urban.commands = ['urban', 'ur', 'urbandictionary']
-urban.example = '.urban pineapples'
+        return code.say(code.color('red', 'urbandictionary.com did not respond correctly, is it down?'))
+    definition = re.compile(r'<div class="definition">.*?</div>').findall(r)
+    example = re.compile(r'<div class="example">.*?</div>').findall(r)
+    did = len(definition)
+    if id > did:
+        id = did
+    definition = re.sub(r'\<.*?\>', '', definition[id-1]).strip()
+    example = re.sub(r'\<.*?\>', '', example[id-1]).strip()
+    if (len(definition) + len(example)) > 490:
+        # cap at definition, skip example
+        code.say('(%s/%s) %s: %s' % (str(id), str(did), code.color('purple', 'Definition'), \
+                 h.unescape(definition)))
+    else:
+        code.say('(%s/%s) %s: %s %s: %s' % (str(id), str(did), code.color('purple', 'Definition'), \
+                 h.unescape(definition), code.color('purple', 'Ex'), h.unescape(example)))
+urban.commands = ['urban', 'ur']
+urban.example = '.urban liam'
 
 
 if __name__ == '__main__':
