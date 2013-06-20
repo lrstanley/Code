@@ -14,6 +14,7 @@ h = HTMLParser.HTMLParser()
 key = '51befff611067'
 language = 'en'
 mature = False
+# http://api.betacie.com/readme.php
 
 def fml(code, input):
     # Random/No input
