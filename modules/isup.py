@@ -40,7 +40,7 @@ def isup(code,input):
     except:
         code.say(synerr)
 
-isup.commands = ['isup', 'isdown', 'check', 'ping', 'up', 'down']
+isup.commands = ['isup', 'isdown', 'check', 'up', 'down']
 isup.example = '.isup http://google.com'
 
 if __name__ == '__main__':
