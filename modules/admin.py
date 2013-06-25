@@ -10,7 +10,8 @@ import os
 
 def listmods(code, input):
     if not input.admin: return
-    code.say('Modules: ' + ', '.join(sorted(input.modules)) + '.')
+    modules = list(set(input.modules))
+    code.say('Modules: ' + ', '.join(sorted(modules)) + '.')
 listmods.commands = ['modules']
 listmods.priority = 'high'
 listmods.rate = 20
