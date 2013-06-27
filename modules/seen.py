@@ -11,7 +11,7 @@ from tools import deprecated
 
 def seen(code, input): 
    """.seen <nick> - Reports when <nick> was last seen."""
-   if not match.group(2): return 
+   if not input.group(2): return 
    nick = input.group(2)
    if not nick:
       return code.reply('Need a %s to search for...' % code.bold('nickname'))
