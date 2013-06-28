@@ -120,10 +120,12 @@ class Bot(asynchat.async_chat):
         if not self.config.textstyles: return message
         return ('\x1f' + str(message) + '\x1f')
 
-    def quit(self, message):
+    def quit(self, message=None):
         '''Disconnect from IRC and close the bot'''
+        if not message: message = 'Terminating Code.'
         self.write(['QUIT'], message)
         self.hasquit = True
+        __import__('os')._exit(0)
 
     def part(self, channel):
         '''Part a channel'''
