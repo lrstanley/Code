@@ -93,7 +93,7 @@ def fml_search(query, id): #ID is index of search query
     # It's their fault!
     deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
     return {'fml': re.sub(r'\<.*?\>', '', fml[id-1]).strip(),
-            'fml-id': fmlid[0].replace('<item id="','',1).replace('">','',1).strip(),
+            'fml-id': fmlid[id-1].replace('<item id="','',1).replace('">','',1).strip(),
             '+': re.sub(r'\<.*?\>', '', agree[id-1]).strip(),
             '-': re.sub(r'\<.*?\>', '', deserved[id-1]).strip(),
             'id': id,
