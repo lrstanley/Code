@@ -109,19 +109,19 @@ def announce(code, input):
 announce.commands = ['announce', 'broadcast']
 announce.example = '.announce Some important message here'
 
-def defend_ground(code, input):
-    """
-    This function monitors all kicks across all channels code is in. If he
-    detects that he is the one kicked he'll automatically join that channel.
-
-    WARNING: This may not be needed and could cause problems if code becomes
-    annoying. Please use this with caution.
-    """
-    channel = input.sender
-    code.write(['JOIN'], channel)
-defend_ground.event = 'KICK'
-defend_ground.rule = '.*'
-defend_ground.priority = 'low'
+#def defend_ground(code, input):
+#    """
+#    This function monitors all kicks across all channels code is in. If he
+#    detects that he is the one kicked he'll automatically join that channel.
+#
+#    WARNING: This may not be needed and could cause problems if code becomes
+#    annoying. Please use this with caution.
+#    """
+#    channel = input.sender
+#    code.write(['JOIN'], channel)
+#defend_ground.event = 'KICK'
+#defend_ground.rule = '.*'
+#defend_ground.priority = 'low'
 
 def blocks(code, input):
     if not input.admin: return
