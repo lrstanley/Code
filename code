@@ -36,10 +36,6 @@ def create_default_config(fn):
    
    # channels to auto-join
    channels = ['#example', '#test']
-   
-   # prefix for Codes commands, nothing complex. e.g one of these:
-   # . : ; " ' , < > - _ + = ! $ ^ *
-   prefix = '.'
 
    # channels to greet users on channel join
    # e.g "Hello Code, welcome to #Lounge!"
@@ -52,7 +48,10 @@ def create_default_config(fn):
    # You can also specify nick@hostmask
    # For example: code@unaffiliated/code
    owner = 'yournickname'
-   
+
+   # These are people who will be able to use admin.py's functions...
+   admins = [owner, 'someoneyoutrust']
+
    # website to show for help documentation
    #website = 'http://code.liamstanley.net'
    
@@ -64,9 +63,7 @@ def create_default_config(fn):
    # code.color/bold/italic() or any other form of carot notation applied directly by code
    # although, if your module uses raw carot notation, then it won't disable that
    textstyles = True
-   
-   # These are people who will be able to use admin.py's functions...
-   admins = [owner, 'someoneyoutrust']
+
    # But admin.py is disabled by default, as follows:
    exclude = ['admin', 'twss']
 
@@ -114,7 +111,7 @@ def create_default_config(fn):
 def create_configfile(dotdir):
 
     if not os.path.isdir(dotdir):
-        print 'Creating a config directory at ~/.code...'
+        print 'Creating a config in directory ~/.code...'
         try: os.mkdir(dotdir)
         except Exception, e:
             print >> sys.stderr, 'There was a problem creating %s:' % dotdir
