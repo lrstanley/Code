@@ -36,16 +36,11 @@ def roulette(code, input):
         response = code.color('red', code.bold('dies!')) + ' :O'
     else:
         response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
-    text = input.group().split()
-    if (input.nick in code.config.admins):
-        if text[1]:
-            nick = text[1]
-            if nick.lower() == 'myself' or nick.lower() == 'me':
-                nick = input.nick
-            elif nick.lower() == code.nick.lower() or nick.lower() == 'himself':
-                nick = 'himself'
-                return code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, \
-                         code.nick, response))
+    if input.group(2):
+        nick = input.group(2)
+        if nick.lower() == 'myself' or nick.lower() == code.nick.lower() or \
+           nick.lower() == 'me' or nick.lower() == 'himself':
+            nick = input.nick
         else:
             nick = input.nick
     else:
@@ -53,7 +48,7 @@ def roulette(code, input):
     code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nick, response))
 roulette.commands = ['rr', 'russianroulette', 'roulette']
 roulette.priority = 'medium'
-roulette.example = '.roulette'
+roulette.example = '.roulette Timothy'
 roulette.rate = 20
 
 def sexymeter(code, input):
@@ -84,7 +79,7 @@ def sexymeter(code, input):
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
         rand = str(random.randint(0,100))
-        if len(nick) > 20: 
+        if len(nick) > 20:
             code.say(input.nick + code.color('red', ': The syntax is .sexymeter <name>.'))
             return
         if nick.lower() == code.nick.lower():
