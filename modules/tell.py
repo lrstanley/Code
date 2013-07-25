@@ -46,8 +46,8 @@ def setup(self):
     self.reminders = loadReminders(self.tell_filename) # @@ tell
 
 def f_remind(code, input):
+    if not input.group(2): code.reply('Syntax: \'.tell <user> <message>\'')
     teller = input.nick
-
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group()).startswith(".tell"):
         verb = "tell".encode('utf-8')
