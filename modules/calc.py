@@ -109,6 +109,8 @@ calc.commands = ['c', 'calc', 'calculate']
 calc.example = '.calc 5 + 3'
 
 def py(code, input):
+    # Prevention from spam, along with exploits on Atheme/Charybdis networks
+    if not input.admin: return
     if not input.group(2):
          return code.reply('Please enter an %s' % code.bold('input'))
     query = input.group(2).encode('utf-8')
