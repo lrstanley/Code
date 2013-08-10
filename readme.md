@@ -33,15 +33,22 @@ Installation - How do I install?
 ================================
 ________________________________
 
- > for rss.py to work, install feedparser via your pip/yum/other package installer.
+ > for rss.py to work (only usable on linux), install feedparser via your pip/yum/other package installer.
 
-**If you have any isues during the install, feel free to head to http://chat.liamstanley.net/ to get help**
+**If you have any issues during the install, feel free to head to http://chat.liamstanley.net/ to get help**
 
-1) Run `git clone https://github.com/Liamraystanley/Code.git` - if you do not have git installed, 
-simply install it via your package manager. e.i, `sudo apt-get install git`
-2) Run `./code`- this creates a default config file 
-3) Edit ~/.code/default.py 
-4) Run `./code` - this now runs code with your settings 
+
+Unix & Unix-like OS: 
+--------------------
+
+    1) Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
+       - (packaged in lots of *nix distros)
+    2) Run `git clone https://github.com/Liamraystanley/Code.git`
+       - if you do not have git installed, simply install it via your package manager.
+         e.i, `sudo apt-get install git`
+    3) Run `./code`- this creates a default config file 
+    4) Edit ~/.code/default.py 
+    5) Run `./code` - this now runs code with your settings 
 
 Full command would be: 
 
@@ -67,6 +74,23 @@ This creates a terminal window that can be logged into and out without disturbin
 To log back into, and view the playback of Code, type `screen -r`.
 
 
+Windows: 
+--------------------
+
+
+    1) Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
+    2) Download Code here: `https://github.com/Liamraystanley/Code/zipball/master` and unzip it.
+    3) Configure Code's default.py file, located in your user directory.
+       - This is often, `C:\\users\(your username)\.code\default.py`.
+       - Note, notepad is not prefered. If anything, use Notepad++ under windows.
+    3) Now, you should be able to use run.exe (if it's in Code's directory.
+       - Else, you can open up command prompt, `cd` to Codes directory, and execute Code with `python code`.
+       - Note, if command prompt says that `python` is not a internal or external program,
+         that means Python failed to be added to your system-wide %PATH% file.
+         So, you need to add it to the %PATH% variable.
+         Feel free to google that one, Code is not noob-friendly.
+
+
 Configuration & Personalization 
 ===============================
 _______________________________
@@ -82,7 +106,7 @@ Windows
 -------
 
 Edit the file located in your Documents folder, which should be located at: 
-`C:\\users\myusername\.code\default.py`
+`C:\\users\myusername\.code\default.py` (for Windows Vista/7/8)
 `default.py` might be located in the same spot as the UNIX location listed above.
 You should see a file like this:
 
@@ -184,7 +208,8 @@ ____________________
 Changing Prefix: 
 (this would be in the config, i just haven't gotten around to it yet. sorry!)
 
-If you wish to change the command prefix from "." to another item Edit /code/code and find this: 
+If you wish to change the command prefix from "." to another item Edit /code/code and find this:
+**NOTE: THIS WILL NOT CHANGE LOTS OF EXAMPLES, OR CERTAIN REGEX CHECKS. BEWARE.**
 
 ```python
     if not hasattr(module, 'prefix'):
