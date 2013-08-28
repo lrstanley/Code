@@ -178,7 +178,7 @@ def main(argv=None):
             module.prefix = (r'\.')
 
         if not hasattr(module, 'name'): 
-           module.name = '\x0307Code: Python IRC Bot - http://code.liamstanley.net'
+           module.name = '\x0307Python IRC Bot - http://code.liamstanley.net'
 
         if not hasattr(module, 'port'):
             module.port = 6667
