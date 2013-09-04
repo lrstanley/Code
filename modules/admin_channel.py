@@ -273,7 +273,7 @@ def unquiet(code, input):
    quietmask = configureHostMask(quietmask)
    if quietmask == '': return
    code.write(['MODE', opt, '-q', quietmask])
-unquiet.commands = ['unquiet','mute']
+unquiet.commands = ['unquiet','unmute']
 unquiet.priority = 'high'
 
 def kickban(code, input):
