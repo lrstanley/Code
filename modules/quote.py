@@ -12,6 +12,7 @@ from modules import unicode as uc
 
 def addquote(code, input):
     '''.addquote <nick> something they said here -- adds the quote to the quote database.'''
+    if not input.admin: return
     text = input.group(2)
     if not text:
         return code.say('No quote provided')
@@ -59,7 +60,7 @@ retrievequote.rate = 30
 
 def delquote(code, input):
     '''.rmquote <number> -- removes a given quote from the database. Can only be done by the owner of the bot.'''
-    if not input.owner: return
+    if not input.admin: return
     text = input.group(2)
     number = int()
     try:
