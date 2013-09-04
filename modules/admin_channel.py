@@ -251,7 +251,7 @@ def quiet(code, input):
    quietmask = configureHostMask(quietmask)
    if quietmask == '': return
    code.write(['MODE', channel, '+q', quietmask])
-quiet.commands = ['quiet']
+quiet.commands = ['quiet','mute']
 quiet.priority = 'high'
 
 def unquiet(code, input):
@@ -273,7 +273,7 @@ def unquiet(code, input):
    quietmask = configureHostMask(quietmask)
    if quietmask == '': return
    code.write(['MODE', opt, '-q', quietmask])
-unquiet.commands = ['unquiet']
+unquiet.commands = ['unquiet','mute']
 unquiet.priority = 'high'
 
 def kickban(code, input):
