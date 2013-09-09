@@ -59,12 +59,15 @@ f_reload.priority = 'low'
 f_reload.thread = False
 f_reload.rate = 20
 
+
 if sys.version_info >= (2, 7):
     def update(code, input):
         if not input.admin:
               return
 
         """Pulls the latest versions of all modules from Git"""
+        if not sys.platform.startswith('linux'):
+            return code.reply('This form of update is only supported if you\'re running linux')
         proc = subprocess.Popen('/usr/bin/git pull',
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE, shell=True)
