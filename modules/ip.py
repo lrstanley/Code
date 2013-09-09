@@ -23,7 +23,7 @@ def ip_lookup(code, input):
         return code.reply(code.color('red', 'No search term!'))
     elif txt.find('192.168.0.') > -1 or txt.find('127.0.0.') > -1:
         return code.reply(code.color('red', 'That IP is blacklisted!'))
-    elif not txt.find('.') > -1 or not txt.find(':') > -1:
+    elif not '.' in txt and not ':' in txt:
         return code.reply(code.color('red','Incorrect input!'))
     txt = uc.encode(txt)
     query = uc.decode(txt) 
