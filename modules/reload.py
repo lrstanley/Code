@@ -68,7 +68,10 @@ if sys.version_info >= (2, 7):
         proc = subprocess.Popen('/usr/bin/git pull',
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE, shell=True)
-        code.say('Github: ' + code.bold(proc.communicate()[0]))
+        data = proc.communicate()[0]
+        while '  ' in data:
+            data = data.replace('  ', ' ')
+        code.say('Github: ' + code.bold(data))
         f_reload(code, input)
 else:
     def update(code, input):
