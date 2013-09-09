@@ -17,6 +17,7 @@ mature = False
 # http://api.betacie.com/readme.php
 
 def fml(code, input):
+    """.fml - Retrieve random FML's, via FMyLife.com's dev API."""
     # Random/No input
     if not input.group(2):
         try:
@@ -51,6 +52,7 @@ def fml(code, input):
                      code.bold(r['-'])))
         except: return code.say('Failed to search for FML.')
 fml.commands = ['fml', 'fmylife']
+fml.example = '.fml #12390101'
 fml.priority = 'medium'
 fml.rate = 15
 

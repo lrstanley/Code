@@ -11,6 +11,7 @@ import HTMLParser
 h = HTMLParser.HTMLParser()
 
 def chuck(code, input):
+    """Get random Chuck Norris facts. I bet he's better than you. :P"""
     try:
         r = urllib2.urlopen('http://api.icndb.com/jokes/random').read()
     except:
@@ -21,7 +22,6 @@ def chuck(code, input):
                            h.unescape(data['value']['joke'])
                            ))
 chuck.commands = ['chuck','norris','cn','chucknorris']
-chuck.example = '.chuck'
 chuck.rate = 10
 
 if __name__ == '__main__':

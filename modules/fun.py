@@ -30,7 +30,7 @@ def sexycomment(rand):
     return response
 
 def roulette(code, input):
-    """.roulette - Play a little gruesome russian roulette."""
+    """Play a little gruesome russian roulette."""
     chance = str(random.randint(1,6))
     if chance == '1':
         response = code.color('red', code.bold('dies!')) + ' :O'
@@ -55,7 +55,7 @@ def sexymeter(code, input):
     hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
     notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
     text = input.group().split()
-    """.sexymeter <target> - rates <target> on sexiness"""
+    """Rates users on sexiness"""
     if len(text) > 2: return
     try:
         name = text[1]
@@ -103,7 +103,7 @@ sexymeter.example = '.sexymeter Code'
 sexymeter.rate = 20
 
 def slap(code, input):
-    """.slap <target> - Slaps <target>"""
+    """Slaps a person using random methods"""
     text = input.group().split()
     if len(text) < 2 or text[1].startswith('#'): return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or \
@@ -127,7 +127,7 @@ slap.priority = 'medium'
 slap.rate = 20
 
 def hug(code, input):
-    """.hug <target> - Hugs <target>"""
+    """Hugs <target>"""
     text = input.group().split()
     if len(text) < 2 or text[1].startswith('#'): return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'himself':
@@ -142,7 +142,7 @@ hug.priority = 'low'
 hug.rate = 5
 
 def magic(code, input):
-    """.8ball - Use the Magic 8 Ball"""
+    """Use the Magic 8 Ball"""
     luck = str(random.randint(1,4))
     # http://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers
     if luck == '1' or luck == '2':
@@ -170,7 +170,7 @@ magic.example = '.8ball will i feel better tomorrow?'
 magic.rate = 15
 
 def rps(code, input):
-    """.rps (rock/paper/scissors) - Play some Rock-Paper-Scissors with Code!"""
+    """Play some Rock-Paper-Scissors with Code!"""
     text = input.group().lower()
     text = text.split()
     cpu = random.randint(1,3)

@@ -3,7 +3,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-ip.py - Code IP Module
+ip.py - Code IP lookup Module
 http://code.liamstanley.net/
 """
 
@@ -17,7 +17,7 @@ base = 'http://freegeoip.net/json/'
 re_ip = re.compile('(?i)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 
 
-def ip_lookup(code, input):
+def ip(code, input):
     txt = input.group(2)
     if not txt:
         return code.reply(code.color('red', 'No search term!'))
@@ -63,8 +63,8 @@ def ip_lookup(code, input):
         response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Latitude:')), results['latitude'])
         response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Longitude:')), results['longitude'])
     code.reply(response)
-ip_lookup.commands = ['ip', 'iplookup', 'host', 'whois']
-ip_lookup.example = ".iplookup 8.8.8.8"
+ip.commands = ['ip', 'iplookup', 'host', 'whois']
+ip.example = ".iplookup 8.8.8.8"
 
 if __name__ == '__main__':
     print __doc__.strip()

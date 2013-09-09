@@ -24,5 +24,6 @@ def lmgtfy(code, input): #needs more work for utf-8 encoding. but, meh.
     code.say(input.nick + ": " + lmgtfyurl)
 lmgtfy.commands = ['lmgtfy']
 lmgtfy.example = '.lmgtfy linux'
+
 if __name__ == '__main__': 
    print __doc__.strip()
