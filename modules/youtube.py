@@ -12,6 +12,8 @@ import time
 api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 
 def youtube(code, input):
+    """Automatically find the information from a youtube url and display it
+       to users in a channel"""
     reply = []
     #if not '//www.youtube.com/watch?v=' in input.group().lower(): return
     try:
