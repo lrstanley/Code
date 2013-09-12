@@ -25,11 +25,11 @@ import web
 BITLY_TRIGGER_LEN_TITLE = 15
 BITLY_TRIGGER_LEN_NOTITLE = 70
 EXCLUSION_CHAR = '!'
-IGNORE = ['git.io', 'build.liamstanley.net']
+IGNORE = ['git.io', 'build.liamstanley.net','youtube.','youtu.be']
 
 # do not edit below this line unless you know what you're doing
 bitly_loaded = False
-BLOCKED_MODULES = ['title', 'bitly', 'isup', 'py']
+BLOCKED_MODULES = ['title', 'bitly', 'isup', 'py','youtube']
 
 try:
     file = open('bitly.txt', 'r')
@@ -67,7 +67,7 @@ def find_title(url):
         uri = self.last_seen_uri.get(origin.sender)
 
     for item in IGNORE:
-        if item in uri:
+        if item.lower() in uri.lower():
             return False, 'ignored'
 
     if not re.search('^((https?)|(ftp))://', uri):
