@@ -15,7 +15,6 @@ def youtube(code, input):
     """Automatically find the information from a youtube url and display it
        to users in a channel"""
     reply = []
-    #if not '//www.youtube.com/watch?v=' in input.group().lower(): return
     try:
         if '//www.youtube.com/watch?v=' in input.group().lower():
             id = input.group().split('/watch?v=',1)[1]
@@ -25,9 +24,9 @@ def youtube(code, input):
         if ' ' in id: id = id.split()[0]
         data = json.loads(urllib2.urlopen(api_url % id).read())['data']
         
-        # set some variables, because we'll have to modify a vew before we spit them back out!
+        # Set some variables, because we'll have to modify a vew before we spit them back out!
         
-        # should surely have a title, but just in case :P
+        # Should surely have a title, but just in case :P
         if 'title' in data:
             reply.append('\x0313\x02' + data['title'] + '\x0f\x02')
         # Some length data ;)
@@ -44,7 +43,7 @@ def youtube(code, input):
         if 'rating' in data and 'ratingCount' in data:
             reply.append('rated \x0313\x02%.2f/5.0\x0f\x02 (\x0313\x02%d\x0f\x02)' % (data['rating'],
                                                       data['ratingCount']))
-        # NUmber of views
+        # Number of views. Yuck.
         if 'viewCount' in data:
             reply.append('\x0313\x02%s\x0f\x02 views' % format(data['viewCount'], ',d'))
         upload_time = time.strptime(data['uploaded'], '%Y-%m-%dT%H:%M:%S.000Z')
