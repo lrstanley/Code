@@ -67,7 +67,9 @@ if sys.version_info >= (2, 7):
 
         """Pulls the latest versions of all modules from Git"""
         if not sys.platform.startswith('linux'):
-            return code.reply('This form of update is only supported if you\'re running linux')
+            code.say('Warning: %s' % code.bold('Using a non-linux OS.'))
+        # normally use '/usr/bin/git' for the command, but to support windows, 
+        # we might be able to do it this way
         proc = subprocess.Popen('/usr/bin/git pull',
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE, shell=True)
