@@ -20,7 +20,7 @@ def youtube(code, input):
             id = input.group().split('/watch?v=',1)[1]
         elif '//youtu.be/' in input.group().lower():
             id = input.group().split('youtu.be/',1)[1]
-        if '&' in id: id.split('&',1)[0]
+        if '&' in id: id = id.split('&',1)[0]
         if ' ' in id: id = id.split()[0]
         data = json.loads(urllib2.urlopen(api_url % id).read())['data']
         
