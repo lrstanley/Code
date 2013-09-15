@@ -32,9 +32,15 @@ def help(code, input):
     if input.group(2):
         name = input.group(2)
         if name in code.doc:
-            code.say(code.color('purple','Description') + ': ' + code.doc[name][0])
+            desc = code.doc[name][0]
+            while '  ' in desc:
+            desc = desc.replace('  ',' ')
+            code.say(code.color('purple','Description') + ': ' + desc)
             if code.doc[name][1]:
-                code.say(code.color('purple','Example') + ': ' + code.doc[name][1])
+                ex = code.doc[name][1]
+                while '  ' in ex:
+                    ex = ex.replace('  ',' ')
+                code.say(code.color('purple','Example') + ': ' + ex)
         else:
             code.reply(code.color('red','I\'m sorry, there is no documentation for that command.'))
     else:
