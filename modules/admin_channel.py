@@ -272,7 +272,7 @@ def unquiet(code, input):
        channel = opt
    quietmask = configureHostMask(quietmask)
    if quietmask == '': return
-   code.write(['MODE', opt, '-q', quietmask])
+   code.write(['MODE', channel, '-q', quietmask])
 unquiet.commands = ['unquiet','unmute']
 unquiet.priority = 'high'
 
