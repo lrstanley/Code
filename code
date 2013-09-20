@@ -33,7 +33,11 @@ def create_default_config(fn):
    
    # port to use to connect
    port = 6667
-   
+
+   # password is the server password. if you have a nickserv password you want to use,
+   # try to set password = 'username:pass', as most networks support nickserv via serverpass
+   #password = 'example'
+
    # channels to auto-join
    channels = ['#example', '#test']
 
@@ -54,10 +58,6 @@ def create_default_config(fn):
 
    # website to show for help documentation
    #website = 'http://code.liamstanley.net'
-   
-   # password is the Nickserv password, serverpass is the server password
-   #password = 'example'
-   #serverpass = 'serverpass'
    
    # would you like color/bolc/italic coded commands? this enables/disables
    # code.color/bold/italic() or any other form of carot notation applied directly by code
