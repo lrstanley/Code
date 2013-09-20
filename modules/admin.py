@@ -8,6 +8,7 @@ http://code.liamstanley.net/
 
 import os
 
+defaultnick = None
 def listmods(code, input):
     if not input.admin: return
     modules = list(set(input.modules))
@@ -51,16 +52,21 @@ quit.priority = 'low'
 
 def nick(code, input):
     """Change nickname dynamically. This is an owner-only command."""
-    #if input.sender.startswith('#'): return
+    global defaultnick
+    if not defaultnick:
+        defaultnick = code.nick
     if input.owner:
-        try:
-            if code.changenick(input.group(2)):
-                code.changenick(input.group(2)) #have to do command twice, solution?
+        if code.changenick(input.group(2)):
+            code.changenick(input.group(2))
+            pass
+        else:
+            code.say('Failed to change username! Trying default!')
+            if code.changenick(defaultnick):
+                code.changenick(defaultnick)
                 pass
             else:
-                code.say('Failed to change username!')
-        except:
-            code.say('Failed to change username!')
+                code.say('Failed to set default, shutting down!')
+                __import__('os')._exit(1)
     else:
         return
 nick.commands = ['name', 'nick', 'nickname']

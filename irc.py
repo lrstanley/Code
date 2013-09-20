@@ -109,7 +109,7 @@ class Bot(asynchat.async_chat):
         '''bold encoding IRC messages, if false in config, returns clean'''
         if not self.config.textstyles: return message
         return ('\x02' + str(message) + '\x02')
-			
+            
     def italic(self, message):
         '''italicize encoding IRC messages, if false in config, returns clean'''
         if not self.config.textstyles: return message
@@ -139,7 +139,7 @@ class Bot(asynchat.async_chat):
             self.write(['JOIN', channel, password])
 
     def __write(self, args, text=None, raw=False):
-        # print '%r %r %r' % (self, args, text)
+        print '%r %r %r' % (self, args, text)
         try:
             if raw:
                 temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
@@ -224,6 +224,8 @@ class Bot(asynchat.async_chat):
                         self.msg(self.logchan_pm, data, True)
             if self.logging:
                 log_raw(data)
+            print data.replace('\x02','').replace('\r','')
+            self.raw = data.replace('\x02','').replace('\r','')
 
     def found_terminator(self):
         line = self.buffer
