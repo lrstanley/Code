@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-"""
+'''
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 admin.py - Code Admin Module
 http://code.liamstanley.net/
-"""
+'''
 
 import os
 
 defaultnick = None
 def listmods(code, input):
+    '''Send a list of the loaded modules ot the user.'''
     if not input.admin: return
     modules = list(set(input.modules))
     code.say('Modules: ' + ', '.join(sorted(modules)) + '.')
@@ -18,7 +19,7 @@ listmods.priority = 'high'
 listmods.rate = 20
 
 def join(code, input):
-    """Join the specified channel. This is an admin-only command."""
+    '''Join the specified channel. This is an admin-only command.'''
     # Can only be done in privmsg by an admin
     if input.sender.startswith('#'): return
     if input.admin:
@@ -31,7 +32,7 @@ join.priority = 'low'
 join.example = '.join #example or .join #example key'
 
 def part(code, input):
-    """Part the specified channel. This is an admin-only command."""
+    '''Part the specified channel. This is an admin-only command.'''
     # Can only be done in privmsg by an admin
     if input.sender.startswith('#'): return
     if input.admin:
@@ -41,7 +42,7 @@ part.priority = 'low'
 part.example = '.part #example'
 
 def quit(code, input):
-    """Quit from the server. This is an owner-only command."""
+    '''Quit from the server. This is an owner-only command.'''
     # Can only be done in privmsg by the owner
     if input.sender.startswith('#'): return
     if input.owner:
@@ -51,7 +52,7 @@ quit.commands = ['quit', 'terminate', 'shutdown', 'stop']
 quit.priority = 'low'
 
 def nick(code, input):
-    """Change nickname dynamically. This is an owner-only command."""
+    '''Change nickname dynamically. This is an owner-only command.'''
     global defaultnick
     if not defaultnick:
         defaultnick = code.nick
@@ -73,6 +74,7 @@ nick.commands = ['name', 'nick', 'nickname']
 nick.priority = 'low'
 
 def msg(code, input):
+    '''Send a message to a channel, or a user. Admin-only.'''
     # Can only be done in privmsg by an admin
     if input.sender.startswith('#'): return
     a, b = input.group(2), input.group(3)
@@ -91,6 +93,7 @@ msg.rule = (['msg', 'say'], r'(#?\S+) (.+)')
 msg.priority = 'low'
 
 def me(code, input):
+    '''Send a raw action to a channel/user. Admin-only.'''
     # Can only be done in privmsg by an admin
     if input.sender.startswith('#'): return
     a, b = input.group(2), input.group(3)
@@ -105,7 +108,7 @@ me.rule = (['me', 'action'], r'(#?\S+) (.+)')
 me.priority = 'low'
 
 def announce(code, input):
-    """Send an announcement to all channels the bot is in"""
+    '''Send an announcement to all channels the bot is in'''
     if not input.admin:
         code.reply('Sorry, I can\'t let you do that')
         return
@@ -115,110 +118,103 @@ def announce(code, input):
 announce.commands = ['announce', 'broadcast']
 announce.example = '.announce Some important message here'
 
-#def defend_ground(code, input):
-#    """
-#    This function monitors all kicks across all channels code is in. If he
-#    detects that he is the one kicked he'll automatically join that channel.
-#
-#    WARNING: This may not be needed and could cause problems if code becomes
-#    annoying. Please use this with caution.
-#    """
-#    channel = input.sender
-#    code.write(['JOIN'], channel)
-#defend_ground.event = 'KICK'
-#defend_ground.rule = '.*'
-#defend_ground.priority = 'low'
-
 def blocks(code, input):
+    '''Command to add/delete user records, for a filter system. This is to prevent users from abusing Code.'''
     if not input.admin: return
 
-    STRINGS = {
-            "success_del" : "Successfully deleted block: %s",
-            "success_add" : "Successfully added block: %s",
-            "no_nick" : "No matching nick block found for: %s",
-            "no_host" : "No matching hostmask block found for: %s",
-            "invalid" : "Invalid format for %s a block. Try: .blocks add (nick|hostmask) code",
-            "invalid_display" : "Invalid input for displaying blocks.",
-            "nonelisted" : "No %s listed in the blocklist.",
-            'huh' : "I could not figure out what you wanted to do.",
-            }
-
-    if not os.path.isfile("blocks"):
-        blocks = open("blocks", "w")
+    if not os.path.isfile('blocks'):
+        blocks = open('blocks', 'w')
         blocks.write('\n')
         blocks.close()
 
-    blocks = open("blocks", "r")
+    blocks = open('blocks', 'r')
     contents = blocks.readlines()
     blocks.close()
 
-    try: masks = contents[0].replace("\n", "").split(',')
+    try: masks = contents[0].replace('\n', '').split(',')
     except: masks = ['']
 
-    try: nicks = contents[1].replace("\n", "").split(',')
+    try: nicks = contents[1].replace('\n', '').split(',')
     except: nicks = ['']
 
-    text = input.group().split()
+    text = input.group().strip().split()
+    low = input.group().lower().strip().split()
 
-    if len(text) == 3 and text[1] == "list":
-        if text[2] == "hostmask":
-            if len(masks) > 0 and masks.count("") == 0:
-                for each in masks:
-                    if len(each) > 0:
-                        code.say("blocked hostmask: " + each)
+    show = ['list','show','users','blocks']
+    host = ['host','hostmask','hostname']
+    name = ['nick','name','user']
+    add = ['add','create','block']
+    delete = ['del','delete','rem','remove','unblock']
+    # List 'em
+    if len(text) >= 2 and low[1] in show:
+        syntax = 'Syntax: \'.blocks list <nick|hostmask>\''
+        if len(text) != 3: return code.reply(syntax)
+        if low[2] in host:
+            if len(masks) > 0 and masks.count('') == 0:
+                for nick in masks:
+                    blocked = []
+                    if len(nick) > 0:
+                        blocked.append(nick)
+                code.say('Blocked hostmask(s): %s' % ', '.join(blocked))
             else:
-                code.reply(STRINGS['nonelisted'] % ('hostmasks'))
-        elif text[2] == "nick":
-            if len(nicks) > 0 and nicks.count("") == 0:
-                for each in nicks:
-                    if len(each) > 0:
-                        code.say("blocked nick: " + each)
+                code.reply('No hostmasks have been blocked yet.')
+        elif low[2] in name:
+            if len(nicks) > 0 and nicks.count('') == 0:
+                blocked = []
+                for nick in nicks:
+                    if len(nick) > 0:
+                        blocked.append(nick)
+                code.say('Blocked nick(s): %s' % ', '.join(blocked))
             else:
-                code.reply(STRINGS['nonelisted'] % ('nicks'))
+                code.reply('No nicks have been blocked yet.')
         else:
-            code.reply(STRINGS['invalid_display'])
+            code.reply(syntax)
 
-    elif len(text) == 4 and text[1] == "add":
-        if text[2] == "nick":
+    # Wants to add a block
+    elif len(text) >= 2 and low[1] in add:
+        syntax = 'Syntax: \'.blocks add <nick|hostmask> <args>\''
+        if len(text) != 4: return code.reply(syntax)
+        if low[2] in name:
             nicks.append(text[3])
-        elif text[2] == "hostmask":
+        elif low[2] in host:
             masks.append(text[3].lower())
         else:
-            code.reply(STRINGS['invalid'] % ("adding"))
-            return
+            return code.reply(syntax)
 
-        code.reply(STRINGS['success_add'] % (text[3]))
+        code.reply('Successfully added block: %s' % (text[3]))
 
-    elif len(text) == 4 and text[1] == "del":
-        if text[2] == "nick":
+    # Wants to delete a block
+    elif len(text) >= 2 and low[1] in delete:
+        syntax = 'Syntax: \'.blocks del <nick|hostmask> <args>\''
+        if len(text) != 4: return code.reply(syntax)
+        if low[2] in name:
             try:
                 nicks.remove(text[3])
-                code.reply(STRINGS['success_del'] % (text[3]))
+                code.reply('Successfully deleted block: %s' % (text[3]))
             except:
-                code.reply(STRINGS['no_nick'] % (text[3]))
+                code.reply('No matching nick block found for: %s' % (text[3]))
                 return
-        elif text[2] == "hostmask":
+        elif low[2] in host:
             try:
                 masks.remove(text[3].lower())
-                code.reply(STRINGS['success_del'] % (text[3]))
+                code.reply('Successfully deleted block: %s' % (text[3]))
             except:
-                code.reply(STRINGS['no_host'] % (text[3]))
+                code.reply('No matching hostmask block found for: %s' % (text[3]))
                 return
         else:
-            code.reply(STRINGS['invalid'] % ("deleting"))
-            return
+            return code.reply(syntax)
     else:
-        code.reply(STRINGS['huh'])
+        code.reply('Syntax: \'.blocks <add|del|list> <nick|hostmask> [args]\'')
 
-    os.remove("blocks")
-    blocks = open("blocks", "w")
-    masks_str = ",".join(masks)
-    if len(masks_str) > 0 and "," == masks_str[0]:
+    os.remove('blocks')
+    blocks = open('blocks', 'w')
+    masks_str = ','.join(masks)
+    if len(masks_str) > 0 and ',' == masks_str[0]:
         masks_str = masks_str[1:]
     blocks.write(masks_str)
-    blocks.write("\n")
-    nicks_str = ",".join(nicks)
-    if len(nicks_str) > 0 and "," == nicks_str[0]:
+    blocks.write('\n')
+    nicks_str = ','.join(nicks)
+    if len(nicks_str) > 0 and ',' == nicks_str[0]:
         nicks_str = nicks_str[1:]
     blocks.write(nicks_str)
     blocks.close()
@@ -228,16 +224,17 @@ blocks.priority = 'low'
 blocks.thread = False
 
 char_replace = {
-        r"\x01": chr(1),
-        r"\x02": chr(2),
-        r"\x03": chr(3),
+        r'\x01': chr(1),
+        r'\x02': chr(2),
+        r'\x03': chr(3),
         }
 
 def write_raw(code, input):
+    '''Send a raw command ot the server. WARNING THIS IS DANGEROUS! Owner-only.'''
     if not input.owner: return
     txt = input.bytes[7:]
     txt = txt.encode('utf-8')
-    a = txt.split(":")
+    a = txt.split(':')
     status = False
     if len(a) > 1:
         newstr = a[1]
@@ -248,14 +245,13 @@ def write_raw(code, input):
         status = True
     elif a:
         b = a[0].split()
-        code.write([b[0].strip()], u" ".join(b[1:]), raw=True)
+        code.write([b[0].strip()], u' '.join(b[1:]), raw=True)
         status = True
     if status:
-        code.reply("Message sent to server.")
+        code.reply('Message sent to server.')
 write_raw.commands = ['write', 'raw']
 write_raw.priority = 'high'
 write_raw.thread = False
 
 if __name__ == '__main__':
     print __doc__.strip()
-
