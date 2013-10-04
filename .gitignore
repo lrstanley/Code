@@ -7,3 +7,6 @@ testing.py
 @*
 *~
 *.out
+blocks
+daemon
+*.sh
