@@ -8,7 +8,7 @@ http://code.liamstanley.net/
 import json, urllib2
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
-uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=%s'
+uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s&client_id=%s'
 
 def soundcloud(code, input):
     """Automatically find the information from a soundcloud url and display it
@@ -18,36 +18,34 @@ def soundcloud(code, input):
             return
         id = input.group().split('soundcloud.com/',1)[1].split()[0].strip()
         # Should look like 'artist/song'
-        if '#' in id: id = id.split('#',1)[0]
-        artist, song = id.split('/')
-        data = json.loads(urllib2.urlopen(uri % (artist,song,client)).read())
+        data = json.loads(urllib2.urlopen(uri % (id,client)).read())
         output = []
         # Get date first so we can add to the title
         year, month, day = data['created_at'].split()[0].split('/')
         # Should always have a title
-        output.append('%s (%s/%s/%s)' % (data['title'], month, day, year))
+        output.append('\x0313\x02%s\x02\x03 (\x0313\x02%s/%s/%s\x02\x03)' % (data['title'], month, day, year))
         # Should always have an artist
-        output.append('uploaded by %s' % data['user']['username'])
+        output.append('uploaded by \x0313\x02%s\x02\x03' % data['user']['username'])
         # Genre!
-        output.append(data['genre'])
+        output.append('\x0313\x02' + data['genre'] + '\x02\x03')
         # Playback count, if none, obviously don't add it
         if int(data['playback_count']) > 0:
-            output.append('%s plays' % data['playback_count'])
+            output.append('\x0313\x02%s\x02\x03 plays' % data['playback_count'])
         # Download count, if none, obviously don't add it
         if int(data['download_count']) > 0:
-            output.append('%s downloads' % data['download_count'])
+            output.append('\x0313\x02%s\x02\x03 downloads' % data['download_count'])
         # And the same thing with the favorites count
         if int(data['favoritings_count']) > 0:
-            output.append('%s favs' % data['favoritings_count'])
+            output.append('\x0313\x02%s\x02\x03 favs' % data['favoritings_count'])
         # Comments too!
         if int(data['comment_count']) > 0:
-            output.append('%s comments' % data['comment_count'])
+            output.append('\x0313\x02%s\x02\x03 comments' % data['comment_count'])
         # Tags!
         if len(data['tag_list'].split()) > 0:
             tmp = data['tag_list'].split()
             tags = []
             for tag in tmp:
-                tags.append('(#%s)' % tag)
+                tags.append('(#\x0313\x02%s\x02\x03)' % tag)
             output.append(' '.join(tags))
         return code.say(' - '.join(output))
     except:
