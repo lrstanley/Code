@@ -74,17 +74,20 @@ def welcomemessage(code, input):
     """sends a welcome message on join to users on join, unless in exclude list"""
     global lastuser #doesn't sent a message if the last user that joined is the same
     try:
-        greetchan = code.config.greetchans
+        greetchanlist, greetchans = code.config.greetchans, []
+        for channel in greetchanlist:
+            greetchans.append(channel.lower())
         try:
-            excludeuser = code.config.excludeusers
-            excludeuser = excludeuser.lower()
+            excludeuserlist, excludeusers = code.config.excludeusers, []
+            for user in excludeuserlist:
+                excludeusers.append(user.lower())
         except:
-            excludeuser = ''
+            excludeusers = []
         global aistate
-        if any( [aistate == False, input.nick == code.nick, input.nick.lower() in excludeuser, \
-                 similar(lastuser, input.nick) > 0.70] ):
+        if any([aistate == False, input.nick == code.nick, input.nick.lower() in excludeusers, \
+                 similar(lastuser, input.nick) > 0.70]):
             return
-        elif input.sender in greetchan:
+        elif input.sender.lower() in greetchans:
             code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
                     code.bold(input.sender)))
             lastuser = input.nick
@@ -92,8 +95,6 @@ def welcomemessage(code, input):
     except: return
 welcomemessage.event = 'JOIN'
 welcomemessage.rule = r'.*'
-welcomemessage.priority = 'medium'
-welcomemessage.thread = False
 
 def howareyou(code, input):
     """How are you? auto reply module"""
