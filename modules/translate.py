@@ -13,8 +13,7 @@ import urllib
 import urllib2
 import web
 
-
-def translate(text, input='auto', output='en'):
+def translate(text, input='auto', output='en', use_proxy=False):
     raw = False
     if output.endswith('-raw'):
         output = output[:-4]
@@ -30,29 +29,36 @@ def translate(text, input='auto', output='en'):
     input, output = urllib.quote(input), urllib.quote(output)
     text = urllib.quote(text)
 
-    uri = 'http://translate.google.com/translate_a/t?'
+    uri = 'https://translate.google.com/translate_a/t?'
     params = {
-        'sl': input,
-        'tl': output,
-        'js': 'n',
-        'prev': '_t',
-        'hl': 'en',
-        'ie': 'UTF-8',
-        'text': text,
-        'client': 't',
-        'multires': '1',
-        'sc': '1',
-        'uptl': 'en',
-        'tsel': '0',
-        'ssel': '0',
-        'otf': '1',
+            'sl': input,
+            'tl': output,
+            'js': 'n',
+            'prev': '_t',
+            'hl': 'en',
+            'ie': 'UTF-8',
+            'text': text,
+            'client': 't',
+            'multires': '1',
+            'sc': '1',
+            'uptl': 'en',
+            'tsel': '0',
+            'ssel': '0',
+            'otf': '1',
     }
 
     for x in params:
         uri += '&%s=%s' % (x, params[x])
 
-    result = opener.open(uri).read()
+    if use_proxy:
+        print 'USING PROXY'
+        result = proxy.get(uri)
+    else:
+        print 'NOT USING PROXY'
+        result = opener.open(uri).read()
 
+    ## this is hackish
+    ## this makes the returned data parsable by the json module
     result = result.replace(',,', ',').replace('[,', '["",')
 
     while ',,' in result:
@@ -62,8 +68,13 @@ def translate(text, input='auto', output='en'):
     if raw:
         return str(data), 'en-raw'
 
-    try: language = data[2] # -2][0][0]
-    except: language = '?'
+    try:
+        language = data[2] # -2][0][0]
+    except:
+        language = '?'
+
+    if isinstance(language, list):
+        language = data[-2][0][0]
 
     return ''.join(x[0] for x in data[0]), language
 
@@ -150,7 +161,7 @@ def mangle(code, input):
             break
         __import__('time').sleep(0.5)
 
-    code.reply(phrase or 'Errors translating.')
+    code.reply(phrase or 'ERRORS SRY')
 mangle.commands = ['mangle']
 
 if __name__ == '__main__':
