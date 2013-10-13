@@ -91,9 +91,11 @@ def welcomemessage(code, input):
             code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
                     code.bold(input.sender)))
             lastuser = input.nick
+            return
         else: return
     except: return
 welcomemessage.event = 'JOIN'
+welcomemessage.priority = 'medium'
 welcomemessage.rule = r'.*'
 
 def howareyou(code, input):
