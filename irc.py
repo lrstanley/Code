@@ -139,7 +139,7 @@ class Bot(asynchat.async_chat):
             self.write(['JOIN', channel, password])
 
     def __write(self, args, text=None, raw=False):
-        print '%r %r %r' % (self, args, text)
+        print '[WRITE] %r %r' % (args, text)
         try:
             if raw:
                 temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
@@ -181,8 +181,8 @@ class Bot(asynchat.async_chat):
 
     def initiate_connect(self, host, port):
         if self.verbose:
-            message = 'Connecting to %s:%s...' % (host, port)
-            print >> sys.stderr, message,
+            message = '[SERVER] Connecting to %s:%s...' % (host, port)
+            print >> sys.stderr, message
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((host, port))
         try: asyncore.loop()
@@ -191,7 +191,7 @@ class Bot(asynchat.async_chat):
 
     def handle_connect(self):
         if self.verbose:
-            print >> sys.stderr, 'Connected!'
+            print >> sys.stderr, '[SERVER] Connected!'
         if self.password:
             self.write(('PASS', self.password))
         self.write(('NICK', self.nick))
@@ -212,7 +212,17 @@ class Bot(asynchat.async_chat):
 
     def handle_close(self):
         self.close()
-        print >> sys.stderr, 'Closed!'
+        print >> sys.stderr, 'Disconnected from IRC - Reason unknown!'
+
+    def handle_error(self):
+        '''Handle any uncaptured error in the core. Overrides asyncore's handle_error'''
+        trace = traceback.format_exc()
+        try:
+            print trace
+        except:
+            pass
+        print('[ERROR] Fatal error in core, please review exception below:')
+        print('[ERROR] Exception: ' + trace)
 
     def collect_incoming_data(self, data):
         self.buffer += data
@@ -224,7 +234,7 @@ class Bot(asynchat.async_chat):
                         self.msg(self.logchan_pm, data, True)
             if self.logging:
                 log_raw(data)
-            print data.replace('\x02','').replace('\r','')
+            print '[SERVER] ' + data.replace('\x02','').replace('\r','')
             self.raw = data.replace('\x02','').replace('\r','')
 
     def found_terminator(self):
@@ -316,7 +326,7 @@ class Bot(asynchat.async_chat):
         try:
             #import traceback
             trace = traceback.format_exc()
-            print trace
+            print '[ERROR] ' + trace
             lines = list(reversed(trace.splitlines()))
 
             report = [lines[0].strip()]
@@ -325,7 +335,7 @@ class Bot(asynchat.async_chat):
                 if line.startswith('File "/'):
                     report.append(line[0].lower() + line[1:])
                     break
-            else: report.append('source unknown')
+            else: report.append('Source unknown.')
 
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
         except: self.msg(origin.sender, 'Got an error.')

@@ -66,7 +66,7 @@ class Code(irc.Bot):
             #     del sys.modules[name]
             try: module = imp.load_source(name, filename)
             except Exception, e:
-                print >> sys.stderr, "Error loading %s: %s (in bot.py)" % (name, e)
+                print >> sys.stderr, "[ERROR] Failed to load %s: %s" % (name, e)
             else:
                 if hasattr(module, 'setup'):
                     module.setup(self)
@@ -74,8 +74,8 @@ class Code(irc.Bot):
                 modules.append(name)
 
         if modules: #im getting double the modules, why is this?
-            print >> sys.stderr, 'Registered modules:', ', '.join(modules)
-        else: print >> sys.stderr, "Warning: Couldn't find any modules"
+            print >> sys.stderr, '[INFO] Registered modules:', ', '.join(modules)
+        else: print >> sys.stderr, "[WARNING] Couldn't find any modules"
 
         self.bind_commands()
 
@@ -89,7 +89,7 @@ class Code(irc.Bot):
         self.commands = {'high': {}, 'medium': {}, 'low': {}}
 
         def bind(self, priority, regexp, func):
-            print priority, regexp.pattern.encode('utf-8'), func
+            print '[INFO] Loading module. Priority: \'%s\', Pattern: %s, Function: %s' % (priority, regexp.pattern.encode('utf-8'), func)
             # register documentation
             if not hasattr(func, 'name'):
                 func.name = func.__name__
