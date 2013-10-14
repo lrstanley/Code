@@ -21,7 +21,20 @@ def commands(code, input):
     names = ', '.join(sorted(code.doc.iterkeys()))
     if input.sender.startswith('#'):
         code.reply('I am sending you a private message of all my commands.')
-    code.msg(input.nick, 'Commands I recognise: ' + names + '.')
+    count = 0
+    cmds = []
+    commands = list(set(input.cmds))
+    full = len(commands)
+    code.msg(input.nick, 'Commands I recognize:')
+    for i in range(0,full-1):
+        count += 1
+        cmds.append(commands[i])
+        if count == 40:
+            code.msg(input.nick, '# ' + ', '.join(cmds))
+            cmds = []
+            count = 0
+        elif i == full:
+            code.msg(input.nick, '# ' + ', '.join(cmds))
     code.msg(input.nick, ('For help, do \'.help example\' where ' +
                           '"example" is the name of the command you want ' +
                           'help for.'))
