@@ -11,6 +11,7 @@ import irc
 
 home = os.getcwd()
 modules = []
+commands = []
 
 def decode(bytes):
     try: text = bytes.decode('utf-8')
@@ -89,7 +90,7 @@ class Code(irc.Bot):
         self.commands = {'high': {}, 'medium': {}, 'low': {}}
 
         def bind(self, priority, regexp, func):
-            print '[INFO] Loading module. Priority: \'%s\', Pattern: %s, Function: %s' % (priority, regexp.pattern.encode('utf-8'), func)
+            print '[INFO] Loading module... Priority: \'%s\' -- Pattern: \'%s\' -- Function: \'%s\'' % (priority, regexp.pattern.encode('utf-8'), func)
             # register documentation
             if not hasattr(func, 'name'):
                 func.name = func.__name__
@@ -157,6 +158,8 @@ class Code(irc.Bot):
                             bind(self, func.priority, regexp, func)
 
             if hasattr(func, 'commands'):
+                global commands
+                commands.append(func.commands[0])
                 for command in func.commands:
                     template = r'^%s(%s)(?: +(.*))?$'
                     pattern = template % (self.config.prefix, command)
@@ -194,6 +197,8 @@ class Code(irc.Bot):
                 s.textstyles = self.config.textstyles
                 global modules
                 s.modules = modules
+                global modules
+                s.commands = modules
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:
@@ -234,7 +239,7 @@ class Code(irc.Bot):
                         print 'Blocked:', input.sender, func.name, func.func_code.co_filename
                         return
         except Exception, e:
-            print "Error attempting to block:", str(func.name)
+            print "Error attempting to block: ", str(func.name)
             self.error(origin)
 
         try:
