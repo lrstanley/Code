@@ -97,7 +97,7 @@ def tr(code, context):
             msg = msg.decode('utf-8')
         if msg:
             msg = web.decode(msg) # msg.replace('&#39;', "'")
-            msg = '"%s" (%s to %s, translate.google.com)' % (msg, input, output)
+            msg = '"%s" (%s to %s)' % (msg, input, output)
         else: msg = 'The %s to %s translation failed, sorry!' % (input, output)
 
         code.reply(msg)
@@ -135,7 +135,7 @@ def tr2(code, input):
             msg = msg.decode('utf-8')
         if msg:
             msg = web.decode(msg) # msg.replace('&#39;', "'")
-            msg = '"%s" (%s to %s, translate.google.com)' % (msg, src, dest)
+            msg = '"%s" (%s to %s)' % (msg, src, dest)
         else: msg = 'The %s to %s translation failed, sorry!' % (src, dest)
 
         code.reply(msg)
@@ -161,7 +161,7 @@ def mangle(code, input):
             break
         __import__('time').sleep(0.5)
 
-    code.reply(phrase or 'ERRORS SRY')
+    code.reply(phrase or 'ERRORS D:')
 mangle.commands = ['mangle']
 
 if __name__ == '__main__':
