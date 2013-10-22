@@ -50,6 +50,7 @@ def f_remind(code, input):
     teller = input.nick
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group()).startswith(".tell"):
+        if input.group(2).lower().split()[1] == 'liam' or input.group(2).lower().split()[1] == 'lime': return
         verb = "tell".encode('utf-8')
         line = input.groups()
         line_txt = line[1].split()
