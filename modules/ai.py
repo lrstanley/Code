@@ -191,17 +191,9 @@ yesno.rule = '(code|$nickname)\:\s+(yes|no)$'
 yesno.rate = 15
 
 def ping_reply(code,input):
-    text = input.group().lower().split(':')
-    text = text[1].split()
-    if text[0] == 'ping':
-        code.reply('PONG')
-ping_reply.rule = '(?i)($nickname|code)\:\s+(ping)\s*'
+    code.reply('PONG')
+ping_reply.commands = ['ping','lag','pong']
 ping_reply.rate = 30
-
-def ping_reply_cmd(code, input):
-    ping_reply(code, input)
-ping_reply_cmd.commands = ['ping', 'pong']
-ping_reply_cmd.rate = 30
 
 def love(code, input):
     code.reply('I love you too.')
