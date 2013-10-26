@@ -18,12 +18,12 @@ if os.path.exists('modules/twss.txt'):
     num_lines = sum(1 for line in open('modules/twss.txt'))
     if num_lines < 2000:
         os.remove('modules/twss.txt')
-        print 'Downloading "That\'s What She Said" library from http://liamstanley.net/twss.txt now...'
-        urllib.urlretrieve ('http://liamstanley.net/twss.txt', 'modules/twss.txt')
+        print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.net/twss.txt now...'
+        urllib.urlretrieve ('http://misc.liamstanley.net/twss.txt', 'modules/twss.txt')
     else: pass
 elif not os.path.exists('modules/twss.txt'):
-    print 'Downloading "That\'s What She Said" library from http://liamstanley.net/twss.txt now...'
-    urllib.urlretrieve ('http://liamstanley.net/twss.txt', 'modules/twss.txt')
+    print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.net/twss.txt now...'
+    urllib.urlretrieve ('http://misc.liamstanley.net/twss.txt', 'modules/twss.txt')
 
     f = open('modules/twss.txt', 'w')
 #    url = 'http://www.twssstories.com/best?page='
