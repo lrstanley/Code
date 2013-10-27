@@ -235,7 +235,6 @@ class Bot(asynchat.async_chat):
                         self.msg(self.logchan_pm, data, True)
             if self.logging:
                 log_raw(data)
-            #print '[SERVER] ' +
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip().split()
             sender,rest = line[0].lstrip(':').split('!',1)[0],' '.join(line[1::])
@@ -246,7 +245,7 @@ class Bot(asynchat.async_chat):
                     print '[%s] <%s> %s' % (channel,sender,msg)
                 else:
                     print '[%s] %s' % (sender,rest)
-            else:
+            elif sender != 'PING':
                 print '[%s] %s' % (sender,rest)
 
     def found_terminator(self):
