@@ -8,7 +8,8 @@ notifications:
   irc:
     channels:
       - "irc.esper.net#L"
-    template:
-      - "Building Code... (ID) %{build_number} on (Branch) %{branch} by %{author}"
-      - "%{repository} (%{commit}) : %{message}"
-      - "Build details: %{build_url}"
+    #  - "chat.freenode.net#some-other-channel"
+    on_success: always
+    on_failure: always
+    use_notice: true
+    skip_join: true
