@@ -139,7 +139,8 @@ class Bot(asynchat.async_chat):
             self.write(['JOIN', channel, password])
 
     def __write(self, args, text=None, raw=False):
-        print '[WRITE] %r %r' % (args, text)
+        #print '[WRITE] %r %r' % (args, text)
+        # Not needed anymore
         try:
             if raw:
                 temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
