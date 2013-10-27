@@ -237,16 +237,16 @@ class Bot(asynchat.async_chat):
             #print '[SERVER] ' +
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip().split()
+            sender,rest = line[0].lstrip(':').split('!',1)[0],' '.join(line[1::])
             if line[0].startswith(':') and len(line) > 3:
                 if line[1] == 'PRIVMSG':
                     channel = line[2]
-                    user = line[0].lstrip(':').split('!',1)[0]
                     msg = ' '.join(line[3::]).lstrip(':')
-                    print '[%s] <%s> %s' % (channel,user,msg)
+                    print '[%s] <%s> %s' % (channel,sender,msg)
                 else:
-                    print '[SERVER] %s' % self.raw
+                    print '[%s] %s' % (sender,rest)
             else:
-                print '[SERVER] %s' % self.raw
+                print '[%s] %s' % (sender,rest)
 
     def found_terminator(self):
         line = self.buffer
