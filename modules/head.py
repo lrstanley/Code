@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-head.py - Code HTTP Metadata Utilities
+head.py - Code HTTP title utilities
 http://code.liamstanley.net/
 """
 
@@ -10,59 +10,6 @@ import re, urllib, urllib2, httplib, urlparse, time
 from htmlentitydefs import name2codepoint
 import web
 from tools import deprecated
-
-def meta(code, input): 
-   """Provide HTTP meta (HEAD) information."""
-   uri = input.group(2)
-   uri = (uri or '').encode('utf-8')
-   if ' ' in uri: 
-      uri, metaer = uri.rsplit(' ', 1)
-   else: uri, metaer = uri, None
-
-   if not uri and hasattr(code, 'last_seen_uri'): 
-      try: uri = code.last_seen_uri[input.sender]
-      except KeyError: return code.say('?')
-
-   if not uri.startswith('htt'): 
-      uri = 'http://' + uri
-   # uri = uri.replace('#!', '?_escaped_fragment_=')
-
-   try: info = web.meta(uri)
-   except IOError: return code.say("Can't %s to %s" % (code.bold('connect'), uri))
-   except httplib.InvalidURL: return code.say("Not a valid URI, sorry.")
-
-   if not isinstance(info, list): 
-      try: info = dict(info)
-      except TypeError: 
-         return code.reply('Try .%s http://example.org/ %s' % (code.color('purple', 'meta'), code.color('blue', '[optional meta]')))
-      info['Status'] = '200'
-   else: 
-      newInfo = dict(info[0])
-      newInfo['Status'] = str(info[1])
-      info = newInfo
-
-   if metaer is None: 
-      data = []
-      if info.has_key('Status'): 
-         data.append(info['Status'])
-      if info.has_key('content-type'): 
-         data.append(info['content-type'].replace('; charset=', ', '))
-      if info.has_key('last-modified'): 
-         modified = info['last-modified']
-         modified = time.strptime(modified, '%a, %d %b %Y %H:%M:%S %Z')
-         data.append(time.strftime('%Y-%m-%d %H:%M:%S UTC', modified))
-      if info.has_key('content-length'): 
-         data.append(info['content-length'] + ' bytes')
-      code.reply(', '.join(data))
-   else: 
-      metaerlower = metaer.lower()
-      if info.has_key(metaerlower): 
-         code.say(metaer + ': ' + info.get(metaerlower))
-      else: 
-         msg = 'There was no %s metaer in the response.' % code.bold(metaer)
-         code.say(msg)
-meta.commands = ['meta']
-meta.example = '.meta http://www.w3.org/'
 
 r_title = re.compile(r'(?ims)<title[^>]*>(.*?)</title\s*>')
 r_entity = re.compile(r'&[A-Za-z0-9#]+;')
