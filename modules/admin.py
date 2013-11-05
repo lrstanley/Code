@@ -120,7 +120,8 @@ announce.example = '.announce Some important message here'
 
 def blocks(code, input):
     '''Command to add/delete user records, for a filter system. This is to prevent users from abusing Code.'''
-    if not input.admin: return
+    if not input.admin:
+        return code.reply(code.color('red','You are not authorized to use this feature!'))
 
     if not os.path.isfile('blocks'):
         blocks = open('blocks', 'w')
