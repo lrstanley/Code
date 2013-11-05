@@ -1,7 +1,6 @@
 # -*- coding: utf8 -*-
 """
 Code Copyright (C) 2012-2013 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 movie.py - Code movie Module
 http://code.liamstanley.net/
 """
