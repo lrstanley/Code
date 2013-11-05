@@ -197,7 +197,7 @@ def blocks(code, input):
                 return
         elif low[2] in host:
             try:
-                masks.remove(text[3].lower())
+                masks.remove(text[3])
                 code.reply('Successfully deleted block: %s' % (text[3]))
             except:
                 code.reply('No matching hostmask block found for: %s' % (text[3]))
