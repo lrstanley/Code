@@ -8,10 +8,12 @@ http://code.liamstanley.net/
 """
 
 import re
-import urllib
+import urllib, urllib2
 import web
 from tools import deprecated
-from modules import htmlencode
+import HTMLParser
+
+h = HTMLParser.HTMLParser()
 
 r_from = re.compile(r'(?i)([+-]\d+):00 from')
 
@@ -415,37 +417,24 @@ f_weather.rule = (['weather'], r'(.*)')
 
 def fucking_weather(code, input):
     """.fw (ZIP|City, State) -- provide a ZIP code or a city state pair to hear about the fucking weather"""
-    text = input.group(2)
-    if not text:
-        code.reply(code.bold('INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.'))
-        return
-    new_text = str()
-    for x in text:
-        if x in htmlencode.HTML_ENCODINGS:
-            new_text += htmlencode.HTML_ENCODINGS[x]
-        else:
-            new_text += x
-    page = web.get("http://thefuckingweather.com/?where=%s" % (new_text))
-    re_mark = re.compile('<p class="remark">(.*?)</p>')
-    re_temp = re.compile('<span class="temperature" tempf="\S+">(\S+)</span>')
-    re_condition = re.compile('<p class="large specialCondition">(.*?)</p>')
-    temps = re_temp.findall(page)
-    remarks = re_mark.findall(page)
-    response = str()
-    if temps:
-        response += temps[0] + code.bold(code.color('red', ' FUCKING DEGREES?!'))
-    if remarks:
-        response += remarks[0]
-    else:
-        response += code.color('red', code.bold('I CAN\'T FIND THAT SHIT.'))
-    conditions = re_condition.findall(page)
-    if conditions:
-        response += " " + code.bold(conditions[0]) #B-B-B-BOLD!
-    code.reply(response)
+    if not input.group(2):
+        return code.reply(code.bold('INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.'))
+    try:
+        text = urllib.quote(input.group(2))
+        data = urllib2.urlopen('http://thefuckingweather.com/?where=%s' % text).read()
+        temp = re.compile(r'<p class="large"><span class="temperature" tempf=".*?">.*?</p>').findall(data)[0]
+        temp = re.sub(r'\<.*?\>', '', temp).strip().replace(' ','').replace('"','')
+        remark = re.compile(r'<p class="remark">.*?</p>').findall(data)[0]
+        remark = re.sub(r'\<.*?\>', '', remark).strip()
+        flavor = re.compile(r'<p class="flavor">.*?</p>').findall(data)[0]
+        flavor = re.sub(r'\<.*?\>', '', flavor).strip()
+        return code.reply(h.unescape(temp) +' '+ code.color('red',code.bold(remark)) +'. '+ flavor)
+
+    except:
+        return code.reply(code.color('red', code.bold('I CAN\'T FIND THAT SHIT.')))
 fucking_weather.commands = ['fuckingweather', 'fw']
 fucking_weather.priority = 'low'
 
 
 if __name__ == '__main__':
     print __doc__.strip()
-
