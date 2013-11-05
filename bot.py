@@ -161,7 +161,7 @@ class Code(irc.Bot):
                 global cmds
                 cmds.append(func.commands[0])
                 for command in func.commands:
-                    template = r'^%s(%s)(?: +(.*))?$'
+                    template = r'(?i)^%s(%s)(?: +(.*))?$'
                     pattern = template % (self.config.prefix, command)
                     regexp = re.compile(pattern)
                     bind(self, func.priority, regexp, func)

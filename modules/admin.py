@@ -27,7 +27,7 @@ def join(code, input):
         if not key:
             code.write(['JOIN'], channel)
         else: code.write(['JOIN', channel, key])
-join.rule = r'\.join (#\S+)(?: *(\S+))?'
+join.rule = r'(?i)\.join (#\S+)(?: *(\S+))?'
 join.priority = 'low'
 join.example = '.join #example or .join #example key'
 
@@ -89,7 +89,7 @@ def msg(code, input):
             helper = True
     if input.admin or helper:
         code.msg(a, b)
-msg.rule = (['msg', 'say'], r'(#?\S+) (.+)')
+msg.rule = (['msg', 'say'], r'(?i)(#?\S+) (.+)')
 msg.priority = 'low'
 
 def me(code, input):
@@ -104,7 +104,7 @@ def me(code, input):
         if a and b:
             msg = '\x01ACTION %s\x01' % input.group(3)
             code.msg(input.group(2), msg, x=True)
-me.rule = (['me', 'action'], r'(#?\S+) (.+)')
+me.rule = (['me', 'action'], r'(?i)(#?\S+) (.+)')
 me.priority = 'low'
 
 def announce(code, input):

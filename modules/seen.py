@@ -26,7 +26,7 @@ def seen(code, input):
       msg = "I last saw %s at %s on %s" % (code.color('blue', nick), code.bold(t), code.bold(channel))
       code.reply(msg)
    else: code.reply('Sorry, I haven\'t seen %s around.' % code.color('blue', nick))
-seen.rule = (['seen'], r'(\S+)')
+seen.rule = (['seen'], r'(?i)(\S+)')
 
 @deprecated
 def f_note(self, origin, match, args): 
