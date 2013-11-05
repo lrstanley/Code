@@ -4,46 +4,82 @@ Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 movie.py - Code movie Module
 http://code.liamstanley.net/
-
-Module imported from jenni.
 """
 
-import web
+import urllib
 import urllib2
+import json
 
+search_uri = 'http://www.omdbapi.com/?t=%s'
+id_uri = 'http://www.omdbapi.com/?i=%s'
+error = 'Unable to search for that movie!'
 
-def movie(code, input):
+def movie_search(code, input):
     """.imdb movie/show title -- displays information about a production"""
 
     if not input.group(2):
-        return
-    word = input.group(2).rstrip()
-    word = word.replace(" ", "+")
-    uri = "http://www.imdbapi.com/?t=" + word
+        return code.reply('Syntax: \'.movie <movie name>\'')
 
-    uri = uri.encode('utf-8')
-    page = web.get(uri)
-    data = web.json(page)
+    try:
+        # Url-ify
+        search = urllib.quote(input.group(2).strip())
 
-    if data['Response'] == 'False':
-        if 'Error' in data:
-            message = '[MOVIE] %s' % data['Error']
+        # Pull response from API, and load into a JSON based dict()
+        data = json.loads(urllib2.urlopen(search_uri % (search)).read())
+
+        # If we get an error from the API. (Other errors are caught from the try:;except:)
+        if data['Response'] == 'False':
+            return code.reply(error)
+
+        # Start creating a response
+        response = build_response(data)
+        output = []
+        for section in response:
+            output.append('%s: %s' % (code.color('blue',section[0]), section[1]))
+        return code.say(' | '.join(output))
+    except:
+        return code.reply(error)
+movie_search.commands = ['movie', 'imdb']
+movie_search.example = '.movie Transformers'
+
+def movie(code, input):
+    """Automatically find the information from a imdb url and display it
+       to users in a channel"""
+    try:
+        if '//www.imdb.com/title/' in input.group().lower() or '//imdb.com/title/' in input.group().lower():
+            id = input.group().split('imdb.com/title/',1)[1]
+            if '/' in id:
+                id = id.split('/',1)[0]
         else:
-            code.debug('movie',
-                        'Got an error from the imdb api,\
-                                search phrase was %s' %
-                        word, 'warning')
-            code.debug('movie', str(data), 'warning')
-            message = '[MOVIE] Got an error from imdbapi'
-    else:
-        message = code.bold(code.color('blue', 'Title: ')) + data['Title'] + \
-                  code.bold(code.color('blue', ' | Year: ')) + data['Year'] + \
-                  code.bold(code.color('blue', ' | Rating: ')) + data['imdbRating'] + \
-                  code.bold(code.color('blue', ' | Genre: ')) + data['Genre'] + \
-                  code.bold(code.color('blue', ' | Link: ')) + 'http://imdb.com/title/' + data['imdbID']
-    code.say(message)
-movie.commands = ['movie', 'imdb']
-movie.example = '.movie Movie Title'
+            return
+        data = json.loads(urllib2.urlopen(id_uri % id).read())
+
+        # If we get an error from the API. (Other errors are caught from the try:;except:)
+        if data['Response'] == 'False':
+            return
+
+        # Start creating a response
+        response = build_response(data)
+        output = []
+        for section in response:
+            output.append('%s: %s' % (code.color('blue',section[0]), section[1]))
+        return code.say(' | '.join(output))
+    except:
+        return
+movie.rule = r'.*'
+movie.priority = 'medium'
+movie.thread = False
+
+def build_response(data):
+    response = []
+    response.append(['Title', data['Title']])
+    response.append(['Rated', data['Rated']])
+    response.append(['Year', data['Year']])
+    response.append(['Rating', data['imdbRating']])
+    response.append(['Genre', data['Genre']])
+    response.append(['Votes', data['imdbVotes']])
+    response.append(['Link', 'http://imdb.com/title/%s/' % (data['imdbID'])])
+    return response
 
 if __name__ == '__main__':
     print __doc__.strip()

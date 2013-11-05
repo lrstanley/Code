@@ -25,7 +25,14 @@ import web
 BITLY_TRIGGER_LEN_TITLE = 15
 BITLY_TRIGGER_LEN_NOTITLE = 70
 EXCLUSION_CHAR = '!'
-IGNORE = ['git.io', 'build.liamstanley.net','youtube.','youtu.be','soundcloud.com']
+IGNORE = [
+          'git.io',
+          'build.liamstanley.net',
+          'youtube.',
+          'youtu.be',
+          'soundcloud.com',
+          'imdb.com'
+          ]
 
 # do not edit below this line unless you know what you're doing
 bitly_loaded = False
