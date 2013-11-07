@@ -22,7 +22,7 @@ def calc(code, input):
             return code.reply('Failed to calculate!')
         #print data['Answer']
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip()
-        print answer
+        return code.say(answer)
     except:
         return code.reply('Failed to calculate!')
 calc.commands = ['c', 'calc', 'calculate']
