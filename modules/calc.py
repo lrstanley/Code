@@ -19,7 +19,7 @@ def calc(code, input):
     try:
         data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2))).read())
         if data['AnswerType'] != 'calc':
-            return code.reply('Failed to calculate!')
+            return code.reply('Syntax: \'.calc <problem>\'')
         #print data['Answer']
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip()
         return code.say(answer)
