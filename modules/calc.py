@@ -15,11 +15,11 @@ import unicodedata
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
 def calc(code, input):
-    if not input.group(2): return code.reply('Failed to calculate!')
+    if not input.group(2): return code.reply('Syntax: \'.calc <problem>\'')
     try:
         data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2))).read())
         if data['AnswerType'] != 'calc':
-            return code.reply('Syntax: \'.calc <problem>\'')
+            return code.reply('Failed to calculate')
         #print data['Answer']
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip()
         return code.say(answer)
