@@ -12,8 +12,7 @@ import urllib, urllib2
 import web
 import unicodedata
 
-r_result = re.compile(r'(?i)<A NAME=results>(.*?)</A>')
-r_tag = re.compile(r'<\S+.*?>')
+uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
 def calc(code, input):
     if not input.group(2): return code.reply('Failed to calculate!')
