@@ -7,7 +7,8 @@ calc.py - Code Calculator Module
 http://code.liamstanley.net/
 """
 
-import re
+import re, json
+import urllib, urllib2
 import web
 import unicodedata
 
