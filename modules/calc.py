@@ -39,6 +39,9 @@ def py(code, input):
     try:
          answer = web.get(uri + web.urllib.quote(query))
          if answer:
+              # Strip line endings from the response, to prevent cut-off
+              # Of multi-line responses
+              answer = answer.replace('\n',' ').replace('\t',' ').replace('\r','')
               # Make sure to reply result, so we don't run into Fantasy-prefix
               # Channel command issues/security holes
               code.reply(answer)
