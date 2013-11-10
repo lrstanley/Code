@@ -30,7 +30,8 @@ calc.example = '.calc 5 + 3'
 
 def py(code, input):
     # Prevention from spam, along with exploits on Atheme/Charybdis networks
-    if not input.admin: return
+    # (see line 42, new fix)
+    #if not input.admin: return
     if not input.group(2):
          return code.reply('Please enter an %s' % code.bold('input'))
     query = input.group(2).encode('utf-8')
@@ -38,7 +39,9 @@ def py(code, input):
     try:
          answer = web.get(uri + web.urllib.quote(query))
          if answer:
-              code.say(answer)
+              # Make sure to reply result, so we don't run into Fantasy-prefix
+              # Channel command issues/security holes
+              code.reply(answer)
          else:
               code.reply('Sorry, no %s' % code.bold('result'))
     except Exception, e:
