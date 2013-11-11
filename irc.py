@@ -76,8 +76,8 @@ class Bot(asynchat.async_chat):
         import threading
         self.sending = threading.RLock()
 
-    def push(self, *args, **kargs):
-        asynchat.async_chat.push(self, *args, **kargs)
+    #def push(self, *args, **kargs):
+    #    asynchat.async_chat.push(self, *args, **kargs)
 
     # text styling support
     #Bold            = \x02
@@ -144,20 +144,17 @@ class Bot(asynchat.async_chat):
         try:
             if raw:
                 temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
-                self.push(temp)
             elif not raw:
                 if text:
                     # 510 because CR and LF count too, as nyuszika7h points out
                     temp = (' '.join(args) + ' :' + text)[:510] + '\r\n'
                 else:
                     temp = ' '.join(args)[:510] + '\r\n'
-                self.push(temp)
+            self.push(temp)
             if self.logging:
                 log_raw(temp)
         except IndexError:
             return
-            #print "INDEXERROR", text
-            #pass
 
     def write(self, args, text=None, raw=False):
         try:
