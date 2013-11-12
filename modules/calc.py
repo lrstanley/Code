@@ -10,7 +10,6 @@ http://code.liamstanley.net/
 import re, json
 import urllib, urllib2
 import web
-import unicodedata
 
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
