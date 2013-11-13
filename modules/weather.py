@@ -46,7 +46,7 @@ def weather(code,input):
     #"visibility":8.58,"cloudCover":0.5,"pressure":1017.56,"ozone":314.62}
     if 'summary' in data:
         output.append(data['summary'])
-    if if 'temperature' in data:
+    if 'temperature' in data:
         output.append('%s (%s) degrees celcius' % (code.color('blue',data['temperature']),
                                                    code.color('blue',data['apparentTemperature'])))
     if 'precipIntensity' in data:
