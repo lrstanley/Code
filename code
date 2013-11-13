@@ -21,90 +21,91 @@ def check_python_version():
 def create_default_config(fn):
     f = open(fn, 'w')
     output = """\
-   # Code Copyright (C) 2012-2013 Liam Stanley
-   # Uncomment things you wish to add to the file
-   # lines with "#" in front of them are comments
-   
-   # irc bot nickname
-   nick = 'code'
-   
-   # irc server host
-   host = 'irc.example.net'
-   
-   # port to use to connect
-   port = 6667
+        # Code Copyright (C) 2012-2013 Liam Stanley
+        # Uncomment things you wish to add to the file
+        # lines with "#" in front of them are comments
 
-   # password is the server password. if you have a nickserv password you want to use,
-   # try to set password = 'username:pass', as most networks support nickserv via serverpass
-   #password = 'example'
+        # irc bot nickname
+        nick = 'code'
 
-   # channels to auto-join
-   channels = ['#example', '#test']
+        # irc server host
+        host = 'irc.example.net'
 
-   # channels to greet users on channel join
-   # e.g "Hello Code, welcome to #Lounge!"
-   # uncomment to enable (remember this wont work with ai.py disabled.)
-   #greetchans = ['#Example', '#Hugs']
-   # exclude users from receiving a welcome message below.
-   #excludeusers = ['Serious', 'User']
-   
-   # your nickname for use in admin functions
-   # You can also specify nick@hostmask
-   # For example: code@unaffiliated/code
-   owner = 'yournickname'
+        # port to use to connect
+        port = 6667
 
-   # These are people who will be able to use admin.py's functions...
-   admins = [owner, 'someoneyoutrust']
+        # password is the server password. if you have a nickserv password you want to use,
+        # try to set password = 'username:pass', as most networks support nickserv via serverpass
+        #password = 'example'
 
-   # website to show for help documentation
-   #website = 'http://code.liamstanley.net'
-   
-   # would you like color/bolc/italic coded commands? this enables/disables
-   # code.color/bold/italic() or any other form of carot notation applied directly by code
-   # although, if your module uses raw carot notation, then it won't disable that
-   textstyles = True
+        # channels to auto-join
+        channels = ['#example', '#test']
 
-   # But admin.py is disabled by default, as follows:
-   exclude = ['admin', 'admin_channel', 'twss']
+        # channels to greet users on channel join
+        # e.g "Hello Code, welcome to #Lounge!"
+        # uncomment to enable (remember this wont work with ai.py disabled.)
+        #greetchans = ['#Example', '#Hugs']
+        # exclude users from receiving a welcome message below.
+        #excludeusers = ['Serious', 'User']
 
-   # If you want to enumerate a list of modules rather than disabling
-   # some, use "enable = ['example']", which takes precedent over exclude
-   #enable = []
-   
-   # Block modules from specific channels
-   # To not block anything for a channel, just don't mention it
-   excludes = {
-       '##blacklist': ['!'],
-   }
-   
-   # This allows one to allow specific people to use ".msg channel message here"
-   # in specific channels.
-   helpers = {
-       '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
-       '##channel2': ['some/other/hostmask'],
-   }
-        
-   # Channel code will report all private messages sent to him to.
-   # This includes server notices.
-   #logchan_pm = '#code-log'
+        # your nickname for use in admin functions
+        # You can also specify nick@hostmask
+        # For example: code@unaffiliated/code
+        owner = 'yournickname'
 
-   # Enable raw logging of everything code sees.
-   # logged to the folder 'log'
-   logging = False
+        # These are people who will be able to use admin.py's functions...
+        admins = [owner, 'someoneyoutrust']
 
-   # Directories to load user modules from
-   # e.g. /path/to/my/modules
-   extra = ['""" + os.getcwd() + '/modules/' + """']
+        # website to show for help documentation
+        #website = 'http://code.liamstanley.net'
 
-   # Services to load: maps channel names to white or black lists
-   external = {
-       '#liberal': ['!'], # allow all
-       '#conservative': [], # allow none
-       '*': ['!'] # default whitelist, allow all
-   }
+        # would you like color/bolc/italic coded commands? this enables/disables
+        # code.color/bold/italic() or any other form of carot notation applied directly by code
+        # although, if your module uses raw carot notation, then it won't disable that
+        textstyles = True
 
-   # EOF
-   """
+        # But admin.py is disabled by default, as follows:
+        exclude = ['admin', 'admin_channel', 'twss']
+
+        # If you want to enumerate a list of modules rather than disabling
+        # some, use "enable = ['example']", which takes precedent over exclude
+        #enable = []
+
+        # Block modules from specific channels
+        # To not block anything for a channel, just don't mention it
+        excludes = {
+           '##blacklist': ['!'],
+        }
+
+        # This allows one to allow specific people to use ".msg channel message here"
+        # in specific channels.
+        helpers = {
+           '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
+           '##channel2': ['some/other/hostmask'],
+        }
+            
+        # Channel code will report all private messages sent to him to.
+        # This includes server notices.
+        #logchan_pm = '#code-log'
+
+        # Enable raw logging of everything code sees.
+        # logged to the folder 'log'
+        logging = False
+
+        # Directories to load user modules from
+        # e.g. /path/to/my/modules
+        extra = ['""" + os.getcwd() + '/modules/' + """']
+
+        # Only uncomment below if you use oblique.py from the unloaded file
+        # Services to load: maps channel names to white or black lists
+        # external = {
+        #   '#liberal': ['!'], # allow all
+        #   '#conservative': [], # allow none
+        #   '*': ['!'] # default whitelist, allow all
+        #}
+
+        # EOF
+        """
     print >> f, trim(output)
     f.close()
 
