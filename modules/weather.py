@@ -49,9 +49,9 @@ def weather(code,input):
     if 'temperature' in data:
         output.append('%s (%s) degrees celcius' % (code.color('blue',data['temperature']),
                                                    code.color('blue',data['apparentTemperature'])))
-    if 'precipIntensity' in data:
+    if 'precipIntensity' in data and 'precipType' in data and 'precipIntensity' in data:
         # Nothing happening
-        if data['precipIntensity'] == 0:
+        if data['precipIntensity'] == 0 and 'precipProbability' in data:
             # If probability above 0%
             if data['precipProbability'] != '0':
                 output.append('%s\% chance of %s' % (code.color('blue',data['precipProbability']),
