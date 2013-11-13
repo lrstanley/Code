@@ -44,12 +44,12 @@ def weather(code,input):
     #"precipIntensity":0,"precipProbability":0,"precipType":"snow","temperature":28.49,
     #"apparentTemperature":20.45,"dewPoint":22.12,"humidity":0.77,"windSpeed":8.19,"windBearing":326,
     #"visibility":8.58,"cloudCover":0.5,"pressure":1017.56,"ozone":314.62}
-    if data['summary']:
+    if 'summary' in data:
         output.append(data['summary'])
-    if data['temperature']:
+    if if 'temperature' in data:
         output.append('%s (%s) degrees celcius' % (code.color('blue',data['temperature']),
                                                    code.color('blue',data['apparentTemperature'])))
-    if data['precipIntensity']:
+    if 'precipIntensity' in data:
         # Nothing happening
         if data['precipIntensity'] == 0:
             # If probability above 0%
@@ -60,20 +60,20 @@ def weather(code,input):
         else:
             output.append('%s of %s' % (code.color('blue',data['precipType']),
                                         code.color('blue',data['precipIntensity'])))
-    if data['dewPoint']:
+    if 'dewPoint' in data:
         output.append('Dew: %s' % code.color('blue',data['dewPoint']))
-    if data['humidity']:
+    if 'humidity' in data:
         output.append('Humidity: %s' % code.color('blue',data['humidity']))
-    if data['windSpeed']:
+    if 'windSpeed' in data:
         output.append('Wind speed: %s (Bearing %s)' % (code.color('blue',data['windSpeed']),
                                                       code.color('blue',data['windBearing'])))
-    if data['visibility']:
+    if 'visibility' in data:
         output.append('Visibility %s' % code.color('blue',data['visibility']))
-    if data['cloudCover']:
+    if 'cloudCover' in data:
         output.append('Cloud cover: %s ' % code.color('blue',data['cloudCover']))
-    if data['pressure']:
+    if 'pressure' in data:
         output.append('Pressure %s' % code.color('blue',data['pressure']))
-    if data['ozone']:
+    if 'ozone' in data:
         output.append('Ozone level: %s' % code.color('blue',data['ozone']))
     code.say(' | '.join(output))
 weather.commands = ['weather']
