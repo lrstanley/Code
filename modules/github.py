@@ -13,7 +13,7 @@ user_api = 'https://api.github.com/users/%s' # Username
 
 
 def github(code, input):
-    syntax = 'Syntax: \'.github <user|user repo>\''
+    syntax = 'Syntax: \'.github <user|user/repo>\''
     failed = 'Failed to get data from Githubs API :('
     if not input.group(2):
         return code.say(syntax)
