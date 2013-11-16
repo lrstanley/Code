@@ -13,7 +13,7 @@ user_api = 'https://api.github.com/users/%s' # Username
 
 
 def github(code, input):
-    syntax = 'Syntax: \'.github <user|user/repo>\''
+    syntax = 'Syntax: \'.github <user|user repo>\''
     failed = 'Failed to get data from Githubs API :('
     if not input.group(2):
         return code.say(syntax)
@@ -71,8 +71,8 @@ def github(code, input):
         output.append('%s %s' % (response['watchers_count'],u'\u231A'))
         output.append('%s %s' % (response['forks_count'],u'\u2442'))
         output.append('%s %s' % (response['open_issues_count'],u'\u2602'))
-        output.append('%s Collaborators' % response['network_count'])
-        output.append('%s Subscribers' % response['subscribers_count'])
+        output.append('%s %s' % (response['network_count'],u'\U0001F46C'))
+        output.append('%s %s' % (response['subscribers_count'],u'\u2764'))
         output.append(response['html_url'])
         return code.say(spacer.join(output))
 github.commands = ['github','git']
