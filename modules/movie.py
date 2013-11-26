@@ -46,9 +46,9 @@ def movie(code, input):
        to users in a channel"""
     try:
         if '//www.imdb.com/title/' in input.group().lower() or '//imdb.com/title/' in input.group().lower():
-            id = input.group().split('imdb.com/title/',1)[1]
+            id = input.group().split('imdb.com/title/', 1)[1]
             if '/' in id:
-                id = id.split('/',1)[0]
+                id = id.split('/', 1)[0]
         else:
             return
         data = json.loads(urllib2.urlopen(id_uri % id).read())
@@ -61,7 +61,7 @@ def movie(code, input):
         response = build_response(data)
         output = []
         for section in response:
-            output.append('%s: %s' % (code.color('blue',section[0]), section[1]))
+            output.append('%s: %s' % (code.color('blue', section[0]), section[1]))
         return code.say(' | '.join(output))
     except:
         return
@@ -70,7 +70,7 @@ movie.priority = 'medium'
 movie.thread = False
 
 def build_response(data):
-    response = []
+    response = list()
     response.append(['Title', data['Title']])
     response.append(['Rated', data['Rated']])
     response.append(['Year', data['Year']])
