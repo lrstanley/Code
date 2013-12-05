@@ -44,15 +44,16 @@ def weather(code,input):
     #"precipIntensity":0,"precipProbability":0,"precipType":"snow","temperature":28.49,
     #"apparentTemperature":20.45,"dewPoint":22.12,"humidity":0.77,"windSpeed":8.19,"windBearing":326,
     #"visibility":8.58,"cloudCover":0.5,"pressure":1017.56,"ozone":314.62}
+    degree = u'\u00B0'
     if 'summary' in data:
         output.append(data['summary'])
     if 'temperature' in data:
         if data['temperature'] == data['apparentTemperature']:
             # Feels like is the same, don't use both of them
-            output.append('%s degrees fahrenheit' % (code.color('blue',data['temperature'] + u'\u2109')))
+            output.append('%s%s' % (code.color('blue',data['temperature'])),degree)
         else:
-            output.append('%s (%s) degrees fahrenheit' % (code.color('blue',data['temperature'] + u'\u2109'),
-                                                   code.color('blue',data['apparentTemperature'] + u'\u2109')))
+            output.append('%s%s (%s%s)' % (code.color('blue',data['temperature']),degree,
+                                                   code.color('blue',data['apparentTemperature']),degree))
     if 'precipIntensity' in data and 'precipType' in data and 'precipIntensity' in data:
         # Nothing happening
         if data['precipIntensity'] == 0 and 'precipProbability' in data:
@@ -65,12 +66,12 @@ def weather(code,input):
             output.append('%s of %s' % (code.color('blue',data['precipType']),
                                         code.color('blue',data['precipIntensity'])))
     if 'dewPoint' in data:
-        output.append('Dew: %s' % code.color('blue',data['dewPoint']))
+        output.append('Dew: %s%s' % code.color('blue',data['dewPoint']),degree)
     if 'humidity' in data:
         output.append('Humidity: %s' % code.color('blue',data['humidity']))
     if 'windSpeed' in data:
-        output.append('Wind speed: %s (Bearing %s)' % (code.color('blue',data['windSpeed']),
-                                                      code.color('blue',data['windBearing'])))
+        output.append('Wind speed: %smph (Bearing %s%s)' % (code.color('blue',data['windSpeed']),
+                                                      code.color('blue',data['windBearing']),degree))
     if 'visibility' in data:
         output.append('Visibility %s' % code.color('blue',data['visibility']))
     if 'cloudCover' in data:
