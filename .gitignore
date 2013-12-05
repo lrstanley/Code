@@ -10,3 +10,4 @@ testing.py
 blocks
 daemon
 *.sh
+*.xml
