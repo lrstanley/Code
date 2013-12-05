@@ -47,8 +47,12 @@ def weather(code,input):
     if 'summary' in data:
         output.append(data['summary'])
     if 'temperature' in data:
-        output.append('%s (%s) degrees fahrenheit' % (code.color('blue',data['temperature']),
-                                                   code.color('blue',data['apparentTemperature'])))
+    	if data['temperature'] == data['apparentTemperature']:
+    		# Feels like is the same, don't use both of them
+        	output.append('%s degrees fahrenheit' % (code.color('blue',data['temperature'] + u'\u2109'))
+        else:
+        	output.append('%s (%s) degrees fahrenheit' % (code.color('blue',data['temperature'] + u'\u2109'),
+                                                   code.color('blue',data['apparentTemperature'] + u'\u2109')))
     if 'precipIntensity' in data and 'precipType' in data and 'precipIntensity' in data:
         # Nothing happening
         if data['precipIntensity'] == 0 and 'precipProbability' in data:
