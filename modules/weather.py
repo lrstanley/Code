@@ -50,7 +50,7 @@ def weather(code,input):
     if 'temperature' in data:
         if data['temperature'] == data['apparentTemperature']:
             # Feels like is the same, don't use both of them
-            output.append('%s%s' % (code.color('blue',data['temperature'])),degree)
+            output.append('%s%s' % (code.color('blue',data['temperature']),degree))
         else:
             output.append('%s%s (%s%s)' % (code.color('blue',data['temperature']),degree,
                                                    code.color('blue',data['apparentTemperature']),degree))
@@ -66,7 +66,7 @@ def weather(code,input):
             output.append('%s of %s' % (code.color('blue',data['precipType']),
                                         code.color('blue',data['precipIntensity'])))
     if 'dewPoint' in data:
-        output.append('Dew: %s%s' % code.color('blue',data['dewPoint']),degree)
+        output.append('Dew: %s%s' % (code.color('blue',data['dewPoint']),degree))
     if 'humidity' in data:
         output.append('Humidity: %s' % code.color('blue',data['humidity']))
     if 'windSpeed' in data:
@@ -75,7 +75,7 @@ def weather(code,input):
     if 'visibility' in data:
         output.append('Visibility %s' % code.color('blue',data['visibility']))
     if 'cloudCover' in data:
-        output.append('Cloud cover: %s ' % code.color('blue',data['cloudCover']))
+        output.append('Cloud cover: %s' % code.color('blue',data['cloudCover']))
     if 'pressure' in data:
         output.append('Pressure %s' % code.color('blue',data['pressure']))
     if 'ozone' in data:
