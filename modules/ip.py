@@ -13,7 +13,7 @@ import re
 import socket
 import web
 
-base = 'http://freegeoip.net/json/'
+base = 'http://geo.liamstanley.net/json/'
 re_ip = re.compile('(?i)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 
 
