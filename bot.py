@@ -144,7 +144,7 @@ class Code(irc.Bot):
                         prefix = self.config.prefix
                         commands, pattern = func.rule
                         for command in commands:
-                            command = r'(%s)\b(?: +(?:%s))?' % (command, pattern)
+                            command = r'(?i)(%s)\b(?: +(?:%s))?' % (command, pattern)
                             regexp = re.compile(prefix + command)
                             bind(self, func.priority, regexp, func)
 
@@ -153,7 +153,7 @@ class Code(irc.Bot):
                         prefix, commands, pattern = func.rule
                         prefix = sub(prefix)
                         for command in commands:
-                            command = r'(%s) +' % command
+                            command = r'(?i)(%s) +' % command
                             regexp = re.compile(prefix + command + pattern)
                             bind(self, func.priority, regexp, func)
 
