@@ -23,10 +23,7 @@ def get_time(code, input):
 
     # Here, try and get the timezone, using the 'uri'
     try:
-        try:
-            r = urllib2.urlopen(uri % timezone).read()
-        except:
-            return code.say(err)
+        r = urllib2.urlopen(uri % timezone).read()
 
         # Try to parse the string data... this will be fun!
         # Example output from the server... "2014-01-07T09:44:58-05:00"
