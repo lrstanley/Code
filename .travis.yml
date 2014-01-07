@@ -7,4 +7,4 @@ script: ./debug
 notifications:
   irc:
     channels:
-      - "irc.liamstanley.net#L"
+      - "irc.esper.net#L"
