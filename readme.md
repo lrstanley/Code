@@ -124,12 +124,12 @@ host = 'irc.example.net'
 # port to use to connect
 port = 6667
 
+# password is the server password. if you have a nickserv password you want to use,
+# try to set password = 'username:pass', as most networks support nickserv via serverpass
+#password = 'example'
+
 # channels to auto-join
 channels = ['#example', '#test']
-
-# prefix for Codes commands, nothing complex. e.g one of these:
-# . : ; " ' , < > - _ + = ! $ ^ *
-prefix = '.'
 
 # channels to greet users on channel join
 # e.g "Hello Code, welcome to #Lounge!"
@@ -143,22 +143,19 @@ prefix = '.'
 # For example: code@unaffiliated/code
 owner = 'yournickname'
 
+# These are people who will be able to use admin.py's functions...
+admins = [owner, 'someoneyoutrust']
+
 # website to show for help documentation
 #website = 'http://code.liamstanley.net'
-
-# password is the Nickserv password, serverpass is the server password
-#password = 'example'
-#serverpass = 'serverpass'
 
 # would you like color/bolc/italic coded commands? this enables/disables
 # code.color/bold/italic() or any other form of carot notation applied directly by code
 # although, if your module uses raw carot notation, then it won't disable that
 textstyles = True
 
-# These are people who will be able to use admin.py's functions...
-admins = [owner, 'someoneyoutrust']
 # But admin.py is disabled by default, as follows:
-exclude = ['admin', 'twss']
+exclude = ['admin', 'admin_channel', 'twss']
 
 # If you want to enumerate a list of modules rather than disabling
 # some, use "enable = ['example']", which takes precedent over exclude
@@ -187,14 +184,15 @@ logging = False
 
 # Directories to load user modules from
 # e.g. /path/to/my/modules
-extra = ['']
+extra = []
 
+# Only uncomment below if you use oblique.py from the unloaded file
 # Services to load: maps channel names to white or black lists
-external = {
-   '#liberal': ['!'], # allow all
-   '#conservative': [], # allow none
-   '*': ['!'] # default whitelist, allow all
-}
+# external = {
+#   '#liberal': ['!'], # allow all
+#   '#conservative': [], # allow none
+#   '*': ['!'] # default whitelist, allow all
+#}
 
 # EOF
 ```
