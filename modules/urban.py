@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2013 Liam Stanley
-minecraft.py - Code Urban Dictionary Module
+urban.py - Code Urban Dictionary Module
 http://code.liamstanley.net/
 """
 
