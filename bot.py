@@ -11,7 +11,7 @@ import irc
 
 home = os.getcwd()
 modules = []
-cmds = []
+commands = []
 
 def decode(bytes):
     try: text = bytes.decode('utf-8')
@@ -78,16 +78,16 @@ class Code(irc.Bot):
             print >> sys.stderr, '[INFO] Registered modules:', ', '.join(modules)
         else: print >> sys.stderr, "[WARNING] Couldn't find any modules"
 
-        self.bind_commands()
+        self.bind_cmds()
 
     def register(self, variables):
         # This is used by reload.py, hence it being methodised
         for name, obj in variables.iteritems():
-            if hasattr(obj, 'commands') or hasattr(obj, 'rule'):
+            if hasattr(obj, 'cmds') or hasattr(obj, 'rule'):
                 self.variables[name] = obj
 
-    def bind_commands(self):
-        self.commands = {'high': {}, 'medium': {}, 'low': {}}
+    def bind_cmds(self):
+        self.cmds = {'high': {}, 'medium': {}, 'low': {}}
 
         def bind(self, priority, regexp, func):
             print '[INFO] Loading module... Priority: \'%s\' -- Pattern: \'%s\' -- Function: \'%s\'' % (priority, regexp.pattern.encode('utf-8'), func)
@@ -100,7 +100,7 @@ class Code(irc.Bot):
                     example = example.replace('$nickname', self.nick)
                 else: example = None
                 self.doc[func.name] = (func.__doc__, example)
-            self.commands[priority].setdefault(regexp, []).append(func)
+            self.cmds[priority].setdefault(regexp, []).append(func)
 
         def sub(pattern, self=self):
             # These replacements have significant order
@@ -120,7 +120,7 @@ class Code(irc.Bot):
             else: func.event = func.event.upper()
 
             if not hasattr(func, 'rate'):
-                if hasattr(func, 'commands'):
+                if hasattr(func, 'cmds'):
                     func.rate = 5
                 else:
                     func.rate = 0
@@ -142,25 +142,25 @@ class Code(irc.Bot):
                     # 2) e.g. (['p', 'q'], '(.*)')
                     elif len(func.rule) == 2 and isinstance(func.rule[0], list):
                         prefix = self.config.prefix
-                        commands, pattern = func.rule
-                        for command in commands:
+                        cmds, pattern = func.rule
+                        for command in cmds:
                             command = r'(?i)(%s)\b(?: +(?:%s))?' % (command, pattern)
                             regexp = re.compile(prefix + command)
                             bind(self, func.priority, regexp, func)
 
                     # 3) e.g. ('$nick', ['p', 'q'], '(.*)')
                     elif len(func.rule) == 3:
-                        prefix, commands, pattern = func.rule
+                        prefix, cmds, pattern = func.rule
                         prefix = sub(prefix)
-                        for command in commands:
+                        for command in cmds:
                             command = r'(?i)(%s) +' % command
                             regexp = re.compile(prefix + command + pattern)
                             bind(self, func.priority, regexp, func)
 
-            if hasattr(func, 'commands'):
-                global cmds
-                cmds.append(func.commands[0])
-                for command in func.commands:
+            if hasattr(func, 'cmds'):
+                global commands
+                commands.append(func.cmds[0])
+                for command in func.cmds:
                     template = r'(?i)^%s(%s)(?: +(.*))?$'
                     pattern = template % (self.config.prefix, command)
                     regexp = re.compile(pattern)
@@ -197,8 +197,8 @@ class Code(irc.Bot):
                 s.textstyles = self.config.textstyles
                 global modules
                 s.modules = modules
-                global cmds
-                s.cmds = cmds
+                global commands
+                s.commands = commands
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:
@@ -260,7 +260,7 @@ class Code(irc.Bot):
         text = decode(bytes)
 
         for priority in ('high', 'medium', 'low'):
-            items = self.commands[priority].items()
+            items = self.cmds[priority].items()
             for regexp, funcs in items:
                 for func in funcs:
                     if event != func.event: continue
