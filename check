@@ -1,5 +1,0 @@
-if screen -list | grep --quiet "\.code"; then
-  echo running!
-else
-  ./daemon
-fi
