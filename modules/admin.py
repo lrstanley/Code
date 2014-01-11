@@ -13,43 +13,36 @@ def listmods(code, input):
     '''Send a list of the loaded modules ot the user.'''
     if not input.admin: return
     modules = list(set(input.modules))
-    code.say('Modules: ' + ', '.join(sorted(modules)) + '.')
+    print input.modules
+    return code.say('Modules: %s.' % ', '.join(sorted(modules)))
 listmods.commands = ['modules']
 listmods.priority = 'high'
 listmods.rate = 20
 
 def join(code, input):
     '''Join the specified channel. This is an admin-only command.'''
-    # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
-    if input.admin:
-        channel, key = input.group(1), input.group(2)
-        if not key:
-            code.write(['JOIN'], channel)
-        else: code.write(['JOIN', channel, key])
-join.rule = r'(?i)\.join (#\S+)(?: *(\S+))?'
-join.priority = 'low'
+    if not input.admin or not input.group(2): return
+    if len(input.group(2).split()) > 1: # Channel + key
+        return code.write(['JOIN', input.group(2).split(' ',1)])
+    else:
+        return code.write(['JOIN'], input.group(2).strip())
+join.commands = ['join']
 join.example = '.join #example or .join #example key'
 
 def part(code, input):
     '''Part the specified channel. This is an admin-only command.'''
-    # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
-    if input.admin:
-        code.write(['PART'], input.group(2))
+    if not input.admin or not input.group(2): return
+    return code.write(['PART', input.group(2).strip()])
 part.commands = ['part', 'leave']
-part.priority = 'low'
 part.example = '.part #example'
 
 def quit(code, input):
     '''Quit from the server. This is an owner-only command.'''
     # Can only be done in privmsg by the owner
-    if input.sender.startswith('#'): return
     if input.owner:
         code.write(['QUIT'], 'Terminating Bot.')
         __import__('os')._exit(0)
 quit.commands = ['quit', 'terminate', 'shutdown', 'stop']
-quit.priority = 'low'
 
 def nick(code, input):
     '''Change nickname dynamically. This is an owner-only command.'''
@@ -221,7 +214,6 @@ def blocks(code, input):
     blocks.close()
 
 blocks.commands = ['blocks']
-blocks.priority = 'low'
 blocks.thread = False
 
 char_replace = {
