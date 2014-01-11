@@ -6,15 +6,7 @@ info.py - Code Information Module
 http://code.liamstanley.net/
 """
 
-#def commands(code, input): 
-#   This function only works in private message
-#   if input.sender.startswith('#'):
-#       code.say(('%s: Please %s me that command.') % (input.nick, code.bold('message')))
-#   else:
-#      code.say(('The list of commands for %s is extensive, so they are now ' +
-#                  'located here: https://github.com/Liamraystanley/Code/wiki#features') % code.bold(code.nick))
-#      code.say(('For help, do \'%s: %s\' where example is the ' + 
-#                  'name of the command you want help for.') % (code.nick, code.color('green', 'help example?')))
+
 def commands(code, input):
     """Get a list of function-names (commands), that the bot has."""
     if input.group(2): return help(code, input)
@@ -25,20 +17,27 @@ def commands(code, input):
     cmds = []
     commands = list(set(input.cmds))
     full = len(commands)
-    code.msg(input.nick, 'Commands I recognize:')
-    for i in range(0,full-1):
+    count = 0
+    tmp = []
+    # Make a list, of lists, of lines. :)
+    for i in sorted(commands):
         count += 1
-        cmds.append(commands[i])
         if count == 40:
-            code.msg(input.nick, '# ' + ', '.join(cmds))
-            cmds = []
-            count = 0
-        elif i == full:
-            code.msg(input.nick, '# ' + ', '.join(cmds))
+            # Assume new line!
+            cmds.append(tmp)
+            tmp, count = [], 0
+            tmp.append(i)
+        else:
+            # Assume appending to tmp
+            tmp.append(i)
+    cmds.append(tmp)
+    code.msg(input.nick, 'Commands I recognize:')
+    for line in cmds:
+        code.msg(input.nick, '# %s' % (', '.join(line)))
     code.msg(input.nick, ('For help, do \'.help example\' where ' +
                           '"example" is the name of the command you want ' +
                           'help for.'))
-commands.commands = ['commands']
+commands.commands = ['commands','cmds']
 commands.priority = 'low'
 
 def help(code, input):
