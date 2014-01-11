@@ -19,8 +19,8 @@ def countdown(code, input):
         code.say(str(diff.days) + "-days " +  str(diff.seconds/60/60) + "-hours " +  str(diff.seconds/60 - diff.seconds/60/60 * 60) + "-minutes until " + text[0] + " " + text[1] + " " + text[2])
     else:
         code.say(code.color('red', error))
-generic_countdown.commands = ['countdown']
-generic_countdown.priority = 'low'
+countdown.commands = ['countdown']
+countdown.priority = 'low'
 
 
 if __name__ == '__main__':
