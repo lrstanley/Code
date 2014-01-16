@@ -81,7 +81,6 @@ def wikipedia(code, input):
     except:
         return code.say('Failed to get the definition!')
 wikipedia.commands = ['wiki', 'w']
-wikipedia.priority = 'medium'
 
 def wikipediaSearch(code, input):
     """Pull search results from wikipedia.org"""
@@ -98,7 +97,6 @@ def wikipediaSearch(code, input):
     except:
         return code.say(code.color('red', 'No suggestions found!'))
 wikipediaSearch.commands = ['wdefine', 'wsearch','wikisearch','swiki']
-wikipediaSearch.priority = 'medium'
 
 
 if __name__ == '__main__': 
