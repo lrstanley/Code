@@ -80,7 +80,7 @@ def wikipedia(code, input):
             return code.say('%s: %s' % (code.color('purple', data[0]), data[1]))
     except:
         return code.say('Failed to get the definition!')
-wikipedia.cmds = ['wiki', 'w']
+wikipedia.commands = ['wiki', 'w']
 wikipedia.priority = 'medium'
 
 def wikipediaSearch(code, input):
@@ -97,7 +97,7 @@ def wikipediaSearch(code, input):
             return code.say('Suggestions: %s' % code.color('purple', ', '.join(search)))
     except:
         return code.say(code.color('red', 'No suggestions found!'))
-wikipediaSearch.cmds = ['wdefine', 'wsearch','wikisearch','swiki']
+wikipediaSearch.commands = ['wdefine', 'wsearch','wikisearch','swiki']
 wikipediaSearch.priority = 'medium'
 
 
