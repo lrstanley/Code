@@ -5,66 +5,76 @@ urban.py - Code Urban Dictionary Module
 http://code.liamstanley.net/
 """
 
-import urllib2
-import re
-import HTMLParser
+from urllib2 import urlopen as get
+from urllib import quote as quote
+from json import loads as jsonify
 
-h = HTMLParser.HTMLParser()
+uri = 'http://api.urbandictionary.com/v0/define?term=%s'
+random_uri = 'http://api.urbandictionary.com/v0/random'
+error = 'Unable to find definition!'
 
-# My present to you.
 def urban(code, input):
     # clean and split the input
-    if input.group(2):
-        msg = input.group(2).lower().strip()
-        parts = msg.split()
-        if parts[-1].replace('-','').isdigit():
-            if int(parts[-1]) <= 0:
-                id = 1
+    try:
+        if input.group(2):
+            msg = input.group(2).lower().strip()
+            tmp = msg.replace('-','').split()
+            if tmp[-1].isdigit():
+                if int(tmp[-1]) <= 0:
+                    id = 0
+                else:
+                    id = int(tmp[-1].replace('-','')) - 1
+                del tmp[-1]
+                msg = ' '.join(tmp)
             else:
-                id = int(parts[-1].replace('-',''))
-            del parts[-1]
-            query = '+'.join(parts)
+                id = 0
+            data = jsonify(get(uri % quote(msg)).read())['list']
+            if not data:
+                return code.reply(code.color('red',error))
+            max = len(data)
+            if id > max:
+                id = max
+                data = data[max-1]
+            else:
+                data = data[id]
+                id += 1
+            msg = '({id} of {max}) "{word}": {definition} +{up}/-{down}'
+            if len(data['definition']) > 235:
+                data['definition'] = data['definition'][0:235] + '[...]'
+            return code.say(msg.format(
+                                id=code.color('purple', str(id)),
+                                max=code.color('purple', str(max)),
+                                definition=strp(data['definition']),
+                                word=code.color('purple', data['word']),
+                                up=code.color('red', data['thumbs_up']),
+                                down=code.color('red', data['thumbs_down'])
+                            ))
+            # Begin trying to get the definition
         else:
-            id = 1
-            query = msg.replace(' ', '+')
-        uri = 'http://www.urbandictionary.com/define.php?term=%s'
-        query = re.sub(r'[^\w\s]', '+', query)
-        query = query.replace('.', '+')
-        while query.find('++') > -1:
-            query = query.replace('++', '+').strip('+')
-        try:
-            r = urllib2.urlopen(uri % (query)).read().replace('\t','').replace('\r',' ').replace('\n','').decode('utf-8')
-        except urllib2.HTTPError as e:
-            return code.say(code.color('red', 'urbandictionary.com did not respond correctly, is it down?'))
-        definitive = 'Definition'
-    else:
-        id = 1
-        uri = 'http://www.urbandictionary.com/random.php'
-        try:
-            r = urllib2.urlopen(uri).read().replace('\t','').replace('\r','').replace('\n',' ').decode('utf-8')
-        except urllib2.HTTPError as e:
-            return code.say(code.color('red', 'urbandictionary.com did not respond correctly, is it down?'))
-        name = re.compile(r'<title>.*?</title>').findall(r)[0].replace('Urban Dictionary: ','')
-        name = re.sub(r'\<.*?\>', '', name).strip()
-        definitive = 'Definition (%s)' % name
-    definition = re.compile(r'<div class="definition">.*?</div>').findall(r)
-    example = re.compile(r'<div class="example">.*?</div>').findall(r)
-    did = len(definition)
-    if did == 0: return code.say('The definition for "%s" wasn\'t found.' % (code.color('purple', ' '.join(parts))))
-    if id > did:
-        id = did
-    definition = re.sub(r'\<.*?\>', '', definition[id-1]).strip()
-    example = re.sub(r'\<.*?\>', '', example[id-1]).strip()
-    if (len(definition) + len(example)) > 490:
-        # cap at definition, skip example
-        code.say('(%s/%s) %s: %s' % (str(id), str(did), code.color('purple', 'Definition'), \
-                 h.unescape(definition)))
-    else:
-        code.say('(%s/%s) %s: %s %s: %s' % (str(id), str(did), code.color('purple', definitive), \
-                 h.unescape(definition), code.color('purple', 'Ex'), h.unescape(example)))
-urban.commands = ['urban', 'ur']
+            # Get a random definition...
+            data = jsonify(get(random_uri).read())['list'][0]
+            if not data:
+                return code.reply(code.color('red',error))
+            msg = '(Definition for "{word}"): {definition} +{up}/-{down}'
+            if len(data['definition']) > 235:
+                data['definition'] = data['definition'][0:235] + '[...]'
+            return code.say(msg.format(
+                                definition=strp(data['definition']),
+                                word=code.color('purple', data['word']),
+                                up=code.color('red', data['thumbs_up']),
+                                down=code.color('red', data['thumbs_down'])
+                            ))
+    except:
+        return code.reply(code.color('red', 'Failed to pull definition from urbandictionary.com!'))
+urban.commands = ['urban', 'ud']
 urban.example = '.urban liam'
 
+
+def strp(data):
+    data = data.replace('\n', ' ').replace('\r','')
+    while '  ' in data:
+        data = data.replace('  ', ' ')
+    return data.strip()
 
 if __name__ == '__main__':
     print __doc__.strip()
