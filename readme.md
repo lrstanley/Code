@@ -35,7 +35,7 @@ ________________________________
 
  > for rss.py to work (only usable on linux), install feedparser via your pip/yum/other package installer.
 
-**If you have any issues during the install, feel free to head to http://chat.liamstanley.net/ to get help**
+**If you have any issues during the install, feel free to head to http://chat.liamstanley.io/ to get help**
 
 
 Unix & Unix-like OS: 
@@ -147,7 +147,7 @@ owner = 'yournickname'
 admins = [owner, 'someoneyoutrust']
 
 # website to show for help documentation
-#website = 'http://code.liamstanley.net'
+#website = 'http://code.liamstanley.io'
 
 # would you like color/bolc/italic coded commands? this enables/disables
 # code.color/bold/italic() or any other form of carot notation applied directly by code
@@ -225,7 +225,7 @@ Licensing
 ---------
 _________
 
-Code Copyright (C) 2012-2013 Liam Stanley (More info here: http://code.liamstanley.net/#license)
+Code Copyright (C) 2012-2013 Liam Stanley (More info here: http://code.liamstanley.io/#license)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 irc.py - Code A Utility IRC Bot
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import sys, re, time, traceback

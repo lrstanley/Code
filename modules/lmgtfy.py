@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 lmgtfy.py - Code 'Let Me Google That For You' Server Module
-About: http://code.liamstanley.net/
+About: http://code.liamstanley.io/
 """
 
 import re

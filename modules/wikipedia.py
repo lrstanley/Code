@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 wikipedia.py - Code Wikipedia Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 from urllib import quote as urlify

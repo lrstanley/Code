@@ -57,7 +57,7 @@ def create_default_config(fn):
         admins = [owner, 'someoneyoutrust']
 
         # website to show for help documentation
-        #website = 'http://code.liamstanley.net'
+        #website = 'http://code.liamstanley.io'
 
         # would you like color/bolc/italic coded commands? this enables/disables
         # code.color/bold/italic() or any other form of carot notation applied directly by code
@@ -179,7 +179,7 @@ def main(argv=None):
             module.prefix = (r'\.')
 
         if not hasattr(module, 'name'): 
-           module.name = '\x0307Python IRC Bot - http://code.liamstanley.net'
+           module.name = '\x0307Python IRC Bot - http://code.liamstanley.io'
 
         if not hasattr(module, 'port'):
             module.port = 6667

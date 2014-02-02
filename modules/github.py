@@ -1,7 +1,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 github.py - Code Github Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 from datetime import datetime

@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 find.py - Code Autocorrect/find Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 from modules import unicode as uc

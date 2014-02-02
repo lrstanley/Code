@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 urban.py - Code Urban Dictionary Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 from urllib2 import urlopen as get

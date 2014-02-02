@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 reload.py - Code Module Reloader Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import sys, os.path, time, imp, subprocess

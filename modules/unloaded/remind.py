@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 remind.py - Code Remind Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import os, re, time, threading

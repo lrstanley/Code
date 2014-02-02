@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 lastfm.py - Code last.fm Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import re

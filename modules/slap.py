@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 slap.py - Code slap module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 

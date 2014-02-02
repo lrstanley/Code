@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 url.py - Code Url Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import json
@@ -27,7 +27,7 @@ BITLY_TRIGGER_LEN_NOTITLE = 70
 EXCLUSION_CHAR = '!'
 IGNORE = [
           'git.io',
-          'build.liamstanley.net',
+          'build.liamstanley.io',
           'youtube.',
           'youtu.be',
           'soundcloud.com',

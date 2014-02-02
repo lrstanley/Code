@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 __init__.py - Code Init Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import sys, os, time, threading, signal

@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 twss.py - Code 'That's what she said' Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import urllib2
@@ -18,12 +18,12 @@ if os.path.exists('modules/twss.txt'):
     num_lines = sum(1 for line in open('modules/twss.txt'))
     if num_lines < 2000:
         os.remove('modules/twss.txt')
-        print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.net/twss.txt now...'
-        urllib.urlretrieve ('http://misc.liamstanley.net/twss.txt', 'modules/twss.txt')
+        print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.io/twss.txt now...'
+        urllib.urlretrieve ('http://misc.liamstanley.io/twss.txt', 'modules/twss.txt')
     else: pass
 elif not os.path.exists('modules/twss.txt'):
-    print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.net/twss.txt now...'
-    urllib.urlretrieve ('http://misc.liamstanley.net/twss.txt', 'modules/twss.txt')
+    print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.io/twss.txt now...'
+    urllib.urlretrieve ('http://misc.liamstanley.io/twss.txt', 'modules/twss.txt')
 
     f = open('modules/twss.txt', 'w')
 #    url = 'http://www.twssstories.com/best?page='

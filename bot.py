@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 bot.py - Code IRC Bot
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import time, sys, os, re, threading, imp

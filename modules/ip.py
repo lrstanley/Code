@@ -4,7 +4,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 ip.py - Code IP lookup Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 from modules import unicode as uc
@@ -13,7 +13,7 @@ import re
 import socket
 import web
 
-base = 'http://geo.liamstanley.net/json/'
+base = 'http://geo.liamstanley.io/json/'
 re_ip = re.compile('(?i)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 
 

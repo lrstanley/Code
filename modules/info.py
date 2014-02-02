@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 info.py - Code Information Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 
@@ -59,7 +59,7 @@ def help(code, input):
         try:
             website = code.config.website
         except: #revert to default - The Code homepage.
-            website = 'http://code.liamstanley.net'
+            website = 'http://code.liamstanley.io'
         response = (
             'Hi, I\'m a bot. Say "%s" to me in private for a list ' +
             'of my commands, or see %s for more general details.' +
@@ -74,7 +74,7 @@ def about(code, input):
     response = (
        code.nick + ' was developed by Liam Stanley and many others. ' + code.nick + ' is a open-source ' + 
        'Python Modular IRC Bot, that serves as a fun, fast, and collective resource ' + 
-       'for large, and small channels. More info: http://code.liamstanley.net'
+       'for large, and small channels. More info: http://code.liamstanley.io'
     )
     code.reply(response)
 about.commands = ['about']

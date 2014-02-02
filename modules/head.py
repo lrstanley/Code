@@ -3,7 +3,7 @@
 Code Copyright (C) 2012-2013 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 head.py - Code HTTP title utilities
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import re, urllib, urllib2, httplib, urlparse, time

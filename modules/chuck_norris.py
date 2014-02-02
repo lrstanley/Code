@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2013 Liam Stanley
 chuck_norris.py - Code Chuck Norris Module
-http://code.liamstanley.net/
+http://code.liamstanley.io/
 """
 
 import json
