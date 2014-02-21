@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 lmgtfy.py - Code 'Let Me Google That For You' Server Module
 About: http://code.liamstanley.io/

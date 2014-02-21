@@ -1,5 +1,5 @@
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 version.py - Code Version Module
 http://code.liamstanley.io/

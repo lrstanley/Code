@@ -1,5 +1,5 @@
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 github.py - Code Github Module
 http://code.liamstanley.io/
 """

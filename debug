@@ -1,6 +1,6 @@
 #/bin/bash
 echo "------------------------------------------------------"
-echo "         Code Copyright Liam Stanley 2012-2013        "
+echo "         Code Copyright Liam Stanley 2012-2014        "
 echo "This way of debugging Code is still under development."
 echo "         -----------------------------------          "
 echo "If you get Python not found errors, add Python to     "

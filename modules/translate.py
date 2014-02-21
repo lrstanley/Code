@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 translate.py - Code Translation Module
 http://code.liamstanley.io/

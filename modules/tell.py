@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 tell.py - Code tell Module
 http://code.liamstanley.io/

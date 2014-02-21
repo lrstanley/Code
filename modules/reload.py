@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
 reload.py - Code Module Reloader Module
 http://code.liamstanley.io/

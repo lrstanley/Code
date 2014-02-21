@@ -111,7 +111,7 @@ Edit the file located in your Documents folder, which should be located at:
 You should see a file like this:
 
 ```python
-# Code Copyright (C) 2012-2013 Liam Stanley
+# Code Copyright (C) 2012-2014 Liam Stanley
 # Uncomment things you wish to add to the file
 # lines with "#" in front of them are comments
 
@@ -225,7 +225,7 @@ Licensing
 ---------
 _________
 
-Code Copyright (C) 2012-2013 Liam Stanley (More info here: http://code.liamstanley.io/#license)
+Code Copyright (C) 2012-2014 Liam Stanley (More info here: http://code.liamstanley.io/#license)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

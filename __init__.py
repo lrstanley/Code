@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Code Copyright (C) 2012-2013 Liam Stanley
+Code Copyright (C) 2012-2014 Liam Stanley
 __init__.py - Code Init Module
 http://code.liamstanley.io/
 """
