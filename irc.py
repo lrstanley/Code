@@ -236,17 +236,17 @@ class Bot(asynchat.async_chat):
             line = self.raw.strip().split()
             try:
                 sender,rest = line[0].lstrip(':').split('!',1)[0],' '.join(line[1::])
+                if line[0].startswith(':') and len(line) > 3:
+                    if line[1] == 'PRIVMSG':
+                        channel = line[2]
+                        msg = ' '.join(line[3::]).lstrip(':')
+                        print '[%s] <%s> %s' % (channel,sender,msg)
+                    else:
+                        print '[%s] %s' % (sender,rest)
+                elif sender != 'PING':
+                    print '[%s] %s' % (sender,rest)
             except IndexError as e:
                 print self.raw
-            if line[0].startswith(':') and len(line) > 3:
-                if line[1] == 'PRIVMSG':
-                    channel = line[2]
-                    msg = ' '.join(line[3::]).lstrip(':')
-                    print '[%s] <%s> %s' % (channel,sender,msg)
-                else:
-                    print '[%s] %s' % (sender,rest)
-            elif sender != 'PING':
-                print '[%s] %s' % (sender,rest)
 
     def found_terminator(self):
         line = self.buffer

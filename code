@@ -64,6 +64,11 @@ def create_default_config(fn):
         # although, if your module uses raw carot notation, then it won't disable that
         textstyles = True
 
+        # send the location of a user to the channel when they join
+        # This is both semi accurate, and broad enough to not have to worry about privacy
+        # List of channels to check for locations
+        #geoip = ['#stalker']
+
         # But admin.py is disabled by default, as follows:
         exclude = ['admin', 'admin_channel', 'twss']
 
