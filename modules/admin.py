@@ -223,25 +223,23 @@ char_replace = {
         }
 
 def write_raw(code, input):
-    '''Send a raw command ot the server. WARNING THIS IS DANGEROUS! Owner-only.'''
-    if not input.owner: return
-    txt = input.bytes[7:]
-    txt = txt.encode('utf-8')
-    a = txt.split(':')
-    status = False
-    if len(a) > 1:
-        newstr = a[1]
-        for x in char_replace:
-            if x in newstr:
-                newstr = newstr.replace(x, char_replace[x])
-        code.write(a[0].split(), newstr, raw=True)
-        status = True
-    elif a:
-        b = a[0].split()
-        code.write([b[0].strip()], u' '.join(b[1:]), raw=True)
-        status = True
-    if status:
-        code.reply('Message sent to server.')
+    '''Send a raw command to the server. WARNING THIS IS DANGEROUS! Owner-only.'''
+    if not input.owner:
+        return
+    syntax = 'Syntax: \'.write <raw message>\''
+    secure = 'That seems like an insecure message. Nope!'
+    if not input.group(2):
+        return code.reply(syntax)
+    if len(input.group(2).split()) < 2 or not ':' in input.group(2):
+        return code.reply(syntax)
+    r = input.group(2).encode('ascii', 'ignore')
+    bad = ['ns', 'nickserv', 'chanserv', 'cs', 'q', 'authserv', 'botserv', 'operserv']
+    for bot in bad:
+        if (' %s ' % bot) in r.lower():
+            return code.reply(code.color('red', secure))
+    args, text = r.split(':')
+    args, text = args.strip().split(), text.strip()
+    return code.write(args, text, raw=True)
 write_raw.commands = ['write', 'raw']
 write_raw.priority = 'high'
 write_raw.thread = False

@@ -234,7 +234,10 @@ class Bot(asynchat.async_chat):
                 log_raw(data)
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip().split()
-            sender,rest = line[0].lstrip(':').split('!',1)[0],' '.join(line[1::])
+            try:
+                sender,rest = line[0].lstrip(':').split('!',1)[0],' '.join(line[1::])
+            except IndexError as e:
+                print self.raw
             if line[0].startswith(':') and len(line) > 3:
                 if line[1] == 'PRIVMSG':
                     channel = line[2]
