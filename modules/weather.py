@@ -10,6 +10,7 @@ import urllib, urllib2
 import json
 import HTMLParser
 
+user = 'code'
 h = HTMLParser.HTMLParser()
 
 api_key = 'a8881902cd797573d33785cbebda6012'
@@ -17,7 +18,7 @@ api_uri = 'https://api.forecast.io/forecast/%s/%s,%s'
 
 def location(name):
     name = urllib.quote(name)
-    data = json.loads(urllib2.urlopen('http://ws.geonames.org/searchJSON?q=%s&maxRows=1' % name).read())
+    data = json.loads(urllib2.urlopen('http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user)).read())
     try:
         name = data['geonames'][0]['name']
     except IndexError:
