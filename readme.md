@@ -53,25 +53,13 @@ Unix & Unix-like OS:
 Full command would be: 
 
     python ./code
-    home/code/lib/python272 ./code
-    
-(full path purposes) 
 
-If you wish to run Code on a UNIX shell, the best thing to do would be to fork it to the background process usign nohup, you do this by execution python/Code with: 
+If you wish to run Code on a UNIX shell, the best thing to do would be to fork it to the background process using screen. You do this by execution python/Code with:
 
-    nohup python ./code &
+    screen -S code python ./code
 
-The `nohup` and `&` play a crucial part in forking itself to the background. If this method 'still' doesn't work, you need to try these commands. (you need to use the method above, THEN cancel out of the current process (I use CTRL+C on windows keyboards)) 
-
-    bg
-    disown -h
-
-Another method of forking it into the background, is by using the well-known linux program called screen.
-
-    screen python ./code
-
-This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit the screen safely, hit `CTRL+A` then `CTRL+D`.
-To log back into, and view the playback of Code, type `screen -r`.
+This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit screen safely, hit `CTRL+A` then `CTRL+D`.
+To log back into, and view the playback of Code, type `screen -x code`.
 
 
 Windows: 
@@ -83,7 +71,7 @@ Windows:
     3) Configure Code's default.py file, located in your user directory.
        - This is often, `C:\\users\(your username)\.code\default.py`.
        - Note, notepad is not prefered. If anything, use Notepad++ under windows.
-    3) Now, you should be able to use run.exe (if it's in Code's directory.
+    3) Now, you should be able to use run.exe (if it's in Code's directory).
        - Else, you can open up command prompt, `cd` to Codes directory, and execute Code with `python code`.
        - Note, if command prompt says that `python` is not a internal or external program,
          that means Python failed to be added to your system-wide %PATH% file.
@@ -108,118 +96,9 @@ Windows
 Edit the file located in your Documents folder, which should be located at: 
 `C:\\users\myusername\.code\default.py` (for Windows Vista/7/8)
 `default.py` might be located in the same spot as the UNIX location listed above.
-You should see a file like this:
+You should see configuration file.
 
-```python
-# Code Copyright (C) 2012-2014 Liam Stanley
-# Uncomment things you wish to add to the file
-# lines with "#" in front of them are comments
-
-# irc bot nickname
-nick = 'code'
-
-# irc server host
-host = 'irc.example.net'
-
-# port to use to connect
-port = 6667
-
-# password is the server password. if you have a nickserv password you want to use,
-# try to set password = 'username:pass', as most networks support nickserv via serverpass
-#password = 'example'
-
-# channels to auto-join
-channels = ['#example', '#test']
-
-# channels to greet users on channel join
-# e.g "Hello Code, welcome to #Lounge!"
-# uncomment to enable (remember this wont work with ai.py disabled.)
-#greetchans = ['#Example', '#Hugs']
-# exclude users from receiving a welcome message below.
-#excludeusers = ['Serious', 'User']
-
-# your nickname for use in admin functions
-# You can also specify nick@hostmask
-# For example: code@unaffiliated/code
-owner = 'yournickname'
-
-# These are people who will be able to use admin.py's functions...
-admins = [owner, 'someoneyoutrust']
-
-# website to show for help documentation
-#website = 'http://code.liamstanley.io'
-
-# would you like color/bolc/italic coded commands? this enables/disables
-# code.color/bold/italic() or any other form of carot notation applied directly by code
-# although, if your module uses raw carot notation, then it won't disable that
-textstyles = True
-
-# But admin.py is disabled by default, as follows:
-exclude = ['admin', 'admin_channel', 'twss']
-
-# If you want to enumerate a list of modules rather than disabling
-# some, use "enable = ['example']", which takes precedent over exclude
-#enable = []
-
-# Block modules from specific channels
-# To not block anything for a channel, just don't mention it
-excludes = {
-   '##blacklist': ['!'],
-}
-
-# This allows one to allow specific people to use ".msg channel message here"
-# in specific channels.
-helpers = {
-   '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
-   '##channel2': ['some/other/hostmask'],
-}
-    
-# Channel code will report all private messages sent to him to.
-# This includes server notices.
-#logchan_pm = '#code-log'
-
-# Enable raw logging of everything code sees.
-# logged to the folder 'log'
-logging = False
-
-# Directories to load user modules from
-# e.g. /path/to/my/modules
-extra = []
-
-# Only uncomment below if you use oblique.py from the unloaded file
-# Services to load: maps channel names to white or black lists
-# external = {
-#   '#liberal': ['!'], # allow all
-#   '#conservative': [], # allow none
-#   '*': ['!'] # default whitelist, allow all
-#}
-
-# EOF
-```
-
-you should uncomment, and replace the necessary items (like serverpass & nickservpass) to run your bot. 
-
-Customize Even More: 
-====================
-____________________
-
-Changing Prefix: 
-(this would be in the config, i just haven't gotten around to it yet. sorry!)
-
-If you wish to change the command prefix from "." to another item Edit /code/code and find this:
-**NOTE: THIS WILL NOT CHANGE LOTS OF EXAMPLES, OR CERTAIN REGEX CHECKS. BEWARE.**
-
-```python
-    if not hasattr(module, 'prefix'):
-        module.prefix = r'\.'
-```
-
-And change it to: 
-
-```python
-    if not hasattr(module, 'prefix'):
-        module.prefix = r'\(CustomPrefix)'
-```
+you should uncomment, and replace the necessary items (like serverpass) to run your bot. 
 
 Licensing
 ---------
