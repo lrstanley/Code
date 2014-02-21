@@ -98,7 +98,7 @@ def test(code, input):
                 if val in r:
                     output.append(r[val])
             if not r['city']:
-                rough = '(estimated)'
+                rough = ' (estimated)'
             else:
                 rough = ''
             return code.msg(channel, code.color('green', 'User is connecting from %s%s' % (', '.join(output), rough)))
