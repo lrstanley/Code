@@ -101,7 +101,7 @@ def test(code, input):
                 rough = '(estimated)'
             else:
                 rough = ''
-            return code.msg(channel, 'User is connecting from %s%s' % (', '.join(output), rough))
+            return code.msg(channel, code.color('green', 'User is connecting from %s%s' % (', '.join(output), rough)))
         except:
             return
     else:
