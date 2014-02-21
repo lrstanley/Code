@@ -80,7 +80,7 @@ def test(code, input):
         host, command, channel = code.raw.split('@')[1].split()
 
         # Stop if the host is suspicious....
-        bad = ['proxy','clone','bnc','bouncer','cloud']
+        bad = ['proxy','clone','bnc','bouncer','cloud','server']
         for domain in bad:
             if domain in host.lower():
                 return

@@ -59,14 +59,18 @@ class Code(irc.Bot):
                      filenames.append(os.path.join(fn, n))
 
         global modules
+        # Should fix
         excluded_modules = getattr(self.config, 'exclude', [])
+        filenames = sorted(list(set(filenames)))
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
-            if name in excluded_modules: continue
+            if name in excluded_modules:
+                continue
             # if name in sys.modules:
             #     del sys.modules[name]
-            try: module = imp.load_source(name, filename)
-            except Exception, e:
+            try:
+                module = imp.load_source(name, filename)
+            except Exception as e:
                 print >> sys.stderr, "[ERROR] Failed to load %s: %s" % (name, e)
             else:
                 if hasattr(module, 'setup'):
@@ -74,7 +78,7 @@ class Code(irc.Bot):
                 self.register(vars(module))
                 modules.append(name)
 
-        if modules: #im getting double the modules, why is this?
+        if modules:
             print >> sys.stderr, '[INFO] Registered modules:', ', '.join(modules)
         else: print >> sys.stderr, "[WARNING] Couldn't find any modules"
 

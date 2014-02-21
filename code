@@ -11,6 +11,7 @@ from textwrap import dedent as trim
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
+configv = 1
 
 def check_python_version():
     if sys.version_info < (2, 7):
@@ -109,6 +110,10 @@ def create_default_config(fn):
         #   '*': ['!'] # default whitelist, allow all
         #}
 
+        # This needs to be changed, based on the current version of Code,
+        # and the version of the file
+        version = """ + str(configv) + """
+
         # EOF
         """
     print >> f, trim(output)
@@ -169,7 +174,7 @@ def main(argv=None):
 
     # Step Two: Check Dependencies
 
-    check_python_version() # require python2.4 or later
+    check_python_version() # require python2.7 or later
     check_dotdir() # require ~/.code, or make it and exit
 
     # Step Three: Load The Configurations
@@ -179,6 +184,14 @@ def main(argv=None):
         name = os.path.basename(config_name).split('.')[0] + '_config'
         module = imp.load_source(name, config_name)
         module.filename = config_name
+
+        if hasattr(module, 'version'):
+            try:
+                cv = int(module.version)
+                if configv > cv:
+                    print >> sys.stderr, 'Error: Configuration is not up to date. You will likely recieve errors.'
+            except:
+                print >> sys.stderr, 'Error: Configuration is not up to date. You will likely recieve errors.'
 
         if not hasattr(module, 'prefix'):
             module.prefix = (r'\.')
@@ -209,7 +222,7 @@ def main(argv=None):
             print >> sys.stderr, "Error: Couldn't find code to import"
             sys.exit(1)
 
-    # Step Five: Initialise And Run The codees
+    # Step Five: Initialise And Run The codeeees
 
     # @@ ignore SIGHUP
     for config_module in config_modules:
