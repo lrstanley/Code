@@ -64,7 +64,7 @@ ip.commands = ['ip', 'iplookup', 'host', 'whois']
 ip.example = ".iplookup 8.8.8.8"
 
 
-def test(code, input):
+def geoip(code, input):
     """GeoIP user on join."""
     if hasattr(code.config, 'geoip'):
         ip = code.config.geoip
@@ -95,7 +95,7 @@ def test(code, input):
             # u'latitude': 42.6333, u'country_code': u'US', u'country_name': u'United States'}
             location = ['region_name', 'country_name']
             for val in location:
-                if val in r:
+                if val in r and len(val) > 1:
                     output.append(r[val])
             if not r['city']:
                 rough = ' (estimated)'
@@ -106,8 +106,8 @@ def test(code, input):
             return
     else:
         return # It's not enabled... :(
-test.event = 'JOIN'
-test.rule = r'.*'
+geoip.event = 'JOIN'
+geoip.rule = r'.*'
 
 if __name__ == '__main__':
     print __doc__.strip()
