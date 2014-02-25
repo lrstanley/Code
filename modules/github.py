@@ -29,10 +29,10 @@ def github(code, input):
         try:
             tmp = json.loads(urllib2.urlopen(user_api % input.group(2).strip()).read())
             tmp = [str(x).replace('null', '') for x in tmp]
-            tmp = filter(None, tmp)
+            response = filter(None, tmp)
         except:
             return code.say(failed)
-        if 'message' in tmp:
+        if 'message' in response:
             # Assume failed
             return code.say(failed)
         
