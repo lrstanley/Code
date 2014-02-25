@@ -13,7 +13,8 @@ user_api = 'https://api.github.com/users/%s' # Username
 
 
 def github(code, input):
-    syntax = 'Syntax: \'.github <user|user repo>\''
+    """Get username data, or user/repo data from Github"""
+    syntax = 'Syntax: \'.github <user|user/repo>\''
     failed = 'Failed to get data from Githubs API :('
     if not input.group(2):
         return code.say(syntax)
@@ -76,6 +77,7 @@ def github(code, input):
         output.append(response['html_url'])
         return code.say(spacer.join(output))
 github.commands = ['github','git']
+github.example = '.github Liamraystanley/Code'
 github.priority = 'medium'
 github.rate = '15'
 
@@ -90,6 +92,7 @@ def git_info():
 
 
 def version(code, input):
+    """Try to get version (commit) data from git (if installed)"""
     try:
         commit, author, date = git_info()
         code.say(str(input.nick) + ": running version:")
