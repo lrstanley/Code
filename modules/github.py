@@ -27,13 +27,15 @@ def github(code, input):
     if not '/' in input.group(2):
         # Assume a single username
         try:
-            response = json.loads(urllib2.urlopen(user_api % input.group(2).strip()).read())
-            print response
+            tmp = json.loads(urllib2.urlopen(user_api % input.group(2).strip()).read())
+            tmp = [str(x).replace('null', '') for x in tmp]
+            tmp = filter(None, tmp)
         except:
             return code.say(failed)
-        if 'message' in response:
+        if 'message' in tmp:
             # Assume failed
             return code.say(failed)
+        
         # Here is where we build the response
         output = []
         if 'name' in response:
@@ -43,8 +45,7 @@ def github(code, input):
         if 'location' in response:
             output.append(response['location'])
         if 'email' in response:
-            if response['email'] != 'null':
-                output.append(response['email'])
+            output.append(response['email'])
         if 'public_repos' in response:
             output.append('%s Repos' % response['public_repos'])
         if 'followers' in response:
