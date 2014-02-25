@@ -36,7 +36,10 @@ def github(code, input):
             return code.say(failed)
         # Here is where we build the response
         output = []
-        output.append('%s (%s)' % (response['name'], response['login']))
+        if 'name' in response:
+            output.append('%s (%s)' % (response['name'], response['login']))
+        else:
+            outout.append(response['login'])
         if 'location' in response:
             output.append(response['location'])
         if 'email' in response:
