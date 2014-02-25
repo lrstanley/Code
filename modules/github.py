@@ -28,8 +28,12 @@ def github(code, input):
         # Assume a single username
         try:
             tmp = json.loads(urllib2.urlopen(user_api % input.group(2).strip()).read())
-            tmp = [str(x).replace('null', '') for x in tmp]
-            response = filter(None, tmp)
+            response = {}
+            # Remove dem ugly nulled values. It's a dictionary so we have to loop differently.
+            for key, value in tmp.iteritems():
+                if value != '' or len(value) != 0 or value != 'null':
+                    response[key] = value
+            print response
         except:
             return code.say(failed)
         if 'message' in response:
@@ -41,7 +45,7 @@ def github(code, input):
         if 'name' in response:
             output.append('%s (%s)' % (response['name'], response['login']))
         else:
-            outout.append(response['login'])
+            output.append(response['login'])
         if 'location' in response:
             output.append(response['location'])
         if 'email' in response:
