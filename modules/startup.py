@@ -54,8 +54,8 @@ def setup(code):
 def startup(code, input):
     import time
 
-    if hasattr(code.config, 'serverpass'):
-        code.write(('PASS', code.config.serverpass))
+    #if hasattr(code.config, 'serverpass'):
+    #    code.write(('PASS', code.config.serverpass))
 
     if hasattr(code.config, 'password'):
         code.msg('NickServ', 'IDENTIFY %s' % code.config.password)
@@ -63,9 +63,9 @@ def startup(code, input):
 
     # Cf. http://swhack.com/logs/2005-12-05#T19-32-36
     for channel in code.channels:
-        code.write(('JOIN', channel))
+        code.join(channel)
         time.sleep(0.5)
-startup.rule = r'(.*)'
+startup.rule = r'.*'
 startup.event = '251'
 startup.priority = 'low'
 
