@@ -27,7 +27,7 @@ class Code(irc.Bot):
         else: lc_pm = None
         if hasattr(config, "logging"): logging = config.logging
         else: logging = False
-        args = (config.nick, config.name, config.channels, config.password, lc_pm, logging)
+        args = (config.nick, config.name, config.channels, config.serverpass, lc_pm, logging)
         irc.Bot.__init__(self, *args)
         self.config = config
         self.doc = {}
@@ -94,8 +94,7 @@ class Code(irc.Bot):
         self.commands = {'high': {}, 'medium': {}, 'low': {}}
 
         def bind(self, priority, regexp, func):
-            print '[INFO] Loading module... Priority: \'%s\' -- Pattern: \'%s\' -- Function: \'%s\'' % (priority, regexp.pattern.encode('utf-8'), func)
-            # register documentation
+            #print '[INFO] Loading %s (%s) (%s)' % (func, priority, regexp.pattern.encode('utf-8'))
             if not hasattr(func, 'name'):
                 func.name = func.__name__
             if func.__doc__:

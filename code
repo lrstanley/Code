@@ -11,7 +11,7 @@ from textwrap import dedent as trim
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 1
+configv = 2
 
 def check_python_version():
     if sys.version_info < (2, 7):
@@ -35,8 +35,12 @@ def create_default_config(fn):
         # port to use to connect
         port = 6667
 
-        # password is the server password. if you have a nickserv password you want to use,
-        # try to set password = 'username:pass', as most networks support nickserv via serverpass
+        # serverpass is the server password. Not required if your server doesn't
+        # require any form of authentication.
+        #serverpass  'example'
+
+        # password is the nickserv password to use when authenticating with
+        # NickServ based IRC servers
         #password = 'example'
 
         # channels to auto-join
@@ -189,9 +193,9 @@ def main(argv=None):
             try:
                 cv = int(module.version)
                 if configv > cv:
-                    print >> sys.stderr, 'Error: Configuration is not up to date. You will likely recieve errors.'
+                    print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
             except:
-                print >> sys.stderr, 'Error: Configuration is not up to date. You will likely recieve errors.'
+                print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
 
         if not hasattr(module, 'prefix'):
             module.prefix = (r'\.')
@@ -202,8 +206,8 @@ def main(argv=None):
         if not hasattr(module, 'port'):
             module.port = 6667
 
-        if not hasattr(module, 'password'):
-            module.password = None
+        if not hasattr(module, 'serverpass'):
+            module.serverpass = None
 
         if module.host == 'irc.example.net':
             error = ('Error: you must edit the config file first!\n' +

@@ -56,7 +56,7 @@ def log_raw(line):
     f.close()
 
 class Bot(asynchat.async_chat):
-    def __init__(self, nick, name, channels, password=None, logchan_pm=None, logging=False):
+    def __init__(self, nick, name, channels, serverpass=None, logchan_pm=None, logging=False):
         asynchat.async_chat.__init__(self)
         self.set_terminator('\n')
         self.buffer = ''
@@ -64,7 +64,7 @@ class Bot(asynchat.async_chat):
         self.nick = nick
         self.user = 'code'
         self.name = name
-        self.password = password
+        self.serverpass = serverpass
 
         self.verbose = True
         self.channels = channels or list()
@@ -133,8 +133,9 @@ class Bot(asynchat.async_chat):
 
     def join(self, channel, password=None):
         '''Join a channel'''
+        print '[JOIN] Attempting to join channel %s' % channel
         if password is None:
-            self.write(['JOIN'], channel)
+            self.write(['JOIN', channel])
         else:
             self.write(['JOIN', channel, password])
 
@@ -190,8 +191,8 @@ class Bot(asynchat.async_chat):
     def handle_connect(self):
         if self.verbose:
             print >> sys.stderr, '[SERVER] Connected!'
-        if self.password:
-            self.write(('PASS', self.password))
+        if self.serverpass:
+            self.write(('PASS', self.serverpass))
         self.write(('NICK', self.nick))
         self.write(('USER', self.user, '+iw', self.nick), self.name)
 
@@ -233,20 +234,59 @@ class Bot(asynchat.async_chat):
             if self.logging:
                 log_raw(data)
             self.raw = data.replace('\x02','').replace('\r','')
-            line = self.raw.strip().split()
+            line = self.raw.strip()
             try:
-                sender,rest = line[0].lstrip(':').split('!',1)[0],' '.join(line[1::])
-                if line[0].startswith(':') and len(line) > 3:
-                    if line[1] == 'PRIVMSG':
-                        channel = line[2]
-                        msg = ' '.join(line[3::]).lstrip(':')
-                        print '[%s] <%s> %s' % (channel,sender,msg)
-                    else:
-                        print '[%s] %s' % (sender,rest)
-                elif sender != 'PING':
-                    print '[%s] %s' % (sender,rest)
-            except IndexError as e:
-                print self.raw
+                reg = {
+                    'PRIVMSG': r'^\:(.*?)\!(.*?)\@(.*\s?) PRIVMSG (.*\s?) \:(.*?)$',
+                    'NOTICE': r'^\:(.*?) NOTICE (.*\s?) \:(.*?)$',
+                    'KICK': r'^\:(.*?)\!(.*?)\@(.*\s?) KICK (.*\s?) (.*\s?) \:(.*?)$',
+                    'MODE': r'^\:(.*?)\!(.*?)\@(.*\s?) MODE (.*?)$'
+                }
+                # :Liam!uid7517@id-7517.ealing.irccloud.com NICK :[]
+                # :[]!uid7517@id-7517.ealing.irccloud.com NICK :Liam
+
+                if line.startswith(':'):
+                    code = line.split()[1]
+                    #if code in ['NICK'] or code.isdigit():
+                    #    print line
+                    if code in ['250', '251', '255']:
+                        msg, sender = line.split(':',2)[2], line.split(':',2)[1].split()[0]
+                        print('[NOTICE] (%s) %s' % (sender, msg))
+                    if code == 'NICK':
+                        nick = line[1::].split('!',1)[0]
+                        new_nick = line[1::].split(':',2)[2]
+                        print('[NICK] %s is now known as %s' % (nick, new_nick))
+                    if code == 'PRIVMSG':
+                        nick, ident, host, sender, msg = re.compile(reg['PRIVMSG']).match(line).groups()
+                        msg = self.stripcolors(msg)
+                        if msg.startswith('\x01'):
+                            msg = '(me) ' + msg.split(' ',1)[1].strip('\x01')
+                        print('[%s] (%s) %s' % (sender, nick, msg))
+                    if code == 'NOTICE':
+                        nick, sender, msg = re.compile(reg['NOTICE']).match(line).groups()
+                        print('[NOTICE] (%s) %s' % (nick.split('!')[0], msg))
+                    if code == 'KICK':
+                        nick, ident, host, sender, kicked, reason = re.compile(reg['KICK']).match(line).groups()
+                        print('[KICK] %s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason))
+                    if code == 'MODE':
+                        nick, ident, host, args = re.compile(reg['MODE']).match(line).groups()
+                        print('[MODE] %s sets MODE %s' % (nick, args))
+            except:
+                pass
+
+    def stripcolors(self, data):
+        """STRIP ALL ZE COLORS! Note: the replacement method is CRUCIAL to keep from
+           left over color digits. Order is very important."""
+        colors = [u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305", \
+                  u"\x032", u"\x033", u"\x034", u"\x035", u"\x0306", u"\x0307", u"\x0308", \
+                  u"\x0309", u"\x0310", u"\x0311", u"\x036", u"\x037", u"\x038", u"\x039", \
+                  u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x030", u"\x031", u"\x03", \
+                  u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"]
+        
+        for color in colors:
+            data = data.replace(color, '')
+     
+        return str(data.encode('ascii', 'ignore'))
 
     def found_terminator(self):
         line = self.buffer
