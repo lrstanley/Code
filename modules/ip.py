@@ -77,7 +77,10 @@ def geoip(code, input):
             allowed.append(channel_name.lower())
 
         # Split the line and get all the data
-        host, command, channel = code.raw.split('@')[1].split()
+        try:
+            host, command, channel = code.raw.split('@')[1].split()
+        except:
+            pass
 
         # Stop if the host is suspicious....
         bad = ['proxy','clone','bnc','bouncer','cloud','server']
