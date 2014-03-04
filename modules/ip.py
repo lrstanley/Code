@@ -6,104 +6,86 @@ ip.py - Code IP lookup Module
 http://code.liamstanley.io/
 """
 
-from modules import unicode as uc
 import json, re
-import socket, web, urllib2
+import urllib2
+from socket import getfqdn as rdns
 
 base = 'http://geo.liamstanley.io/json/%s'
-re_ip = re.compile('(?i)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 
 
 def ip(code, input):
-    txt = input.group(2)
-    if not txt:
-        return code.reply(code.color('red', 'No search term!'))
-    elif txt.find('192.168.0.') > -1 or txt.find('127.0.0.') > -1:
-        return code.reply(code.color('red', 'That IP is blacklisted!'))
-    elif not '.' in txt and not ':' in txt:
-        return code.reply(code.color('red','Incorrect input!'))
-    txt = uc.encode(txt)
-    query = uc.decode(txt) 
-    response = ''
-    #response = '[' + code.color('blue', 'IP/Host Lookup ') + '] '
-    page = web.get(base % txt)
+    show = [
+        ['hostname', 'Hostname'],
+        ['ip', 'IP'],
+        ['city', 'City'],
+        ['region_name', 'Region'],
+        ['country_name', 'Country'],
+        ['zipcode', 'Zip'],
+        ['latitude', 'Lat'],
+        ['longitude', 'Long']
+    ]
+    doc = {
+               'invalid': code.color('red', 'Invalid input: \'.whois [ip|hostname]\''),
+               'error': code.color('red', 'Couldn\'t receive information for %s'),
+               'na': code.color('red', 'N/A')
+    }
+    if not input.group(2):
+        host = code.host
+    else:
+        host = input.group(2).strip()
+    if not '.' in input.group(2) and not ':' in input.group(2) and len(input.group(2).split()) != 1:
+        return code.reply(doc['invalid'])
+    host = code.stripcolors(host).encode('ascii', 'ignore')
+
+    # Try to get data from GeoIP server...
     try:
-        results = json.loads(page)
+        data = json.loads(urllib2.urlopen(base % host).read())
     except:
-        print str(page)
-        return code.color('red', code.reply('Couldn\'t receive information for %s' % code.bold(txt)))
-    if results:
-        print 'query', str(query)
-        print 'matches', re_ip.findall(query)
-        if re_ip.findall(query):
-            ## IP Address
-            try:
-                hostname = socket.gethostbyaddr(query)[0]
-            except:
-                hostname = code.bold(code.color('red', 'Unknown Host'))
-            response += code.color('blue', 'Hostname: ') + str(hostname)
-        else:
-            ## Host name
-            response += code.bold(code.color('blue','IP: ')) + results['ip']
-        spacing = ' ' + code.bold('|')
-        for param in results:
-            if not results[param]:
-                results[param] = code.bold(code.color('red', 'N/A'))
-        if 'city' in results:
-            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'City:')), results['city'])
-        if 'region_name' in results:
-            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'State:')), results['region_name'])
-        if 'country_name' in results:
-            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Country:')), results['country_name'])
-        if 'zip' in results:
-            response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'ZIP:')), results['zip'])
-        response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Latitude:')), results['latitude'])
-        response += '%s %s %s' % (spacing, code.bold(code.color('blue', 'Longitude:')), results['longitude'])
-    code.reply(response)
-ip.commands = ['ip', 'iplookup', 'host', 'whois']
+        return code.reply(doc['error'] % host)
+
+    # Check if errored or localhost
+    if data['country_name'] == 'Reserved':
+        return code.reply(doc['error'] % host)
+
+    # Try to get reverse dns based hostname
+    data['hostname'], output = rdns(host), []
+
+    # Make list of things to respond with
+    for option in show:
+        if len(str(data[option[0]])) < 1 or data[option[0]] == host:
+            output.append('%s: %s' % (code.color('blue', option[1]), doc['na']))
+            continue
+        output.append('%s: %s' % (code.color('blue', option[1]), data[option[0]]))
+    return code.say(' \x02|\x02 '.join(output))
+ip.commands = ['ip', 'host', 'whois', 'geo', 'geoip']
 ip.example = ".iplookup 8.8.8.8"
 
 
 def geoip(code, input):
     """GeoIP user on join."""
     if hasattr(code.config, 'geoip'):
-        ip = code.config.geoip
-        if not ip:
-            return
+        if not code.config.geoip: return
 
-        # Make them all lowercase
         allowed = []
-        for channel_name in ip:
+        for channel_name in code.config.geoip:
             allowed.append(channel_name.lower())
 
         # Split the line and get all the data
-        try:
-            host, command, channel = code.raw.split('@')[1].split()
-        except:
-            pass
+        try: host, command, channel = code.raw.split('@')[1].split()
+        except: pass
 
-        # Stop if the host is suspicious....
-        bad = ['proxy','clone','bnc','bouncer','cloud','server']
-        for domain in bad:
-            if domain in host.lower():
-                return
+        for domain in ['proxy', 'clone', 'bnc', 'bouncer', 'cloud', 'server']:
+            if domain in host.lower(): return
 
         if input.nick == code.nick or not channel.lower() in allowed:
             return
         try:
             r = json.loads(urllib2.urlopen(base % host).read())
-            output = []
-            #{u'city': u'Holt', u'region_code': u'MI', u'region_name': u'Michigan', u'areacode': u'517',
-            # u'ip': u'68.40.234.141', u'zipcode': u'48842', u'longitude': -84.5377, u'metro_code': u'551',
-            # u'latitude': 42.6333, u'country_code': u'US', u'country_name': u'United States'}
-            location = ['region_name', 'country_name']
+            output, location = [], ['region_name', 'country_name']
             for val in location:
-                if val in r and len(val) > 1:
-                    output.append(r[val])
-            if not r['city']:
-                rough = ' (estimated)'
-            else:
-                rough = ''
+                if val in r and len(val) > 1: output.append(r[val])
+            if not r['city']: rough = ' (estimated)'
+            else: rough = ''
             return code.msg(channel, code.color('green', 'User is connecting from %s%s' % (', '.join(output), rough)))
         except:
             return
