@@ -30,10 +30,10 @@ def ip(code, input):
                'na': code.color('red', 'N/A')
     }
     if not input.group(2):
-        host = code.host
+        host = code.host.strip()
     else:
         host = input.group(2).strip()
-    if not '.' in input.group(2) and not ':' in input.group(2) and len(input.group(2).split()) != 1:
+    if not '.' in host and not ':' in host and len(host.split()) != 1:
         return code.reply(doc['invalid'])
     host = code.stripcolors(host).encode('ascii', 'ignore')
 
