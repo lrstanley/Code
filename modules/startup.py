@@ -54,9 +54,6 @@ def setup(code):
 def startup(code, input):
     import time
 
-    #if hasattr(code.config, 'serverpass'):
-    #    code.write(('PASS', code.config.serverpass))
-
     if hasattr(code.config, 'password'):
         code.msg('NickServ', 'IDENTIFY %s' % code.config.password)
         time.sleep(5)

@@ -72,7 +72,7 @@ def geoip(code, input):
 
         # Split the line and get all the data
         try: host, command, channel = code.raw.split('@')[1].split()
-        except: pass
+        except: return
 
         for domain in ['proxy', 'clone', 'bnc', 'bouncer', 'cloud', 'server']:
             if domain in host.lower(): return

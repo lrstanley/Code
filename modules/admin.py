@@ -230,15 +230,16 @@ def write_raw(code, input):
     secure = 'That seems like an insecure message. Nope!'
     if not input.group(2):
         return code.reply(syntax)
-    if len(input.group(2).split()) < 2 or not ':' in input.group(2):
-        return code.reply(syntax)
     r = input.group(2).encode('ascii', 'ignore')
     bad = ['ns', 'nickserv', 'chanserv', 'cs', 'q', 'authserv', 'botserv', 'operserv']
     for bot in bad:
         if (' %s ' % bot) in r.lower():
             return code.reply(code.color('red', secure))
-    args, text = r.split(':')
-    args, text = args.strip().split(), text.strip()
+    try:
+        args, text = r.split(':')
+        args, text = args.strip().split(), text.strip()
+    except:
+        return code.write(input.group(2), raw=True)
     return code.write(args, text, raw=True)
 write_raw.commands = ['write', 'raw']
 write_raw.priority = 'high'
