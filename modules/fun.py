@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-fun.py - Fun Module
+fun.py - Code Fun Module
 http://code.liamstanley.io/
 """
 

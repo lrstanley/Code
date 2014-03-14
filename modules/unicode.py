@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-unicode.py - Code unicode Module
+unicode.py - Code Unicode Module
 http://code.liamstanley.io/
 """
 

@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-countdown.py - Code countdown Module
+countdown.py - Code Countdown Module
 http://code.liamstanley.io/
 """
 

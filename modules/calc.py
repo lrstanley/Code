@@ -2,7 +2,6 @@
 # coding=utf-8
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 calc.py - Code Calculator Module
 http://code.liamstanley.io/
 """

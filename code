@@ -11,7 +11,7 @@ from textwrap import dedent as trim
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 3
+configv = 4
 
 def check_python_version():
     if sys.version_info < (2, 7):
@@ -25,6 +25,11 @@ def create_default_config(fn):
         # Code Copyright (C) 2012-2014 Liam Stanley
         # Uncomment things you wish to add to the file
         # lines with "#" in front of them are comments
+
+        # This needs to be changed based on the current version of Code,
+        # and the version of the file. Note if you are quite a few versions
+        # behind, it might be best just to rename the file and have Code regen it
+        version = """ + str(configv) + """
 
         # irc bot nickname
         nick = 'code'
@@ -53,8 +58,7 @@ def create_default_config(fn):
         # exclude users from receiving a welcome message below.
         #excludeusers = ['Serious', 'User']
 
-        # your nickname for use in admin functions
-        # You can also specify nick@hostmask
+        # your nickname for use in admin functions. You can also specify 'nick@hostmask'
         # For example: code@unaffiliated/code
         owner = 'yournickname'
 
@@ -64,9 +68,7 @@ def create_default_config(fn):
         # website to show for help documentation
         #website = 'http://code.liamstanley.io'
 
-        # would you like color/bolc/italic coded commands? this enables/disables
-        # code.color/bold/italic() or any other form of carot notation applied directly by code
-        # although, if your module uses raw carot notation, then it won't disable that
+        # Enable or disable /ALMOST/ all color responses from Code
         textstyles = True
 
         # send the location of a user to the channel when they join
@@ -107,18 +109,6 @@ def create_default_config(fn):
         # Directories to load user modules from
         # e.g. /path/to/my/modules
         extra = ['""" + os.getcwd() + '/modules/' + """']
-
-        # Only uncomment below if you use oblique.py from the unloaded file
-        # Services to load: maps channel names to white or black lists
-        # external = {
-        #   '#liberal': ['!'], # allow all
-        #   '#conservative': [], # allow none
-        #   '*': ['!'] # default whitelist, allow all
-        #}
-
-        # This needs to be changed, based on the current version of Code,
-        # and the version of the file
-        version = """ + str(configv) + """
 
         # EOF
         """
