@@ -24,21 +24,30 @@ def deprecated(old):
 
 def empty(code, input, response=None):
     if not response:
-        response = 'No arguments supplied! Try: %s' % code.color('purple', '.help <command>')
+        response = 'No arguments supplied! Try: "%s"' % code.bold(code.color('purple', '.help <command>'))
     if not input.group(2):
         code.say(response)
         return True
     else:
-        return # Don't care.
+        return False
 
 def admin(code, input, response=None):
     if not response:
         response = 'You are not authorized to use this command!'
     if not input.admin:
-        code.say(code.color('red', response))
-        return True
+        code.say(code.bold(code.color('red', response)))
+        return False
     else:
-        return # Don't care.
+        return True
+
+def owner(code, input, response=None):
+    if not response:
+        response = 'You are not authorized to use this command!'
+    if not input.owner:
+        code.say(code.bold(code.color('red', response)))
+        return False
+    else:
+        return True
 
 
 # def hook(*args):
