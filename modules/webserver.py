@@ -13,7 +13,7 @@ import time
 from random import randint as gen
 
 # Example command...
-#  - http://your-host.net:8888/?pass=yoloswag&args=PRIVMSG+%23L&data=Testing+123
+#  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
 host = '0.0.0.0'
 port = 8888
 
