@@ -198,6 +198,7 @@ class Code(irc.Bot):
                 s.groups = match.groups
                 s.args = args
                 s.textstyles = self.config.textstyles
+                s.data = {}
                 global modules
                 s.modules = modules
                 global cmds
@@ -326,6 +327,19 @@ class Code(irc.Bot):
                             try: self.stats[(func.name, source)] += 1
                             except KeyError:
                                 self.stats[(func.name, source)] = 1
+
+    def get(self, key):
+        if key in self.data:
+            return self.data[key]
+        else:
+            return False
+
+    def set(self, key, data):
+        try:
+            self.data[key] = data
+            return True
+        except:
+            return False
 
 if __name__ == '__main__':
     print __doc__

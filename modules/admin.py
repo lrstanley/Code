@@ -69,34 +69,26 @@ nick.priority = 'low'
 def msg(code, input):
     '''Send a message to a channel, or a user. Admin-only.'''
     # Can only be done in privmsg by an admin
-    if input.sender.startswith('#'): return
+    if input.sender.startswith('#') or not input.admin: return
     a, b = input.group(2), input.group(3)
     if (not a) or (not b): return
     if not input.owner:
         al = a.lower()
         if al == 'chanserv' or al == 'nickserv' or al == 'hostserv' or al == 'memoserv' or al == 'saslserv' or al == 'operserv':
            return
-    helper = False
-    if hasattr(code.config, 'helpers'):
-        if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):
-            helper = True
-    if input.admin or helper:
-        code.msg(a, b)
+    code.msg(a, b)
 msg.rule = (['msg', 'say'], r'(?i)(#?\S+) (.+)')
 msg.priority = 'low'
 
 def me(code, input):
     '''Send a raw action to a channel/user. Admin-only.'''
+    if not input.admin: return
     # Can only be done in privmsg by an admin
     if input.sender.startswith('#'): return
     a, b = input.group(2), input.group(3)
-    helper = False
-    if a in code.config.helpers and (input.host in code.config.helpers[a] or (input.nick).lower() in code.config.helpers[a]):
-        helper = True
-    if input.admin or helper:
-        if a and b:
-            msg = '\x01ACTION %s\x01' % input.group(3)
-            code.msg(input.group(2), msg, x=True)
+    if a and b:
+        msg = '\x01ACTION %s\x01' % input.group(3)
+        code.msg(input.group(2), msg, x=True)
 me.rule = (['me', 'action'], r'(?i)(#?\S+) (.+)')
 me.priority = 'low'
 

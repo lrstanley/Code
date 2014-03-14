@@ -11,7 +11,7 @@ from textwrap import dedent as trim
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 2
+configv = 3
 
 def check_python_version():
     if sys.version_info < (2, 7):
@@ -74,8 +74,17 @@ def create_default_config(fn):
         # List of channels to check for locations
         #geoip = ['#stalker']
 
+        # Would you like to run a webserver alongside Code? This is only for development purposes
+        # And is accessable with the raw IRC command, and password below (required)
+        # E.g: http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23MyChannel&data=I+love+trains
+        # Note that port 8888 is used by default. To change this, go into modules/webserver.py and change
+        # "port" to your custom port. NOTE: To use this, you must also remove this module from
+        # the exclude list below, and uncomment both lines
+        #run_webserver = True
+        #webserver_pass = 'herpderptrains'
+
         # But admin.py is disabled by default, as follows:
-        exclude = ['admin', 'admin_channel', 'twss']
+        exclude = ['admin', 'admin_channel', 'webserver']
 
         # If you want to enumerate a list of modules rather than disabling
         # some, use "enable = ['example']", which takes precedent over exclude
@@ -85,13 +94,6 @@ def create_default_config(fn):
         # To not block anything for a channel, just don't mention it
         excludes = {
            '##blacklist': ['!'],
-        }
-
-        # This allows one to allow specific people to use ".msg channel message here"
-        # in specific channels.
-        helpers = {
-           '#channel1': ['a.somedomain.tld', 'b.anotherdomain.tld'],
-           '##channel2': ['some/other/hostmask'],
         }
             
         # Channel code will report all private messages sent to him to.
