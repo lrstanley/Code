@@ -84,7 +84,7 @@ def msg(code, input):
     code.msg(a, b)
 msg.rule = (['msg', 'say'], r'(?i)(#?\S+) (.+)')
 msg.priority = 'low'
-msg.example = ['.msg #L I LOVE PENGUINS.']
+msg.example = '.msg #L I LOVE PENGUINS.'
 
 def me(code, input):
     '''Send a raw action to a channel/user. Admin-only.'''
@@ -97,7 +97,7 @@ def me(code, input):
     code.msg(input.group(2), msg, x=True)
 me.rule = (['me', 'action'], r'(?i)(#?\S+) (.+)')
 me.priority = 'low'
-me.example = ['.me #L loves to sing']
+me.example = '.me #L loves to sing'
 
 def announce(code, input):
     '''Send an announcement to all channels the bot is in'''
