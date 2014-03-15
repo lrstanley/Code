@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 
 import sys, os.path, time, imp, subprocess
 import irc
+from tools import *
 
 def f_reload_cmd(code, input):
     f_reload(code, input)
@@ -15,7 +16,7 @@ f_reload_cmd.commands = ['rld', 'reload', 'recompile']
 
 def f_reload(code, input): 
     """Reloads a module, for use by admins only.""" 
-    if not input.admin: return
+    if not admin(code, input): return
 
     name = input.group(2)
     if name == code.config.owner: 
