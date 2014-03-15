@@ -51,6 +51,9 @@ def create_default_config(fn):
         # channels to auto-join
         channels = ['#example', '#test']
 
+        # Prefix that Code uses for commands. Default is "."
+        #prefix = "."
+
         # channels to greet users on channel join
         # e.g "Hello Code, welcome to #Lounge!"
         # uncomment to enable (remember this wont work with ai.py disabled.)
