@@ -72,6 +72,7 @@ class Bot(asynchat.async_chat):
         self.stack_log = list()
         self.logchan_pm = logchan_pm
         self.logging = logging
+        self.chan = {}
 
         import threading
         self.sending = threading.RLock()
@@ -272,6 +273,34 @@ class Bot(asynchat.async_chat):
                     if code == 'MODE':
                         nick, ident, host, args = re.compile(reg['MODE']).match(line).groups()
                         print('[MODE] %s sets MODE %s' % (nick, args))
+
+                    # start gathering info for every channel here
+                    # self.chan = {
+                    #     '#L': {
+                    #         'Liam': {'admin': True},
+                    #         'dober': {'admin': False}
+                    #     },
+                    #     '#CHCMATT': {
+                    #         'CHCMATT': {'admin': True},
+                    #         'Liam': {'admin': False}
+                    #     }
+                    # }
+
+                    # Note: Should use NAMES in a different function
+                    # 1. trigger on:
+                    #      - JOIN (bot) to create/wipe the self.chan dict()
+                    #         - Use NAMES, then parse the data inside a loop
+                    #      - MODE - Update users without pulling full NAME check
+                    #      - KICK/QUIT - Remove users from the list
+                    #      - NICK, to rename users in the self.chan dict()
+                    # 2. Methods:
+                    #      - code.chan['#L'] - get user list
+                    #      - code.chan['#L']['Liam'] - get user data
+                    #      - code.chan['#L']['Liam']['admin'] - get admin
+                    if code in ['MODE','NAMES','QUIT','JOIN','KICK','NICK']:
+                        print line
+                    # :Liam!liam@liam.ml MODE #Liam +o Code-testing
+
             except:
                 pass
 
