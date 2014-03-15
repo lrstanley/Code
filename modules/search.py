@@ -10,6 +10,7 @@ http://code.liamstanley.io/
 import re
 import web
 from modules.url import shorten
+from tools import *
 
 class Grab(web.urllib.URLopener):
     def __init__(self, *args):
