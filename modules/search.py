@@ -9,6 +9,7 @@ http://code.liamstanley.io/
 
 import re
 import web
+from modules.url import shorten
 
 class Grab(web.urllib.URLopener):
     def __init__(self, *args):
@@ -60,7 +61,7 @@ def g(code, input):
     query = query.encode('utf-8')
     uri = google_search(query)
     if uri:
-        code.reply(uri)
+        code.reply(shorten(uri))
         if not hasattr(code.bot, 'last_seen_uri'):
             code.bot.last_seen_uri = {}
         code.bot.last_seen_uri[input.sender] = uri
