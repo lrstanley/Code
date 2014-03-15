@@ -9,11 +9,12 @@ http://code.liamstanley.io/
 import re, json
 import urllib, urllib2
 import web
+from tools import *
 
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
 def calc(code, input):
-    if not input.group(2): return code.reply('Syntax: \'.calc <problem>\'')
+    if empty(code, input): return
     try:
         data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2))).read())
         if data['AnswerType'] != 'calc':
@@ -24,14 +25,12 @@ def calc(code, input):
     except:
         return code.reply('Failed to calculate!')
 calc.commands = ['c', 'calc', 'calculate']
-calc.example = '.calc 5 + 3'
+calc.example = 'calc 5 + 3'
 
 def py(code, input):
     # Prevention from spam, along with exploits on Atheme/Charybdis networks
-    # (see line 42, new fix)
-    #if not input.admin: return
-    if not input.group(2):
-         return code.reply('Please enter an %s' % code.bold('input'))
+    # (see line 41, new fix)
+    if empty(code, input): return
     query = input.group(2).encode('utf-8')
     uri = 'http://tumbolia.appspot.com/py/'
     try:
@@ -49,11 +48,11 @@ def py(code, input):
          code.reply(code.color('red', 'The server did not return an answer.'))
          print '[.py]', e
 py.commands = ['py', 'python']
-py.example = '.py print(int(1.0) + int(3))'
+py.example = 'py print(int(1.0) + int(3))'
 
-def wa(code, input): 
-    if not input.group(2):
-        return code.reply('No search term.')
+def wa(code, input):
+    """Wolphram Alpha search"""
+    if empty(code, input): return
     query = input.group(2).encode('utf-8')
     uri = 'http://tumbolia.appspot.com/wa/'
     answer = web.get(uri + web.urllib.quote(query.replace('+', '%2B')))
@@ -61,6 +60,7 @@ def wa(code, input):
         code.say(answer)
     else: code.reply('Sorry, no result.')
 wa.commands = ['wa']
+wa.example = 'wa 1 mile in feet'
 
 if __name__ == '__main__': 
     print __doc__.strip()

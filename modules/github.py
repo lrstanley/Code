@@ -5,6 +5,7 @@ http://code.liamstanley.io/
 """
 
 from datetime import datetime
+from tools import *
 from subprocess import *
 import json, urllib2
 
@@ -13,11 +14,10 @@ user_api = 'https://api.github.com/users/%s' # Username
 
 
 def github(code, input):
-    """Get username data, or user/repo data from Github"""
+    """github <user}user/repo> - Get username data, or user/repo data from Github"""
     syntax = 'Syntax: \'.github <user|user/repo>\''
     failed = 'Failed to get data from Githubs API :('
-    if not input.group(2):
-        return code.say(syntax)
+    if empty(code, input): return
 
     if len(input.group(2).strip().split()) != 1:
         return code.say(syntax)
@@ -85,7 +85,7 @@ def github(code, input):
         output.append(response['html_url'])
         return code.say(spacer.join(output))
 github.commands = ['github','git']
-github.example = '.github Liamraystanley/Code'
+github.example = 'github Liamraystanley/Code'
 github.priority = 'medium'
 github.rate = '15'
 

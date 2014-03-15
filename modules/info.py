@@ -34,9 +34,9 @@ def commands(code, input):
     code.msg(input.nick, 'Commands I recognize:')
     for line in cmds:
         code.msg(input.nick, '# %s' % (', '.join(line)))
-    code.msg(input.nick, ('For help, do \'.help example\' where ' +
+    code.msg(input.nick, ('For help, do \'%shelp example\' where ' +
                           '"example" is the name of the command you want ' +
-                          'help for.'))
+                          'help for.') % code.prefix)
 commands.commands = ['commands','cmds']
 commands.priority = 'low'
 
@@ -52,7 +52,7 @@ def help(code, input):
                 ex = code.doc[name][1]
                 while '  ' in ex:
                     ex = ex.replace('  ',' ')
-                code.say(code.color('purple','Example') + ': ' + ex)
+                code.say(code.color('purple','Example') + ': ' + code.prefix + ex)
         else:
             code.reply(code.color('red','I\'m sorry, there is no documentation for that command.'))
     else:
@@ -64,10 +64,10 @@ def help(code, input):
             'Hi, I\'m a bot. Say "%s" to me in private for a list ' +
             'of my commands, or see %s for more general details.' +
             ' %s is my owner.')
-        code.reply(response % (code.color('purple', '.commands'),website,code.color('gold', code.config.owner)))
+        code.reply(response % (code.color('purple', '%scommands' % code.prefix),website,code.color('gold', code.config.owner)))
 help.priority = 'medium'
 help.commands = ['help']
-help.example = '.help fml'
+help.example = 'help fml'
 help.rate = 30
 
 def about(code, input):

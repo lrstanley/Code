@@ -16,8 +16,9 @@ language = 'en'
 mature = False
 # http://api.betacie.com/readme.php
 
+
 def fml(code, input):
-    """.fml - Retrieve random FML's, via FMyLife.com's dev API."""
+    """fml - Retrieve random FML's, via FMyLife.com's dev API."""
     # Random/No input
     if not input.group(2):
         try:
@@ -52,12 +53,13 @@ def fml(code, input):
                      code.bold(r['-'])))
         except: return code.say('Failed to search for FML.')
 fml.commands = ['fml', 'fmylife']
-fml.example = '.fml #12390101'
+fml.example = 'fml #12390101'
 fml.priority = 'medium'
 fml.rate = 15
 
+
 def fml_random():
-    """.fml - Retrieve random FML's, via FMyLife.com's dev API."""
+    """fml - Retrieve random FML's, via FMyLife.com's dev API."""
     if mature: is_mature = '/nosex'
     else: is_mature = ''
     try: r = urllib2.urlopen('http://api.fmylife.com/view/random/1%s?language=%s&key=%s' % (is_mature, \
@@ -72,8 +74,9 @@ def fml_random():
             '+': re.sub(r'\<.*?\>', '', agree[0]).strip(),
             '-': re.sub(r'\<.*?\>', '', deserved[0]).strip()}
 
+
 def fml_search(query, id): #ID is index of search query
-    """.fml - Retrieve FML search results, via FMyLife.com's dev API."""
+    """fml - Retrieve FML search results, via FMyLife.com's dev API."""
     if mature: is_mature = '/nosex'
     else: is_mature = ''
     # Try to query FML
@@ -101,8 +104,9 @@ def fml_search(query, id): #ID is index of search query
             'id': id,
             'max': count}
 
+
 def fml_id_search(query_id):
-    """.fml - Retrieve the FML in accordance with the assigned ID, via FMyLife.com's dev API."""
+    """fml - Retrieve the FML in accordance with the assigned ID, via FMyLife.com's dev API."""
     try: r = urllib2.urlopen('http://api.fmylife.com/view/%s/nocomment?language=%s&key=%s' % (str(query_id), \
                              language, key)).read()
     except: return

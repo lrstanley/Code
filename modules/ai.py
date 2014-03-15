@@ -127,7 +127,7 @@ def gau(code, input):
         time.sleep(random.randint(0,1))
         code.reply(randmsg)
         conversation = False
-#gau.rule = '(?i).*(good).*'
+gau.rule = '(?i).*(good).*$'
 
 def bad(code, input):
     global aistate

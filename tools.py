@@ -24,7 +24,7 @@ def deprecated(old):
 
 def empty(code, input, response=None):
     if not response:
-        response = 'No arguments supplied! Try: "%s"' % code.bold(code.color('purple', '.help <command>'))
+        response = 'No arguments supplied! Try: "%s"' % code.bold(code.color('purple', '%shelp <command>' % code.prefix))
     if not input.group(2):
         code.say(response)
         return True

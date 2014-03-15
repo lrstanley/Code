@@ -7,14 +7,12 @@ http://code.liamstanley.io/
 """
 
 import time
-from tools import deprecated
+from tools import *
 
 def seen(code, input): 
-   """.seen <nick> - Reports when <nick> was last seen."""
-   if not input.group(2): return 
+   """seen <nick> - Reports when <nick> was last seen."""
+   if empty(code, input): return
    nick = input.group(2)
-   if not nick:
-      return code.reply('Need a %s to search for...' % code.bold('nickname'))
    nick = nick.lower()
    if not hasattr(code, 'seen'): 
       return code.reply("?")

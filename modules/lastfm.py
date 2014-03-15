@@ -41,7 +41,7 @@ def lastfm(code, input):
             song = re.sub(r'\<.*?\>', '', song).strip()
             code.reply(code.color('purple', song) + code.color('red',' (via Last.Fm)'))
 lastfm.commands = ['lastfm', 'lfm']
-lastfm.example = '.lfm liamraystanley'
+lastfm.example = 'lfm liamraystanley'
 lastfm.rate = 10
 
 if __name__ == '__main__':

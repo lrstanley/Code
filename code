@@ -190,7 +190,7 @@ def main(argv=None):
                 print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
 
         if not hasattr(module, 'prefix'):
-            module.prefix = (r'\.')
+            module.prefix = '.'
 
         if not hasattr(module, 'name'): 
            module.name = '\x0307Python IRC Bot - http://code.liamstanley.io'

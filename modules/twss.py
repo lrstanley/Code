@@ -11,6 +11,7 @@ import urllib
 import re
 import os
 import sys
+from tools import *
 
 
 last = "DEBUG_ME" # Dont find this in terminal, you might want to flip shit.
@@ -74,7 +75,7 @@ say_it.rule = r"(.*)"
 say_it.priority = 'low'
 
 def add_twss(code, input):
-    if not input.admin: return
+    if not admin(code, input): return
     if len(last) < 5: return
     print last
     with open('modules/twss_ua.txt', 'a') as f:

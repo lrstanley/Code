@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 
 import re, unicodedata
 from itertools import islice
+from tools import *
 
 def about(u, cp=None, name=None): 
    if cp is None: 
@@ -120,14 +121,15 @@ def u(code, input):
          code.reply(' '.join('U+%04X' % ord(c) for c in text))
       else: code.reply(code.color('red', 'Sorry, your input is too long!'))
 u.commands = ['u']
-u.example = '.u 203D'
+u.example = 'u 203D'
 
 def bytes(code, input): 
    """Show the input as pretty printed bytes."""
+   if empty(code, input): return
    b = input.bytes
    code.reply('%r' % b[b.find(' ') + 1:])
 bytes.commands = ['bytes']
-bytes.example = '.bytes \xe3\x8b\xa1'
+bytes.example = 'bytes \xe3\x8b\xa1'
 
 if __name__ == '__main__': 
    print __doc__.strip()

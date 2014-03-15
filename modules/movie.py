@@ -1,24 +1,22 @@
 # -*- coding: utf8 -*-
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-movie.py - Code movie Module
+movie.py - Code Movie Module
 http://code.liamstanley.io/
 """
 
 import urllib
 import urllib2
 import json
+from tools import *
 
 search_uri = 'http://www.omdbapi.com/?t=%s'
 id_uri = 'http://www.omdbapi.com/?i=%s'
 error = 'Unable to search for that movie!'
 
 def movie_search(code, input):
-    """.imdb movie/show title -- displays information about a production"""
-
-    if not input.group(2):
-        return code.reply('Syntax: \'.movie <movie name>\'')
-
+    """imdb movie/show title -- displays information about a production"""
+    if empty(code, input): return
     try:
         # Url-ify
         search = urllib.quote(input.group(2).strip())
@@ -39,7 +37,7 @@ def movie_search(code, input):
     except:
         return code.reply(error)
 movie_search.commands = ['movie', 'imdb']
-movie_search.example = '.movie Transformers'
+movie_search.example = 'movie Transformers'
 
 def movie(code, input):
     """Automatically find the information from a imdb url and display it

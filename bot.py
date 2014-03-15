@@ -30,6 +30,7 @@ class Code(irc.Bot):
         args = (config.nick, config.name, config.channels, config.serverpass, lc_pm, logging)
         irc.Bot.__init__(self, *args)
         self.config = config
+        self.prefix = self.config.prefix
         self.doc = {}
         self.stats = {}
         self.times = {}
@@ -147,7 +148,7 @@ class Code(irc.Bot):
                         prefix = self.config.prefix
                         commands, pattern = func.rule
                         for command in commands:
-                            command = r'(?i)(%s)\b(?: +(?:%s))?' % (command, pattern)
+                            command = r'(?i)(\%s)\b(?: +(?:%s))?' % (command, pattern)
                             regexp = re.compile(prefix + command)
                             bind(self, func.priority, regexp, func)
 

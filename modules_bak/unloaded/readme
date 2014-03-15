@@ -1,0 +1,10 @@
+#=============================================================#
+# to use scripts in this directory, just move them from their #
+# folders and put then in the previous directory              #
+#=============================================================#
+                        =- More notes -=
+=-------------------------------------------------------------=
+
+(1): remember, some files require dependancies of other files, so things like
+     anything in the Minecraft directory require eachother, but things in the
+     Web-Services don't.

@@ -16,7 +16,7 @@ control_char_re = re.compile('[%s]' % re.escape(control_chars))
 
 
 def supercombiner(code, input):
-    """.sc -- displays the infamous supercombiner"""
+    """Displays the infamous supercombiner"""
     s = 'u'
     for i in xrange(1, 3000):
         if unicodedata.category(unichr(i)) == "Mn":

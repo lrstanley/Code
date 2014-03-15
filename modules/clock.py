@@ -43,7 +43,7 @@ def get_time(code, input):
 
         # Try to encode into
 get_time.commands = ['t','time']
-get_time.example = '.t UTC'
+get_time.example = 't UTC'
 
 def beats(code, input): 
     """Shows the internet time in Swatch beats."""
@@ -51,7 +51,6 @@ def beats(code, input):
     beats = int(math.floor(beats))
     code.say('@%03i' % beats)
 beats.commands = ['beats']
-beats.priority = 'low'
 
 if __name__ == '__main__': 
     print __doc__.strip()

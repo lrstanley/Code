@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 
 import re
 import web
+from tools import *
 
 uri = 'http://en.wiktionary.org/w/index.php?title=%s&printable=yes'
 r_tag = re.compile(r'<[^>]+>')
@@ -71,8 +72,7 @@ def format(word, definitions, number=2):
    return result.strip(' .,')
 
 def w(code, input): 
-   if not input.group(2):
-      return code.reply(code.color('red', 'Nothing to define.'))
+   if empty(code, input): return
    word = input.group(2).lower()
    etymology, definitions = wiktionary(word)
    if not definitions: 
@@ -89,7 +89,7 @@ def w(code, input):
       result = result[:295] + '[...]'
    code.say(result)
 w.commands = ['w','define', 'd']
-w.example = '.w example'
+w.example = 'w example'
 
 
 if __name__ == '__main__': 

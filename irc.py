@@ -96,8 +96,8 @@ class Bot(asynchat.async_chat):
           'yellow': '08', 'lightgreen': '09', 'lime': '09', 'teal': '10',
           'cyan': '11', 'lightblue': '12', 'royal': '12', 'lightpurple': '13',
           'pink': '13', 'fuchsia': '13', 'grey': '14', 'lightgrey': '0', 'silver': '0'}
-        color = str(color).lower()
-        message = str(message)
+        color = color.lower()
+        message = message
         if '/' in color:
             color = color.split('/')
             message = '\x03' + colors[color[0]] + ',' + colors[color[1]] + message + '\x03'
@@ -108,17 +108,17 @@ class Bot(asynchat.async_chat):
     def bold(self, message):
         '''bold encoding IRC messages, if false in config, returns clean'''
         if not self.config.textstyles: return message
-        return ('\x02' + str(message) + '\x02')
+        return ('\x02' + message + '\x02')
             
     def italic(self, message):
         '''italicize encoding IRC messages, if false in config, returns clean'''
         if not self.config.textstyles: return message
-        return ('\x16' + str(message) + '\x16')
+        return ('\x16' + message + '\x16')
 
     def underline(self, message):
         '''underlined encoding IRC messages, if false in config, returns clean'''
         if not self.config.textstyles: return message
-        return ('\x1f' + str(message) + '\x1f')
+        return ('\x1f' + message + '\x1f')
 
     def quit(self, message=None):
         '''Disconnect from IRC and close the bot'''

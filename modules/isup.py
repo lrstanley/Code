@@ -9,12 +9,12 @@ http://code.liamstanley.io/
 import re
 from urllib import urlopen
 import string
+from tools import *
 
 def isup(code,input):
-    """Is it down for everyone, or just me?"""
-    synerr = input.nick + ': The syntax is \'.isup <uri>\' e.g, \'.isup http://google.com\''
+    """isup <url> - Is it down for everyone, or just me?"""
+    if empty(code, input): return
     try:
-        if not input.group(2): return code.reply('Please enter an input.')
         domain = input.group(2)
         chars = set('~`!@$%^&*()+=[]{}|;,<>?')
         if not domain.find('.') > -1:
@@ -41,7 +41,7 @@ def isup(code,input):
         code.say(synerr)
 
 isup.commands = ['isup', 'isdown', 'check', 'up', 'down']
-isup.example = '.isup http://google.com'
+isup.example = 'isup http://google.com'
 
 if __name__ == '__main__':
     print __doc__.strip()

@@ -55,9 +55,8 @@ def formatnumber(n):
 
 def g(code, input):
     """Queries Google for the specified input."""
+    if empty(code, input): return
     query = input.group(2)
-    if not query:
-        return code.reply('.g what?')
     query = query.encode('utf-8')
     uri = google_search(query)
     if uri:
@@ -69,20 +68,19 @@ def g(code, input):
     else: code.reply("No results found for '%s'." % code.color('purple',query))
 g.commands = ['g', 'search', 'google']
 g.priority = 'high'
-g.example = '.g swhack'
+g.example = 'g swhack'
 g.rate = 30
 
 def gc(code, input):
     """Returns the number of Google results for the specified input."""
+    if empty(code, input): return
     query = input.group(2)
-    if not query:
-        return code.reply('.gc what?')
     query = query.encode('utf-8')
     num = formatnumber(google_count(query))
     code.say(query + ': ' + num)
 gc.commands = ['gc']
 gc.priority = 'high'
-gc.example = '.gc extrapolate'
+gc.example = 'gc extrapolate'
 gc.rate = 30
 
 r_query = re.compile(
@@ -90,8 +88,7 @@ r_query = re.compile(
 )
 
 def gcs(code, input):
-    if not input.group(2):
-        return code.reply("Nothing to compare.")
+    if empty(code, input): return
     queries = r_query.findall(input.group(2))
     if len(queries) > 6:
         return code.reply('Sorry, can only compare up to six things.')
@@ -122,10 +119,9 @@ def bing_search(query, lang='en-GB'):
 
 def bing(code, input):
     """Queries Bing for the specified input."""
+    if empty(code, input): return
     query = input.group(2)
     lang = 'en-GB'
-    if not query:
-        if not query: return code.reply('.bing what?')
     query = query.encode('utf-8')
     uri = bing_search(query, lang)
     if uri:
@@ -135,7 +131,7 @@ def bing(code, input):
         code.bot.last_seen_uri[input.sender] = uri
     else: code.reply("No results found for '%s'." % code.bold(query))
 bing.commands = ['bing']
-bing.example = '.bing swhack'
+bing.example = 'bing swhack'
 bing.rate = 30
 
 r_duck = re.compile(r'nofollow" class="[^"]+" href="(.*?)">')
@@ -189,8 +185,7 @@ r_duck = re.compile(r'nofollow" class="[^"]+" href="(.*?)">')
 #search.rate = 30
 
 def suggest(code, input):
-    if not input.group(2):
-        return code.reply('No query term.')
+    if empty(code, input): return
     query = input.group(2).encode('utf-8')
     uri = 'http://websitedev.de/temp-bin/suggest.pl?q='
     answer = web.get(uri + web.urllib.quote(query).replace('+', '%2B'))
@@ -202,6 +197,7 @@ def suggest(code, input):
             code.reply(answer)
     else: code.reply(code.color('red', 'Sorry, no result.'))
 suggest.commands = ['suggest', 'sugg']
+suggest.example = 'suggest apples'
 suggest.rate = 30
 
 if __name__ == '__main__':

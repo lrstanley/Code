@@ -7,12 +7,12 @@ http://code.liamstanley.io/
 """
 
 import datetime
+from tools import *
 
 def countdown(code, input):
     """ .countdown <year> <month> <day> - displays a countdown to a given date. """
-    error = 'Please use correct format: .countdown <year> <month> <day>'
-    if not input.group(2):
-        return code.say(code.color('red', error))
+    error = 'Please use correct format: %scountdown <year> <month> <day>' % code.prefix
+    if empty(code, input): return
     text = input.group(2).split()
     if text[0].isdigit() and text[1].isdigit() and text[2].isdigit() and len(text) == 3:
         diff = datetime.datetime(int(text[0]), int(text[1]), int(text[2])) - datetime.datetime.today()

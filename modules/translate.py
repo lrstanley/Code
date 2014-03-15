@@ -12,6 +12,7 @@ import time
 import urllib
 import urllib2
 import web
+from tools import *
 
 def translate(text, input='auto', output='en', use_proxy=False):
     raw = False
@@ -109,7 +110,7 @@ tr.priority = 'low'
 
 def tr2(code, input):
     """Translates a phrase, with an optional language hint."""
-    if not input.group(2): return code.say("No input provided.")
+    if empty(code, input): return
     command = input.group(2).encode('utf-8')
 
     def langcode(p):

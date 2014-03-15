@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 
 import re, time
 import web
+from tools import *
 
 r_username = re.compile(r'^[a-zA-Z0-9_]{1,15}$')
 r_link = re.compile(r'^https?://twitter.com/\S+$')
@@ -67,9 +68,8 @@ def id_tweet(tid):
     return "Sorry, couldn't get a tweet from %s" % link
 
 def twitter(code, input):
-    arg = input.group(2)
-    if not arg:
-        return code.reply("Give me a link, a username, or a tweet id")
+    """twitter <link|username|tweet id> - Return twitter results for search"""
+    if empty(code, input): return
 
     arg = arg.strip()
     if isinstance(arg, unicode):
@@ -86,6 +86,7 @@ def twitter(code, input):
     else: code.reply("Give me a link, a username, or a tweet id")
 
 twitter.commands = ['tw', 'twitter']
+twitter.example = 'twitter liamraystanley'
 twitter.thread = True
 
 if __name__ == '__main__':

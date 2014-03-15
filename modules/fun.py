@@ -6,7 +6,7 @@ http://code.liamstanley.io/
 """
 
 import random
-#from random import randint
+from tools import *
 
 def sexycomment(rand):
     """finds a random comment dependant on what the rating was."""
@@ -47,7 +47,7 @@ def roulette(code, input):
     code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nick, response))
 roulette.commands = ['rr', 'russianroulette', 'roulette']
 roulette.priority = 'medium'
-roulette.example = '.roulette Timothy'
+roulette.example = 'roulette Timothy'
 roulette.rate = 20
 
 def sexymeter(code, input):
@@ -98,11 +98,12 @@ def sexymeter(code, input):
             code.bold(rand), code.bold(sexycomment(rand))))
 sexymeter.commands = ['sm', 'sexymeter', 'um', 'uglymeter']
 sexymeter.priority = 'medium'
-sexymeter.example = '.sexymeter Code'
+sexymeter.example = 'sexymeter Code'
 sexymeter.rate = 20
 
 def slap(code, input):
     """Slaps a person using random methods"""
+    if empty(code, input): return
     text = input.group().split()
     if len(text) < 2 or text[1].startswith('#'): return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or \
@@ -165,7 +166,7 @@ def magic(code, input):
     code.say('*%s shakes the Magic 8 Ball...* %s' % (code.nick, code.bold(response)))
 magic.commands = ['8ball', '8b', 'luck', 'eightball', 'magic8']
 magic.priority = 'medium'
-magic.example = '.8ball will i feel better tomorrow?'
+magic.example = '8ball will i feel better tomorrow?'
 magic.rate = 15
 
 def rps(code, input):
@@ -208,7 +209,7 @@ def rps(code, input):
     return code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
           code.bold(state)), code.nick, code.bold(response)))
 rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
-rps.example = '.rock'
+rps.example = 'rock'
 rps.rate = 15
 
 if __name__ == '__main__':

@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 
 import os, re, time, random
 import web
+from tools import *
 
 maximum = 4
 
@@ -46,7 +47,7 @@ def setup(self):
     self.reminders = loadReminders(self.tell_filename) # @@ tell
 
 def f_remind(code, input):
-    if not input.group(2): return code.reply('Syntax: \'.tell <user> <message>\'')
+    if empty(code, input): return
     teller = input.nick
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group()).startswith(".tell"):
@@ -107,6 +108,7 @@ def f_remind(code, input):
     dumpReminders(code.tell_filename, code.reminders) # @@ tell
 f_remind.rule = ('$nick', ['[tT]ell', '[aA]sk'], r'(\S+) (.*)')
 f_remind.commands = ['tell', 'to']
+f_remind.example = 'remind 10m Go to school'
 
 def getReminders(code, channel, key, tellee):
     lines = []

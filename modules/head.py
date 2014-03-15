@@ -16,7 +16,7 @@ r_entity = re.compile(r'&[A-Za-z0-9#]+;')
 
 @deprecated
 def f_title(self, origin, match, args): 
-   """.title <URI> - Return the title of URI."""
+   """title <URI> - Return the title of URI."""
    uri = match.group(2)
    uri = (uri or '').encode('utf-8')
 

@@ -26,7 +26,7 @@ def checkdb(cursor):
 
 
 def manage_rss(code, input):
-    """.rss operation channel site_name url -- 'add', 'del', or 'list' rss"""
+    """rss operation channel site_name url -- 'add', 'del', or 'list' rss"""
     if not input.admin:
         code.reply("Sorry, you need to be an admin to modify the RSS feeds.")
         return

@@ -30,7 +30,7 @@ def join(code, input):
     else:
         return code.write(['JOIN'], input.group(2).strip())
 join.commands = ['join']
-join.example = '.join #example or .join #example key'
+join.example = 'join #example or .join #example key'
 
 def part(code, input):
     '''Part the specified channel. This is an admin-only command.'''
@@ -38,7 +38,7 @@ def part(code, input):
     if empty(code, input): return
     return code.write(['PART', input.group(2).strip()])
 part.commands = ['part', 'leave']
-part.example = '.part #example'
+part.example = 'part #example'
 
 def quit(code, input):
     '''Quit from the server. This is an owner-only command.'''
@@ -84,7 +84,7 @@ def msg(code, input):
     code.msg(a, b)
 msg.rule = (['msg', 'say'], r'(?i)(#?\S+) (.+)')
 msg.priority = 'low'
-msg.example = '.msg #L I LOVE PENGUINS.'
+msg.example = 'msg #L I LOVE PENGUINS.'
 
 def me(code, input):
     '''Send a raw action to a channel/user. Admin-only.'''
@@ -97,7 +97,7 @@ def me(code, input):
     code.msg(input.group(2), msg, x=True)
 me.rule = (['me', 'action'], r'(?i)(#?\S+) (.+)')
 me.priority = 'low'
-me.example = '.me #L loves to sing'
+me.example = 'me #L loves to sing'
 
 def announce(code, input):
     '''Send an announcement to all channels the bot is in'''
@@ -107,7 +107,7 @@ def announce(code, input):
     for channel in code.channels:
         code.msg(channel, code.color('purple', code.bold('[ANNOUNCMENT] ')) + input.group(2))
 announce.commands = ['announce', 'broadcast']
-announce.example = '.announce Some important message here'
+announce.example = 'announce Some important message here'
 
 def blocks(code, input):
     '''Command to add/delete user records, for a filter system. This is to prevent users from abusing Code.'''
@@ -137,7 +137,7 @@ def blocks(code, input):
     delete = ['del','delete','rem','remove','unblock']
     # List 'em
     if len(text) >= 2 and low[1] in show:
-        syntax = 'Syntax: \'.blocks list <nick|hostmask>\''
+        syntax = 'Syntax: \'%sblocks list <nick|hostmask>\'' % code.prefix
         if len(text) != 3: return code.reply(syntax)
         if low[2] in host:
             if len(masks) > 0 and masks.count('') == 0:
@@ -162,7 +162,7 @@ def blocks(code, input):
 
     # Wants to add a block
     elif len(text) >= 2 and low[1] in add:
-        syntax = 'Syntax: \'.blocks add <nick|hostmask> <args>\''
+        syntax = 'Syntax: \'%sblocks add <nick|hostmask> <args>\'' % code.prefix
         if len(text) != 4: return code.reply(syntax)
         if low[2] in name:
             nicks.append(text[3])
@@ -175,7 +175,7 @@ def blocks(code, input):
 
     # Wants to delete a block
     elif len(text) >= 2 and low[1] in delete:
-        syntax = 'Syntax: \'.blocks del <nick|hostmask> <args>\''
+        syntax = 'Syntax: \'%sblocks del <nick|hostmask> <args>\'' % code.prefix
         if len(text) != 4: return code.reply(syntax)
         if low[2] in name:
             try:
@@ -194,7 +194,7 @@ def blocks(code, input):
         else:
             return code.reply(syntax)
     else:
-        code.reply('Syntax: \'.blocks <add|del|list> <nick|hostmask> [args]\'')
+        code.reply('Syntax: \'%sblocks <add|del|list> <nick|hostmask> [args]\'' % code.prefix)
 
     os.remove('blocks')
     blocks = open('blocks', 'w')

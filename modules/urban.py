@@ -67,7 +67,7 @@ def urban(code, input):
     except:
         return code.reply(code.color('red', 'Failed to pull definition from urbandictionary.com!'))
 urban.commands = ['urban', 'ud']
-urban.example = '.urban liam'
+urban.example = 'urban liam 2'
 
 
 def strp(data):

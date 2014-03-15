@@ -14,6 +14,7 @@ base = 'http://geo.liamstanley.io/json/%s'
 
 
 def ip(code, input):
+    """whois <ip|hostname> - Reverse domain/ip lookup (WHOIS)"""
     show = [
         ['hostname', 'Hostname'],
         ['ip', 'IP'],
@@ -58,7 +59,7 @@ def ip(code, input):
         output.append('%s: %s' % (code.color('blue', option[1]), data[option[0]]))
     return code.say(' \x02|\x02 '.join(output))
 ip.commands = ['ip', 'host', 'whois', 'geo', 'geoip']
-ip.example = ".iplookup 8.8.8.8"
+ip.example = ".whois 8.8.8.8"
 
 
 def geoip(code, input):

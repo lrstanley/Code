@@ -7,11 +7,11 @@ http://code.liamstanley.io/
 """
 
 import web
+from tools import *
 
 def val(code, input): 
    """Check a webpage using the W3C Markup Validator."""
-   if not input.group(2):
-      return code.reply("Nothing to validate.")
+   if empty(code, input): return
    uri = input.group(2)
    if not uri.startswith('http://'): 
       uri = 'http://' + uri
@@ -36,7 +36,7 @@ def val(code, input):
 
    code.reply(result)
 val.rule = (['val'], r'(?i)(\S+)')
-val.example = '.val http://www.w3.org/'
+val.example = 'val http://www.w3.org/'
 
 if __name__ == '__main__': 
    print __doc__.strip()

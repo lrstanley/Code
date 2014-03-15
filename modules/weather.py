@@ -9,6 +9,7 @@ import re
 import urllib, urllib2
 import json
 import HTMLParser
+from tools import *
 
 user = 'code'
 h = HTMLParser.HTMLParser()
@@ -29,8 +30,8 @@ def location(name):
     return name, country, lat, lng
 
 def weather(code,input):
-    if not input.group(2):
-        return code.reply('Syntax: \'.weather [<city, state>|<country>|<zip>]\'')
+    """weather <city, state|country|zip> - Return weather results for specified address"""
+    if empty(code, input): return
     # Here, we check if it's an actual area, if the geo returns the lat/long then it is..
     name, country, lat, lng = location(input.group(2))
     if not name or not country or not lat or not lng:
@@ -83,9 +84,10 @@ def weather(code,input):
         output.append('Ozone level: %s' % code.color('blue',data['ozone']))
     code.say(' | '.join(output))
 weather.commands = ['weather']
+weather.example = 'weather Eaton Rapids, Michigan'
 
 def fw(code, input):
-    """.fw (ZIP|City, State) -- provide a ZIP code or a city state pair to hear about the fucking weather"""
+    """fw (ZIP|City, State) -- provide a ZIP code or a city state pair to hear about the fucking weather"""
     if not input.group(2):
         return code.reply(code.bold('INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.'))
     try:
@@ -101,6 +103,7 @@ def fw(code, input):
     except:
         return code.reply(code.color('red', code.bold('I CAN\'T FIND THAT SHIT.')))
 fw.commands = ['fuckingweather', 'fw']
+fw.example = 'fw 48827'
 fw.priority = 'low'
 
 if __name__ == '__main__':

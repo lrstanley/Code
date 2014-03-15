@@ -8,14 +8,13 @@ http://code.liamstanley.io/
 
 import random
 from modules import unicode as uc
+from tools import *
 
 
 def addquote(code, input):
     '''.addquote <nick> something they said here -- adds the quote to the quote database.'''
-    if not input.admin: return
-    text = input.group(2)
-    if not text:
-        return code.say('No quote provided')
+    if not admin(code, input): return
+    if empty(code, input): return
     fn = open('quotes.txt', 'a')
     output = uc.encode(text)
     fn.write(output)
@@ -24,7 +23,7 @@ def addquote(code, input):
     code.reply('Quote added.')
 addquote.commands = ['addquote']
 addquote.priority = 'low'
-addquote.example = '.addquote'
+addquote.example = 'addquote <liam> HERPDERPTRAINS'
 addquote.rate = 30
 
 
@@ -54,13 +53,14 @@ def retrievequote(code, input):
         code.reply('Quote %s of %s: ' % (code.color('blue',number), code.color('blue',MAX)) + line)
 retrievequote.commands = ['quote']
 retrievequote.priority = 'low'
-retrievequote.example = '.quote'
+retrievequote.example = 'quote 2'
 retrievequote.rate = 30
 
 
 def delquote(code, input):
     '''.rmquote <number> -- removes a given quote from the database. Can only be done by the owner of the bot.'''
-    if not input.admin: return
+    if not admin(code, input): return
+    if empty(code, input): return
     text = input.group(2)
     number = int()
     try:
@@ -87,7 +87,7 @@ def delquote(code, input):
     code.reply(code.color('green','Successfully deleted quote %s.' % (number)))
 delquote.commands = ['rmquote', 'delquote','deletequote','removequote']
 delquote.priority = 'low'
-delquote.example = '.rmquote'
+delquote.example = 'rmquote 2'
 delquote.rate = 30
 
 
