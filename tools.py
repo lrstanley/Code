@@ -31,6 +31,9 @@ def empty(code, input, response=None):
     else:
         return False
 
+def error(code):
+    code.say('Incorrect usage! Try: "%s"' % code.bold(code.color('purple', '%shelp <command>' % code.prefix)))
+
 def admin(code, input, response=None):
     if not response:
         response = 'You are not authorized to use this command!'

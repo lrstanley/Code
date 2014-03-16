@@ -8,38 +8,22 @@ http://code.liamstanley.io/
 
 import re
 from urllib import urlopen
-import string
 from tools import *
 
 def isup(code,input):
-    """isup <url> - Is it down for everyone, or just me?"""
+    """isup <url> - Is it down for everyone, or just you?"""
     if empty(code, input): return
+    if len(input.group(2).split()) != 1: return error(code)
     try:
-        domain = input.group(2)
-        chars = set('~`!@$%^&*()+=[]{}|;,<>?')
-        if not domain.find('.') > -1:
-            code.say(synerr)
-            return
+        data = urlopen('http://isup.me/%s' % input.group(2)).read()
+        if 'not just you' in data:
+            return code.say(code.color('red', '%s is down! It\'s not just you!' % input.group(2)))
+        elif 'It\'s just you.' in data:
+            return code.say(code.color('green', '%s is up! Must just be you!' % input.group(2)))
         else:
-            splituri = domain.split('.')
-            splitrev = splituri[::-1]
-            if len(splitrev[0]) > 4 or len(splitrev[1]) > 63 or any((c in chars) for c in domain): #<3 Tomko
-                code.say(input.nick + ': ' + code.color('red', 'You have specified an incorrect %s.') % (code.bold('URI')))
-                return
-            else:
-                pass
-        resp = urlopen('http://www.isup.me/%s' % domain).read()
-        up = code.color('lime', 'Looks like it\'s up from here, %s just be you! %s') % (code.italic( 'must'), code.bold(':('))
-        down = code.color('red', 'Looks like it\'s down from here too! %s') % (code.bold(':O'))
-        response = '%s: %s' % (input.nick, up if re.search('It\'s just you.', resp, re.DOTALL) else down)
-        if response.find('NONE') > -1:
-            code.say(synerr)
-            return
-        else:
-            code.say(response)
+            return error(code)
     except:
-        code.say(synerr)
-
+        return error(code)
 isup.commands = ['isup', 'isdown', 'check', 'up', 'down']
 isup.example = 'isup http://google.com'
 
