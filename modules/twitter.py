@@ -71,7 +71,7 @@ def twitter(code, input):
     """twitter <link|username|tweet id> - Return twitter results for search"""
     if empty(code, input): return
 
-    arg = arg.strip()
+    arg = input.group(2).strip()
     if isinstance(arg, unicode):
         arg = arg.encode('utf-8')
 
