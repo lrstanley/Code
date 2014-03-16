@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich, andrix: https://gist.github.com/andrix/1423960
-isup.py - Code isup Module
+isup.py - Code Isup Module
 http://code.liamstanley.io/
 """
 
