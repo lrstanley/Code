@@ -8,7 +8,7 @@ http://code.liamstanley.io/
 
 import sys, re, time, traceback
 import socket, asyncore, asynchat
-import os, codecs
+import os, codecs, pprint
 
 IRC_CODES = ('251', '252', '254', '255', '265', '266', '250', '333', '353', '366', '372', '375', '376', 'QUIT', 'NICK')
 cwd = os.getcwd()
@@ -236,6 +236,8 @@ class Bot(asynchat.async_chat):
                 log_raw(data)
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip()
+            if '!test' in line.lower():
+                pprint.pprint(self.chan)
             try:
                 reg = {
                     'PRIVMSG': r'^\:(.*?)\!(.*?)\@(.*\s?) PRIVMSG (.*\s?) \:(.*?)$',
@@ -247,6 +249,8 @@ class Bot(asynchat.async_chat):
                 # :[]!uid7517@id-7517.ealing.irccloud.com NICK :Liam
 
                 if line.startswith(':'):
+                    if line[1::].split()[0] == self.nick:
+                        pass
                     code = line.split()[1]
                     #if code in ['NICK'] or code.isdigit():
                     #    print line
@@ -255,7 +259,7 @@ class Bot(asynchat.async_chat):
                         print('[NOTICE] (%s) %s' % (sender, msg))
                     if code == 'NICK':
                         nick = line[1::].split('!',1)[0]
-                        new_nick = line[1::].split(':',2)[2]
+                        new_nick = line[1::].split(':',1)[1]
                         print('[NICK] %s is now known as %s' % (nick, new_nick))
                     if code == 'PRIVMSG':
                         nick, ident, host, sender, msg = re.compile(reg['PRIVMSG']).match(line).groups()
@@ -264,6 +268,11 @@ class Bot(asynchat.async_chat):
                         if msg.startswith('\x01'):
                             msg = '(me) ' + msg.split(' ',1)[1].strip('\x01')
                         print('[%s] (%s) %s' % (sender, nick, msg))
+                        
+                        # self.chan specific
+                        if sender.startswith('#'):
+                            if not nick in self.chan[sender]:
+                                self.chan[sender][nick] = default
                     if code == 'NOTICE':
                         nick, sender, msg = re.compile(reg['NOTICE']).match(line).groups()
                         print('[NOTICE] (%s) %s' % (nick.split('!')[0], msg))
@@ -271,38 +280,123 @@ class Bot(asynchat.async_chat):
                         nick, ident, host, sender, kicked, reason = re.compile(reg['KICK']).match(line).groups()
                         print('[KICK] %s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason))
                     if code == 'MODE':
-                        nick, ident, host, args = re.compile(reg['MODE']).match(line).groups()
+                        try:
+                            nick, ident, host, args = re.compile(reg['MODE']).match(line).groups()
+                        except:
+                            return
                         print('[MODE] %s sets MODE %s' % (nick, args))
 
                     # start gathering info for every channel here
-                    # self.chan = {
-                    #     '#L': {
-                    #         'Liam': {'admin': True},
-                    #         'dober': {'admin': False}
-                    #     },
-                    #     '#CHCMATT': {
-                    #         'CHCMATT': {'admin': True},
-                    #         'Liam': {'admin': False}
-                    #     }
-                    # }
+                    # make sure to put after normal line parsing because some functions
+                    # will return
 
-                    # Note: Should use NAMES in a different function
-                    # 1. trigger on:
-                    #      - JOIN (bot) to create/wipe the self.chan dict()
-                    #         - Use NAMES, then parse the data inside a loop
-                    #      - MODE - Update users without pulling full NAME check
-                    #      - KICK/QUIT - Remove users from the list
-                    #      - NICK, to rename users in the self.chan dict()
-                    # 2. Methods:
+                    # 1. Methods:
+                    #      - code.chan - dict() keys of channels
                     #      - code.chan['#L'] - get user list
                     #      - code.chan['#L']['Liam'] - get user data
-                    #      - code.chan['#L']['Liam']['admin'] - get admin
-                    if code in ['MODE','NAMES','QUIT','JOIN','KICK','NICK']:
-                        print line
-                    # :Liam!liam@liam.ml MODE #Liam +o Code-testing
+                    #      - code.chan['#L']['Liam']['op'] - get admin
+                    default = {'normal': True, 'voiced': False, 'op': False}
 
+                    # :nova.esper.net 353 Test @ #Liam :Test asdlasdkal Testing123 @Liam
+                    # :aperture.esper.net 353 Test = #L :Test _123DMWM +vps-2
+                    if code == '353':
+                        channel, user_list = line[1::].split(':',1)
+                        channel, user_list = '#' + channel.split('#',1)[1].strip(), user_list.strip().split()
+                        if not channel in self.chan:
+                            self.chan[channel] = {}
+                        for user in user_list:
+                            if user.startswith('@'):
+                                name, normal, voiced, op = user[1::], True, True, True
+                            elif user.startswith('+'):
+                                name, normal, voiced, op = user[1::], True, True, False
+                            else:
+                                name, normal, voiced, op = user, True, False, False
+                            self.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op}
+                    
+                    if code == 'MODE':
+                        # :Liam!liam@liam.ml MODE #Liam +o Code-testing
+                        # :Liam!liam@liam.ml MODE #Liam +vv-vv Testing123 Test webuser605 webuser738
+                        data = line.split('MODE',1)[1]
+                        if len(data.split()) >= 3:
+                            channel, modes, users = data.strip().split(' ',2)
+                            users = users.split()
+                            # :Liam!liam@liam.ml MODE #Liam +vv-vv Testing123 Test webuser605 webuser738
+                            tmp = []
+
+                            def remove(old, sign):
+                                tmp = []
+                                modes = []
+                                for char in old:
+                                    modes.append(char)
+                                while sign in modes:
+                                    i = modes.index(sign)
+                                    tmp.append(i)
+                                    del modes[i]
+                                return tmp, ''.join(modes)
+
+                            if modes.startswith('+'):
+                                _plus, new_modes = remove(modes, '+')
+                                _minus, new_modes = remove(new_modes, '-')
+                            else:
+                                _minus, new_modes = remove(modes, '-')
+                                _plus, new_modes = remove(new_modes, '+')
+
+                            for index in range(len(users)):
+                                _usr = users[index]
+                                _mode = new_modes[index]
+                                _sign = ''
+                                if index in _plus:
+                                    _sign = '+'
+                                if index in _minus:
+                                    _sign = '-'
+                                tmp.append({'name': _usr, 'mode': _mode, 'sign': _sign})
+
+                            last_used = ''
+
+                            for index in range(len(tmp)):
+                                if not last_used:
+                                    last_used = tmp[index]['sign']
+                                if not tmp[index]['sign'] or len(tmp[index]['sign']) == 0:
+                                    tmp[index]['sign'] = last_used
+                                else:
+                                    last_used = tmp[index]['sign']
+
+                            names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
+                            # From above, we now have a LIST of user dicts()
+                            # {'mode': 'v', 'name': 'voiced1', 'sign': '+'}
+                            for user in tmp:
+                                if user['mode'] in names and user['sign'] in names:
+                                    mode, name, sign = names[user['mode']], user['name'], names[user['sign']]
+                                    self.chan[channel][name][mode] = sign
+                                    if mode == 'op' and sign:
+                                        self.chan[channel][name]['voiced'] = True
+
+                    if code == 'JOIN':
+                        name = line[1::].split('!',1)[0]
+                        channel = line.split('JOIN',1)[1].strip()
+                        if name != self.nick:
+                            self.chan[channel][name] = default
+                    
+                    if code == 'PART':
+                        name = line[1::].split('!',1)[0]
+                        channel = line.split('PART',1)[1].split()[0]
+                        del self.chan[channel][name]
+
+                    if code == 'QUIT':
+                        # :Liam!liam@liam.ml KICK #LIam webuser :Uhm
+                        # :R2D2Warrior!~R2D2@ip70-160-210-75.hr.hr.cox.net QUIT :Msg here
+                        name = line[1::].split('!',1)[0]
+                        for channel in self.chan:
+                            if name in channel:
+                                del self.chan[channel][name]
+
+                    # :Liam!liam@liam.ml KICK #L Test :Test
+                    if code == 'KICK':
+                        tmp = line.split('#',1)[1].split()
+                        channel, name = '#' + tmp[0], tmp[1]
+                        del self.chan[channel][name]
             except:
-                pass
+               pass
 
     def stripcolors(self, data):
         """STRIP ALL ZE COLORS! Note: the replacement method is CRUCIAL to keep from

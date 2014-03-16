@@ -43,6 +43,10 @@ def admin(code, input, response=None):
     else:
         return True
 
+def notauthed(code):
+    response = 'You are not authorized to use this command!'
+    code.say(code.bold(code.color('red', response)))
+
 def owner(code, input, response=None):
     if not response:
         response = 'You are not authorized to use this command!'
