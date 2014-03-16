@@ -71,6 +71,7 @@ def get_title_auto(code, input):
     return code.say(' | '.join(output))
 get_title_auto.rule = ('(?iu).*%s.*' % url_re)
 get_title_auto.priority = 'high'
+get_title_auto.rate = 5
 
 
 def shorten(url):
