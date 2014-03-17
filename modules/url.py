@@ -18,7 +18,7 @@ notitle_len = 4
 title_len = 80
 nourl_len = 15
 url_len = 70
-ignored = ['git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com']
+ignored = ['git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com','ci.liamstanley.io']
 short_ignored = ['bit.ly', 'is.gd', 'goo.gl', 'links.ml']
 
 
