@@ -6,7 +6,7 @@ http://code.liamstanley.io/
 """
 
 from urllib2 import urlopen as get
-from urllib import quote as quote
+from urllib import quote
 from json import loads as jsonify
 
 uri = 'http://api.urbandictionary.com/v0/define?term=%s'
@@ -46,8 +46,8 @@ def urban(code, input):
                                 max=code.color('purple', str(max)),
                                 definition=strp(data['definition']),
                                 word=code.color('purple', data['word']),
-                                up=code.color('red', data['thumbs_up']),
-                                down=code.color('red', data['thumbs_down'])
+                                up=code.color('red', str(data['thumbs_up'])),
+                                down=code.color('red', str(data['thumbs_down']))
                             ))
             # Begin trying to get the definition
         else:
@@ -61,8 +61,8 @@ def urban(code, input):
             return code.say(msg.format(
                                 definition=strp(data['definition']),
                                 word=code.color('purple', data['word']),
-                                up=code.color('red', data['thumbs_up']),
-                                down=code.color('red', data['thumbs_down'])
+                                up=code.color('red', str(data['thumbs_up'])),
+                                down=code.color('red', str(data['thumbs_down']))
                             ))
     except:
         return code.reply(code.color('red', 'Failed to pull definition from urbandictionary.com!'))
