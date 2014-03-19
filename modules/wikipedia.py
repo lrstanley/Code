@@ -90,7 +90,7 @@ def wikipediaSearch(code, input):
         search = wikiSearch(input.group(2).strip(), wikipedia_url) # list() of results
         if not search:
             # Crap. No results for this either?
-            return code.say('No Wiki page for {purple}%s{c}!' % input.group(2.strip()))
+            return code.say('No Wiki page for {purple}%s{c}!' % input.group(2).strip())
         else:
             # Make nice sexy results, because we're sorry we couldn't find it...
             return code.say('Suggestions: {purple}%s{c}' % ', '.join(search))
