@@ -47,24 +47,24 @@ def help(code, input):
             desc = code.doc[name][0]
             while '  ' in desc:
                 desc = desc.replace('  ',' ')
-            code.say(code.color('purple','Description') + ': ' + desc)
+            code.say('{purple}Description:{c} %s' % desc)
             if code.doc[name][1]:
                 ex = code.doc[name][1]
                 while '  ' in ex:
                     ex = ex.replace('  ',' ')
-                code.say(code.color('purple','Example') + ': ' + code.prefix + ex)
+                code.say('{purple}Example:{c} %s%s' % (code.prefix, ex))
         else:
-            code.reply(code.color('red','I\'m sorry, there is no documentation for that command.'))
+            code.reply('{red}I\'m sorry, there is no documentation for that command.')
     else:
         try:
             website = code.config.website
         except: #revert to default - The Code homepage.
             website = 'http://code.liamstanley.io'
         response = (
-            'Hi, I\'m a bot. Say "%s" to me in private for a list ' +
+            'Hi, I\'m a bot. Say "{purple}%s%s{c}" to me in private for a list ' +
             'of my commands, or see %s for more general details.' +
-            ' %s is my owner.')
-        code.reply(response % (code.color('purple', '%scommands' % code.prefix),website,code.color('gold', code.config.owner)))
+            ' {red}%s{c} is my owner.')
+        code.reply(response % (code.prefix, website, code.config.owner))
 help.priority = 'medium'
 help.commands = ['help']
 help.example = 'help fml'
@@ -72,7 +72,7 @@ help.rate = 30
 
 def about(code, input):
     response = (
-       code.nick + ' was developed by Liam Stanley and many others. ' + code.nick + ' is a open-source ' + 
+       code.nick + ' was developed by Liam Stanley and many others. {b}' + code.nick + '{b} is a open-source ' + 
        'Python Modular IRC Bot, that serves as a fun, fast, and collective resource ' + 
        'for large, and small channels. More info: http://code.liamstanley.io'
     )
@@ -83,7 +83,7 @@ about.rate = 60
 
 
 def issue(code, input):
-    code.reply('Having an issue with ' + code.bold(code.nick) + '? Post a bug report here:')
+    code.reply('Having an issue with {b}' + code.nick + '{b}? Post a bug report here:')
     code.say('https://github.com/Liamraystanley/Code/issues/new')
 issue.commands = ['report','issue','bug','issues']
 issue.priority = 'low'
@@ -117,19 +117,19 @@ def stats(code, input):
     charank = sorted([(b, a) for (a, b) in channels.iteritems()], reverse=True)
 
     # most heavily used commands
-    creply = code.color('green', 'most used commands: ')
+    creply = '{green}most used commands: '
     for count, command in comrank[:10]: 
         creply += '%s (%s), ' % (command, count)
     code.say(creply.rstrip(', '))
 
     # most heavy users
-    reply = code.color('blue', 'power users: ')
+    reply = '{blue}power users: '
     for count, user in userank[:10]: 
         reply += '%s (%s), ' % (user, count)
     code.say(reply.rstrip(', '))
 
     # most heavy channels
-    chreply = code.color('purple', 'power channels: ')
+    chreply = '{purple}power channels: '
     for count, channel in charank[:3]: 
         chreply += '%s (%s), ' % (channel, count)
     code.say(chreply.rstrip(', '))

@@ -32,9 +32,9 @@ def roulette(code, input):
     """Play a little gruesome russian roulette."""
     chance = str(random.randint(1,6))
     if chance == '1':
-        response = code.color('red', code.bold('dies!')) + ' :O'
+        response = '{b}{red}dies! :O'
     else:
-        response = code.color('green', code.bold('is OK')) + ', the chamber was empty!'
+        response = '{b}{green}is OK{c}{b}, the chamber was empty!'
     if input.group(2):
         nick = input.group(2)
         if nick.lower() == 'myself' or nick.lower() == code.nick.lower() or \
@@ -71,15 +71,15 @@ def sexymeter(code, input):
             rand = str(random.randint(0,20))
         else:
             rand = str(random.randint(0,100))
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
-            code.bold(rand), code.bold(sexycomment(rand))))
+        code.say('Rating {b}%s{b} on a scale of 1-100 of sexiness. Result: {b}%s{b}. {b}%s{b}' % (nick, rand,
+                 sexycomment(rand)))
     else:
         nick = text[1]
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
         rand = str(random.randint(0,100))
         if len(nick) > 20:
-            code.say(input.nick + code.color('red', ': The syntax is .sexymeter <name>.'))
+            code.say('%s: {red}The syntax is .sexymeter <name>.' % input.nick)
             return
         if nick.lower() == code.nick.lower():
             nick = 'myself'
@@ -94,8 +94,8 @@ def sexymeter(code, input):
             rand = str(random.randint(0,20))
         else:
             nick = text[1]
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (code.bold(nick), \
-            code.bold(rand), code.bold(sexycomment(rand))))
+        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (nick, rand,
+                 sexycomment(rand)))
 sexymeter.commands = ['sm', 'sexymeter', 'um', 'uglymeter']
 sexymeter.priority = 'medium'
 sexymeter.example = 'sexymeter Code'
@@ -151,19 +151,19 @@ def magic(code, input):
                        'Without a doubt.', 'Yes, definitely.', 'You may rely on it.', \
                        'As I see it yes.', 'Most likely.', 'Outlook good.', 'Yes.', \
                        'Signs point to yes.'))
-        response = code.color('green', response)
+        response = '{green}' + response
     elif luck == '3':
         # chance: 25% - Negative/Red/Bold
         response = random.choice(('Don\'t count on it.', 'My reply is no.', \
                        'My sources say no.', 'Outlook not so good.', 'Very doubtful.'))
-        response = code.color('red', response)
+        response = '{red}' + response
     else:
         # chance 25% - Non-Committal/Yellow/Bold
         response = random.choice(('Reply hazy, try again.', 'Ask again later.', \
                        'Better not tell you now.', 'Cannot predict now.', \
                        'Concentrate and ask again.'))
-        response = code.color('yellow', response)
-    code.say('*%s shakes the Magic 8 Ball...* %s' % (code.nick, code.bold(response)))
+        response = '{yellow}' + response
+    code.say('*%s shakes the Magic 8 Ball...* {b}%s{c}{b}' % (code.nick, response))
 magic.commands = ['8ball', '8b', 'luck', 'eightball', 'magic8']
 magic.priority = 'medium'
 magic.example = '8ball will i feel better tomorrow?'
@@ -206,8 +206,8 @@ def rps(code, input):
             response = 'paper'
         else:
             response = 'rock'
-    return code.say('*Rock... Paper... Scissors!* You %s! %s had %s!' % (code.color(color, \
-          code.bold(state)), code.nick, code.bold(response)))
+    return code.say('*Rock... Paper... Scissors!* You {%s}{b}%s{b}! %s had {b}%s{b}!' % (color,
+                    state, code.nick, response))
 rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
 rps.example = 'rock'
 rps.rate = 15

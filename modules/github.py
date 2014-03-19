@@ -22,7 +22,7 @@ def github(code, input):
     if len(input.group(2).strip().split()) != 1:
         return code.say(syntax)
     
-    spacer = ' %s ' % code.color('blue','|')
+    spacer = ' {blue}|{c} '
 
     if not '/' in input.group(2):
         # Assume a single username
@@ -107,7 +107,7 @@ def version(code, input):
         code.say('  ' + commit)
         code.say('  ' + author)
         code.say('  ' + date)
-        code.say('  ' + code.bold('Source: ') + 'https://github.com/Liamraystanley/Code/')
+        code.say('  ' + '{b}Source:{b} https://github.com/Liamraystanley/Code/')
     except:
         code.say('%s does not use Github file management. Unable to determine version.' % code.nick)
 version.commands = ['version']

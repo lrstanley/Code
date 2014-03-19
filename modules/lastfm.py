@@ -29,7 +29,7 @@ def lastfm(code, input):
         else:
             song = re.compile(r'<title>.*?</title>').findall(data)[1]
             song = re.sub(r'\<.*?\>', '', song).strip()
-            code.reply(code.color('purple', song) + code.color('red',' (via Last.Fm)'))
+            code.reply('{purple}%s{c} {red}(via Last.Fm)' % song)
     # .lfm <username>
     elif input.group(2):
         user = input.group(2).split()[0].strip().lower()
@@ -39,7 +39,7 @@ def lastfm(code, input):
         else:
             song = re.compile(r'<title>.*?</title>').findall(data)[1]
             song = re.sub(r'\<.*?\>', '', song).strip()
-            code.reply(code.color('purple', song) + code.color('red',' (via Last.Fm)'))
+            code.reply('{purple}%s{c} {red}(via Last.Fm)' % song)
 lastfm.commands = ['lastfm', 'lfm']
 lastfm.example = 'lfm liamraystanley'
 lastfm.rate = 10

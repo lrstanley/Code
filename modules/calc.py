@@ -43,9 +43,9 @@ def py(code, input):
               # Channel command issues/security holes
               code.reply(answer)
          else:
-              code.reply('Sorry, no %s' % code.bold('result'))
+              code.reply('Sorry, no {b}%s{b}')
     except Exception, e:
-         code.reply(code.color('red', 'The server did not return an answer.'))
+         code.reply('{red}The server did not return an answer.')
          print '[.py]', e
 py.commands = ['py', 'python']
 py.example = 'py print(int(1.0) + int(3))'

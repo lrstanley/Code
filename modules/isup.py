@@ -16,9 +16,9 @@ def isup(code,input):
     try:
         data = urlopen('http://isup.me/%s' % input.group(2)).read()
         if 'not just you' in data:
-            return code.say(code.color('red', '%s is down! It\'s not just you!' % input.group(2)))
+            return code.say('{red}%s is down! It\'s not just you!' % input.group(2))
         elif 'It\'s just you.' in data:
-            return code.say(code.color('green', '%s is up! Must just be you!' % input.group(2)))
+            return code.say('{green}%s is up! Must just be you!' % input.group(2))
         else:
             return error(code)
     except:

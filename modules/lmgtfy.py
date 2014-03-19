@@ -9,19 +9,15 @@ import re
 from modules.url import shorten
 from tools import *
 
-def lmgtfy(code, input): #needs more work for utf-8 encoding. but, meh.
+def lmgtfy(code, input):
     """Let my Google That For You"""
     if empty(code, input): return
     lmgtfy = input.group(2)
-    lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy)
-    lmgtfy = lmgtfy.replace(".", " ")
-    lmgtfy = lmgtfy.replace(" ", "+")
+    lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy).replace(".", " ").replace(" ", "+")
     while lmgtfy.find('++') > -1:
-        lmgtfy = lmgtfy.replace("++", "+")
-        lmgtfy = lmgtfy.strip("+")
+        lmgtfy = lmgtfy.replace("++", "+").strip("+")
     while lmgtfy.find(' ') > -1:
-        lmgtfy = lmgtfy.replace(" ", "")
-        lmgtfy = lmgtfy.strip(" ")
+        lmgtfy = lmgtfy.replace(" ", "").strip(" ")
     lmgtfyurl = "http://lmgtfy.com/?q=" + lmgtfy
     code.say(input.nick + ": " + shorten(lmgtfyurl))
 lmgtfy.commands = ['lmgtfy']

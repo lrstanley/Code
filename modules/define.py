@@ -76,10 +76,10 @@ def w(code, input):
    word = input.group(2).lower()
    etymology, definitions = wiktionary(word)
    if not definitions: 
-      code.say(code.color('red', 'Couldn\'t get any definitions for %s.' % code.bold(word)))
+      code.say('{red}Couldn\'t get any definitions for {b}%s{b}.' % word)
       return
 
-   result = format(code.color('purple', code.bold(word)), definitions)
+   result = format('{purple}{b}' + word + '{c}{b}', definitions)
    if len(result) < 150: 
       result = format(word, definitions, 3)
 #   if len(result) < 150: 

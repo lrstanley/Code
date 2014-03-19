@@ -26,9 +26,9 @@ def ip(code, input):
         ['longitude', 'Long']
     ]
     doc = {
-               'invalid': code.color('red', 'Invalid input: \'.whois [ip|hostname]\''),
-               'error': code.color('red', 'Couldn\'t receive information for %s'),
-               'na': code.color('red', 'N/A')
+               'invalid': '{red}Invalid input: \'.whois [ip|hostname]\'{c}'),
+               'error': '{red}Couldn\'t receive information for %s{c}'),
+               'na': '{red}N/A{c}')
     }
     if not input.group(2):
         host = code.host.strip()
@@ -54,9 +54,9 @@ def ip(code, input):
     # Make list of things to respond with
     for option in show:
         if len(str(data[option[0]])) < 1 or data[option[0]] == host:
-            output.append('%s: %s' % (code.color('blue', option[1]), doc['na']))
+            output.append('{blue}%s{c}: %s' % (option[1], doc['na']))
             continue
-        output.append('%s: %s' % (code.color('blue', option[1]), data[option[0]]))
+        output.append('{blue}%s{c}: %s' % (option[1], data[option[0]]))
     return code.say(' \x02|\x02 '.join(output))
 ip.commands = ['ip', 'host', 'whois', 'geo', 'geoip']
 ip.example = ".whois 8.8.8.8"
@@ -87,7 +87,7 @@ def geoip(code, input):
                 if val in r and len(val) > 1: output.append(r[val])
             if not r['city']: rough = ' (estimated)'
             else: rough = ''
-            return code.msg(channel, code.color('green', 'User is connecting from %s%s' % (', '.join(output), rough)))
+            return code.msg(channel, '{green}User is connecting from %s%s' % (', '.join(output), rough))
         except:
             return
     else:

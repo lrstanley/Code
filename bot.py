@@ -198,7 +198,6 @@ class Code(irc.Bot):
                 s.group = match.group
                 s.groups = match.groups
                 s.args = args
-                s.textstyles = self.config.textstyles
                 s.data = {}
                 global modules
                 s.modules = modules

@@ -17,10 +17,7 @@ def chuck(code, input):
     except:
         return code.say('Chuck seems to be in the way. I\'m not fucking with him.')
     data = json.loads(r)
-    code.say('#%s - %s' % (
-                           code.color('blue',data['value']['id']),
-                           h.unescape(data['value']['joke'])
-                           ))
+    code.say('#{blue}%s{c} - %s' % (data['value']['id'], h.unescape(data['value']['joke'])))
 chuck.commands = ['chuck','norris','cn','chucknorris']
 chuck.rate = 10
 

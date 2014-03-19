@@ -21,7 +21,7 @@ def seen(code, input):
       channel, t = code.seen[nick]
       t = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime(t))
 
-      msg = "I last saw %s at %s on %s" % (code.color('blue', nick), code.bold(t), code.bold(channel))
+      msg = "I last saw {blue}%s{c} at {b}%s{b} on {b}%s{b}" % (nick, t, channel)
       code.reply(msg)
    else: code.reply('Sorry, I haven\'t seen %s around.' % code.color('blue', nick))
 seen.rule = (['seen'], r'(?i)(\S+)')

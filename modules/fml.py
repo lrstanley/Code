@@ -23,14 +23,14 @@ def fml(code, input):
     if not input.group(2):
         try:
             r = fml_random()
-            code.say('#%s %s +%s/-%s' % (code.color('blue', str(r['fml-id'])), h.unescape(r['fml']).replace('FML', \
-                                         code.color('red','FML')),code.bold(r['+']),code.bold(r['-'])))
-        except: return code.say('Failed to retrieve random FML.')
+            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
+                     h.unescape(r['fml']).replace('FML','{red}FML{c}'),r['+'],r['-']))
+        except: return code.say('{red}Failed to retrieve random FML.')
     elif input.group(2).startswith('#') and input.group(2).lstrip('#').isdigit():
         try:
             r = fml_id_search(input.group(2).lstrip('#'))
-            code.say('#%s %s +%s/-%s' % (code.color('blue', str(r['fml-id'])), h.unescape(r['fml']).replace('FML', \
-                                         code.color('red','FML')),code.bold(r['+']),code.bold(r['-'])))
+            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
+                     h.unescape(r['fml']).replace('FML', '{red}FML{c}'),r['+'],r['-']))
         except: return code.say('Failed to retrieve FML via ID.')
     # Input/Assume search query, with (possible) number at end indicating FML index
     else:
@@ -48,9 +48,8 @@ def fml(code, input):
             query = msg.replace(' ', '+')
         try: 
             r = fml_search(query, id)
-            code.say('(%s/%s) #%s %s +%s/-%s' % (r['id'],r['max'],code.color('blue', str(r['fml-id'])), \
-                     h.unescape(r['fml']).replace('FML',code.color('red','FML')),code.bold(r['+']), \
-                     code.bold(r['-'])))
+            code.say('(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (r['id'],r['max'],str(r['fml-id']), \
+                     h.unescape(r['fml']).replace('FML','{red}FML{c}'),r['+'],r['-']))
         except: return code.say('Failed to search for FML.')
 fml.commands = ['fml', 'fmylife']
 fml.example = 'fml #12390101'
@@ -91,7 +90,7 @@ def fml_search(query, id): #ID is index of search query
     fml = re.compile(r'<text>.*?</text>').findall(r)
     fmlid = re.compile(r'<item id=".*?">').findall(r)
     count = len(fml)
-    if count == 0: return code.say('The definition for "%s" wasn\'t found.' % (code.color('purple', ' '.join(parts))))
+    if count == 0: return code.say('The definition for "{purple}%s{c}" wasn\'t found.' % ' '.join(parts))
     if id > count: id = count
     # Who agrees
     agree = re.compile(r'<agree>.*?</agree>').findall(r)

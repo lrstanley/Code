@@ -73,6 +73,18 @@ class Bot(asynchat.async_chat):
         self.logchan_pm = logchan_pm
         self.logging = logging
         self.chan = {}
+        self.special_chars = {
+            'white': '\x0300', 'black': '\x0301', 'blue': '\x0302', 'navy': '\x0302',
+            'green': '\x0303', 'red': '\x0304', 'brown': '\x0305', 'maroon': '\x0305',
+            'purple': '\x0306', 'orange': '\x0307', 'olive': '\x0307', 'gold': '\x0307',
+            'yellow': '\x0308', 'lightgreen': '\x0309', 'lime': '\x0309', 'teal': '\x0310',
+            'cyan': '\x0311', 'lightblue': '\x0312', 'royal': '\x0312', 'lightpurple': '\x0313',
+            'pink': '\x0313', 'fuchsia': '\x0313', 'grey': '\x0314', 'lightgrey': '\x0315',
+            'silver': '\x0315',
+            # Even more special...
+            'bold': '\x02', 'b': '\x02', 'italic': '\x16', 'underline': '\x1f', 'reset': '\x0f',
+            'r': '\x0f', 'clear': '\x03', 'c': '\x03'
+        }
 
         import threading
         self.sending = threading.RLock()
@@ -80,46 +92,43 @@ class Bot(asynchat.async_chat):
     #def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
-    # text styling support
-    #Bold            = \x02
-    #Color           = \x03
-    #Reset           = \x0f
-    #Underline       = \x1f
-    #Italicized      = \x16
+    def format(self, message, legacy=None):
+        '''formatting to support color/bold/italic/etc assignment in Codes responses'''
+        if not hasattr(self.config, 'textstyles'):
+            return message
+        if not self.config.textstyles:
+            return message
+        if legacy:
+            message = '{%s}%s{%s}' % (legacy, message, legacy)
+        find_char = re.compile(r'{.*?}')
+        charlist = find_char.findall(message)
+        try:
+            message = unicode(message)
+
+            for formatted_char in charlist:
+                char = formatted_char[1:-1]
+                if char.startswith('/'):
+                    char = char[1::] # Assume closing {/char}
+                if char in self.special_chars:
+                    message = message.replace(formatted_char, self.special_chars[char],1)
+            return message
+        except:
+            for custom in charlist:
+                message = message.replace(custom,'',1)
+            return message
+
 
     def color(self, color, message):
-        '''color forground/background encoding IRC messages, if false
-           in config, returns clean.'''
-        if not self.config.textstyles: return message
-        colors = {'white': '00', 'black': '01', 'blue': '02', 'navy': '02',
-          'green': '03', 'red': '04', 'brown': '05', 'maroon': '05',
-          'purple': '06', 'orange': '07', 'olive': '07', 'gold': '07',
-          'yellow': '08', 'lightgreen': '09', 'lime': '09', 'teal': '10',
-          'cyan': '11', 'lightblue': '12', 'royal': '12', 'lightpurple': '13',
-          'pink': '13', 'fuchsia': '13', 'grey': '14', 'lightgrey': '0', 'silver': '0'}
-        color = color.lower()
-        message = message
-        if '/' in color:
-            color = color.split('/')
-            message = '\x03' + colors[color[0]] + ',' + colors[color[1]] + message + '\x03'
-        else: 
-            message = '\x03' + colors[color] + message + '\x03'
-        return message
+        return self.format(message, color)
 
     def bold(self, message):
-        '''bold encoding IRC messages, if false in config, returns clean'''
-        if not self.config.textstyles: return message
-        return ('\x02' + message + '\x02')
+        return self.format(message, 'bold')
             
     def italic(self, message):
-        '''italicize encoding IRC messages, if false in config, returns clean'''
-        if not self.config.textstyles: return message
-        return ('\x16' + message + '\x16')
+        return self.format(message, 'italic')
 
     def underline(self, message):
-        '''underlined encoding IRC messages, if false in config, returns clean'''
-        if not self.config.textstyles: return message
-        return ('\x1f' + message + '\x1f')
+        return self.format(message, 'underline')
 
     def quit(self, message=None):
         '''Disconnect from IRC and close the bot'''
@@ -236,8 +245,6 @@ class Bot(asynchat.async_chat):
                 log_raw(data)
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip()
-            if '!test' in line.lower():
-                pprint.pprint(self.chan)
             try:
                 reg = {
                     'PRIVMSG': r'^\:(.*?)\!(.*?)\@(.*\s?) PRIVMSG (.*\s?) \:(.*?)$',
@@ -443,6 +450,7 @@ class Bot(asynchat.async_chat):
 
     def msg(self, recipient, text, log=False, x=False):
         self.sending.acquire()
+        text = self.format(text)
 
         if isinstance(text, unicode):
             try: text = text.encode('utf-8')

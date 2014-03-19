@@ -32,7 +32,7 @@ def movie_search(code, input):
         response = build_response(data)
         output = []
         for section in response:
-            output.append('%s: %s' % (code.color('blue',section[0]), section[1]))
+            output.append('{blue}%s{c}: %s' % (section[0], section[1]))
         return code.say(' | '.join(output))
     except:
         return code.reply(error)
@@ -59,7 +59,7 @@ def movie(code, input):
         response = build_response(data)
         output = []
         for section in response:
-            output.append('%s: %s' % (code.color('blue', section[0]), section[1]))
+            output.append('{blue}%s{c}: %s' % (section[0], section[1]))
         return code.say(' | '.join(output))
     except:
         return

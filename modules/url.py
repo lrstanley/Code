@@ -67,7 +67,7 @@ def get_title_auto(code, input):
         # Lets get some data!
         data = get_url_data(url)
         if data:
-            output.append('%s - %s' % (code.color('blue', code.bold(data)), shorten(url)))
+            output.append('{blue}{b}%s{b}{c} - %s' % (data, shorten(url)))
     return code.say(' | '.join(output))
 get_title_auto.rule = ('(?iu).*%s.*' % url_re)
 get_title_auto.priority = 'high'

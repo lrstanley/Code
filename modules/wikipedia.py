@@ -72,11 +72,11 @@ def wikipedia(code, input):
                 return code.say('No Wiki page for %s! (Try \'.wsearch\')' % input.group(2).strip())
             else:
                 # Make nice sexy results, because we're sorry we couldn't find it...
-                return code.say('Unable to find results. Try: %s' % code.color('purple', ', '.join(search)))
+                return code.say('Unable to find results. Try: {purple}%s{c}' % ', '.join(search))
         else:
             # Working, print out a nice clean definition.
             print repr(data[1])
-            return code.say('%s: %s' % (code.color('purple', data[0]), data[1]))
+            return code.say('{purple}%s{c}: %s' % (data[0], data[1]))
     except:
         return code.say('Failed to get the definition!')
 wikipedia.commands = ['wiki', 'w']
@@ -90,12 +90,12 @@ def wikipediaSearch(code, input):
         search = wikiSearch(input.group(2).strip(), wikipedia_url) # list() of results
         if not search:
             # Crap. No results for this either?
-            return code.say('No Wiki page for %s!' % code.color('purple', input.group(2).strip()))
+            return code.say('No Wiki page for {purple}%s{c}!' % input.group(2.strip()))
         else:
             # Make nice sexy results, because we're sorry we couldn't find it...
-            return code.say('Suggestions: %s' % code.color('purple', ', '.join(search)))
+            return code.say('Suggestions: {purple}%s{c}' % ', '.join(search))
     except:
-        return code.say(code.color('red', 'No suggestions found!'))
+        return code.say('{red}No suggestions found!')
 wikipediaSearch.commands = ['wdefine', 'wsearch','wikisearch','swiki']
 wikipediaSearch.example = 'wsearch yellow'
 

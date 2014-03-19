@@ -24,21 +24,21 @@ random.seed()
 
 def off(code, input):
     if input.nick == code.config.owner:
-        code.reply(code.bold(code.color('red', 'Feature has been disabled.')))
+        code.reply('{b}{red}Feature has been disabled.')
         global aistate
         aistate = False
     else:
-        code.reply(code.bold(code.color('red', 'You are not authorized to disable this feature.')))
+        code.reply('{b}{red}You are not authorized to disable this feature.')
 off.commands = ['off']
 off.priority = 'high'
 
 def on(code, input):
     if input.nick == code.config.owner:
-        code.reply(code.bold(code.color('green', 'Feature has been enabled.')))
+        code.reply('{b}{green}Feature has been enabled.')
         global aistate
         aistate = True
     else:
-        code.reply(code.bold(code.color('red', 'You are not authorized to enable this feature.')))
+        code.reply('{b}{red}You are not authorized to enable this feature.')
 on.commands = ['on']
 on.priority = 'high'
 
@@ -46,9 +46,9 @@ def state(code, input):
     """check the AI state of Code"""
     global aistate
     if aistate == True:
-        code.say(code.bold(code.color('green', 'It is on.')))
+        code.say('{b}{green}It is on.')
     else:
-        code.say(code.bold(code.color('red', 'It is off.')))
+        code.say('{b}{red}It is off.')
 state.commands = ['state', 'aistate']
 state.priority = 'high'
 
@@ -88,8 +88,7 @@ def welcomemessage(code, input):
                  similar(lastuser, input.nick) > 0.70]):
             return
         elif input.sender.lower() in greetchans:
-            code.say('%s %s, welcome to %s!' % (random.choice(greeting), input.nick, \
-                    code.bold(input.sender)))
+            code.say('%s %s, welcome to {b}%s{b}!' % (random.choice(greeting), input.nick, input.sender))
             lastuser = input.nick
             return
         else: return

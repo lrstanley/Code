@@ -45,12 +45,12 @@ def retrievequote(code, input):
             number = MAX - abs(number) + 1
     except:
         try: number = random.randint(1, MAX)
-        except: return code.reply(code.color('red','I\'m sorry, there currently aren\'t any quote in the database. Use .addquote to add one!'))
+        except: return code.reply('{red}I\'m sorry, there currently aren\'t any quote in the database. Use .addquote to add one!')
     if not (0 <= number <= MAX):
         code.reply(code.color('red','I\'m not sure which quote you would like to see.'))
     else:
         line = lines[number - 1]
-        code.reply('Quote %s of %s: ' % (code.color('blue',number), code.color('blue',MAX)) + line)
+        code.reply('Quote {blue}%s{c} of {blue}%s{c}: ' % (number, MAX) + line)
 retrievequote.commands = ['quote']
 retrievequote.priority = 'low'
 retrievequote.example = 'quote 2'
@@ -66,7 +66,7 @@ def delquote(code, input):
     try:
         fn = open('quotes.txt', 'r')
     except:
-        return code.reply(code.color('red','No quotes to delete.'))
+        return code.reply('{red}No quotes to delete.')
     lines = fn.readlines()
     MAX = len(lines)
     fn.close()
@@ -84,7 +84,7 @@ def delquote(code, input):
             if txt[-1] != '\n':
                 fn.write('\n')
     fn.close()
-    code.reply(code.color('green','Successfully deleted quote %s.' % (number)))
+    code.reply('{green}Successfully deleted quote {b}%s{b}.' % (number))
 delquote.commands = ['rmquote', 'delquote','deletequote','removequote']
 delquote.priority = 'low'
 delquote.example = 'rmquote 2'

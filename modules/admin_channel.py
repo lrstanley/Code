@@ -1,157 +1,88 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich, Alek Rollyson
 clock.py - Code Clock Module
 http://code.liamstanley.io/
 """
 
 import re
+from tools import *
 
-auth_list = []
-admins = []
-
-def op(code, input):
-    """
-    Command to op users in a room. If no nick is given,
-    Code will op the nick who sent the command
-    """
-    if not input.admin or not input.sender.startswith('#'):
-        return
+def check_normal(code, input):
+    """Globalized fail checklist"""
+    if not input.sender.startswith('#'):
+        return {'success': False}
     nick = input.group(2)
-    verify = auth_check(code, input.nick, nick)
-    if verify:
-        channel = input.sender
-        if not nick:
-            nick = input.nick
-        code.write(['MODE', channel, "+o", nick])
-op.rule = (['op'], r'(\S+)?')
-op.priority = 'low'
-
-def deop(code, input):
-    """
-    Command to deop users in a room. If no nick is given,
-    Code will deop the nick who sent the command
-    """
-    if not input.admin or not input.sender.startswith('#'):
-        return
-    nick = input.group(2)
-    verify = auth_check(code, input.nick, nick)
-    if verify:
-        channel = input.sender
-        if not nick:
-            nick = input.nick
-        code.write(['MODE', channel, "-o", nick])
-deop.rule = (['deop'], r'(\S+)?')
-deop.priority = 'low'
-
-def voice(code, input):
-    """
-    Command to voice users in a room. If no nick is given,
-    Code will voice the nick who sent the command
-    """
-    if not input.admin or not input.sender.startswith('#'):
-        return
-    nick = input.group(2)
-    verify = auth_check(code, input.nick, nick)
-    if verify:
-        channel = input.sender
-        if not nick:
-            nick = input.nick
-        code.write(['MODE', channel, "+v", nick])
-voice.rule = (['voice'], r'(\S+)?')
-voice.priority = 'low'
-
-def devoice(code, input):
-    """
-    Command to devoice users in a room. If no nick is given,
-    Code will devoice the nick who sent the command
-    """
-    if not input.admin or not input.sender.startswith('#'):
-        return
-    nick = input.group(2)
-    verify = auth_check(code, input.nick, nick)
-    if verify:
-        channel = input.sender
-        if not nick:
-            nick = input.nick
-        code.write(['MODE', channel, "-v", nick])
-devoice.rule = (['devoice'], r'(\S+)?')
-devoice.priority = 'low'
-
-def auth_request(code, input):
-    """
-    This will scan every message in a room for nicks in Code's
-    admin list.  If one is found, it will send an ACC request
-    to NickServ.  May only work with Freenode.
-    """
-    admins = code.config.admins
-    pattern = '(' + '|'.join([re.escape(x) for x in admins]) + ')'
-    matches = re.findall(pattern, input)
-    for x in matches:
-        code.msg('NickServ', 'ACC ' + x)
-auth_request.rule = r'.*'
-auth_request.priority = 'high'
-
-def auth_verify(code, input):
-    """
-    This will wait for notices from NickServ and scan for ACC
-    responses.  This verifies with NickServ that nicks in the room
-    are identified with NickServ so that they cannot be spoofed.
-    May only work with freenode.
-    """
-    global auth_list
-    nick = input.group(1)
-    level = input.group(3)
-    if input.nick != 'NickServ':
-        return
-    elif level == '3':
-        if nick in auth_list:
-            return
-        else:
-            auth_list.append(nick)
+    verify = auth_check(code, input.sender, input.nick, nick)
+    if not verify:
+        notauthed(code)
+        return {'success': False}
+    if input.group(2):
+        nick = input.group(2)
     else:
-        if nick not in auth_list:
-            return
-        else:
-            auth_list.remove(nick)
-auth_verify.event = 'NOTICE'
-auth_verify.rule = r'(\S+) (ACC) ([0-3])'
-auth_verify.priority = 'high'
+        nick = input.nick
+    return {'success': True, 'nick': nick}
 
-def auth_check(code, nick, target=None):
+def auth_check(code, channel, nick, target=None):
     """
     Checks if nick is on the auth list and returns true if so
     """
-    global auth_list
-    if target == code.config.nick:
+    if target == code.nick:
         return 0
-    elif nick in auth_list:
+    if code.chan[channel][nick]['op']:
         return 1
+    return 0
 
-def deauth(nick):
-    """
-    Remove people from the deauth list.
-    """
-    global auth_list
-    if nick in auth_list:
-        a = auth_list.index(nick)
-        del(auth_list[a])
+def configureHostMask (mask):
+    if mask == '*!*@*': return mask
+    if re.match('^[^.@!/]+$', mask) is not None: return '%s!*@*' % mask
+    if re.match('^[^@!]+$', mask) is not None: return '*!*@%s' % mask
 
-def deauth_quit(code, input):
-    deauth(input.nick)
-deauth_quit.event = 'QUIT'
-deauth_quit.rule = '.*'
+    m = re.match('^([^!@]+)@$', mask)
+    if m is not None: return '*!%s@*' % m.group(1)
 
-def deauth_part(code, input):
-    deauth(input.nick)
-deauth_part.event = 'PART'
-deauth_part.rule = '.*'
+    m = re.match('^([^!@]+)@([^@!]+)$', mask)
+    if m is not None: return '*!%s@%s' % (m.group(1), m.group(2))
 
-def deauth_nick(code, input):
-    deauth(input.nick)
-deauth_nick.event = 'NICK'
-deauth_nick.rule = '.*'
+    m = re.match('^([^!@]+)!(^[!@]+)@?$', mask)
+    if m is not None: return '%s!%s@*' % (m.group(1), m.group(2))
+    return ''
+
+def op(code, input):
+    """op <user> - Op users in a room. If no nick is given, input user is selected."""
+    check = check_normal(code, input)
+    if not check['success']:
+        return
+    code.write(['MODE', input.sender, "+o", check['nick']])
+op.commands = ['op']
+op.priority = 'low'
+
+def deop(code, input):
+    """deop <user> - Deop users in a room. If no nick is given, input user is selected."""
+    check = check_normal(code, input)
+    if not check['success']:
+        return
+    code.write(['MODE', input.sender, "-o", check['nick']])
+deop.commands = ['deop']
+deop.priority = 'low'
+
+def voice(code, input):
+    """voice <user> - Voice users in a room. If no nick is given, input user is selected."""
+    check = check_normal(code, input)
+    if not check['success']:
+        return
+    code.write(['MODE', input.sender, "+v", check['nick']])
+voice.commands = ['voice']
+voice.priority = 'low'
+
+def devoice(code, input):
+    """devoice <user> - Devoice users in a room. If no nick is given, input user is selected."""
+    check = check_normal(code, input)
+    if not check['success']:
+        return
+    code.write(['MODE', input.sender, "-v", check['nick']])
+devoice.commands = ['devoice']
+devoice.priority = 'low'
 
 def kick(code, input):
     if not input.admin: return
@@ -172,21 +103,6 @@ def kick(code, input):
         code.write(['KICK', channel, nick, reason])
 kick.commands = ['kick']
 kick.priority = 'high'
-
-def configureHostMask (mask):
-    if mask == '*!*@*': return mask
-    if re.match('^[^.@!/]+$', mask) is not None: return '%s!*@*' % mask
-    if re.match('^[^@!]+$', mask) is not None: return '*!*@%s' % mask
-
-    m = re.match('^([^!@]+)@$', mask)
-    if m is not None: return '*!%s@*' % m.group(1)
-
-    m = re.match('^([^!@]+)@([^@!]+)$', mask)
-    if m is not None: return '*!%s@%s' % (m.group(1), m.group(2))
-
-    m = re.match('^([^!@]+)!(^[!@]+)@?$', mask)
-    if m is not None: return '%s!%s@*' % (m.group(1), m.group(2))
-    return ''
 
 def ban(code, input):
     """

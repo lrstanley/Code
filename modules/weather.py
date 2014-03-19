@@ -35,53 +35,48 @@ def weather(code,input):
     # Here, we check if it's an actual area, if the geo returns the lat/long then it is..
     name, country, lat, lng = location(input.group(2))
     if not name or not country or not lat or not lng:
-        return code.reply('Incorrect location. Please try again!')
+        return code.reply('{red}{b}Incorrect location. Please try again!')
     try:
         data = json.loads(urllib2.urlopen(api_uri % (api_key,lat,lng)).read())['currently']
     except:
-        return code.reply('Incorrect location. Please try again!')
+        return code.reply('{red}{b}Incorrect location. Please try again!')
     output = []
-    output.append(code.bold('%s, %s' % (code.color('blue',name), country)))
-    # "currently":{"time":1384216660,"summary":"Partly Cloudy","icon":"partly-cloudy-night",
-    #"precipIntensity":0,"precipProbability":0,"precipType":"snow","temperature":28.49,
-    #"apparentTemperature":20.45,"dewPoint":22.12,"humidity":0.77,"windSpeed":8.19,"windBearing":326,
-    #"visibility":8.58,"cloudCover":0.5,"pressure":1017.56,"ozone":314.62}
+    output.append('{b}{blue}%s{b}{c} - {b}{blue}%s{b}{c}' % (name, country))
     degree = u'\u00B0'
     if 'summary' in data:
-        output.append(data['summary'])
+        output.append('{b}{blue}' + data['summary'] + '{b}{c}')
     if 'temperature' in data:
         if data['temperature'] == data['apparentTemperature']:
             # Feels like is the same, don't use both of them
-            output.append('%s%s' % (code.color('blue',data['temperature']),degree))
+            output.append('{b}{blue}%s%s{b}{c}' % (data['temperature'],degree))
         else:
-            output.append('%s%s (%s%s)' % (code.color('blue',data['temperature']),degree,
-                                                   code.color('blue',data['apparentTemperature']),degree))
+            output.append('{b}{blue}%s%s{b}{c} ({b}{blue}%s%s{b}{c})' % (data['temperature'], degree,
+                                           data['apparentTemperature'], degree))
     if 'precipIntensity' in data and 'precipType' in data and 'precipIntensity' in data:
         # Nothing happening
         if data['precipIntensity'] == 0 and 'precipProbability' in data:
             # If probability above 0%
             if data['precipProbability'] != '0':
-                output.append('%s\% chance of %s' % (code.color('blue',data['precipProbability']),
-                                                    code.color('blue',data['precipType'])))
+                output.append('{b}{blue}%s\%{b}{blue} chance of {b}{blue}%s{b}{c}' % (data['precipProbability'],
+                                                    data['precipType']))
         # Pricipitation
         else:
-            output.append('%s of %s' % (code.color('blue',data['precipType']),
-                                        code.color('blue',data['precipIntensity'])))
+            output.append('{b}{blue}%s{b}{c} of {b}{blue}%s{b}{c}' % (data['precipType'],data['precipIntensity']))
     if 'dewPoint' in data:
-        output.append('Dew: %s%s' % (code.color('blue',data['dewPoint']),degree))
+        output.append('{b}{blue}Dew:{b}{c} %s%s' % (data['dewPoint'],degree))
     if 'humidity' in data:
-        output.append('Humidity: %s' % code.color('blue',data['humidity']))
+        output.append('{b}{blue}Humidity:{b}{c} %s' % data['humidity'])
     if 'windSpeed' in data:
-        output.append('Wind speed: %smph (Bearing %s%s)' % (code.color('blue',data['windSpeed']),
-                                                      code.color('blue',data['windBearing']),degree))
+        output.append('{b}{blue}Wind speed:{b}{c} %smph ({b}{blue}Bearing %s%s{b}{c})' % (data['windSpeed'],
+                                                      data['windBearing'],degree))
     if 'visibility' in data:
-        output.append('Visibility %s' % code.color('blue',data['visibility']))
+        output.append('{b}{blue}Visibility{b}{c} %s' % data['visibility'])
     if 'cloudCover' in data:
-        output.append('Cloud cover: %s' % code.color('blue',data['cloudCover']))
+        output.append('{b}{blue}Cloud cover:{b}{c} %s' % data['cloudCover'])
     if 'pressure' in data:
-        output.append('Pressure %s' % code.color('blue',data['pressure']))
+        output.append('{b}{blue}Pressure{b}{c} %s' % data['pressure'])
     if 'ozone' in data:
-        output.append('Ozone level: %s' % code.color('blue',data['ozone']))
+        output.append('{b}{blue}Ozone level:{b}{c} %s' % data['ozone'])
     code.say(' | '.join(output))
 weather.commands = ['weather']
 weather.example = 'weather Eaton Rapids, Michigan'
@@ -89,7 +84,7 @@ weather.example = 'weather Eaton Rapids, Michigan'
 def fw(code, input):
     """fw (ZIP|City, State) -- provide a ZIP code or a city state pair to hear about the fucking weather"""
     if not input.group(2):
-        return code.reply(code.bold('INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.'))
+        return code.reply('{red}{b}INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.')
     try:
         text = urllib.quote(input.group(2))
         data = urllib2.urlopen('http://thefuckingweather.com/?where=%s' % text).read()
@@ -99,9 +94,9 @@ def fw(code, input):
         remark = re.sub(r'\<.*?\>', '', remark).strip()
         flavor = re.compile(r'<p class="flavor">.*?</p>').findall(data)[0]
         flavor = re.sub(r'\<.*?\>', '', flavor).strip()
-        return code.reply(h.unescape(temp) +' '+ code.color('red',code.bold(remark)) +'. '+ flavor)
+        return code.reply(h.unescape(temp) +' '+ remark +'. '+ flavor)
     except:
-        return code.reply(code.color('red', code.bold('I CAN\'T FIND THAT SHIT.')))
+        return code.reply('{red}{b}I CAN\'T FIND THAT SHIT.')
 fw.commands = ['fuckingweather', 'fw']
 fw.example = 'fw 48827'
 fw.priority = 'low'

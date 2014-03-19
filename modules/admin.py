@@ -11,6 +11,7 @@ from tools import *
 
 defaultnick = None
 
+
 def listmods(code, input):
     '''Send a list of the loaded modules ot the user.'''
     if not admin(code, input): return
@@ -105,7 +106,7 @@ def announce(code, input):
     if empty(code, input): return
     print code.channels
     for channel in code.channels:
-        code.msg(channel, code.color('purple', code.bold('[ANNOUNCMENT] ')) + input.group(2))
+        code.msg(channel, '{b}{purple}[ANNOUNCMENT] %s' % input.group(2))
 announce.commands = ['announce', 'broadcast']
 announce.example = 'announce Some important message here'
 
@@ -222,12 +223,12 @@ def write_raw(code, input):
     '''Send a raw command to the server. WARNING THIS IS DANGEROUS! Owner-only.'''
     if not owner(code, input): return
     if empty(code, input): return
-    secure = 'That seems like an insecure message. Nope!'
+    secure = '{red}That seems like an insecure message. Nope!'
     r = input.group(2).encode('ascii', 'ignore')
     bad = ['ns', 'nickserv', 'chanserv', 'cs', 'q', 'authserv', 'botserv', 'operserv']
     for bot in bad:
         if (' %s ' % bot) in r.lower():
-            return code.reply(code.color('red', secure))
+            return code.reply(secure)
     try:
         args, text = r.split(':')
         args, text = args.strip().split(), text.strip()

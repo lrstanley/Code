@@ -24,7 +24,7 @@ def deprecated(old):
 
 def empty(code, input, response=None):
     if not response:
-        response = 'No arguments supplied! Try: "%s"' % code.bold(code.color('purple', '%shelp <command>' % code.prefix))
+        response = 'No arguments supplied! Try: "{b}{purple}%shelp <command>{b}{r}"' % code.prefix
     if not input.group(2):
         code.say(response)
         return True
@@ -32,30 +32,32 @@ def empty(code, input, response=None):
         return False
 
 def error(code):
-    code.say('Incorrect usage! Try: "%s"' % code.bold(code.color('purple', '%shelp <command>' % code.prefix)))
+    code.say('Incorrect usage! Try: "{b}{purple}%shelp <command>{b}{r}"' % code.prefix)
 
 def admin(code, input, response=None):
     if not response:
-        response = 'You are not authorized to use this command!'
+        response = '{b}{red}You are not authorized to use this command!'
     if not input.admin:
-        code.say(code.bold(code.color('red', response)))
+        code.say(response)
         return False
     else:
         return True
 
 def notauthed(code):
-    response = 'You are not authorized to use this command!'
-    code.say(code.bold(code.color('red', response)))
+    response = '{b}{red}You are not authorized to use this command!'
+    code.say(response)
 
 def owner(code, input, response=None):
     if not response:
-        response = 'You are not authorized to use this command!'
+        response = '{b}{red}You are not authorized to use this command!'
     if not input.owner:
-        code.say(code.bold(code.color('red', response)))
+        code.say(response)
         return False
     else:
         return True
 
+
+# Ignore these. Still under testing.
 
 # def hook(*args):
 #     def add_attribute(function):

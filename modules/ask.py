@@ -72,7 +72,7 @@ def rand(code, input):
 
         # Now respond
         number = str(random.randint(small,big))
-        return code.reply('Your random integer is: %s' % code.color('red',number))
+        return code.reply('Your random integer is: {red}%s' % number)
     except:
         return code.reply(syntax)
 rand.commands = ['rand']

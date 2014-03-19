@@ -67,7 +67,7 @@ def g(code, input):
             code.bot.last_seen_uri = {}
         code.bot.last_seen_uri[input.sender] = uri
     elif uri is False: code.reply("Problem getting data from Google.")
-    else: code.reply("No results found for '%s'." % code.color('purple',query))
+    else: code.reply("No results found for '{purple}%s{c}'." % query)
 g.commands = ['g', 'search', 'google']
 g.priority = 'high'
 g.example = 'g swhack'
@@ -131,7 +131,7 @@ def bing(code, input):
         if not hasattr(code.bot, 'last_seen_uri'):
             code.bot.last_seen_uri = {}
         code.bot.last_seen_uri[input.sender] = uri
-    else: code.reply("No results found for '%s'." % code.bold(query))
+    else: code.reply("No results found for '{b}%s{b}'." % query)
 bing.commands = ['bing']
 bing.example = 'bing swhack'
 bing.rate = 30
@@ -193,11 +193,11 @@ def suggest(code, input):
     answer = web.get(uri + web.urllib.quote(query).replace('+', '%2B'))
     if answer:
         if answer.find('No suggestions for ') > -1:
-            answer = code.color('red', 'Sorry, no result.')
+            answer = '{red}Sorry, no result.'
             code.reply(answer)
         else:
             code.reply(answer)
-    else: code.reply(code.color('red', 'Sorry, no result.'))
+    else: code.reply('{red}Sorry, no result.')
 suggest.commands = ['suggest', 'sugg']
 suggest.example = 'suggest apples'
 suggest.rate = 30
