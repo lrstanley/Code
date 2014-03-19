@@ -26,9 +26,9 @@ def ip(code, input):
         ['longitude', 'Long']
     ]
     doc = {
-               'invalid': '{red}Invalid input: \'.whois [ip|hostname]\'{c}'),
-               'error': '{red}Couldn\'t receive information for %s{c}'),
-               'na': '{red}N/A{c}')
+               'invalid': '{red}Invalid input: \'.whois [ip|hostname]\'{c}',
+               'error': '{red}Couldn\'t receive information for %s{c}',
+               'na': '{red}N/A{c}'
     }
     if not input.group(2):
         host = code.host.strip()
