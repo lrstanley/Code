@@ -14,6 +14,7 @@ defaultnick = None
 @hook(['modules'])
 @priority('high')
 @rate(20)
+@adminonly(True)
 def listmods(code, input):
     '''Send a list of the loaded modules ot the user.'''
     if not admin(code, input): return

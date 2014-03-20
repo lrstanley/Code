@@ -59,11 +59,12 @@ def owner(code, input, response=None):
 
 # Ignore these. Still under testing.
 
-# def adminonly(args):
-#     def add_attribute(function):
-#         function.adminonly = True
-#         return function
-#     return add_attribute
+def adminonly(args):
+    def add_attribute(function):
+        if args:
+            function.admin = True
+        return function
+    return add_attribute
 
 
 def hook(*args):
@@ -72,9 +73,9 @@ def hook(*args):
         if len(args) == 2:
             commands, example = args
         else:
-            commands = args
+            commands = list(args)[0]
             example = None
-        function.commands = list(commands)
+        function.commands = commands
         if example:
             function.example = example
         return function

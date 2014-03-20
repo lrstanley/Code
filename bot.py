@@ -179,6 +179,9 @@ class Code(irc.Bot):
                     regexp = re.compile(pattern)
                     bind(self, func.priority, regexp, func)
 
+            if not hasattr(func, 'admin'):
+                func.admin = False
+
     def wrapped(self, origin, text, match):
         class CodeWrapper(object):
             def __init__(self, code):
@@ -227,6 +230,10 @@ class Code(irc.Bot):
         return CommandInput(text, origin, bytes, match, event, args)
 
     def call(self, func, origin, code, input):
+        if func.admin and not input.admin:
+            code.say('{b}{red}You are not authorized to use this command!')
+            return
+
         nick = (input.nick).lower()
         if nick in self.times:
             if func in self.times[nick]:
