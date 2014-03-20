@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 from urllib import quote as urlify
 from urllib2 import urlopen as get
 from json import loads as jsonify
+from tools import *
 
 lang = 'en'
 maxlen = '220'
