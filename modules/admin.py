@@ -15,9 +15,7 @@ defaultnick = None
 def listmods(code, input):
     '''Send a list of the loaded modules ot the user.'''
     if not admin(code, input): return
-    modules = list(set(input.modules))
-    print input.modules
-    return code.say('Modules: %s.' % ', '.join(sorted(modules)))
+    return code.say('Modules: %s.' % ', '.join(code.modules))
 listmods.commands = ['modules']
 listmods.priority = 'high'
 listmods.rate = 20

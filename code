@@ -68,9 +68,6 @@ def create_default_config(fn):
         # These are people who will be able to use admin.py's functions...
         admins = [owner, 'someoneyoutrust']
 
-        # website to show for help documentation
-        #website = 'http://code.liamstanley.io'
-
         # Enable or disable /ALMOST/ all color responses from Code
         textstyles = True
 
@@ -191,6 +188,9 @@ def main(argv=None):
                     print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
             except:
                 print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
+
+        if not hasattr(module, 'website'):
+            module.website = 'http://code.liamstanley.io'
 
         if not hasattr(module, 'prefix'):
             module.prefix = '.'

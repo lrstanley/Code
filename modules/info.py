@@ -6,19 +6,22 @@ info.py - Code Information Module
 http://code.liamstanley.io/
 """
 
+from pprint import pprint as pretty
 
 def commands(code, input):
     """Get a list of function-names (commands), that the bot has."""
     if input.group(2): return help(code, input)
-    names = ', '.join(sorted(code.doc.iterkeys()))
     if input.sender.startswith('#'):
         code.reply('I am sending you a private message of all my commands.')
     count = 0
-    cmds = []
-    commands = list(set(input.cmds))
+    commands = []
+    for module in code.doc:
+        if code.doc[module]['commands']:
+            commands.append(code.doc[module]['commands'][0])
+    commands = list(set(commands))
     full = len(commands)
     count = 0
-    tmp = []
+    tmp, cmds = [], []
     # Make a list, of lists, of lines. :)
     for i in sorted(commands):
         count += 1
@@ -26,10 +29,10 @@ def commands(code, input):
             # Assume new line!
             cmds.append(tmp)
             tmp, count = [], 0
-            tmp.append(i)
+            tmp.append(code.prefix + i)
         else:
             # Assume appending to tmp
-            tmp.append(i)
+            tmp.append(code.prefix + i)
     cmds.append(tmp)
     code.msg(input.nick, 'Commands I recognize:')
     for line in cmds:
@@ -41,27 +44,33 @@ commands.commands = ['commands','cmds']
 commands.priority = 'low'
 
 def help(code, input):
+    #pretty(code.doc)
     if input.group(2):
-        name = input.group(2)
-        if name in code.doc:
-            desc = code.doc[name][0]
-            while '  ' in desc:
-                desc = desc.replace('  ',' ')
-            code.say('{purple}Description:{c} %s' % desc)
-            if code.doc[name][1]:
-                ex = code.doc[name][1]
-                while '  ' in ex:
-                    ex = ex.replace('  ',' ')
-                code.say('{purple}Example:{c} %s%s' % (code.prefix, ex))
-        else:
-            code.reply('{red}I\'m sorry, there is no documentation for that command.')
+        mod, name = None, None
+        for module in code.doc:
+            # Assume dictionary... 
+            if input.group(2).lower() in code.doc[module]['commands'] or \
+               input.group(2).lower() == module.lower():
+                mod = code.doc[module]
+                name = module
+                break
+        if not mod:
+            return code.reply('{red}{b}There is no such command!')
+        # Start responding
+        if mod['info']:
+            if mod['commands']:
+                cmds = mod['commands']
+            else:
+                cmds = [input.group(2)]
+            for i in range(len(cmds)):
+                cmds[i] = code.prefix + cmds[i]
+            code.say('{purple}{b}Help{c} {green}(%s){c}{b}: %s' % (', '.join(cmds), mod['info']))
+        if mod['example']:
+            code.say('{purple}{b}Example{b}{c}: %s%s' % (code.prefix, mod['example']))
     else:
-        try:
-            website = code.config.website
-        except: #revert to default - The Code homepage.
-            website = 'http://code.liamstanley.io'
+        website = code.config.website
         response = (
-            'Hi, I\'m a bot. Say "{purple}%s%s{c}" to me in private for a list ' +
+            'Hi, I\'m a bot. Say "{purple}%scmds{c}" to me in private for a list ' +
             'of my commands, or see %s for more general details.' +
             ' {red}%s{c} is my owner.')
         code.reply(response % (code.prefix, website, code.config.owner))

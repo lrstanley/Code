@@ -10,8 +10,6 @@ import time, sys, os, re, threading, imp
 import irc
 
 home = os.getcwd()
-modules = []
-cmds = []
 
 def decode(bytes):
     try: text = bytes.decode('utf-8')
@@ -34,6 +32,8 @@ class Code(irc.Bot):
         self.doc = {}
         self.stats = {}
         self.times = {}
+        self.modules = []
+        self.cmds = {}
         if hasattr(config, 'excludes'):
             self.excludes = config.excludes
         self.setup()
@@ -59,10 +59,14 @@ class Code(irc.Bot):
                   if n.endswith('.py') and not n.startswith('_'): 
                      filenames.append(os.path.join(fn, n))
 
-        global modules
         # Should fix
         excluded_modules = getattr(self.config, 'exclude', [])
         filenames = sorted(list(set(filenames)))
+        # Reset some variables that way we don't get dups
+        self.modules = []
+        self.cmds = {}
+
+        # Load modules
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
             if name in excluded_modules:
@@ -77,10 +81,10 @@ class Code(irc.Bot):
                 if hasattr(module, 'setup'):
                     module.setup(self)
                 self.register(vars(module))
-                modules.append(name)
+                self.modules.append(name)
 
-        if modules:
-            print >> sys.stderr, '[INFO] Registered modules:', ', '.join(modules)
+        if self.modules:
+            print >> sys.stderr, '[INFO] Registered modules:', ', '.join(self.modules)
         else: print >> sys.stderr, "[WARNING] Couldn't find any modules"
 
         self.bind_commands()
@@ -98,12 +102,6 @@ class Code(irc.Bot):
             #print '[INFO] Loading %s (%s) (%s)' % (func, priority, regexp.pattern.encode('utf-8'))
             if not hasattr(func, 'name'):
                 func.name = func.__name__
-            if func.__doc__:
-                if hasattr(func, 'example'):
-                    example = func.example
-                    example = example.replace('$nickname', self.nick)
-                else: example = None
-                self.doc[func.name] = (func.__doc__, example)
             self.commands[priority].setdefault(regexp, []).append(func)
 
         def sub(pattern, self=self):
@@ -113,6 +111,18 @@ class Code(irc.Bot):
 
         for name, func in self.variables.iteritems():
             # print name, func
+            self.doc[name] = {'commands': [], 'info': None, 'example': None}
+            if func.__doc__:
+                doc = func.__doc__
+            else:
+                doc = None
+            if hasattr(func, 'example'):
+                example = func.example
+                example = example.replace('$nickname', self.nick)
+            else:
+                example = None
+            self.doc[name]['info'] = doc
+            self.doc[name]['example'] = example
             if not hasattr(func, 'priority'):
                 func.priority = 'medium'
 
@@ -162,9 +172,8 @@ class Code(irc.Bot):
                             bind(self, func.priority, regexp, func)
 
             if hasattr(func, 'commands'):
-                global cmds
-                cmds.append(func.commands[0])
-                for command in func.commands:
+                self.doc[name]['commands'] = list(func.commands)
+                for command in list(func.commands):
                     template = r'(?i)^\%s(%s)(?: +(.*))?$'
                     pattern = template % (self.config.prefix, command)
                     regexp = re.compile(pattern)
@@ -199,10 +208,6 @@ class Code(irc.Bot):
                 s.groups = match.groups
                 s.args = args
                 s.data = {}
-                global modules
-                s.modules = modules
-                global cmds
-                s.cmds = cmds
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:

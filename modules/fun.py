@@ -51,6 +51,7 @@ roulette.example = 'roulette Timothy'
 roulette.rate = 20
 
 def sexymeter(code, input):
+    """Rate people in terms of sexy, and not!"""
     hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
     notuser = ['taq', 'taq|away', 'retro', 'retro|away', 'jonny'] #because lazy
     text = input.group().split()
@@ -209,9 +210,7 @@ def rps(code, input):
     return code.say('*Rock... Paper... Scissors!* You {%s}{b}%s{b}! %s had {b}%s{b}!' % (color,
                     state, code.nick, response))
 rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
-rps.example = 'rock'
 rps.rate = 15
 
 if __name__ == '__main__':
     print __doc__.strip()
-

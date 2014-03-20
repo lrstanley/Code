@@ -7,7 +7,6 @@ http://code.liamstanley.io/
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
-import cgi
 import threading, thread
 import time
 from random import randint as gen
@@ -75,6 +74,7 @@ class CollectData(threading.Thread):
 def init(host, port):
     """Tries to start the webserver. Fails if someone initiates a reload, or port is already in use."""
     try:
+        time.sleep(5)
         server = HTTPServer(('0.0.0.0', 8888), WebServer)
         print('[WEBSERVER] Starting HTTP server on %s:%s' % (host, port))
     except:
@@ -83,13 +83,13 @@ def init(host, port):
     server.serve_forever()
 
 
-started, password = False, None
-def initFromIRC(code, input):
-    global started
-    if started == True:
-        return
+password = None
+def setup(code):
+    # global started
+    # if started == True:
+    #     return
 
-    started = True
+    # started = True
     id = str(gen(0,10000000))
     code.set('webserver.object', id)
 
@@ -103,14 +103,7 @@ def initFromIRC(code, input):
         return
     Sender = CollectData(code, input, id)
     Sender.start() # Initiate the thread.
-    return
-initFromIRC.rule = r'.'
-initFromIRC.thread = False
-initFromIRC.priority = 'low'
-initFromIRC.rate = 1
-
-# Initialize the webserver. (Oooooo right!)
-thread.start_new_thread(init, (str(host), int(port),))
+    thread.start_new_thread(init, (str(host), int(port),))
 
 if __name__ == '__main__':
     print __doc__.strip()
