@@ -271,7 +271,6 @@ class Bot(asynchat.async_chat):
                     if code == 'PRIVMSG':
                         nick, ident, host, sender, msg = re.compile(reg['PRIVMSG']).match(line).groups()
                         msg = self.stripcolors(msg)
-                        self.host = host
                         if msg.startswith('\x01'):
                             msg = '(me) ' + msg.split(' ',1)[1].strip('\x01')
                         print('[%s] (%s) %s' % (sender, nick, msg))

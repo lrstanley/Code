@@ -31,7 +31,7 @@ def ip(code, input):
                'na': '{red}N/A{c}'
     }
     if not input.group(2):
-        host = code.host.strip()
+        host = input.host.strip()
     else:
         host = input.group(2).strip()
     if not '.' in host and not ':' in host and len(host.split()) != 1:
