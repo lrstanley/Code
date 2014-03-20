@@ -16,7 +16,7 @@ uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 def calc(code, input):
     if empty(code, input): return
     try:
-        data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2))).read())
+        data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2).replace('^','**'))).read())
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
         #print data['Answer']
