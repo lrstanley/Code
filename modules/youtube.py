@@ -5,10 +5,14 @@ youtube.py - Code Youtube Module
 http://code.liamstanley.io/
 """
 
+import re
 import json
 import urllib2
 import time
 from tools import *
+from modules.url import shorten
+
+yt_regex = r'https?://.*?\.(youtube\.com|youtu\.be)\/watch.*?v=(.*\w)'
 
 api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=jsonc&start-index=%s&q=%s'
@@ -17,20 +21,18 @@ def youtube(code, input):
     """Automatically find the information from a youtube url and display it
        to users in a channel"""
     try:
-        if '//www.youtube.com/watch?v=' in input.group().lower():
-            id = input.group().split('/watch?v=',1)[1]
-        elif '//youtu.be/' in input.group().lower():
-            id = input.group().split('youtu.be/',1)[1]
-        if '&' in id: id = id.split('&',1)[0]
-        if ' ' in id: id = id.split()[0]
-        data = json.loads(urllib2.urlopen(api_url % id.split('#')[0]).read())['data']
+        id = re.findall(yt_regex, str(input.group()))
+        if not id:
+            return
+        id = id[0][1].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
+        data = json.loads(urllib2.urlopen(api_url % id).read())['data']
         
         # Set some variables, because we'll have to modify a vew before we spit them back out!
         reply = create_response(data,url=False)
         return code.say(' - '.join(reply))
     except:
         return
-youtube.rule = r'.*'
+youtube.rule = yt_regex
 youtube.priority = 'medium'
 youtube.thread = False
 
@@ -56,7 +58,7 @@ def create_response(data,url=False):
     reply = []
     # Should surely have a title, but just in case :P
     if 'title' in data:
-        reply.append('\x0313\x02' + data['title'] + '\x0f\x02')
+        reply.append('{fuchsia}{b}%s{b}{c}' % data['title'])
     # Some length data ;)
     if 'duration' in data:
         length = data['duration']
@@ -66,21 +68,21 @@ def create_response(data,url=False):
         if length / 60:
             lenout += '%dm ' % (length / 60 % 60)
             lenout += "%ds" % (length % 60)
-        reply.append('length \x0313\x02%s\x0f\x02' % lenout)
+        reply.append('{b}length{b} %s' % lenout)
     # Shitty video? FIND OUT!
     if 'rating' in data and 'ratingCount' in data:
-        reply.append('rated \x0313\x02%.2f/5.0\x0f\x02 (\x0313\x02%d\x0f\x02)' % (data['rating'],
+        reply.append('{b}rated{b} %.2f/5.0 (%d)' % (data['rating'],
                                                   data['ratingCount']))
     # Number of views. Yuck.
     if 'viewCount' in data:
-        reply.append('\x0313\x02%s\x0f\x02 views' % format(data['viewCount'], ',d'))
+        reply.append('%s {b}views{b}' % data['viewCount'])
     upload_time = parse_date(data['uploaded'])
-    reply.append('by \x0313\x02%s\x0f\x02 on \x0313\x02%s\x0f\x02' % (data['uploader'],upload_time))
+    reply.append('by {fuchsia}{b}%s{b}{c} on {b}%s{b}' % (data['uploader'],upload_time))
     # Dis shit not be child appr0ved
     if 'contentRating' in data:
-        reply.append('\x0304NSFW\x02')
+        reply.append('{red}{b}NSFW{b}{red}')
     if url and data['player']['default']:
-       reply.append(data['player']['default'].split('&',1)[0].strip())
+       reply.append(shorten(data['player']['default'].split('&',1)[0].strip()))
     return reply
 
 def parse_date(thedate):
