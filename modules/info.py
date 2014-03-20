@@ -6,8 +6,6 @@ info.py - Code Information Module
 http://code.liamstanley.io/
 """
 
-from pprint import pprint as pretty
-
 def commands(code, input):
     """Get a list of function-names (commands), that the bot has."""
     if input.group(2): return help(code, input)
@@ -68,12 +66,11 @@ def help(code, input):
         if mod['example']:
             code.say('{purple}{b}Example{b}{c}: %s%s' % (code.prefix, mod['example']))
     else:
-        website = code.config.website
         response = (
             'Hi, I\'m a bot. Say "{purple}%scmds{c}" to me in private for a list ' +
             'of my commands, or see %s for more general details.' +
             ' {red}%s{c} is my owner.')
-        code.reply(response % (code.prefix, website, code.config.owner))
+        code.reply(response % (code.prefix, code.config.website, code.config.owner))
 help.priority = 'medium'
 help.commands = ['help']
 help.example = 'help fml'
@@ -106,7 +103,7 @@ def stats(code, input):
 
     ignore = set(['f_note', 'startup', 'message', 'noteuri',
                       'say_it', 'collectlines', 'oh_baby', 'chat',
-                      'collect_links','welcomemessage','auth_request'])
+                      'collect_links','welcomemessage'])
     for (name, user), count in code.stats.items(): 
         if name in ignore: continue
         if not user: continue
@@ -144,6 +141,7 @@ def stats(code, input):
     code.say(chreply.rstrip(', '))
 stats.commands = ['stats']
 stats.priority = 'low'
+stats.rate = 60
 
 if __name__ == '__main__': 
     print __doc__.strip()
