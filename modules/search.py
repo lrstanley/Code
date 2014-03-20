@@ -44,10 +44,12 @@ def search(code, input):
     count, time = r['responseData']['cursor']['resultCount'], r['responseData']['cursor']['searchResultTime'] + 's'
     # Make the count prettified
     count_commas = [m.start() for m in re.finditer(r'{}'.format(re.escape(',')), count)]
-    if len(count_commas) == 2:
+    if len(count_commas) == 1:
         count = count.split(',',1)[0] + 'k'
-    elif len(count_commas) == 3:
+    elif len(count_commas) == 2:
         count = count.split(',',1)[0] + 'm'
+    elif len(count_commas) == 3:
+        count = count.split(',',1)[0] + 'b'
     output = []
     r_type = code.format('{b}{title}{b}{c} - {link}')
     colors, color_count = ['{blue}', '{teal}', '{green}'], 0
