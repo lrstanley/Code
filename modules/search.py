@@ -12,6 +12,8 @@ from urllib import quote
 from urllib2 import urlopen
 from modules.url import shorten
 from tools import *
+import HTMLParser
+h = HTMLParser.HTMLParser()
 
 uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
 
@@ -54,7 +56,7 @@ def search(code, input):
         color = colors[color_count]
         color_count += 1
         # Remove html formatting
-        title = re.sub(r'\<.*?\>', '', url['title']).strip()
+        title = h.unescape(re.sub(r'\<.*?\>', '', url['title']).strip())
         # Restrict sizing of titles to no longer than 50 chars
         if len(title) > 50:
             title = title[0:44] + '[...]'
