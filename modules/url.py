@@ -74,10 +74,10 @@ get_title_auto.priority = 'high'
 
 
 def shorten(url):
-    for bad in short_ignored:
-        if bad in url.lower():
-            return url
     try:
+        for bad in short_ignored:
+            if bad in url.lower():
+                return url
         data = urlopen(shorten_uri % quote(url)).read()
         if 'Bad request' in data:
             return url
