@@ -59,60 +59,66 @@ def owner(code, input, response=None):
 
 # Ignore these. Still under testing.
 
-# def hook(*args):
+# def adminonly(args):
 #     def add_attribute(function):
-#         # args is a list of two indexes. 1st, a list() of cmds, 2nd an example
-#         if len(args) == 2:
-#             commands, example = args
-#         else:
-#             commands = args
-#             example = None
-#         function.cmds = commands
-#         if example:
-#             function.example = example
-#         #function.commands.extend(command_list)
+#         function.adminonly = True
 #         return function
 #     return add_attribute
 
 
-# def rule(*args):
-#     def add_attribute(function):
-#         if len(args) == 2:
-#             trigger, regex = args
-#             function.rule = trigger, regex
-#         else:
-#             regex = args
-#             function.rule = regex
-#         return function
-#     return add_attribute
+def hook(*args):
+    def add_attribute(function):
+        # args is a set() of two indexes. 1st, a list() of cmds, 2nd an example
+        if len(args) == 2:
+            commands, example = args
+        else:
+            commands = args
+            example = None
+        function.commands = list(commands)
+        if example:
+            function.example = example
+        return function
+    return add_attribute
 
 
-# def rate(args):
-#     def add_attribute(function):
-#         function.rate = args
-#         return function
-#     return add_attribute
+def rule(*args):
+    def add_attribute(function):
+        if len(args) == 2:
+            trigger, regex = args
+            function.rule = trigger, regex
+        else:
+            regex = args
+            function.rule = regex
+        return function
+    return add_attribute
 
 
-# def all(args):
-#     def add_attribute(function):
-#         function.rule = r'.*'
-#         return function
-#     return add_attribute
+def rate(args):
+    def add_attribute(function):
+        function.rate = int(args)
+        return function
+    return add_attribute
 
 
-# def priority(args):
-#     def add_attribute(function):
-#         function.priority = args
-#         return function
-#     return add_attribute
+def all(args):
+    def add_attribute(function):
+        function.rule = r'.*'
+        return function
+    return add_attribute
 
 
-# def thread(args):
-#     def add_attribute(function):
-#         function.thread = args
-#         return function
-#     return add_attribute
+def priority(args):
+    def add_attribute(function):
+        function.priority = args
+        return function
+    return add_attribute
+
+
+def thread(args):
+    def add_attribute(function):
+        function.thread = args
+        return function
+    return add_attribute
 
 
 if __name__ == '__main__':

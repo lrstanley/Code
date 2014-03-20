@@ -321,7 +321,7 @@ class Code(irc.Bot):
                                     except:
                                         if nick in input.nick:
                                             return
-                        # stats
+
                         if func.thread:
                             targs = (func, origin, code, input)
                             t = threading.Thread(target=self.call, args=targs)

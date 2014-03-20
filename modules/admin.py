@@ -11,14 +11,13 @@ from tools import *
 
 defaultnick = None
 
-
+@hook(['modules'])
+@priority('high')
+@rate(20)
 def listmods(code, input):
     '''Send a list of the loaded modules ot the user.'''
-    if not admin(code, input): return
+    #if not admin(code, input): return
     return code.say('Modules: %s.' % ', '.join(code.modules))
-listmods.commands = ['modules']
-listmods.priority = 'high'
-listmods.rate = 20
 
 def join(code, input):
     '''Join the specified channel. This is an admin-only command.'''
