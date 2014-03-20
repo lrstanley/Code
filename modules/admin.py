@@ -16,7 +16,7 @@ defaultnick = None
 @rate(20)
 def listmods(code, input):
     '''Send a list of the loaded modules ot the user.'''
-    #if not admin(code, input): return
+    if not admin(code, input): return
     return code.say('Modules: %s.' % ', '.join(code.modules))
 
 def join(code, input):
