@@ -80,7 +80,7 @@ def me(code, input):
     code.msg(input.group(2), msg, x=True)
 
 
-@hook(cmds=['announce', 'broadcast'], ex='announce Some important message here', 'low', admin=True, args=True)
+@hook(cmds=['announce', 'broadcast'], ex='announce Some important message here', priority='low', admin=True, args=True)
 def announce(code, input):
     '''Send an announcement to all channels the bot is in'''
     print code.channels
