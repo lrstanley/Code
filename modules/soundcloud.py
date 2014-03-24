@@ -9,13 +9,14 @@ import json, urllib2
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
 uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s&client_id=%s'
+sc_regex = r'https?://soundcloud.com\/'
 
+
+@hook(rule=sc_regex)
 def soundcloud(code, input):
     """Automatically find the information from a soundcloud url and display it
        to users in a channel"""
     try:
-        if not '//soundcloud.com/' in input.group().lower():
-            return
         id = input.group().split('soundcloud.com/',1)[1].split()[0].strip()
         # Should look like 'artist/song'
         data = json.loads(urllib2.urlopen(uri % (id,client)).read())
@@ -50,9 +51,6 @@ def soundcloud(code, input):
         return code.say(' - '.join(output))
     except:
         return
-soundcloud.rule = r'.*'
-soundcloud.priority = 'medium'
-soundcloud.thread = False
 
 def convert_time(seconds): # data[17]
     length = seconds
