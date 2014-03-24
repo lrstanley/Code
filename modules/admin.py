@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 '''
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 admin.py - Code Admin Module
 http://code.liamstanley.io/
 '''
@@ -11,47 +10,38 @@ from tools import *
 
 defaultnick = None
 
-@hook(['modules'])
-@priority('high')
-@rate(20)
-@adminonly(True)
+@hook(cmds=['modules'], rate=20, priority='high', admin=True)
 def listmods(code, input):
-    '''Send a list of the loaded modules ot the user.'''
-    if not admin(code, input): return
+    '''Send a list of the loaded modules to the user.'''
+    #if not admin(code, input): return
     return code.say('Modules: %s.' % ', '.join(code.modules))
 
+
+@hook(cmds=['join'], ex='join #example or .join #example key', admin=True, args=True)
 def join(code, input):
     '''Join the specified channel. This is an admin-only command.'''
-    if not admin(code, input): return
-    if empty(code, input): return
     if len(input.group(2).split()) > 1: # Channel + key
         return code.write(['JOIN', input.group(2).split(' ',1)])
     else:
         return code.write(['JOIN'], input.group(2).strip())
-join.commands = ['join']
-join.example = 'join #example or .join #example key'
 
+
+@hook(cmds=['part', 'leave'], ex='part #example', admin=True, args=True)
 def part(code, input):
     '''Part the specified channel. This is an admin-only command.'''
-    if not admin(code, input): return
-    if empty(code, input): return
     return code.write(['PART', input.group(2).strip()])
-part.commands = ['part', 'leave']
-part.example = 'part #example'
 
+
+@hook(cmds=['quit', 'terminate', 'shutdown', 'stop'], owner=True, args=True)
 def quit(code, input):
     '''Quit from the server. This is an owner-only command.'''
-    # Can only be done in privmsg by the owner
-    if not owner(code, input): return
-    if empty(code, input): return
     code.write(['QUIT'], 'Terminating Bot.')
     __import__('os')._exit(0)
-quit.commands = ['quit', 'terminate', 'shutdown', 'stop']
 
+
+@hook(cmds=['name', 'nick', 'nickname'], priority='low', owner=True, args=True)
 def nick(code, input):
     '''Change nickname dynamically. This is an owner-only command.'''
-    if not owner(code, input): return
-    if empty(code, input): return
     global defaultnick
     if not defaultnick:
         defaultnick = code.nick
@@ -66,51 +56,41 @@ def nick(code, input):
         else:
             code.say('Failed to set default, shutting down!')
             __import__('os')._exit(1)
-nick.commands = ['name', 'nick', 'nickname']
-nick.priority = 'low'
 
+
+@hook(cmds=['msg','say'], ex='msg #L I LOVE PENGUINS.', priority='low', admin=True, args=True)
 def msg(code, input):
     '''Send a message to a channel, or a user. Admin-only.'''
-    if not owner(code, input): return
-    if empty(code, input): return
-    if input.sender.startswith('#'): return
-    a, b = input.group(2), input.group(3)
+    a, b = input.group(2).split()[0], input.group(2).split()[1:]
     if not b: return
     if not input.owner:
         al = a.lower()
         if al == 'chanserv' or al == 'nickserv' or al == 'hostserv' or al == 'memoserv' or al == 'saslserv' or al == 'operserv':
-           return
+            return
     code.msg(a, b)
-msg.rule = (['msg', 'say'], r'(?i)(#?\S+) (.+)')
-msg.priority = 'low'
-msg.example = 'msg #L I LOVE PENGUINS.'
 
+
+@hook(cmds=['me', 'action'], ex='me #L loves Liam', 'low', admin=True, args=True)
 def me(code, input):
     '''Send a raw action to a channel/user. Admin-only.'''
-    if not admin(code, input): return
-    if empty(code, input): return
     if input.sender.startswith('#'): return
     a, b = input.group(2), input.group(3)
     if not b: return
     msg = '\x01ACTION %s\x01' % input.group(3)
     code.msg(input.group(2), msg, x=True)
-me.rule = (['me', 'action'], r'(?i)(#?\S+) (.+)')
-me.priority = 'low'
-me.example = 'me #L loves to sing'
 
+
+@hook(cmds=['announce', 'broadcast'], ex='announce Some important message here', 'low', admin=True, args=True)
 def announce(code, input):
     '''Send an announcement to all channels the bot is in'''
-    if not admin(code, input): return
-    if empty(code, input): return
     print code.channels
     for channel in code.channels:
         code.msg(channel, '{b}{purple}[ANNOUNCMENT] %s' % input.group(2))
-announce.commands = ['announce', 'broadcast']
-announce.example = 'announce Some important message here'
 
+
+@hook(cmds=['blocks'], ex='blocks add nick MyNameIsSpammer', thread=False, admin=True, args=True)
 def blocks(code, input):
     '''Command to add/delete user records, for a filter system. This is to prevent users from abusing Code.'''
-    if not admin(code, input): return
     if not os.path.isfile('blocks'):
         blocks = open('blocks', 'w')
         blocks.write('\n')
@@ -208,19 +188,16 @@ def blocks(code, input):
     blocks.write(nicks_str)
     blocks.close()
 
-blocks.commands = ['blocks']
-blocks.thread = False
-
 char_replace = {
         r'\x01': chr(1),
         r'\x02': chr(2),
         r'\x03': chr(3),
         }
 
+
+@hook(cmds=['write','raw'], priority='high', thread=False, owner=True, args=True)
 def write_raw(code, input):
     '''Send a raw command to the server. WARNING THIS IS DANGEROUS! Owner-only.'''
-    if not owner(code, input): return
-    if empty(code, input): return
     secure = '{red}That seems like an insecure message. Nope!'
     r = input.group(2).encode('ascii', 'ignore')
     bad = ['ns', 'nickserv', 'chanserv', 'cs', 'q', 'authserv', 'botserv', 'operserv']
@@ -233,9 +210,6 @@ def write_raw(code, input):
     except:
         return code.write(input.group(2), raw=True)
     return code.write(args, text, raw=True)
-write_raw.commands = ['write', 'raw']
-write_raw.priority = 'high'
-write_raw.thread = False
 
 if __name__ == '__main__':
     print __doc__.strip()

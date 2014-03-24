@@ -179,8 +179,10 @@ class Code(irc.Bot):
                     regexp = re.compile(pattern)
                     bind(self, func.priority, regexp, func)
 
-            if not hasattr(func, 'admin'):
-                func.admin = False
+            custom = ['admin', 'empty', 'owner']
+            for atrb in custom:
+                if not hasattr(func, atrb):
+                    setattr(func, atrb, False)
 
     def wrapped(self, origin, text, match):
         class CodeWrapper(object):
@@ -224,14 +226,25 @@ class Code(irc.Bot):
                                 s.admin = True
                 s.owner = origin.nick + '@' + origin.host == self.config.owner
                 if s.owner == False: s.owner = origin.nick == self.config.owner
+                if s.owner: s.admin = True
                 s.host = origin.host
                 return s
 
         return CommandInput(text, origin, bytes, match, event, args)
 
     def call(self, func, origin, code, input):
+        # custom decorators
         if func.admin and not input.admin:
-            code.say('{b}{red}You are not authorized to use this command!')
+            code.say('{b}{red}You are not authorized to use that command!')
+            return
+
+        if func.owner and not input.owner:
+            code.say('{b}{red}You must be owner to use that command!')
+            return
+
+        if func.empty and not input.group(2):
+            code.say('No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
+                      code.doc[func.name]['commands'][0]))
             return
 
         nick = (input.nick).lower()

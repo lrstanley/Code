@@ -62,7 +62,11 @@ def help(code, input):
                 cmds = [input.group(2)]
             for i in range(len(cmds)):
                 cmds[i] = code.prefix + cmds[i]
-            code.say('{purple}{b}Help{c} {green}(%s){c}{b}: %s' % (', '.join(cmds), mod['info']))
+            if len(cmds) == 1:
+                listcmds = ''
+            else:
+                listcmds = ' {green}(%s){c}' % ', '.join(cmds)
+            code.say('{purple}{b}Help{c}%s{b}: %s' % (listcmds, mod['info']))
         if mod['example']:
             code.say('{purple}{b}Example{b}{c}: %s%s' % (code.prefix, mod['example']))
     else:

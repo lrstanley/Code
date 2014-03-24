@@ -7,19 +7,19 @@ http://code.liamstanley.io/
 
 
 def deprecated(old):
-    def new(code, input, old=old):
-        self = code
-        origin = type('Origin', (object,), {
-            'sender': input.sender,
-            'nick': input.nick
-        })()
-        match = input.match
-        args = [input.bytes, input.sender, '@@']
+   def new(code, input, old=old):
+       self = code
+       origin = type('Origin', (object,), {
+           'sender': input.sender,
+           'nick': input.nick
+       })()
+       match = input.match
+       args = [input.bytes, input.sender, '@@']
 
-        old(self, origin, match, args)
-    new.__module__ = old.__module__
-    new.__name__ = old.__name__
-    return new
+       old(self, origin, match, args)
+   new.__module__ = old.__module__
+   new.__name__ = old.__name__
+   return new
 
 
 def empty(code, input, response=None):
@@ -34,91 +34,35 @@ def empty(code, input, response=None):
 def error(code):
     code.say('Incorrect usage! Try: "{b}{purple}%shelp <command>{b}{r}"' % code.prefix)
 
-def admin(code, input, response=None):
-    if not response:
-        response = '{b}{red}You are not authorized to use this command!'
-    if not input.admin:
-        code.say(response)
-        return False
-    else:
-        return True
+def admin(code, input):
+    if input.owner: return True
+    code.say('{b}{red}You are not authorized to use that command!')
 
 def notauthed(code):
-    response = '{b}{red}You are not authorized to use this command!'
+    response = '{b}{red}You are not authorized to use that command!'
     code.say(response)
 
-def owner(code, input, response=None):
-    if not response:
-        response = '{b}{red}You are not authorized to use this command!'
-    if not input.owner:
-        code.say(response)
-        return False
-    else:
-        return True
+def owner(code, input):
+    if input.owner: return True
+    code.say('{b}{red}You are not authorized to use that command!')
 
+# /SOME/ of these ones are decorators customized to respond from call()
+#    in bot.py and defaults in bind_commands() (mainly admin/owner)
 
-# Ignore these. Still under testing.
-
-def adminonly(args):
-    def add_attribute(function):
-        if args:
-            function.admin = True
-        return function
-    return add_attribute
-
-
-def hook(*args):
-    def add_attribute(function):
-        # args is a set() of two indexes. 1st, a list() of cmds, 2nd an example
-        if len(args) == 2:
-            commands, example = args
-        else:
-            commands = list(args)[0]
-            example = None
-        function.commands = commands
-        if example:
-            function.example = example
-        return function
-    return add_attribute
-
-
-def rule(*args):
-    def add_attribute(function):
-        if len(args) == 2:
-            trigger, regex = args
-            function.rule = trigger, regex
-        else:
-            regex = args
-            function.rule = regex
-        return function
-    return add_attribute
-
-
-def rate(args):
-    def add_attribute(function):
-        function.rate = int(args)
-        return function
-    return add_attribute
-
-
-def all(args):
-    def add_attribute(function):
-        function.rule = r'.*'
-        return function
-    return add_attribute
-
-
-def priority(args):
-    def add_attribute(function):
-        function.priority = args
-        return function
-    return add_attribute
-
-
-def thread(args):
-    def add_attribute(function):
-        function.thread = args
-        return function
+def hook(commands=None, cmds=None, example=None, ex=None, rate=None, rule=None, priority=None,
+         thread=None, args=None, admin=None, owner=None):
+    def add_attribute(func):
+        if commands != None: func.commands = commands
+        if cmds != None: func.commands = cmds
+        if example != None: func.example = example
+        if rate != None: func.rate = rate
+        if rule != None: func.rule = rule
+        if priority != None: func.priority = priority
+        if thread != None: func.thread = thread
+        if args != None: func.args = args
+        if admin != None: func.admin = admin
+        if owner != None: func.owner = owner
+        return func
     return add_attribute
 
 
