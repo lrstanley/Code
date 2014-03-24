@@ -70,7 +70,7 @@ def msg(code, input):
     code.msg(a, b)
 
 
-@hook(cmds=['me', 'action'], ex='me #L loves Liam', 'low', admin=True, args=True)
+@hook(cmds=['me', 'action'], ex='me #L loves Liam', priority='low', admin=True, args=True)
 def me(code, input):
     '''Send a raw action to a channel/user. Admin-only.'''
     if input.sender.startswith('#'): return
