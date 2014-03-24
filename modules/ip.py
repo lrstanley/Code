@@ -64,34 +64,35 @@ ip.example = ".whois 8.8.8.8"
 
 def geoip(code, input):
     """GeoIP user on join."""
-    if hasattr(code.config, 'geoip'):
-        if not code.config.geoip: return
+    if not hasattr(code.config, 'geoip'):
+        return
+    if not code.config.geoip: return
 
-        allowed = []
-        for channel_name in code.config.geoip:
-            allowed.append(channel_name.lower())
+    allowed = []
+    for channel_name in code.config.geoip:
+        allowed.append(channel_name.lower())
 
-        # Split the line and get all the data
-        try: host, command, channel = code.raw.split('@')[1].split()
-        except: return
+    # Split the line and get all the data
+    try: host, command, channel = code.raw.split('@')[1].split()
+    except: return
 
-        for domain in ['proxy', 'clone', 'bnc', 'bouncer', 'cloud', 'server']:
-            if domain in host.lower(): return
+    for domain in ['proxy', 'clone', 'bnc', 'bouncer', 'cloud', 'server']:
+        if domain in host.lower(): return
 
-        if input.nick == code.nick or not channel.lower() in allowed:
-            return
-        try:
-            r = json.loads(urllib2.urlopen(base % host).read())
-            output, location = [], ['region_name', 'country_name']
-            for val in location:
-                if val in r and len(val) > 1: output.append(r[val])
-            if not r['city']: rough = ' (estimated)'
-            else: rough = ''
-            return code.msg(channel, '{green}User is connecting from %s%s' % (', '.join(output), rough))
-        except:
-            return
-    else:
-        return # It's not enabled... :(
+    if input.nick == code.nick or not channel.lower() in allowed:
+        return
+    try:
+        r = json.loads(urllib2.urlopen(base % host).read())
+        output, location = [], ['region_name', 'country_name']
+        for val in location:
+            if not val in r:
+                continue
+            if len(r[val]) > 1: output.append(r[val])
+        if not r['city']: rough = ' (estimated)'
+        else: rough = ''
+        return code.msg(channel, '{green}User is connecting from %s%s' % (', '.join(output), rough))
+    except:
+        return
 geoip.event = 'JOIN'
 geoip.rule = r'.*'
 
