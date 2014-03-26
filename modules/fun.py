@@ -6,7 +6,7 @@ http://code.liamstanley.io/
 """
 
 import random
-from tools import *
+from util.hook import *
 
 def sexycomment(rand):
     """finds a random comment dependant on what the rating was."""

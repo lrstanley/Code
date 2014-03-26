@@ -7,7 +7,7 @@ http://code.liamstanley.io/
 
 import re
 from urllib import urlopen
-from tools import *
+from util.hook import *
 
 def isup(code,input):
     """isup <url> - Is it down for everyone, or just you?"""

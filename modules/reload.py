@@ -8,7 +8,7 @@ http://code.liamstanley.io/
 
 import sys, os.path, time, imp, subprocess
 import irc
-from tools import *
+from util.hook import *
 
 def f_reload_cmd(code, input):
     f_reload(code, input)

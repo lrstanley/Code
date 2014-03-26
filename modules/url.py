@@ -10,16 +10,15 @@ import re
 from urllib import quote
 from urllib2 import urlopen
 from HTMLParser import HTMLParser
+from util.web import shorten
 h = HTMLParser()
 
 url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-shorten_uri = 'http://links.ml/submit?link=%s&api=True'
 notitle_len = 4
 title_len = 80
 nourl_len = 15
 url_len = 70
 ignored = ['git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com','ci.liamstanley.io']
-short_ignored = ['bit.ly', 'is.gd', 'goo.gl', 'links.ml']
 
 
 def get_url_data(url):
@@ -51,6 +50,10 @@ def get_url_data(url):
         return False
 
 
+def clean_url(url):
+    head, other = url.split('//',1)
+    return head + '//' + other.split('/')[0]
+
 
 def get_title_auto(code, input):
     if input.startswith(code.prefix): return # Prevent triggering of other plugins
@@ -67,23 +70,17 @@ def get_title_auto(code, input):
         # Lets get some data!
         data = get_url_data(url)
         if data:
-            output.append('{blue}{b}%s{b}{c} - %s' % (data, shorten(url)))
+            if hasattr(code.config, 'shortenurls'):
+                if code.config.shortenurls:
+                    url = shorten(url)
+                else:
+                    url = clean_url(url)
+            else:
+                url = clean_url(url)
+            output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     return code.say(' | '.join(output))
 get_title_auto.rule = ('(?iu).*%s.*' % url_re)
 get_title_auto.priority = 'high'
-
-
-def shorten(url):
-    try:
-        for bad in short_ignored:
-            if bad in url.lower():
-                return url
-        data = urlopen(shorten_uri % quote(url)).read()
-        if 'Bad request' in data:
-            return url
-    except:
-        return url
-    return data
 
 
 if __name__ == '__main__':

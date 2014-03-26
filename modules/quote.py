@@ -7,8 +7,8 @@ http://code.liamstanley.io/
 """
 
 import random
-from modules import unicode as uc
-from tools import *
+import modules.unicode as uc
+from util.hook import *
 
 
 def addquote(code, input):
@@ -16,7 +16,7 @@ def addquote(code, input):
     if not admin(code, input): return
     if empty(code, input): return
     fn = open('quotes.txt', 'a')
-    output = uc.encode(text)
+    output = uc.encode(input.group(2))
     fn.write(output)
     fn.write('\n')
     fn.close()

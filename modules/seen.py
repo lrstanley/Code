@@ -7,7 +7,7 @@ http://code.liamstanley.io/
 """
 
 import time
-from tools import *
+from util.hook import *
 
 def seen(code, input): 
    """seen <nick> - Reports when <nick> was last seen."""

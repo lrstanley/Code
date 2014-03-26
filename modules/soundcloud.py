@@ -6,6 +6,7 @@ http://code.liamstanley.io/
 """
 
 import json, urllib2
+from util.hook import *
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
 uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s&client_id=%s'

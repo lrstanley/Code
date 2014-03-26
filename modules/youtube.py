@@ -9,8 +9,7 @@ import re
 import json
 import urllib2
 import time
-from tools import *
-from modules.url import shorten
+from util.hook import *
 
 yt_regex = r'https?://.*?\.(youtube\.com|youtu\.be)\/watch.*?v=(.*\w)'
 
@@ -71,7 +70,7 @@ def create_response(data,url=False):
         reply.append('{b}length{b} %s' % lenout)
     # Shitty video? FIND OUT!
     if 'rating' in data and 'ratingCount' in data:
-        reply.append('{b}rated{b} %.2f/5.0 (%d)' % (data['rating'],
+        reply.append('{b}rated{b} %.2f/5.00 (%d)' % (data['rating'],
                                                   data['ratingCount']))
     # Number of views. Yuck.
     if 'viewCount' in data:
@@ -82,7 +81,8 @@ def create_response(data,url=False):
     if 'contentRating' in data:
         reply.append('{red}{b}NSFW{b}{red}')
     if url and data['player']['default']:
-       reply.append(shorten(data['player']['default'].split('&',1)[0].strip()))
+        url = data['player']['default'].split('&',1)[0].strip()
+        reply.append(url)
     return reply
 
 def parse_date(thedate):

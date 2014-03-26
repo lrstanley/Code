@@ -8,8 +8,7 @@ http://code.liamstanley.io/
 
 import re, json
 import urllib, urllib2
-import web
-from tools import *
+from util.hook import *
 
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
@@ -34,7 +33,7 @@ def py(code, input):
     query = input.group(2).encode('utf-8')
     uri = 'http://tumbolia.appspot.com/py/'
     try:
-         answer = web.get(uri + web.urllib.quote(query))
+         answer = urllib2.urlopen(uri + urllib.quote(query)).read()
          if answer:
               # Strip line endings from the response, to prevent cut-off
               # Of multi-line responses
@@ -55,7 +54,7 @@ def wa(code, input):
     if empty(code, input): return
     query = input.group(2).encode('utf-8')
     uri = 'http://tumbolia.appspot.com/wa/'
-    answer = web.get(uri + web.urllib.quote(query.replace('+', '%2B')))
+    answer = urllib2.urlopen(uri + urllib.quote(query.replace('+', '%2B'))).read()
     if answer: 
         code.say(answer)
     else: code.reply('Sorry, no result.')

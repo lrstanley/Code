@@ -7,8 +7,7 @@ http://code.liamstanley.io/
 """
 
 import os, re, time, random
-import web
-from tools import *
+from util.hook import *
 
 maximum = 4
 
@@ -50,8 +49,8 @@ def f_remind(code, input):
     if empty(code, input): return
     teller = input.nick
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
-    if input.group() and (input.group()).startswith(".tell"):
-        if input.group(2).lower().split()[1] == 'liam' or input.group(2).lower().split()[1] == 'lime': return
+    if input.group() and (input.group())[1:].startswith("tell"):
+        if input.group(2).lower().split()[0] in ['liam', 'lime']: return
         verb = "tell".encode('utf-8')
         line = input.groups()
         line_txt = line[1].split()

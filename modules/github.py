@@ -5,7 +5,7 @@ http://code.liamstanley.io/
 """
 
 from datetime import datetime
-from tools import *
+from util.hook import *
 from subprocess import *
 import json, urllib2
 

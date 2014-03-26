@@ -10,8 +10,8 @@ import re
 from json import loads as json
 from urllib import quote
 from urllib2 import urlopen
-from modules.url import shorten
-from tools import *
+from util.web import shorten
+from util.hook import *
 import HTMLParser
 h = HTMLParser.HTMLParser()
 
@@ -63,13 +63,17 @@ def search(code, input):
         if len(title) > 50:
             title = title[0:44] + '[...]'
         # Shorten URL to fit more responses cleaner
-        link = shorten(url['url'])
+        link = url['url']
+        if hasattr(code.config, 'shortenurls'):
+            if code.config.shortenurls:
+                link = shorten(url['url'])
         output.append(color + r_type.format(title=title, link=link))
     code.say('%s ({b}%s{b}, {b}%s{b} results)' % (' | '.join(output), time, count))
 search.commands = ['search', 'google', 'g']
 search.priority = 'medium'
 search.example = 'search swhack'
 search.rate = 10
+
 
 def gc(code, input):
     """Returns the number of Google results for the specified input."""

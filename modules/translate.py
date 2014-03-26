@@ -11,8 +11,8 @@ import json
 import time
 import urllib
 import urllib2
-import web
-from tools import *
+import util.web
+from util.hook import *
 
 def translate(text, input='auto', output='en', use_proxy=False):
     raw = False
@@ -97,7 +97,7 @@ def tr(code, context):
         if isinstance(msg, str):
             msg = msg.decode('utf-8')
         if msg:
-            msg = web.decode(msg) # msg.replace('&#39;', "'")
+            msg = util.web.decode(msg) # msg.replace('&#39;', "'")
             msg = '"%s" (%s to %s)' % (msg, input, output)
         else: msg = 'The %s to %s translation failed, sorry!' % (input, output)
 
@@ -135,7 +135,7 @@ def tr2(code, input):
         if isinstance(msg, str):
             msg = msg.decode('utf-8')
         if msg:
-            msg = web.decode(msg) # msg.replace('&#39;', "'")
+            msg = util.web.decode(msg) # msg.replace('&#39;', "'")
             msg = '"%s" (%s to %s)' % (msg, src, dest)
         else: msg = 'The %s to %s translation failed, sorry!' % (src, dest)
 

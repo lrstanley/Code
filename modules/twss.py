@@ -8,10 +8,8 @@ http://code.liamstanley.io/
 
 import urllib2
 import urllib
-import re
-import os
-import sys
-from tools import *
+import re, os, sys
+from util.hook import *
 
 
 last = "DEBUG_ME" # Dont find this in terminal, you might want to flip shit.
@@ -24,7 +22,7 @@ if os.path.exists('modules/twss.txt'):
     else: pass
 elif not os.path.exists('modules/twss.txt'):
     print 'Downloading "That\'s What She Said" library from http://misc.liamstanley.io/twss.txt now...'
-    urllib.urlretrieve ('http://misc.liamstanley.io/twss.txt', 'modules/twss.txt')
+    urllib.urlretrieve('http://misc.liamstanley.io/twss.txt', 'modules/twss.txt')
 
     f = open('modules/twss.txt', 'w')
 #    url = 'http://www.twssstories.com/best?page='

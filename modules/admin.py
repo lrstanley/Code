@@ -6,7 +6,7 @@ http://code.liamstanley.io/
 '''
 
 import os
-from tools import *
+from util.hook import *
 
 defaultnick = None
 

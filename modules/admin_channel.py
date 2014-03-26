@@ -6,7 +6,7 @@ http://code.liamstanley.io/
 """
 
 import re
-from tools import *
+from util.hook import *
 
 def check_normal(code, input):
     """Globalized fail checklist"""

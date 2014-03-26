@@ -402,20 +402,19 @@ class Bot(asynchat.async_chat):
                         channel, name = '#' + tmp[0], tmp[1]
                         del self.chan[channel][name]
             except:
-               pass
+                pass
 
     def stripcolors(self, data):
         """STRIP ALL ZE COLORS! Note: the replacement method is CRUCIAL to keep from
            left over color digits. Order is very important."""
-        colors = [u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305", \
-                  u"\x032", u"\x033", u"\x034", u"\x035", u"\x0306", u"\x0307", u"\x0308", \
-                  u"\x0309", u"\x0310", u"\x0311", u"\x036", u"\x037", u"\x038", u"\x039", \
-                  u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x030", u"\x031", u"\x03", \
+        colors = [u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
+                  u"\x032", u"\x033", u"\x034", u"\x035", u"\x0306", u"\x0307", u"\x0308",
+                  u"\x0309", u"\x0310", u"\x0311", u"\x036", u"\x037", u"\x038", u"\x039",
+                  u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x030", u"\x031", u"\x03",
                   u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"]
         
         for color in colors:
             data = data.replace(color, '')
-     
         return str(data.encode('ascii', 'ignore'))
 
     def found_terminator(self):
@@ -502,7 +501,8 @@ class Bot(asynchat.async_chat):
            documentation for more information'''
         self.write(('NOTICE', dest), text)
 
-
+    def action(self, dest, text):
+        self.write(('PRIVMSG', dest), '\x01ACTION ' + text + '\x01')
 
     def error(self, origin):
         try:
@@ -510,7 +510,6 @@ class Bot(asynchat.async_chat):
             trace = traceback.format_exc()
             print '[ERROR] ' + trace
             lines = list(reversed(trace.splitlines()))
-
             report = [lines[0].strip()]
             for line in lines:
                 line = line.strip()
@@ -533,8 +532,8 @@ class TestBot(Bot):
     f_ping.rule = r'^\.ping(?:[ \t]+(\d+))?$'
 
 def main():
-   # bot = TestBot('TestBot', ['#L'])
-   # bot.run('irc.esper.net')
+    # bot = TestBot('TestBot', ['#L'])
+    # bot.run('irc.esper.net')
     print __doc__
 
 if __name__ == "__main__":

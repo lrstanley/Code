@@ -6,8 +6,8 @@ http://code.liamstanley.io/
 """
 
 import re
-from modules.url import shorten
-from tools import *
+from util.hook import *
+from util.web import shorten
 
 def lmgtfy(code, input):
     """Let my Google That For You"""
@@ -19,7 +19,10 @@ def lmgtfy(code, input):
     while lmgtfy.find(' ') > -1:
         lmgtfy = lmgtfy.replace(" ", "").strip(" ")
     lmgtfyurl = "http://lmgtfy.com/?q=" + lmgtfy
-    code.say(input.nick + ": " + shorten(lmgtfyurl))
+    if hasattr(code.config, 'shortenurls'):
+        if code.config.shortenurls:
+            lmgtfyurl = shorten(lmgtfyurl)
+    code.say(input.nick + ": " + lmgtfyurl)
 lmgtfy.commands = ['lmgtfy']
 lmgtfy.example = 'lmgtfy linux'
 

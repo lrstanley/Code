@@ -8,7 +8,7 @@ http://code.liamstanley.io/
 import urllib
 import urllib2
 import json
-from tools import *
+from util.hook import *
 
 search_uri = 'http://www.omdbapi.com/?t=%s'
 id_uri = 'http://www.omdbapi.com/?i=%s'

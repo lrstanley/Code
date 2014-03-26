@@ -8,7 +8,7 @@ http://code.liamstanley.io/
 
 import re, unicodedata
 from itertools import islice
-from tools import *
+from util.hook import *
 
 def about(u, cp=None, name=None): 
    if cp is None: 

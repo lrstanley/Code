@@ -38,26 +38,26 @@ class Code(irc.Bot):
             self.excludes = config.excludes
         self.setup()
 
-    def setup(self): 
+    def setup(self):
         self.variables = {}
 
         filenames = []
-        if not hasattr(self.config, 'enable'): 
-         for fn in os.listdir(os.path.join(home, 'modules')): 
-            if fn.endswith('.py') and not fn.startswith('_'): 
-               filenames.append(os.path.join(home, 'modules', fn))
-        else: 
-         for fn in self.config.enable: 
-            filenames.append(os.path.join(home, 'modules', fn + '.py'))
+        if not hasattr(self.config, 'enable'):
+            for fn in os.listdir(os.path.join(home, 'modules')):
+                if fn.endswith('.py') and not fn.startswith('_'):
+                    filenames.append(os.path.join(home, 'modules', fn))
+        else:
+            for fn in self.config.enable:
+                filenames.append(os.path.join(home, 'modules', fn + '.py'))
 
-        if hasattr(self.config, 'extra'): 
-         for fn in self.config.extra: 
-            if os.path.isfile(fn): 
-               filenames.append(fn)
-            elif os.path.isdir(fn): 
-               for n in os.listdir(fn): 
-                  if n.endswith('.py') and not n.startswith('_'): 
-                     filenames.append(os.path.join(fn, n))
+        if hasattr(self.config, 'extra'):
+            for fn in self.config.extra:
+                if os.path.isfile(fn):
+                    filenames.append(fn)
+                elif os.path.isdir(fn):
+                    for n in os.listdir(fn):
+                        if n.endswith('.py') and not n.startswith('_'):
+                            filenames.append(os.path.join(fn, n))
 
         # Should fix
         excluded_modules = getattr(self.config, 'exclude', [])
@@ -196,6 +196,8 @@ class Code(irc.Bot):
                         self.bot.msg(sender, origin.nick + ': ' + msg))
                 elif attr == 'say':
                     return lambda msg: self.bot.msg(sender, msg)
+                elif attr == 'action':
+                    return lambda msg: self.bot.action(sender, msg)
                 return getattr(self.bot, attr)
 
         return CodeWrapper(self)

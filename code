@@ -11,7 +11,7 @@ from textwrap import dedent as trim
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 4
+configv = 5
 
 def check_python_version():
     if sys.version_info < (2, 7):
@@ -53,6 +53,9 @@ def create_default_config(fn):
 
         # Prefix that Code uses for commands. Default is "."
         prefix = '.'
+
+        # Auto shorten URL's for URL responses
+        shortenurls = True
 
         # channels to greet users on channel join
         # e.g "Hello Code, welcome to #Lounge!"

@@ -6,7 +6,7 @@ find.py - Code Autocorrect/find Module
 http://code.liamstanley.io/
 """
 
-from modules import unicode as uc
+import modules.unicode as uc
 import os, re
 
 

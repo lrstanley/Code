@@ -7,8 +7,9 @@ http://code.liamstanley.io/
 """
 
 import re
-import web
-from tools import *
+from urllib import quote
+from urllib2 import urlopen
+from util.hook import *
 
 uri = 'http://en.wiktionary.org/w/index.php?title=%s&printable=yes'
 r_tag = re.compile(r'<[^>]+>')
@@ -23,7 +24,7 @@ def text(html):
    return text
 
 def wiktionary(word): 
-   bytes = web.get(uri % web.urllib.quote(word.encode('utf-8')))
+   bytes = urlopen(uri % quote(word.encode('utf-8'))).read()
    bytes = r_ul.sub('', bytes)
 
    mode = None

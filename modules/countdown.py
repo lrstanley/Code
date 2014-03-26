@@ -7,7 +7,7 @@ http://code.liamstanley.io/
 """
 
 import datetime
-from tools import *
+from util.hook import *
 
 def countdown(code, input):
     """ .countdown <year> <month> <day> - displays a countdown to a given date. """

@@ -11,7 +11,7 @@ from json import loads as jsonify
 
 uri = 'http://api.urbandictionary.com/v0/define?term=%s'
 random_uri = 'http://api.urbandictionary.com/v0/random'
-error = 'Unable to find definition!'
+error = '{red}{b}Unable to find definition!'
 
 def urban(code, input):
     # clean and split the input
@@ -30,7 +30,7 @@ def urban(code, input):
                 id = 0
             data = jsonify(get(uri % quote(msg)).read())['list']
             if not data:
-                return code.reply(code.color('red',error))
+                return code.reply(error)
             max = len(data)
             if id > max:
                 id = max
@@ -38,34 +38,28 @@ def urban(code, input):
             else:
                 data = data[id]
                 id += 1
-            msg = '({id} of {max}) "{word}": {definition} +{up}/-{down}'
+            msg = '({purple}{id}{c} of {purple}{max}{c}) "{purple}{word}{c}": {definition} +{red}{up}{c}/-{red}{down}{c}'
             if len(data['definition']) > 235:
                 data['definition'] = data['definition'][0:235] + '[...]'
-            return code.say(msg.format(
-                                id=code.color('purple', str(id)),
-                                max=code.color('purple', str(max)),
-                                definition=strp(data['definition']),
-                                word=code.color('purple', data['word']),
-                                up=code.color('red', str(data['thumbs_up'])),
-                                down=code.color('red', str(data['thumbs_down']))
+            return code.say(code.format(msg).format(
+                                id=str(id), max=str(max), definition=strp(data['definition']),
+                                word=data['word'], up=str(data['thumbs_up']), down=str(data['thumbs_down'])
                             ))
             # Begin trying to get the definition
         else:
             # Get a random definition...
             data = jsonify(get(random_uri).read())['list'][0]
             if not data:
-                return code.reply(code.color('red',error))
-            msg = '(Definition for "{word}"): {definition} +{up}/-{down}'
+                return code.reply(error)
+            msg = '(Definition for "{purple}{word}{c}"): {definition} +{red}{up}{c}/-{red}{down}{c}'
             if len(data['definition']) > 235:
                 data['definition'] = data['definition'][0:235] + '[...]'
-            return code.say(msg.format(
-                                definition=strp(data['definition']),
-                                word=code.color('purple', data['word']),
-                                up=code.color('red', str(data['thumbs_up'])),
-                                down=code.color('red', str(data['thumbs_down']))
+            return code.say(code.format(msg).format(
+                                definition=strp(data['definition']), word=data['word'],
+                                up=str(data['thumbs_up']), down=str(data['thumbs_down'])
                             ))
     except:
-        return code.reply(code.color('red', 'Failed to pull definition from urbandictionary.com!'))
+        return code.reply('{red}{b}Failed to pull definition from urbandictionary.com!')
 urban.commands = ['urban', 'ud']
 urban.example = 'urban liam 2'
 

@@ -7,8 +7,9 @@ http://code.liamstanley.io/
 """
 
 import re, time
-import web
-from tools import *
+import util.web
+from urllib2 import urlopen
+from util.hook import *
 
 r_username = re.compile(r'^[a-zA-Z0-9_]{1,15}$')
 r_link = re.compile(r'^https?://twitter.com/\S+$')
@@ -20,10 +21,10 @@ r_whiteline = re.compile(r'(?ims)[ \t]+[\r\n]+')
 r_breaks = re.compile(r'(?ims)[\r\n]+')
 
 def entity(*args, **kargs):
-    return web.entity(*args, **kargs).encode('utf-8')
+    return util.web.entity(*args, **kargs).encode('utf-8')
 
 def decode(html):
-    return web.r_entity.sub(entity, html)
+    return util.web.r_entity.sub(entity, html)
 
 def expand(tweet):
     def replacement(match):
@@ -34,7 +35,7 @@ def expand(tweet):
     return r_anchor.sub(replacement, tweet)
 
 def read_tweet(url):
-    bytes = web.get(url)
+    bytes = urlopen(url).read()
     shim = '<div class="content clearfix">'
     if shim in bytes:
         bytes = bytes.split(shim, 1).pop()
@@ -57,7 +58,7 @@ def user_tweet(username):
 
 def id_tweet(tid):
     link = 'https://twitter.com/twitter/status/' + tid
-    data = web.head(link)
+    data = util.web.head(link)
     message, status = tuple(data)
     if status == 301:
         url = message.get("Location")

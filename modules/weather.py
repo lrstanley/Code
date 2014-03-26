@@ -9,7 +9,7 @@ import re
 import urllib, urllib2
 import json
 import HTMLParser
-from tools import *
+from util.hook import *
 
 user = 'code'
 h = HTMLParser.HTMLParser()

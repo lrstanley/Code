@@ -8,7 +8,7 @@ http://code.liamstanley.io/
 
 import random, time
 import re
-from tools import *
+from util.hook import *
 
 def ask(code, input):
     """ask <item1> or <item2> or <item3> - Randomly picks from a set of items seperated by ' or '."""
