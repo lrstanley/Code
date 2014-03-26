@@ -10,28 +10,33 @@ import os
 import json
 
 
-name_management = 'module.%s.db'
+db_name = 'data.db'
+mod_name = 'module.%s.db'
 
-def get(module):
-    fn = name_management % str(module)
-    module_filename = os.path.join(os.path.expanduser('~/.code'), fn)
-    if not os.path.exists(module_filename):
-        f = open(module_filename, 'w')
-        f.write(json.dumps(dict()))
-        f.close()
-        return dict()
+def get(module=False):
+    if module:
+        fn = mod_name % str(module)
     else:
-        f = open(module_filename, 'r')
-        data = json.loads(f)
-        return data
-
-def set(module, data, pretty=False):
-    if not isinstance(data, dict):
-        return False
-    fn = name_management % str(module)
+        fn = db_name
     module_filename = os.path.join(os.path.expanduser('~/.code'), fn)
     if not os.path.exists(module_filename):
-        f = open(module_filename, 'w')
-        f.write(json.dumps(data, indent=pretty))
-        f.close(json.dumps(data, indent=pretty))
-        return True
+        return {}
+    with open(module_filename, 'r') as f:
+        try:
+            data = json.loads(f.read())
+        except ValueError:
+            data = str(f.read())
+    return data
+
+def set(data, module=False):
+    if module:
+        fn = mod_name % str(module)
+    else:
+        fn = db_name
+    module_filename = os.path.join(os.path.expanduser('~/.code'), fn)
+    with open(module_filename, 'w') as f:
+        if isinstance(data, dict):
+            f.write(json.dumps(data))
+        else:
+            f.write(str(data))
+    return True
