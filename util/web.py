@@ -16,6 +16,18 @@ shorten_uri = 'http://links.ml/submit?link=%s&api=True'
 exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 
+def get(uri, timeout=5):
+    uri = uri.encode("utf-8")
+    req = urllib2.Request(uri, headers={'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (Code)'})
+    try:
+        u = urllib2.urlopen(req, None, timeout)
+    except urllib2.HTTPError, e:
+        return e.fp
+    except:
+        raise
+    return u
+
+
 def head(uri):
     if not uri.startswith('http'): return
     u = urllib.urlopen(uri)

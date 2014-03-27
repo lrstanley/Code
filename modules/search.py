@@ -9,8 +9,8 @@ http://code.liamstanley.io/
 import re
 from json import loads as json
 from urllib import quote
-from urllib2 import urlopen
-from util.web import shorten
+import urllib2
+import util.web
 from util.hook import *
 import HTMLParser
 h = HTMLParser.HTMLParser()
@@ -19,10 +19,8 @@ uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
 
 def google_search(query):
     """Search using Googles AjaxSearch functionality."""
-    if isinstance(query, unicode):
-        query = query.encode('utf-8')
     try:
-        data = urlopen(uri % quote(query)).read()
+        data = util.web.get(uri % query).read()
     except:
         return False
     if not data:
@@ -66,7 +64,7 @@ def search(code, input):
         link = url['url']
         if hasattr(code.config, 'shortenurls'):
             if code.config.shortenurls:
-                link = shorten(url['url'])
+                link = util.web.shorten(url['url'])
         output.append(color + r_type.format(title=title, link=link))
     code.say('%s ({b}%s{b}, {b}%s{b} results)' % (' | '.join(output), time, count))
 search.commands = ['search', 'google', 'g']
