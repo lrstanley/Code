@@ -214,7 +214,8 @@ class Code(irc.Bot):
                 s.group = match.group
                 s.groups = match.groups
                 s.args = args
-                s.data = {}
+                if not hasattr(s, 'data'):
+                    s.data = {}
                 s.admin = origin.nick in self.config.admins
                 if s.admin == False:
                     for each_admin in self.config.admins:
@@ -236,18 +237,24 @@ class Code(irc.Bot):
 
     def call(self, func, origin, code, input):
         # custom decorators
+        try:
+            if func.op and not code.chan[input.sender][input.nick]['op']:
+                return code.say('{b}{red}You must be op to use that command!')
+
+            if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
+                return code.say('{b}{red}You must be voiced to use that command!')
+        except AttributeError:
+            pass
+
         if func.admin and not input.admin:
-            code.say('{b}{red}You are not authorized to use that command!')
-            return
+            return code.say('{b}{red}You are not authorized to use that command!')
 
         if func.owner and not input.owner:
-            code.say('{b}{red}You must be owner to use that command!')
-            return
+            return code.say('{b}{red}You must be owner to use that command!')
 
         if func.empty and not input.group(2):
-            code.say('No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
+            return code.say('No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
                       code.doc[func.name]['commands'][0]))
-            return
 
         nick = (input.nick).lower()
         if nick in self.times:

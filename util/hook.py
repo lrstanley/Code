@@ -51,7 +51,7 @@ def owner(code, input):
 
 def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None,
          rate=None, rule=None, priority=None, thread=None, args=None, admin=None,
-         owner=None):
+         owner=None, voiced=None, op=None):
     def add_attribute(func):
         # This is kinda ugly looking, but it does quite the job.
         if commands != None: func.commands = list(commands)
@@ -66,6 +66,9 @@ def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None
         if args != None: func.args = bool(args)
         if admin != None: func.admin = bool(admin)
         if owner != None: func.owner = bool(owner)
+        # Custom to user tracking...
+        if voiced != None: func.voiced = bool(voiced)
+        if op != None: func.op = bool(op)
         #if op != None:
         #    pass
         return func

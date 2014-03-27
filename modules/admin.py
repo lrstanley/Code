@@ -10,7 +10,7 @@ from util.hook import *
 
 defaultnick = None
 
-@hook(cmds=['modules'], rate=20, priority='high', admin=True)
+@hook(cmds=['modules'], rate=20, priority='high', op=True)
 def listmods(code, input):
     '''Send a list of the loaded modules to the user.'''
     #if not admin(code, input): return
