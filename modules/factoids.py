@@ -31,9 +31,6 @@ def factoid(code, input):
         id, arguments = input.group(1), ''
     else:
         id, arguments = input.group(1).split(' ', 1)
-    
-    print id
-    print arguments
 
     if not id in db:
         return code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}? add <name> <data>{red}")')
@@ -100,4 +97,4 @@ def factoid_manage(data, code, input):
         return code.reply('{red} Usage: "{purple}? <add|delete|info> [args]{red}"')
 
 if __name__ == '__main__':
-   print __doc__.strip()
+    print __doc__.strip()
