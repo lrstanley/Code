@@ -237,14 +237,18 @@ class Code(irc.Bot):
 
     def call(self, func, origin, code, input):
         # custom decorators
-        #try:
-        if func.op and not code.chan[input.sender][input.nick]['op']:
-            return code.say('{b}{red}You must be op to use that command!')
+        try:
+            if func.op and not code.chan[input.sender][input.nick]['op']:
+                return code.say('{b}{red}You must be op to use that command!')
 
-        if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
-            return code.say('{b}{red}You must be voiced to use that command!')
-        #except AttributeError:
-        #    pass
+            if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
+                return code.say('{b}{red}You must be voiced to use that command!')
+
+            input.op = code.chan[input.sender][input.nick]['op']
+            input.voiced = code.chan[input.sender][input.nick]['voiced']
+            input.chan = code.chan[input.sender]
+        except KeyError:
+            pass
 
         if func.admin and not input.admin:
             return code.say('{b}{red}You are not authorized to use that command!')

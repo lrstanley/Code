@@ -50,8 +50,8 @@ def owner(code, input):
 #    in bot.py and defaults in bind_commands() (mainly admin/owner)
 
 def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None,
-         rate=None, rule=None, priority=None, thread=None, args=None, admin=None,
-         owner=None, voiced=None, op=None):
+         rate=None, rule=None, priority=None, thread=None, event=None, args=None,
+         admin=None, owner=None, voiced=None, op=None):
     def add_attribute(func):
         # This is kinda ugly looking, but it does quite the job.
         if commands != None: func.commands = list(commands)
@@ -63,6 +63,7 @@ def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None
         if rule != None: func.rule = str(rule)
         if priority != None: func.priority = str(priority)
         if thread != None: func.thread = bool(thread)
+        if event != None: func.event = str(event).upper()
         if args != None: func.args = bool(args)
         if admin != None: func.admin = bool(admin)
         if owner != None: func.owner = bool(owner)
