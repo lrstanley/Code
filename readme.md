@@ -104,34 +104,18 @@ Licensing
 ---------
 _________
 
-Code Copyright (C) 2012-2014 Liam Stanley (More info here: http://code.liamstanley.io/#license)
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-The original license from Jenni and Phenny
-
-       Eiffel Forum License, version 2
+Code Copyright (C) 2012-2014 Liam Stanley
+    `Eiffel Forum License, version 2`
     
     1. Permission is hereby granted to use, copy, modify and/or
-       distribute this package, provided that:
-          * copyright notices are retained unchanged,
-          * any distribution of this package, whether modified or not,
-            includes this license text.
+        distribute this package, provided that:
+            * copyright notices are retained unchanged,
+            * any distribution of this package, whether modified or not,
+              includes this license text.
     2. Permission is hereby also granted to distribute binary programs
-       which depend on this package. If the binary program depends on a
-       modified version of this package, you are encouraged to publicly
-       release the modified version of this package.
+        which depend on this package. If the binary program depends on a
+        modified version of this package, you are encouraged to publicly
+        release the modified version of this package.
     
     THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT WARRANTY. ANY EXPRESS OR
     IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
