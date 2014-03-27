@@ -7,7 +7,8 @@ http://code.liamstanley.io/
 """
 
 import time, sys, os, re, threading, imp
-import irc
+#import irc
+from core import irc
 
 home = os.getcwd()
 

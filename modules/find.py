@@ -11,12 +11,12 @@ import os, re
 
 
 def load_db():
-    """ load lines from find.txt to search_dict """
-    if not os.path.isfile("find.txt"):
-        f = open("find.txt", "w")
-        f.write("#test,yano,foobar\n")
+    """load lines from find.txt to search_dict"""
+    if not os.path.isfile("modules/find.db"):
+        f = open("modules/find.db", "w")
+        f.write("#test,yolo,swag\n")
         f.close()
-    search_file = open("find.txt", "r")
+    search_file = open("modules/find.db", "r")
     lines = search_file.readlines()
     search_file.close()
     search_dict = dict()
@@ -44,9 +44,10 @@ def load_db():
             search_dict[channel][nick].append(uc.decode(result))
     return search_dict
 
+
 def save_db(search_dict):
-    """ save search_dict to find.txt """
-    search_file = open("find.txt", "w")
+    """save search_dict to find.db"""
+    search_file = open("modules/find.db", "w")
     for channel in search_dict:
         if channel is not "":
             for nick in search_dict[channel]:
@@ -64,7 +65,9 @@ def save_db(search_dict):
                     search_file.write("\n")
     search_file.close()
 
+
 # Create a temporary log of the most recent thing anyone says.
+@hook(rule=r'.*', priority='low')
 def collectlines(code, input):
     # don't log things in PM
     channel = (input.sender).encode("utf-8")
@@ -87,9 +90,9 @@ def collectlines(code, input):
     del templist[:-10]
     search_dict[channel][nick] = templist
     save_db(search_dict)
-collectlines.rule = r'.*'
-collectlines.priority = 'low'
 
+
+@hook(rule=r'(?iu)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w])(.*)', priority='high', rate=20)
 def findandreplace(code, input):
     # don't bother in PM
     channel = (input.sender).encode("utf-8")
@@ -145,11 +148,6 @@ def findandreplace(code, input):
     phrase = nick + (input.group(1) and ' thinks ' + rnick or '') + (me and ' ' or " \x02meant\x02 to say: ") + new_phrase
     if me and not input.group(1): phrase = '\x02' + phrase + '\x02'
     code.say(phrase)
-
-# Matches optional whitespace + 's' + optional whitespace + separator character
-findandreplace.rule = r'(?iu)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w])(.*)' # May work for both this and "meant" (requires input.group(i+1))
-findandreplace.priority = 'high'
-findandreplace.rate = 30
 
 
 if __name__ == '__main__':

@@ -6,7 +6,8 @@ http://code.liamstanley.io/
 """
 
 import sys, os, time, threading, signal
-import bot
+#import bot
+from core import bot
 
 class Watcher(object):
     def __init__(self):

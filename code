@@ -217,7 +217,7 @@ def main(argv=None):
 
     # Step Four: Load code
 
-    try: from __init__ import run
+    try: from core.run import run
     except ImportError:
         try: from code import run
         except ImportError:
