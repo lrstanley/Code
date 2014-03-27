@@ -9,10 +9,12 @@ http://code.liamstanley.io/
 import json, re
 import urllib2
 from socket import getfqdn as rdns
+from util.hook import *
 
 base = 'http://geo.liamstanley.io/json/%s'
 
 
+@hook(cmds=['ip', 'host', 'whois', 'geo', 'geoip'], ex='whois 8.8.8.8')
 def ip(code, input):
     """whois <ip|hostname> - Reverse domain/ip lookup (WHOIS)"""
     show = [
@@ -58,14 +60,12 @@ def ip(code, input):
             continue
         output.append('{blue}%s{c}: %s' % (option[1], data[option[0]]))
     return code.say(' \x02|\x02 '.join(output))
-ip.commands = ['ip', 'host', 'whois', 'geo', 'geoip']
-ip.example = ".whois 8.8.8.8"
 
 
+@hook(rule=r'.*', event='JOIN', rate=10)
 def geoip(code, input):
     """GeoIP user on join."""
-    if not hasattr(code.config, 'geoip'):
-        return
+    if not hasattr(code.config, 'geoip'): return
     if not code.config.geoip: return
 
     allowed = []
@@ -93,8 +93,7 @@ def geoip(code, input):
         return code.msg(channel, '{green}User is connecting from %s%s' % (', '.join(output), rough))
     except:
         return
-geoip.event = 'JOIN'
-geoip.rule = r'.*'
+
 
 if __name__ == '__main__':
     print __doc__.strip()
