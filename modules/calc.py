@@ -52,8 +52,6 @@ def wa(code, input):
         return code.say(answer)
     else:
         return code.reply('Sorry, no result.')
-wa.commands = ['wa']
-wa.example = 'wa 1 mile in feet'
 
 
 @hook(cmds=['md5', 'hash'], priority='low', args=True)

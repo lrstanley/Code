@@ -59,6 +59,7 @@ def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None
         if cmds != None: func.commands = list(cmds)
         if cmd != None: func.commands = list(cmd)
         if example != None: func.example = str(example)
+        if ex != None: func.example = str(ex)
         if rate != None: func.rate = int(rate)
         if rule != None: func.rule = str(rule)
         if priority != None: func.priority = str(priority)
