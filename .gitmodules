@@ -1,0 +1,4 @@
+[submodule "wiki"]
+	path = wiki
+	url = git://github.com/Liamraystanley/Code.wiki.git
+	branch = master
