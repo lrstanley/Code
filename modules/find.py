@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 
 import modules.unicode as uc
 import os, re
+from util.hook import *
 
 
 def load_db():
