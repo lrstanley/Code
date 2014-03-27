@@ -38,7 +38,7 @@ def gettld(code, input):
             desc = desc[:400] + "..."
         reply = "%s -- %s. IDN: %s, DNSSEC: %s" % (matches[1], desc,
                 matches[3], matches[4])
-        code.reply(reply)
+        code.say(reply)
     else:
         search = r'<td><a href="\S+" title="\S+">.{0}</a></td>\n<td><span class="flagicon"><img.*?\">(.*?)</a></td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n'
         search = search.format(unicode(input.group(2)))
