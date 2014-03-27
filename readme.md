@@ -27,13 +27,11 @@ Open-Source
 - Found a bug, feature, or technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code) page to make requests and post bugs. Heck, even fork Code as your own and make your own modifications!</dd>
 
 Configuration
-- By default, Code has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules.
+- By default, Code has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules, and more.
 
 Installation - How do I install? 
 ================================
 ________________________________
-
- > for rss.py to work (only usable on linux), install feedparser via your pip/yum/other package installer.
 
 **If you have any issues during the install, feel free to head to http://chat.liamstanley.io/ to get help**
 
@@ -52,11 +50,11 @@ Unix & Unix-like OS:
 
 Full command would be: 
 
-    python ./code
+    python code
 
 If you wish to run Code on a UNIX shell, the best thing to do would be to fork it to the background process using screen. You do this by execution python/Code with:
 
-    screen -S code python ./code
+    screen -S code ./code
 
 This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit screen safely, hit `CTRL+A` then `CTRL+D`.
 To log back into, and view the playback of Code, type `screen -x code`.
@@ -71,12 +69,11 @@ Windows:
     3) Configure Code's default.py file, located in your user directory.
        - This is often, `C:\\users\(your username)\.code\default.py`.
        - Note, notepad is not prefered. If anything, use Notepad++ under windows.
-    3) Now, you should be able to use run.exe (if it's in Code's directory).
-       - Else, you can open up command prompt, `cd` to Codes directory, and execute Code with `python code`.
-       - Note, if command prompt says that `python` is not a internal or external program,
+    3) You can open up command prompt, `cd` to Codes directory, and execute Code with `python code`.
+       - Note, if command prompt says that `python` is not a internal or external command/program,
          that means Python failed to be added to your system-wide %PATH% file.
          So, you need to add it to the %PATH% variable.
-         Feel free to google that one, Code is not noob-friendly.
+         Feel free to google that one, Code is not COMPLETELY noob-friendly.
 
 
 Configuration & Personalization 
@@ -88,7 +85,7 @@ Warning! Once you install Code using the method above, you need to configure him
 Unix & Unix-like OS: 
 --------------------
 
-Edit the file located at `../.code/default.py`. this is either the previous directory, or your $HOME directory `/home/(user)`.
+Edit the file located at `~/.code/default.py`.
 
 Windows
 -------
@@ -97,8 +94,6 @@ Edit the file located in your Documents folder, which should be located at:
 `C:\\users\myusername\.code\default.py` (for Windows Vista/7/8)
 `default.py` might be located in the same spot as the UNIX location listed above.
 You should see configuration file.
-
-you should uncomment, and replace the necessary items (like serverpass) to run your bot. 
 
 Licensing
 ---------
