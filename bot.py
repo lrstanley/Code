@@ -179,7 +179,7 @@ class Code(irc.Bot):
                     regexp = re.compile(pattern)
                     bind(self, func.priority, regexp, func)
 
-            custom = ['admin', 'empty', 'owner']
+            custom = ['admin', 'args', 'owner', 'op', 'voiced']
             for atrb in custom:
                 if not hasattr(func, atrb):
                     setattr(func, atrb, False)
@@ -237,14 +237,14 @@ class Code(irc.Bot):
 
     def call(self, func, origin, code, input):
         # custom decorators
-        try:
-            if func.op and not code.chan[input.sender][input.nick]['op']:
-                return code.say('{b}{red}You must be op to use that command!')
+        #try:
+        if func.op and not code.chan[input.sender][input.nick]['op']:
+            return code.say('{b}{red}You must be op to use that command!')
 
-            if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
-                return code.say('{b}{red}You must be voiced to use that command!')
-        except AttributeError:
-            pass
+        if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
+            return code.say('{b}{red}You must be voiced to use that command!')
+        #except AttributeError:
+        #    pass
 
         if func.admin and not input.admin:
             return code.say('{b}{red}You are not authorized to use that command!')
@@ -252,7 +252,7 @@ class Code(irc.Bot):
         if func.owner and not input.owner:
             return code.say('{b}{red}You must be owner to use that command!')
 
-        if func.empty and not input.group(2):
+        if func.args and not input.group(2):
             return code.say('No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
                       code.doc[func.name]['commands'][0]))
 
