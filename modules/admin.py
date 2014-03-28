@@ -13,7 +13,6 @@ defaultnick = None
 @hook(cmds=['modules'], rate=20, priority='high', op=True)
 def listmods(code, input):
     '''Send a list of the loaded modules to the user.'''
-    #if not admin(code, input): return
     return code.say('Modules: %s.' % ', '.join(code.modules))
 
 
@@ -32,7 +31,7 @@ def part(code, input):
     return code.write(['PART', input.group(2).strip()])
 
 
-@hook(cmds=['quit', 'terminate', 'shutdown', 'stop'], owner=True, args=True)
+@hook(cmds=['quit', 'terminate', 'shutdown', 'stop'], owner=True)
 def quit(code, input):
     '''Quit from the server. This is an owner-only command.'''
     code.write(['QUIT'], 'Terminating Bot.')
