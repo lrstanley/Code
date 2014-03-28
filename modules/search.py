@@ -20,7 +20,7 @@ uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
 def google_search(query):
     """Search using Googles AjaxSearch functionality."""
     try:
-        data = util.web.get(uri % query).read()
+        data = util.web.get(uri % quote(query)).read()
     except:
         return False
     if not data:
