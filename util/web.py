@@ -8,6 +8,8 @@ http://code.liamstanley.io/
 import re
 import urllib, urllib2, json
 from htmlentitydefs import name2codepoint
+import HTMLParser
+h = HTMLParser.HTMLParser()
 
 
 paste_url = 'http://paste.ml'
@@ -56,6 +58,10 @@ def entity(match):
     elif value in name2codepoint:
         return unichr(name2codepoint[value])
     return '[' + value + ']'
+
+
+def htmlescape(message):
+    return h.unescape(message)
 
 
 def decode(html):

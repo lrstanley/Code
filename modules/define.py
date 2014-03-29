@@ -88,7 +88,7 @@ def w(code, input):
       result = format(word, definitions, 3)
 
    if len(result) > 300:
-      result = result[:294] + ' {red}{b}[...]'
+      result = result[:294] + ' [...]'
    code.say(result)
 w.commands = ['w','define', 'd']
 w.example = 'w example'

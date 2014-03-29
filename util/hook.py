@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-tools.py - Code Tools
+hook.py - Code Hook Module
 http://code.liamstanley.io/
 """
 
