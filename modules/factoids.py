@@ -96,6 +96,14 @@ def factoid_manage(data, code, input):
             else:
                 return code.say('{red}That factoid does not exist!')
         return code.reply('{red}Use "{purple}? info <name>{red}" to view the factoid in raw form.')
+    elif cmd.lower() in ['list', 'all', 'show']:
+        factoids = db.keys()
+        if len(factoids) < 1:
+            return code.say('There are no factoids yet!')
+        tmp = []
+        for factoid in factoids:
+            tmp.append('?%s' % factoid)
+        return code.say('{b}List of factoids:{b} %s' % (', '.join(tmp)))
     else:
         return code.reply('{red} Usage: "{purple}? <add|delete|info> [args]{red}"')
 
