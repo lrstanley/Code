@@ -12,6 +12,13 @@ from util.hook import *
 from util import database, web
 
 
+# In the future.... Build factoids INTO the prefix+command structure.
+#  - Firstly check if there is a factoid within the prefix+command
+#  - Second check if the command exists in another module/is already registered..
+# Latter makes it so we can override commands if we want. As well, make aliases possibly.
+# But we have to move the factoi management to normal commands too. Fun!
+
+
 @hook(rule='^\?(.*)$')
 def factoid(code, input):
     """
@@ -89,14 +96,14 @@ def factoid_manage(data, code, input):
                 database.set(db, 'factoids')
                 return code.reply('{green}Successfully deleted the factoid "{purple}%s{green}"!' % name)
         return code.reply('{red}Use "{purple}? del <name>{red}" to delete a factoid.')
-    elif cmd.lower() == 'info':
+    elif cmd.lower() in ['info', 'raw', 'show', 'view']:
         if args:
             if name in db:
                 return code.say('Raw: ' + db[name])
             else:
                 return code.say('{red}That factoid does not exist!')
         return code.reply('{red}Use "{purple}? info <name>{red}" to view the factoid in raw form.')
-    elif cmd.lower() in ['list', 'all', 'show']:
+    elif cmd.lower() in ['list', 'all']:
         factoids = db.keys()
         if len(factoids) < 1:
             return code.say('There are no factoids yet!')
