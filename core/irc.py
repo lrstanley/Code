@@ -8,7 +8,8 @@ http://code.liamstanley.io/
 
 import sys, re, time, traceback
 import socket, asyncore, asynchat
-import os, codecs, pprint
+import os, codecs
+from util import output
 
 IRC_CODES = ('251', '252', '254', '255', '265', '266', '250', '333', '353', '366', '372', '375', '376', 'QUIT', 'NICK')
 cwd = os.getcwd()
@@ -30,9 +31,9 @@ class Origin(object):
 def create_logdir():
     try: os.mkdir(cwd + '/logs')
     except Exception, e:
-        print >> sys.stderr, 'There was a problem creating the logs directory.'
-        print >> sys.stderr, e.__class__, str(e)
-        print >> sys.stderr, 'Please fix this and then run code again.'
+        output.error('There was a problem creating the logs directory.')
+        output.error(e.__class__, str(e))
+        output.error('Please fix this and then run code again.')
         sys.exit(1)
 
 def check_logdir():
@@ -101,7 +102,7 @@ class Bot(asynchat.async_chat):
         if legacy:
             message = '{%s}%s{%s}' % (legacy, message, legacy)
         find_char = re.compile(r'{.*?}')
-        charlist = find_char.findall(message)
+        charlist = find_char.findall(unicode(message))
         try:
             message = unicode(message)
 
@@ -143,7 +144,7 @@ class Bot(asynchat.async_chat):
 
     def join(self, channel, password=None):
         '''Join a channel'''
-        print '[JOIN] Attempting to join channel %s' % channel
+        output.info('Attempting to join channel %s' % channel, 'JOIN')
         if password is None:
             self.write(['JOIN', channel])
         else:
@@ -190,8 +191,7 @@ class Bot(asynchat.async_chat):
 
     def initiate_connect(self, host, port):
         if self.verbose:
-            message = '[SERVER] Connecting to %s:%s...' % (host, port)
-            print >> sys.stderr, message
+            output.normal('Connecting to %s:%s...' % (host, port), 'STATUS')
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((host, port))
         try: asyncore.loop()
@@ -200,7 +200,7 @@ class Bot(asynchat.async_chat):
 
     def handle_connect(self):
         if self.verbose:
-            print >> sys.stderr, '[SERVER] Connected!'
+            output.success('Connected!', 'STATUS')
         if self.serverpass:
             self.write(('PASS', self.serverpass))
         self.write(('NICK', self.nick))
@@ -221,17 +221,17 @@ class Bot(asynchat.async_chat):
 
     def handle_close(self):
         self.close()
-        print >> sys.stderr, 'Disconnected from IRC - Reason unknown!'
+        output.error('Disconnected from IRC - Reason unknown!')
 
     def handle_error(self):
         '''Handle any uncaptured error in the core. Overrides asyncore's handle_error'''
         trace = traceback.format_exc()
         try:
-            print trace
+            output.error(trace)
         except:
             pass
-        print('[ERROR] Fatal error in core, please review exception below:')
-        print('[ERROR] Exception: ' + trace)
+        output.error('Fatal error in core, please review exception below:')
+        output.error('Exception: ' + trace)
 
     def collect_incoming_data(self, data):
         self.buffer += data
@@ -263,17 +263,17 @@ class Bot(asynchat.async_chat):
                     #    print line
                     if code in ['250', '251', '255']:
                         msg, sender = line.split(':',2)[2], line.split(':',2)[1].split()[0]
-                        print('[NOTICE] (%s) %s' % (sender, msg))
+                        output.normal('(%s) %s' % (sender, msg), 'NOTICE')
                     if code == 'NICK':
                         nick = line[1::].split('!',1)[0]
                         new_nick = line[1::].split(':',1)[1]
-                        print('[NICK] %s is now known as %s' % (nick, new_nick))
+                        output.normal('%s is now known as %s' % (nick, new_nick), 'NICK')
                     if code == 'PRIVMSG':
                         nick, ident, host, sender, msg = re.compile(reg['PRIVMSG']).match(line).groups()
                         msg = self.stripcolors(msg)
                         if msg.startswith('\x01'):
                             msg = '(me) ' + msg.split(' ',1)[1].strip('\x01')
-                        print('[%s] (%s) %s' % (sender, nick, msg))
+                        output.normal('(%s) %s' % (nick, msg), sender)
                         
                         # self.chan specific
                         if sender.startswith('#'):
@@ -281,16 +281,16 @@ class Bot(asynchat.async_chat):
                                 self.chan[sender][nick] = default
                     if code == 'NOTICE':
                         nick, sender, msg = re.compile(reg['NOTICE']).match(line).groups()
-                        print('[NOTICE] (%s) %s' % (nick.split('!')[0], msg))
+                        output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
                     if code == 'KICK':
                         nick, ident, host, sender, kicked, reason = re.compile(reg['KICK']).match(line).groups()
-                        print('[KICK] %s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason))
+                        output.normal('%s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason), 'KICK', 'red')
                     if code == 'MODE':
                         try:
                             nick, ident, host, args = re.compile(reg['MODE']).match(line).groups()
                         except:
                             return
-                        print('[MODE] %s sets MODE %s' % (nick, args))
+                        output.normal('%s sets MODE %s' % (nick, args), 'MODE')
 
                     # start gathering info for every channel here
                     # make sure to put after normal line parsing because some functions
@@ -508,7 +508,7 @@ class Bot(asynchat.async_chat):
         try:
             #import traceback
             trace = traceback.format_exc()
-            print '[ERROR] ' + trace
+            output.error(trace)
             lines = list(reversed(trace.splitlines()))
             report = [lines[0].strip()]
             for line in lines:
@@ -516,10 +516,10 @@ class Bot(asynchat.async_chat):
                 if line.startswith('File "/'):
                     report.append(line[0].lower() + line[1:])
                     break
-            else: report.append('Source unknown.')
+            else: report.append('{red}Source unknown.')
 
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
-        except: self.msg(origin.sender, 'Got an error.')
+        except: self.msg(origin.sender, '{red}Got an error.')
 
 class TestBot(Bot):
     def f_ping(self, origin, match, args):

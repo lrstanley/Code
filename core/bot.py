@@ -9,6 +9,7 @@ http://code.liamstanley.io/
 import time, sys, os, re, threading, imp
 #import irc
 from core import irc
+from util import output
 
 home = os.getcwd()
 
@@ -77,7 +78,7 @@ class Code(irc.Bot):
             try:
                 module = imp.load_source(name, filename)
             except Exception as e:
-                print >> sys.stderr, "[ERROR] Failed to load %s: %s" % (name, e)
+                output.error("Failed to load %s: %s" % (name, e))
             else:
                 if hasattr(module, 'setup'):
                     module.setup(self)
@@ -85,8 +86,8 @@ class Code(irc.Bot):
                 self.modules.append(name)
 
         if self.modules:
-            print >> sys.stderr, '[INFO] Registered modules:', ', '.join(self.modules)
-        else: print >> sys.stderr, "[WARNING] Couldn't find any modules"
+            output.info('Registered modules: ' + ', '.join(self.modules))
+        else: output.warning("Couldn't find any modules")
 
         self.bind_commands()
 
@@ -258,7 +259,7 @@ class Code(irc.Bot):
             return code.say('{b}{red}You must be owner to use that command!')
 
         if func.args and not input.group(2):
-            return code.say('No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
+            return code.say('{red}No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
                       code.doc[func.name]['commands'][0]))
 
         nick = (input.nick).lower()
@@ -282,7 +283,7 @@ class Code(irc.Bot):
                         print 'Blocked:', input.sender, func.name, func.func_code.co_filename
                         return
         except Exception, e:
-            print "Error attempting to block: ", str(func.name)
+            output.error("Error attempting to block: ", str(func.name))
             self.error(origin)
 
         try:

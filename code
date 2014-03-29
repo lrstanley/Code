@@ -7,6 +7,7 @@ Documentation: http://code.liamstanley.io/
 
 import sys, os, imp, optparse
 from textwrap import dedent as trim
+from util import output
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
@@ -21,7 +22,6 @@ def start():
         if len(line) > largest:
             largest = len(line)
     outer = (largest + (1 * 4)) * symbol
-    output = []
     print >> sys.stdout, outer
     for line in lines:
         difference = largest - (1 * 2) - len(line)
@@ -30,14 +30,11 @@ def start():
         tmp += ' '*sidedif + symbol
         print >> sys.stdout, tmp
     print >> sys.stdout, outer
-    print >> sys.stdout, '[START] Initializing the bot'
-
-#print >> sys.stdout, __doc__.strip() + '\n[BOT] Initializing Code for bootup...\n'
+    output.normal('Initializing the bot', 'START')
 
 def check_python_version():
     if sys.version_info < (2, 7):
-        error = '[ERROR] Requires Python 2.7 or later, from www.python.org'
-        print >> sys.stderr, error
+        output.error('Requires Python 2.7 or later, from www.python.org')
         sys.exit(1)
 
 def create_default_config(fn):
@@ -142,16 +139,16 @@ def create_default_config(fn):
 def create_configfile(dotdir):
 
     if not os.path.isdir(dotdir):
-        print '[INFO] Creating a config in directory ~/.code...'
+        output.info('Creating a config in directory ~/.code...')
         try: os.mkdir(dotdir)
         except Exception, e:
-            print >> sys.stderr, '[ERROR] There was a problem creating %s:' % dotdir
-            print >> sys.stderr, e.__class__, str(e)
-            print >> sys.stderr, '[ERROR] Please fix this and then run code again.'
+            output.error('There was a problem creating %s:' % dotdir)
+            output.error(e.__class__, str(e))
+            output.error('Please fix this and then run code again.')
             sys.exit(1)
 
     create_default_config(configpath)
-    print >> sys.stdout, '[INFO] Config file generated. Please edit it at ' + configpath + ' and run ./code again.'
+    output.info('Config file generated. Please edit it at ' + configpath + ' and run ./code again.')
 
     sys.exit(0)
 
@@ -208,7 +205,7 @@ def main(argv=None):
         try:
             module = imp.load_source(name, config_name)
         except:
-            print >> sys.stderr, "[ERROR] The config file has syntax errors. Please fix them and run Code again!"
+            output.error("The config file has syntax errors. Please fix them and run Code again!")
             sys.exit(1)
         module.filename = config_name
 
@@ -216,9 +213,9 @@ def main(argv=None):
             try:
                 cv = int(module.version)
                 if configv > cv:
-                    print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
+                    output.warning('Configuration is not up to date. You will likely recieve errors.')
             except:
-                print >> sys.stderr, '[ERROR] Configuration is not up to date. You will likely recieve errors.'
+                output.warning('Configuration is not up to date. You will likely recieve errors.')
 
         if not hasattr(module, 'website'):
             module.website = 'http://code.liamstanley.io'
@@ -236,9 +233,9 @@ def main(argv=None):
             module.serverpass = None
 
         if module.host == 'irc.example.net':
-            error = ('[ERROR] You must edit the config file first!\n' +
+            error = ('You must edit the config file first!\n' +
                         "You're currently using %s" % module.filename)
-            print >> sys.stderr, error
+            output.error(error)
             sys.exit(1)
 
         config_modules.append(module)
@@ -249,7 +246,7 @@ def main(argv=None):
     except ImportError:
         try: from code import run
         except ImportError:
-            print >> sys.stderr, "[ERROR] Couldn't find code to import"
+            output.error("Couldn't find code to import")
             sys.exit(1)
 
     # Step Five: Initialise And Run The codeeees

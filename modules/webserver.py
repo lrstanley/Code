@@ -10,6 +10,7 @@ import urlparse
 import threading, thread
 import time
 from random import randint as gen
+from util import output
 
 # Example command...
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
@@ -66,7 +67,7 @@ class CollectData(threading.Thread):
                     if not 'args' in query or not 'data' in query: continue
                     self.code.write(query['args'].split(), query['data'])
             except:
-                print '[ERROR] Failed to parse data! (%s)' % data
+                output.error('Failed to parse data! (%s)' % data)
                 continue
             data = []
 
@@ -76,7 +77,7 @@ def init(host, port):
     try:
         time.sleep(5)
         server = HTTPServer(('0.0.0.0', 8888), WebServer)
-        print('[WEBSERVER] Starting HTTP server on %s:%s' % (host, port))
+        output.success('Starting HTTP server on %s:%s' % (host, port), 'WEBSERVER')
     except:
         return
     server.serve_forever()
@@ -98,7 +99,7 @@ def setup(code):
     if not code.config.run_webserver:
         return
     if not code.config.webserver_pass:
-        print '[ERROR] To use webserver.py you must have a password setup in default.py!'
+        output.error('To use webserver.py you must have a password setup in default.py!')
         return
     Sender = CollectData(code, input, id)
     Sender.start() # Initiate the thread.
