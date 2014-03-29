@@ -9,6 +9,7 @@ import re, json
 import urllib, urllib2
 import hashlib
 from util.hook import *
+from util import web
 
 
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
@@ -45,13 +46,19 @@ def py(code, input):
 @hook(cmds=['wa'], ex='wa 1 mile in feet', args=True)
 def wa(code, input):
     """Wolphram Alpha search"""
-    query = input.group(2).encode('utf-8')
+    query = input.group(2)
     uri = 'http://tumbolia.appspot.com/wa/'
-    answer = urllib2.urlopen(uri + urllib.quote(query.replace('+', '%2B'))).read()
-    if answer:
-        return code.say(answer)
+    answer = urllib2.urlopen(uri + urllib.quote(query)).read()
+    if answer and not 'json stringified precioussss' in answer:
+        answer = answer.split(';')
+        if len(answer) > 3:
+            answer = answer[1]
+        answer = '{purple}{b}WolphramAlpha: {c}{b}' + answer
+        while '  ' in answer:
+            answer = answer.replace('  ', ' ')
+        return code.say(web.htmlescape(answer))
     else:
-        return code.reply('Sorry, no result.')
+        return code.reply('{red}Sorry, no result.')
 
 
 @hook(cmds=['md5', 'hash'], priority='low', args=True)
