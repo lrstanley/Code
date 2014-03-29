@@ -78,7 +78,6 @@ def init(host, port):
         server = HTTPServer(('0.0.0.0', 8888), WebServer)
         print('[WEBSERVER] Starting HTTP server on %s:%s' % (host, port))
     except:
-        print '[ERROR] Webserver already started.'
         return
     server.serve_forever()
 

@@ -22,6 +22,7 @@ def f_reload(code, input):
         code.variables = None
         code.commands = None
         code.setup()
+        print '[INFO] Reloaded all modules.'
         return code.reply('{b}Reloaded all modules.')
 
     # if a user supplies the module with the extension
@@ -48,6 +49,7 @@ def f_reload(code, input):
 
     code.register(vars(module))
     code.bind_commands()
+    print '[INFO] Reloaded %s' % module
     module = str(module)
     module_name, module_location = module.split()[1].strip('\''), module.split()[3].strip('\'').strip('>')
     code.say('{b}Reloaded {blue}%s{c} (from {blue}%s{c}) (version: {blue}%s{c}){b}' % (module_name, module_location, modified))
