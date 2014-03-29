@@ -18,7 +18,10 @@ def factoid(code, input):
         ?<word> -- Shows what data is associated with <word>.
         ? <add|delete|info> [args] -- for management
     """
-
+    
+    if len(input.group().strip()) == 1:
+        return
+    
     # If it's a management command...
     if input.group().startswith('? '):
         if not input.admin:
@@ -71,7 +74,7 @@ def factoid_manage(data, code, input):
         if args:
             if name in db:
                 return code.reply('{red}That factoid already exists!')
-            else:
+            elif len(args.strip().split()) > 2:
                 db[name] = args.split(' ',1)[1]
                 database.set(db, 'factoids')
                 return code.reply('{green}Successfully create the factoid "{purple}%s{green}"!' % name)
