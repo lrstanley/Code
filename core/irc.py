@@ -252,15 +252,15 @@ class Bot(asynchat.async_chat):
                     'KICK': r'^\:(.*?)\!(.*?)\@(.*\s?) KICK (.*\s?) (.*\s?) \:(.*?)$',
                     'MODE': r'^\:(.*?)\!(.*?)\@(.*\s?) MODE (.*?)$'
                 }
-                # :Liam!uid7517@id-7517.ealing.irccloud.com NICK :[]
-                # :[]!uid7517@id-7517.ealing.irccloud.com NICK :Liam
-
                 if line.startswith(':'):
                     if line[1::].split()[0] == self.nick:
                         pass
                     code = line.split()[1]
-                    #if code in ['NICK'] or code.isdigit():
-                    #    print line
+                    if code in ['433']:
+                        output.warning('Nickname %s is already in use. Trying another..' % self.nick)
+                        nick = self.nick + '_'
+                        self.write(('NICK', nick))
+                        self.nick = nick.encode('ascii','ignore')
                     if code in ['250', '251', '255']:
                         msg, sender = line.split(':',2)[2], line.split(':',2)[1].split()[0]
                         output.normal('(%s) %s' % (sender, msg), 'NOTICE')
@@ -275,7 +275,6 @@ class Bot(asynchat.async_chat):
                             msg = '(me) ' + msg.split(' ',1)[1].strip('\x01')
                         output.normal('(%s) %s' % (nick, msg), sender)
                         
-                        # self.chan specific
                         if sender.startswith('#'):
                             if not nick in self.chan[sender]:
                                 self.chan[sender][nick] = default
@@ -291,20 +290,8 @@ class Bot(asynchat.async_chat):
                         except:
                             return
                         output.normal('%s sets MODE %s' % (nick, args), 'MODE')
-
-                    # start gathering info for every channel here
-                    # make sure to put after normal line parsing because some functions
-                    # will return
-
-                    # 1. Methods:
-                    #      - code.chan - dict() keys of channels
-                    #      - code.chan['#L'] - get user list
-                    #      - code.chan['#L']['Liam'] - get user data
-                    #      - code.chan['#L']['Liam']['op'] - get admin
                     default = {'normal': True, 'voiced': False, 'op': False}
 
-                    # :nova.esper.net 353 Test @ #Liam :Test asdlasdkal Testing123 @Liam
-                    # :aperture.esper.net 353 Test = #L :Test _123DMWM +vps-2
                     if code == '353':
                         channel, user_list = line[1::].split(':',1)
                         channel, user_list = '#' + channel.split('#',1)[1].strip(), user_list.strip().split()
@@ -320,13 +307,10 @@ class Bot(asynchat.async_chat):
                             self.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op}
                     
                     if code == 'MODE':
-                        # :Liam!liam@liam.ml MODE #Liam +o Code-testing
-                        # :Liam!liam@liam.ml MODE #Liam +vv-vv Testing123 Test webuser605 webuser738
                         data = line.split('MODE',1)[1]
                         if len(data.split()) >= 3:
                             channel, modes, users = data.strip().split(' ',2)
                             users = users.split()
-                            # :Liam!liam@liam.ml MODE #Liam +vv-vv Testing123 Test webuser605 webuser738
                             tmp = []
 
                             def remove(old, sign):
@@ -368,8 +352,6 @@ class Bot(asynchat.async_chat):
                                     last_used = tmp[index]['sign']
 
                             names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
-                            # From above, we now have a LIST of user dicts()
-                            # {'mode': 'v', 'name': 'voiced1', 'sign': '+'}
                             for user in tmp:
                                 if user['mode'] in names and user['sign'] in names:
                                     mode, name, sign = names[user['mode']], user['name'], names[user['sign']]
@@ -389,14 +371,11 @@ class Bot(asynchat.async_chat):
                         del self.chan[channel][name]
 
                     if code == 'QUIT':
-                        # :Liam!liam@liam.ml KICK #LIam webuser :Uhm
-                        # :R2D2Warrior!~R2D2@ip70-160-210-75.hr.hr.cox.net QUIT :Msg here
                         name = line[1::].split('!',1)[0]
                         for channel in self.chan:
                             if name in channel:
                                 del self.chan[channel][name]
 
-                    # :Liam!liam@liam.ml KICK #L Test :Test
                     if code == 'KICK':
                         tmp = line.split('#',1)[1].split()
                         channel, name = '#' + tmp[0], tmp[1]
