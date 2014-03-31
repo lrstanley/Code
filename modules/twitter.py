@@ -18,12 +18,13 @@ import thread, time
 auto_check = 15 # Time in seconds to check for new tweets
 
 # Input checking...
-r_uid = re.compile(r'(@[a-zA-Z0-9_]{1,15})')
+r_uid = re.compile(r'\s(@[a-zA-Z0-9_]{1,15})')
 r_fullname = re.compile(r'<strong class="fullname">(.*?)</strong>')
 r_username = re.compile(r'<span class="username">.*?<span>@</span>(.*?)</span>')
 r_time = re.compile(r'<td class="timestamp">.*?</td>')
 r_tweet = re.compile(r'<tr class="tweet-container">.*?</tr>')
 r_url = re.compile(r'<a href=".*?" class="twitter_external_link.*?" data-url="(.*?)" dir=".*?" rel=".*?" target=".*?">(.*?)</a>')
+r_basicurl = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 
 uri_user = 'https://mobile.twitter.com/%s/'
 uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
@@ -44,7 +45,7 @@ def get_tweets(url):
             urls = r_url.findall(tweet_data)
             for url in urls:
                 url = list(url)
-                tweet_data = tweet_data.replace(url[1], web.shorten(url[0]))
+                tweet_data = tweet_data.replace(url[1], url[0])
             tmp['text'] = web.htmlescape(web.striptags(tweet_data).strip())
             uids = r_uid.findall(tmp['text'])
             for uid in uids:
@@ -109,6 +110,11 @@ def daemon(code, tc):
                 db.append(hash_str)
                 database.set(db, 'twitter')
                 msg = format(data)
+                if hasattr(code.config, 'shortenurls'):
+                    if code.config.shortenurls:
+                        urls = r_basicurl.findall(msg)
+                        for url in urls:
+                            msg = msg.replace(url, web.shorten(url))
                 code.msg(channel, msg.decode('ascii', 'ignore'))
             db = database.get('twitter')
             if db:
