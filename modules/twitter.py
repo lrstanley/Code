@@ -1,87 +1,69 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 twitter.py - Code Twitter Module
 http://code.liamstanley.io/
 """
 
-import re, time
-import util.web
-from urllib2 import urlopen
+import re
+import urllib2, urllib
+from util import web
 from util.hook import *
 
-r_username = re.compile(r'^[a-zA-Z0-9_]{1,15}$')
-r_link = re.compile(r'^https?://twitter.com/\S+$')
-r_p = re.compile(r'(?ims)(<p class="js-tweet-text.*?</p>)')
-r_tag = re.compile(r'(?ims)<[^>]+>')
-r_anchor = re.compile(r'(?ims)(<a.*?</a>)')
-r_expanded = re.compile(r'(?ims)data-expanded-url=["\'](.*?)["\']')
-r_whiteline = re.compile(r'(?ims)[ \t]+[\r\n]+')
-r_breaks = re.compile(r'(?ims)[\r\n]+')
+# Input checking...
+r_username = re.compile(r'^@?[a-zA-Z0-9_]{1,15}$')
+r_hash = re.compile(r'^#[a-zA-Z0-9_]{1,15}$')
+r_fullname = re.compile(r'<strong class="fullname">(.*?)</strong>')
+r_username = re.compile(r'<span class="username">.*?<span>@</span>(.*?)</span>')
+r_time = re.compile(r'<td class="timestamp">.*?</td>')
+r_tweet = re.compile(r'<tr class="tweet-container">.*?</tr>')
+r_url = re.compile(r'<a href=".*?" class="twitter_external_link.*?" data-url="(.*?)" dir=".*?" rel=".*?" target=".*?">(.*?)</a>')
 
-def entity(*args, **kargs):
-    return util.web.entity(*args, **kargs).encode('utf-8')
+uri_user = 'https://mobile.twitter.com/%s/'
+uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
 
-def decode(html):
-    return util.web.r_entity.sub(entity, html)
+def get_tweets(url):
+    try:
+        data = urllib2.urlopen(url).read().replace('\r','').replace('\n','')
+        data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
+    except:
+        return
+    tweets = []
 
-def expand(tweet):
-    def replacement(match):
-        anchor = match.group(1)
-        for link in r_expanded.findall(anchor):
-            return link
-        return r_tag.sub('', anchor)
-    return r_anchor.sub(replacement, tweet)
+    for tweet in data:
+        try:
+            tmp = {}
+            tmp['full'] = r_fullname.findall(tweet)[0].strip()
+            tmp['user'] = r_username.findall(tweet)[0].strip()
+            tmp['time'] = web.htmlescape(r_time.findall(tweet)[0]).strip()
+            tweet_data = t_tweet.findall(tweet)[0].strip()
+            urls = r_url.findall(tweet_data)
+            for url in urls:
+                url = list(url)
+                tweet_data = tweet_data.replace(url[1], url[0])
+            tmp['text'] = web.htmlescape(tweet_data).strip()
+            tweets.append(tmp)
+        except:
+            continue
+    if tweets:
+        return tweets
+    else:
+        return False
 
-def read_tweet(url):
-    bytes = urlopen(url).read()
-    shim = '<div class="content clearfix">'
-    if shim in bytes:
-        bytes = bytes.split(shim, 1).pop()
-
-    for text in r_p.findall(bytes):
-        text = expand(text)
-        text = r_tag.sub('', text)
-        text = text.strip()
-        text = r_whiteline.sub(' ', text)
-        text = r_breaks.sub(' ', text)
-        return decode(text)
-    return "Sorry, couldn't get a tweet from %s" % url
 
 def format(tweet, username):
-    return '%s (@%s)' % (tweet, username)
-
-def user_tweet(username):
-    tweet = read_tweet('https://twitter.com/' + username + "?" + str(time.time()))
-    return format(tweet, username)
-
-def id_tweet(tid):
-    link = 'https://twitter.com/twitter/status/' + tid
-    data = util.web.head(link)
-    message, status = tuple(data)
-    if status == 301:
-        url = message.get("Location")
-        if not url: return "Sorry, couldn't get a tweet from %s" % link
-        username = url.split('/')[3]
-        tweet = read_tweet(url)
-        return format(tweet, username)
-    return "Sorry, couldn't get a tweet from %s" % link
+    return '{b}{teal}%s{c} ({purple}@%s{c}){b}' % (tweet, username)
 
 
 @hook(cmds=['tw','twitter'],ex='twitter liamraystanley', args=True)
 def twitter(code, input):
-    """twitter <link|username|tweet id> - Return twitter results for search"""
-    arg = input.group(2).strip()
-    if isinstance(arg, unicode):
-        arg = arg.encode('utf-8')
-
-    if arg.isdigit():
-        code.say(id_tweet(arg))
-    elif r_username.match(arg):
-        code.say(user_tweet(arg))
-    elif r_link.match(arg):
-        username = arg.split('/')[3]
-        tweet = read_tweet(arg)
-        code.say(format(tweet, username))
-    else: code.reply("Give me a link, a username, or a tweet id")
+    """twitter <hashtag|username> - Return twitter results for search"""
+    err = '{red}{b}Unabled to find any tweets with that search!'
+    if r_hash.match(input.group(2)):
+        data = get_tweets(uri_hash % urllib.quote(input.group(2)))
+        if not data: return code.say(err)
+        code.say(format(data[0]['text'], data[0]['user']))
+    elif r_username.match(input.group(2)):
+        data = get_tweets(uri_user % input.group(2))
+        if not data: return code.say(err)
+        code.say(format(data[0]['text'], data[0]['user']))
