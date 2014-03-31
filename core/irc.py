@@ -80,8 +80,8 @@ class Bot(asynchat.async_chat):
             'purple': '\x0306', 'orange': '\x0307', 'olive': '\x0307', 'gold': '\x0307',
             'yellow': '\x0308', 'lightgreen': '\x0309', 'lime': '\x0309', 'teal': '\x0310',
             'cyan': '\x0311', 'lightblue': '\x0312', 'royal': '\x0312', 'lightpurple': '\x0313',
-            'pink': '\x0313', 'fuchsia': '\x0313', 'grey': '\x0314', 'lightgrey': '\x0315',
-            'silver': '\x0315',
+            'pink': '\x0313', 'fuchsia': '\x0313', 'grey': '\x0314', 'gray': '\x0314',
+            'lightgrey': '\x0315', 'silver': '\x0315',
             # Even more special...
             'bold': '\x02', 'b': '\x02', 'italic': '\x16', 'underline': '\x1f', 'reset': '\x0f',
             'r': '\x0f', 'clear': '\x03', 'c': '\x03'
