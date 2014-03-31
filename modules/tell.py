@@ -48,6 +48,7 @@ def setup(self):
 
 @hook(cmds=['tell'], ex='tell George When you get back on, I need your help!', args=True)
 def f_remind(code, input):
+    """tell <user> -- Save a note so that when a user gets back online it plays for them"""
     teller = input.nick
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group())[1:].startswith("tell"):
