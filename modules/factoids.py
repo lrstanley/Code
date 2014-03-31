@@ -74,7 +74,7 @@ def factoid_manage(data, code, input):
         if args:
             if name in db:
                 return code.reply('{red}That factoid already exists!')
-            elif len(args.strip().split()) > 2:
+            elif len(args.strip().split()) > 1:
                 db[name] = args.split(' ',1)[1]
                 database.set(db, 'factoids')
                 return code.reply('{green}Successfully create the factoid "{purple}%s{green}"!' % name)

@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 import sys, platform
 
 colors = True
+parse = True
 
 # Note: Background would be 4#
 black, red, green, yellow, blue, magenta, cyan, white = range(8)
@@ -34,15 +35,24 @@ def format_colors(message):
 
 
 def template(message, prefix, color, error=False):
-    if platform.system().lower() == 'windows':
-        tmp = '[%s] %s' % (prefix.upper(), message)
-        return tmp
+    if not prefix:
+        prefix = ''
+    if not parse:
+        if error:
+            print >> sys.stderr, '[%s] %s' % (prefix, message)
+        else:
+            print >> sys.stdout, '[%s] %s' % (prefix, message)
+        return
     prefix_length = len(prefix) + 2
     if prefix_length >= pad:
         padding = ' '
     else:
         padding = ' ' * (pad - prefix_length)
-    prefix = '$%s%s$bold[%s]$reset' % (color.lower(), padding, prefix.upper())
+    if len(prefix) > 1:
+        prefix = '[%s]' % prefix
+    else:
+        prefix = '  '
+    prefix = '$%s%s$bold%s$reset' % (color.lower(), padding, prefix.upper())
     clean_prefix = ' ' * pad
     data = ' | %s$reset'
     for line in message.split('\n'):
