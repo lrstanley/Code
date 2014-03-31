@@ -29,6 +29,8 @@ def factoid(code, input):
         return factoid_manage(input.group().split(' ', 1)[1], code, input)
 
     db = database.get('factoids')
+    if not db:
+        db = []
 
     if len(input.group(1).strip().split()) <= 1:
         id, arguments = input.group(1), ''
