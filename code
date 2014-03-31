@@ -22,14 +22,14 @@ def start():
         if len(line) > largest:
             largest = len(line)
     outer = (largest + (1 * 4)) * symbol
-    print >> sys.stdout, outer
+    output.normal(outer, False)
     for line in lines:
         difference = largest - (1 * 2) - len(line)
         tmp = symbol + (1 * ' ') + line
         sidedif = (largest + (1 * 4)) - len(tmp) - 1
         tmp += ' '*sidedif + symbol
-        print >> sys.stdout, tmp
-    print >> sys.stdout, outer
+        output.normal(tmp, False)
+    output.normal(outer, False)
     output.normal('Initializing the bot', 'START')
 
 def check_python_version():
