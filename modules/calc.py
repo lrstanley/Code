@@ -77,7 +77,3 @@ def sha256(code, input):
 def sha512(code, input):
     """sha512 <string> -- Create a sha512 hash of the input string"""
     return code.say(hashlib.sha512(input.group(2)).hexdigest())
-
-
-if __name__ == '__main__': 
-    print __doc__.strip()

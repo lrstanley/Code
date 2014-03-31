@@ -237,6 +237,3 @@ def topic(code, input):
     return
 topic.commands = ['topic']
 topic.priority = 'low'
-
-if __name__ == '__main__':
-    print __doc__.strip()

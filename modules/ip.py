@@ -14,7 +14,7 @@ from util.hook import *
 base = 'http://geo.liamstanley.io/json/%s'
 
 
-@hook(cmds=['ip', 'host', 'whois', 'geo', 'geoip'], ex='whois 8.8.8.8')
+@hook(cmds=['ip','host','whois','geo','geoip'], ex='whois 8.8.8.8')
 def ip(code, input):
     """whois <ip|hostname> - Reverse domain/ip lookup (WHOIS)"""
     show = [
@@ -93,7 +93,3 @@ def geoip(code, input):
         return code.msg(channel, '{green}User is connecting from %s%s' % (', '.join(output), rough))
     except:
         return
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

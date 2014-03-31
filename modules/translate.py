@@ -108,7 +108,3 @@ def tr(code, input):
 
         code.reply(msg)
     else: code.say('{red}Language guessing failed, so try suggesting one!')
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

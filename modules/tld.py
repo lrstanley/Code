@@ -59,7 +59,3 @@ def gettld(code, input):
         else:
             reply = "No matches found for TLD: {0}".format(unicode(input.group(2)))
         code.say(reply)
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

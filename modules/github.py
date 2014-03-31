@@ -13,12 +13,11 @@ repo_api = 'https://api.github.com/repos/%s' # Username/Repo
 user_api = 'https://api.github.com/users/%s' # Username
 
 
+@hook(cmds['github','git'], ex='github Liamraystanley/Code', rate=15, args=True)
 def github(code, input):
     """github <user}user/repo> - Get username data, or user/repo data from Github"""
     syntax = 'Syntax: \'.github <user|user/repo>\''
     failed = 'Failed to get data from Githubs API :('
-    if empty(code, input): return
-
     if len(input.group(2).strip().split()) != 1:
         return code.say(syntax)
     
@@ -84,10 +83,6 @@ def github(code, input):
         output.append('%s %s' % (response['subscribers_count'],u'\u2764'))
         output.append(response['html_url'])
         return code.say(spacer.join(output))
-github.commands = ['github','git']
-github.example = 'github Liamraystanley/Code'
-github.priority = 'medium'
-github.rate = '15'
 
 
 def git_info():
@@ -99,6 +94,7 @@ def git_info():
     return commit, author, date
 
 
+@hook(cmds['version','v'], rate=30)
 def version(code, input):
     """Try to get version (commit) data from git (if installed)"""
     try:
@@ -110,47 +106,37 @@ def version(code, input):
         code.say('  ' + '{b}Source:{b} https://github.com/Liamraystanley/Code/')
     except:
         code.say('%s does not use Github file management. Unable to determine version.' % code.nick)
-version.commands = ['version']
-version.priority = 'medium'
-version.rate = 30
 
 
+@hook(rule='\x01VERSION\x01', rate=20)
 def ctcp_version(code, input):
     commit, author, date = git_info()
     date = date.replace("  ", "")
 
     code.write(('NOTICE', input.nick),
             '\x01VERSION {0} : {1}\x01'.format(commit, date))
-ctcp_version.rule = '\x01VERSION\x01'
-ctcp_version.rate = 20
 
 
+@hook(rule='\x01SOURCE\x01', rate=20)
 def ctcp_source(code, input):
     code.write(('NOTICE', input.nick),
             '\x01SOURCE https://github.com/Liamraystanley/Code/\x01')
     code.write(('NOTICE', input.nick),
             '\x01SOURCE\x01')
-ctcp_source.rule = '\x01SOURCE\x01'
-ctcp_source.rate = 20
 
 
+@hook(rule='\x01PING\s(.*)\x01', rate=10)
 def ctcp_ping(code, input):
     text = input.group()
     text = text.replace('PING ', '')
     text = text.replace('\x01', '')
     code.write(('NOTICE', input.nick),
             '\x01PING {0}\x01'.format(text))
-ctcp_ping.rule = '\x01PING\s(.*)\x01'
-ctcp_ping.rate = 10
 
 
+@hook(rule='\x01TIME\x01', rate=20)
 def ctcp_time(code, input):
     dt = datetime.now()
     current_time = dt.strftime('%A, %d. %B %Y %I:%M%p')
     code.write(('NOTICE', input.nick),
             '\x01TIME {0}\x01'.format(current_time))
-ctcp_time.rule = '\x01TIME\x01'
-ctcp_time.rate = 20
-
-if __name__ == '__main__':
-    print __doc__.strip()

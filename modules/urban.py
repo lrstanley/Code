@@ -8,11 +8,14 @@ http://code.liamstanley.io/
 from urllib2 import urlopen as get
 from urllib import quote
 from json import loads as jsonify
+from util.hook import *
 
 uri = 'http://api.urbandictionary.com/v0/define?term=%s'
 random_uri = 'http://api.urbandictionary.com/v0/random'
 error = '{red}{b}Unable to find definition!'
 
+
+@hook(cmds=['urban','ud'], ex='urban liam 2')
 def urban(code, input):
     # clean and split the input
     try:
@@ -60,8 +63,6 @@ def urban(code, input):
                             ))
     except:
         return code.reply('{red}{b}Failed to pull definition from urbandictionary.com!')
-urban.commands = ['urban', 'ud']
-urban.example = 'urban liam 2'
 
 
 def strp(data):
@@ -69,6 +70,3 @@ def strp(data):
     while '  ' in data:
         data = data.replace('  ', ' ')
     return data.strip()
-
-if __name__ == '__main__':
-    print __doc__.strip()

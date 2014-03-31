@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 wiktionary.py - Code Wiktionary Module
 http://code.liamstanley.io/
 """
@@ -11,9 +10,13 @@ from urllib import quote
 from urllib2 import urlopen
 from util.hook import *
 
+
 uri = 'http://en.wiktionary.org/w/index.php?title=%s&printable=yes'
 r_tag = re.compile(r'<[^>]+>')
 r_ul = re.compile(r'(?ims)<ul>.*?</ul>')
+parts = ('preposition', 'particle', 'blue', 'noun', 'verb',
+   'adjective', 'adverb', 'interjection')
+
 
 def text(html):
    text = r_tag.sub('', html).strip()
@@ -22,6 +25,7 @@ def text(html):
    text = text.replace('(intransitive', '(intr.')
    text = text.replace('(transitive', '(trans.')
    return text
+
 
 def wiktionary(word):
    try:
@@ -62,8 +66,6 @@ def wiktionary(word):
          break
    return etymology, definitions
 
-parts = ('preposition', 'particle', 'blue', 'noun', 'verb',
-   'adjective', 'adverb', 'interjection')
 
 def format(word, definitions, number=2):
    result = '{purple}{b}%s{b}{c}' % word.encode('utf-8')
@@ -75,8 +77,9 @@ def format(word, definitions, number=2):
          result += ', '.join(n)
    return result.strip(' .,')
 
+
+@hook(cmds=['w','define','d'], ex='w example', args=True)
 def w(code, input):
-   if empty(code, input): return
    word = input.group(2).lower()
    etymology, definitions = wiktionary(word)
    if not definitions:
@@ -90,9 +93,3 @@ def w(code, input):
    if len(result) > 300:
       result = result[:294] + ' [...]'
    code.say(result)
-w.commands = ['w','define', 'd']
-w.example = 'w example'
-
-
-if __name__ == '__main__':
-   print __doc__.strip()

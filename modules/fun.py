@@ -28,6 +28,8 @@ def sexycomment(rand):
         response = random.choice(low)
     return response
 
+
+@hook(cmds=['rr','roulette'], ex='roulette Timothy', rate=20)
 def roulette(code, input):
     """Play a little gruesome russian roulette."""
     chance = str(random.randint(1,6))
@@ -45,11 +47,9 @@ def roulette(code, input):
     else:
         nick = input.nick
     code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nick, response))
-roulette.commands = ['rr', 'russianroulette', 'roulette']
-roulette.priority = 'medium'
-roulette.example = 'roulette Timothy'
-roulette.rate = 20
 
+
+@hook(cmds=['sm','sexymeter'], ex='sm Code', rate=20)
 def sexymeter(code, input):
     """Rate people in terms of sexy, and not!"""
     hotuser = ['amber', 'mel', 'alaska', 'zac', 'zacbatt'] #remember, lowercase
@@ -97,14 +97,11 @@ def sexymeter(code, input):
             nick = text[1]
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (nick, rand,
                  sexycomment(rand)))
-sexymeter.commands = ['sm', 'sexymeter', 'um', 'uglymeter']
-sexymeter.priority = 'medium'
-sexymeter.example = 'sexymeter Code'
-sexymeter.rate = 20
 
+
+@hook(cmds=['slap'], rate=20, args=True)
 def slap(code, input):
     """Slaps a person using random methods"""
-    if empty(code, input): return
     text = input.group().split()
     if len(text) < 2 or text[1].startswith('#'): return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or \
@@ -123,10 +120,9 @@ def slap(code, input):
     'into a hole, till death', 'into mid-air disintegration', \
     'into a pancake'))
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', verb, text[1], afterfact, '\x01'])
-slap.commands = ['slap', 'slaps']
-slap.priority = 'medium'
-slap.rate = 20
 
+
+@hook(cmds=['hug'], rate=5)
 def hug(code, input):
     """Hugs <target>"""
     text = input.group().split()
@@ -138,10 +134,9 @@ def hug(code, input):
     types = random.choice(('hugs', 'snuggles'))
     hugtype = random.choice(('real tight', 'strongly', 'like a bear', 'tight', ''))
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', types, text[1], hugtype, '\x01'])
-hug.commands = ['hug', 'hugs']
-hug.priority = 'low'
-hug.rate = 5
 
+
+@hook(cmds['8ball', '8b'], ex='8ball Will I feel better tomorrow?', rate=15)
 def magic(code, input):
     """Use the Magic 8 Ball"""
     luck = str(random.randint(1,4))
@@ -165,11 +160,9 @@ def magic(code, input):
                        'Concentrate and ask again.'))
         response = '{yellow}' + response
     code.say('*%s shakes the Magic 8 Ball...* {b}%s{c}{b}' % (code.nick, response))
-magic.commands = ['8ball', '8b', 'luck', 'eightball', 'magic8']
-magic.priority = 'medium'
-magic.example = '8ball will i feel better tomorrow?'
-magic.rate = 15
 
+
+@hook(cmds=['rock','paper','scissors'], rate=15)
 def rps(code, input):
     """Play some Rock-Paper-Scissors with Code!"""
     text = input.group().lower()
@@ -209,8 +202,3 @@ def rps(code, input):
             response = 'rock'
     return code.say('*Rock... Paper... Scissors!* You {%s}{b}%s{b}! %s had {b}%s{b}!' % (color,
                     state, code.nick, response))
-rps.commands = ['rock', 'paper', 'scissors'] #screw combining .rps (cmd) and .(cmd)
-rps.rate = 15
-
-if __name__ == '__main__':
-    print __doc__.strip()

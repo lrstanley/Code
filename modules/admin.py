@@ -209,6 +209,3 @@ def write_raw(code, input):
     except:
         return code.write(input.group(2), raw=True)
     return code.write(args, text, raw=True)
-
-if __name__ == '__main__':
-    print __doc__.strip()

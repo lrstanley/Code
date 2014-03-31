@@ -16,6 +16,8 @@ yt_regex = r'https?://.*?\.(youtube\.com|youtu\.be)\/watch.*?v=(.*\w)'
 api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=jsonc&start-index=%s&q=%s'
 
+
+@hook(rule=yt_regex, thread=False)
 def youtube(code, input):
     """Automatically find the information from a youtube url and display it
        to users in a channel"""
@@ -31,13 +33,11 @@ def youtube(code, input):
         return code.say(' - '.join(reply))
     except:
         return
-youtube.rule = yt_regex
-youtube.priority = 'medium'
-youtube.thread = False
 
+
+@hook(cmds=['youtube','yt','video'], ex='yt PewDiePie 7', rate=10, args=True)
 def get_search(code, input):
     """Search youtube for the top video of <query>. Also note, you can specify next response with a number at the end"""
-    if empty(code, input): return
     if input.group(2).strip().split()[-1].isdigit():
         numerical = int(input.group(2).strip().split()[-1])
         if numerical < 1: return code.reply('Invalid search number: \'.yt <search query> <#>\'')
@@ -49,9 +49,6 @@ def get_search(code, input):
         return code.say(' - '.join(reply))
     except:
         return code.reply('{red}Failed to search for %s!' % input.group(2))
-get_search.rate = 10
-get_search.commands = ['youtube','yt','video']
-get_search.example = 'yt PewDiePie 7'
 
 def create_response(data,url=False):
     reply = []
@@ -88,6 +85,3 @@ def create_response(data,url=False):
 def parse_date(thedate):
     upload_time = time.strptime(thedate, '%Y-%m-%dT%H:%M:%S.000Z')
     return time.strftime("%Y.%m.%d", upload_time)
-
-if __name__ == '__main__':
-    print __doc__.strip()

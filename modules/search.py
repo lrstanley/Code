@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-search.py - Code Web Search Module
+search.py - Code Search Module
 http://code.liamstanley.io/
 """
 
@@ -27,9 +26,10 @@ def google_search(query):
         return False
     return json(data)
 
+
+@hook(cmds['search','google','g'], ex='search Twitter API', rate=10, args=True)
 def search(code, input):
     """Queries Google for the specified input."""
-    if empty(code, input): return
     r = google_search(input.group(2))
     if uri is False:
         return code.reply("Problem getting data from Google.")
@@ -67,15 +67,11 @@ def search(code, input):
                 link = util.web.shorten(url['url'])
         output.append(color + r_type.format(title=title, link=link))
     code.say('%s ({b}%s{b}, {b}%s{b} results)' % (' | '.join(output), time, count))
-search.commands = ['search', 'google', 'g']
-search.priority = 'medium'
-search.example = 'search swhack'
-search.rate = 10
 
 
+@hook(cmds=['gc'], priority='high', ex='gc extrapolate', rate=10, args=True)
 def gc(code, input):
     """Returns the number of Google results for the specified input."""
-    if empty(code, input): return
     r = google_search(input.group(2))
     if uri is False:
         return code.reply("Problem getting data from Google.")
@@ -84,10 +80,3 @@ def gc(code, input):
     urls = r['responseData']['results']
     return code.say('%s: {b}%s{b} results found.' % (input.group(2), r['responseData']['cursor']['resultCount']))
     code.say(query + ': ' + num)
-gc.commands = ['gc']
-gc.priority = 'high'
-gc.example = 'gc extrapolate'
-gc.rate = 10
-
-if __name__ == '__main__':
-    print __doc__.strip()

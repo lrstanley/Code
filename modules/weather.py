@@ -29,9 +29,10 @@ def location(name):
     lng = data['geonames'][0]['lng']
     return name, country, lat, lng
 
+
+@hook(cmds=['weather'], ex='weather Eaton Rapids, Michigan', args=True)
 def weather(code,input):
     """weather <city, state|country|zip> - Return weather results for specified address"""
-    if empty(code, input): return
     # Here, we check if it's an actual area, if the geo returns the lat/long then it is..
     name, country, lat, lng = location(input.group(2))
     if not name or not country or not lat or not lng:
@@ -78,9 +79,9 @@ def weather(code,input):
     if 'ozone' in data:
         output.append('{b}{blue}Ozone level:{b}{c} %s' % data['ozone'])
     code.say(' | '.join(output))
-weather.commands = ['weather']
-weather.example = 'weather Eaton Rapids, Michigan'
 
+
+@hook(cmds=['fuckingweather','fw'], ex='fw hell', priority='low')
 def fw(code, input):
     """fw (ZIP|City, State) -- provide a ZIP code or a city state pair to hear about the fucking weather"""
     if not input.group(2):
@@ -97,9 +98,3 @@ def fw(code, input):
         return code.reply(h.unescape(temp) +' '+ remark +'. '+ flavor)
     except:
         return code.reply('{red}{b}I CAN\'T FIND THAT SHIT.')
-fw.commands = ['fuckingweather', 'fw']
-fw.example = 'fw 48827'
-fw.priority = 'low'
-
-if __name__ == '__main__':
-    print __doc__.strip()

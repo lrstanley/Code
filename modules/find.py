@@ -149,7 +149,3 @@ def findandreplace(code, input):
     phrase = nick + (input.group(1) and ' thinks ' + rnick or '') + (me and ' ' or " \x02meant\x02 to say: ") + new_phrase
     if me and not input.group(1): phrase = '\x02' + phrase + '\x02'
     code.say(phrase)
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

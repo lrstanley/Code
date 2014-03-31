@@ -44,7 +44,3 @@ def add_twss(code, input):
         f.write(re.sub(r'[^\w\s]', '', last.lower()) + '\n')
         f.close()
     code.say('That\'s what she said.')
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

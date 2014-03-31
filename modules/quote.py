@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 quote.py - Code Quote Module
 http://code.liamstanley.io/
 """
@@ -11,24 +10,19 @@ import modules.unicode as uc
 from util.hook import *
 
 
+@hook(cmds=['addquote'], priority='low', ex='addquote <liam> HERPDERPTRAINS', rate=30, admin=True, args=True)
 def addquote(code, input):
-    '''.addquote <nick> something they said here -- adds the quote to the quote database.'''
-    if not admin(code, input): return
-    if empty(code, input): return
+    '''addquote <nick> something they said here -- adds the quote to the quote database.'''
     fn = open('quotes.txt', 'a')
     output = uc.encode(input.group(2))
     fn.write(output)
     fn.write('\n')
     fn.close()
     code.reply('Quote added.')
-addquote.commands = ['addquote']
-addquote.priority = 'low'
-addquote.example = 'addquote <liam> HERPDERPTRAINS'
-addquote.rate = 30
 
-
+@hook(cmds=['quote'], priority='low', ex='quote 2', rate=30)
 def retrievequote(code, input):
-    '''.quote <number> -- displays a given quote'''
+    '''quote <number> -- displays a given quote'''
     text = input.group(2)
     try:
         fn = open('quotes.txt', 'r')
@@ -51,16 +45,11 @@ def retrievequote(code, input):
     else:
         line = lines[number - 1]
         code.reply('Quote {blue}%s{c} of {blue}%s{c}: ' % (number, MAX) + line)
-retrievequote.commands = ['quote']
-retrievequote.priority = 'low'
-retrievequote.example = 'quote 2'
-retrievequote.rate = 30
 
 
+@hook(cmds=['rmquote', 'delquote'], priority='low', ex='delquote 2', rate=30, admin=True, args=True)
 def delquote(code, input):
-    '''.rmquote <number> -- removes a given quote from the database. Can only be done by the owner of the bot.'''
-    if not admin(code, input): return
-    if empty(code, input): return
+    '''delquote <number> -- removes a given quote from the database. Can only be done by the owner of the bot.'''
     text = input.group(2)
     number = int()
     try:
@@ -85,11 +74,3 @@ def delquote(code, input):
                 fn.write('\n')
     fn.close()
     code.reply('{green}Successfully deleted quote {b}%s{b}.' % (number))
-delquote.commands = ['rmquote', 'delquote','deletequote','removequote']
-delquote.priority = 'low'
-delquote.example = 'rmquote 2'
-delquote.rate = 30
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

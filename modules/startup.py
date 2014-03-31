@@ -7,9 +7,9 @@ http://code.liamstanley.io/
 """
 
 import threading, time
+from util.hook import *
 
 def setup(code):
-    # by clsn
     code.data = {}
     refresh_delay = 300.0
 
@@ -51,6 +51,8 @@ def setup(code):
 
         code.handle_connect = outer_handle_connect
 
+
+@hook(rule=r'.*', event='251', priority='low')
 def startup(code, input):
     import time
 
@@ -61,9 +63,3 @@ def startup(code, input):
     for channel in code.channels:
         code.join(channel)
         time.sleep(0.5)
-startup.rule = r'.*'
-startup.event = '251'
-startup.priority = 'low'
-
-if __name__ == '__main__':
-    print __doc__.strip()

@@ -9,6 +9,7 @@ import re
 import urllib
 import urllib2
 import HTMLParser
+from util.hook import *
 h = HTMLParser.HTMLParser()
 
 key = '51befff611067'
@@ -17,6 +18,7 @@ mature = False
 # http://api.betacie.com/readme.php
 
 
+@hook(cmds=['fml','fmylife'], ex='fml #12390101', priority='medium', rate=15)
 def fml(code, input):
     """fml - Retrieve random FML's, via FMyLife.com's dev API."""
     # Random/No input
@@ -51,10 +53,6 @@ def fml(code, input):
             code.say('(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (r['id'],r['max'],str(r['fml-id']), \
                      h.unescape(r['fml']).replace('FML','{red}FML{c}'),r['+'],r['-']))
         except: return code.say('Failed to search for FML.')
-fml.commands = ['fml', 'fmylife']
-fml.example = 'fml #12390101'
-fml.priority = 'medium'
-fml.rate = 15
 
 
 def fml_random():

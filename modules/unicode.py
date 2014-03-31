@@ -194,7 +194,3 @@ def bytes(code, input):
     if empty(code, input): return
     b = input.bytes
     code.reply('%r' % b[b.find(' ') + 1:])
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

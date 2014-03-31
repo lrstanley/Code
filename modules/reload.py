@@ -66,6 +66,3 @@ def update(code, input):
         data = data.replace('  ', ' ')
     code.say('Github: ' + code.bold(data))
     f_reload(code, input)
-
-if __name__ == '__main__':
-    print __doc__.strip()

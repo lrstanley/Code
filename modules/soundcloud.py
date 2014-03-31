@@ -64,6 +64,3 @@ def convert_time(seconds): # data[17]
         lenout += '%dm ' % (length / 60 % 60)
         lenout += "%ds" % (length % 60)
     return lenout
-
-if __name__ == '__main__':
-    print __doc__.strip()

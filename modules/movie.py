@@ -73,6 +73,3 @@ def build_response(data):
     response.append(['Votes', data['imdbVotes']])
     response.append(['Link', 'http://imdb.com/title/%s/' % (data['imdbID'])])
     return response
-
-if __name__ == '__main__':
-    print __doc__.strip()

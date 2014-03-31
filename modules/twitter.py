@@ -68,10 +68,10 @@ def id_tweet(tid):
         return format(tweet, username)
     return "Sorry, couldn't get a tweet from %s" % link
 
+
+@hook(cmds=['tw','twitter'],ex='twitter liamraystanley', args=True)
 def twitter(code, input):
     """twitter <link|username|tweet id> - Return twitter results for search"""
-    if empty(code, input): return
-
     arg = input.group(2).strip()
     if isinstance(arg, unicode):
         arg = arg.encode('utf-8')
@@ -85,10 +85,3 @@ def twitter(code, input):
         tweet = read_tweet(arg)
         code.say(format(tweet, username))
     else: code.reply("Give me a link, a username, or a tweet id")
-
-twitter.commands = ['tw', 'twitter']
-twitter.example = 'twitter liamraystanley'
-twitter.thread = True
-
-if __name__ == '__main__':
-    print __doc__

@@ -220,7 +220,3 @@ def interjection(code, input):
 interjection.rule = r'$nickname!'
 interjection.priority = 'high'
 interjection.thread = False
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

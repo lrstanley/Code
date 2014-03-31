@@ -9,9 +9,10 @@ import re
 from util.hook import *
 from util.web import shorten
 
+
+@hook(cmds=['lmgtfy'], ex='lmgtfy linux', args=True)
 def lmgtfy(code, input):
     """Let my Google That For You"""
-    if empty(code, input): return
     lmgtfy = input.group(2)
     lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy).replace(".", " ").replace(" ", "+")
     while lmgtfy.find('++') > -1:
@@ -23,8 +24,3 @@ def lmgtfy(code, input):
         if code.config.shortenurls:
             lmgtfyurl = shorten(lmgtfyurl)
     code.say(input.nick + ": " + lmgtfyurl)
-lmgtfy.commands = ['lmgtfy']
-lmgtfy.example = 'lmgtfy linux'
-
-if __name__ == '__main__': 
-   print __doc__.strip()

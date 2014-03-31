@@ -75,6 +75,3 @@ def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None
         #    pass
         return func
     return add_attribute
-
-if __name__ == '__main__':
-    print __doc__.strip()

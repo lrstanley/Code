@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-info.py - Code Information Module
+help.py - Code Help Module
 http://code.liamstanley.io/
 """
 
+
+from util.hook import *
+
+
+@hook(cmds['commands', 'cmds'], priority='low')
 def commands(code, input):
     """Get a list of function-names (commands), that the bot has."""
     if input.group(2): return help(code, input)
@@ -38,9 +42,9 @@ def commands(code, input):
     code.msg(input.nick, ('For help, do \'%shelp example\' where ' +
                           '"example" is the name of the command you want ' +
                           'help for.') % code.prefix)
-commands.commands = ['commands','cmds']
-commands.priority = 'low'
 
+
+@hook(cmds['help'], ex='help fml', rate=30)
 def help(code, input):
     #pretty(code.doc)
     if input.group(2):
@@ -75,11 +79,9 @@ def help(code, input):
             'of my commands, or see %s for more general details.' +
             ' {red}%s{c} is my owner.')
         code.reply(response % (code.prefix, code.config.website, code.config.owner))
-help.priority = 'medium'
-help.commands = ['help']
-help.example = 'help fml'
-help.rate = 30
 
+
+@hook(cmds=['about'], priority='low', rate=60)
 def about(code, input):
     response = (
        code.nick + ' was developed by Liam Stanley and many others. {b}' + code.nick + '{b} is a open-source ' + 
@@ -87,18 +89,15 @@ def about(code, input):
        'for large, and small channels. More info: http://code.liamstanley.io'
     )
     code.reply(response)
-about.commands = ['about']
-about.priority = 'low'
-about.rate = 60
 
 
+@hook(cmds['issue', 'report', 'bug', 'issues'], priority='low', rate=60)
 def issue(code, input):
     code.reply('Having an issue with {b}' + code.nick + '{b}? Post a bug report here:')
     code.say('https://github.com/Liamraystanley/Code/issues/new')
-issue.commands = ['report','issue','bug','issues']
-issue.priority = 'low'
-issue.rate = 60
 
+
+@hook(cmds=['stats'], priority='low', rate=60)
 def stats(code, input): 
     """Show information on command usage patterns."""
     commands = {}
@@ -143,9 +142,3 @@ def stats(code, input):
     for count, channel in charank[:3]: 
         chreply += '%s (%s), ' % (channel, count)
     code.say(chreply.rstrip(', '))
-stats.commands = ['stats']
-stats.priority = 'low'
-stats.rate = 60
-
-if __name__ == '__main__': 
-    print __doc__.strip()

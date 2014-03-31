@@ -11,6 +11,7 @@ from urllib import quote
 from urllib2 import urlopen
 from HTMLParser import HTMLParser
 from util.web import shorten
+from util.hook import *
 h = HTMLParser()
 
 url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
@@ -55,8 +56,10 @@ def clean_url(url):
     return head + '//' + other.split('/')[0]
 
 
+
+@hook(rule='(?iu).*%s.*' % url_re, priority='high')
 def get_title_auto(code, input):
-    if input.startswith(code.prefix): return # Prevent triggering of other plugins
+    if input.startswith(code.prefix) or input.startswith('?'): return # Prevent triggering of other plugins
     urls = re.findall('(?iu)' + url_re, input)
     # If a user wants to spam... lets limit is to 3 URLs max, per line
     if len(urls) > 3:
@@ -79,9 +82,3 @@ def get_title_auto(code, input):
                 url = clean_url(url)
             output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     return code.say(' | '.join(output))
-get_title_auto.rule = ('(?iu).*%s.*' % url_re)
-get_title_auto.priority = 'high'
-
-
-if __name__ == '__main__':
-    print __doc__.strip()

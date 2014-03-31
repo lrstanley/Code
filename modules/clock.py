@@ -6,9 +6,12 @@ http://code.liamstanley.io/
 """
 
 import urllib2
+from util.hook import *
 
 uri = 'http://www.timeapi.org/%s/now'
 
+
+@hook(cmds=['t','time'], ex='t UTC')
 def get_time(code, input):
     """Returns the current time."""
     default = 'est'
@@ -41,16 +44,9 @@ def get_time(code, input):
     except:
         return code.say(err)
 
-        # Try to encode into
-get_time.commands = ['t','time']
-get_time.example = 't UTC'
-
+@hook(cmds=['beats'])
 def beats(code, input): 
     """Shows the internet time in Swatch beats."""
     beats = ((time.time() + 3600) % 86400) / 86.4
     beats = int(math.floor(beats))
     code.say('@%03i' % beats)
-beats.commands = ['beats']
-
-if __name__ == '__main__': 
-    print __doc__.strip()

@@ -104,6 +104,3 @@ def setup(code):
     Sender = CollectData(code, input, id)
     Sender.start() # Initiate the thread.
     thread.start_new_thread(init, (str(host), int(port),))
-
-if __name__ == '__main__':
-    print __doc__.strip()

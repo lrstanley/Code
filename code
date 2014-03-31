@@ -107,7 +107,7 @@ def create_default_config(fn):
         #webserver_pass = 'herpderptrains'
 
         # But admin.py is disabled by default, as follows:
-        exclude = ['admin', 'admin_channel', 'webserver']
+        exclude = ['admin_channel', 'webserver']
 
         # If you want to enumerate a list of modules rather than disabling
         # some, use "enable = ['example']", which takes precedent over exclude

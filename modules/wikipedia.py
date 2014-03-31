@@ -58,9 +58,9 @@ def wikiDefine(term, url):
             return [title, content]
 
 
+@hook(cmds=['wiki','w'], ex='wiki speaker', args=True)
 def wikipedia(code, input):
     """Pull definitions/search from wikipedia.org"""
-    if empty(code, input): return
     try:
         # Try to get the definition of what they WANT
         data = wikiDefine(input.group(2).strip(), wikipedia_url) # 1:title, 2:content
@@ -80,13 +80,11 @@ def wikipedia(code, input):
             return code.say('{purple}%s{c}: %s' % (data[0], data[1]))
     except:
         return code.say('Failed to get the definition!')
-wikipedia.commands = ['wiki', 'w']
-wikipedia.example = 'wiki speaker'
 
+
+@hook(cmds=['wdefine','wsearch','wikisearch','swiki'], ex='wsearch yellow', args=True)
 def wikipediaSearch(code, input):
     """Pull search results from wikipedia.org"""
-    if not input.group(2):
-        return code.say('The syntax is: \'.wsearch <word(s)>\'')
     try:
         search = wikiSearch(input.group(2).strip(), wikipedia_url) # list() of results
         if not search:
@@ -97,9 +95,3 @@ def wikipediaSearch(code, input):
             return code.say('Suggestions: {purple}%s{c}' % ', '.join(search))
     except:
         return code.say('{red}No suggestions found!')
-wikipediaSearch.commands = ['wdefine', 'wsearch','wikisearch','swiki']
-wikipediaSearch.example = 'wsearch yellow'
-
-
-if __name__ == '__main__': 
-    print __doc__.strip()

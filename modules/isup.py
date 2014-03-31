@@ -9,9 +9,10 @@ import re
 from urllib import urlopen
 from util.hook import *
 
+
+@hook(cmds['isup','isdown','check','up','down'], ex='isup http://google.com', args=True)
 def isup(code,input):
     """isup <url> - Is it down for everyone, or just you?"""
-    if empty(code, input): return
     if len(input.group(2).split()) != 1: return error(code)
     try:
         data = urlopen('http://isup.me/%s' % input.group(2)).read()
@@ -23,8 +24,3 @@ def isup(code,input):
             return error(code)
     except:
         return error(code)
-isup.commands = ['isup', 'isdown', 'check', 'up', 'down']
-isup.example = 'isup http://google.com'
-
-if __name__ == '__main__':
-    print __doc__.strip()

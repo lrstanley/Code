@@ -120,6 +120,3 @@ def shorten(url):
     except:
         return url
     return data
-
-if __name__ == "__main__":
-    main()

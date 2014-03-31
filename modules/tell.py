@@ -2,9 +2,10 @@
 """
 Code Copyright (C) 2012-2014 Liam Stanley
 Credits: Sean B. Palmer, Michael Yanovich
-tell.py - Code tell Module
+tell.py - Code Tell Module
 http://code.liamstanley.io/
 """
+
 
 import os, re, time, random
 from util.hook import *
@@ -23,6 +24,7 @@ def loadReminders(fn):
     f.close()
     return result
 
+
 def dumpReminders(fn, data):
     f = open(fn, 'w')
     for tellee in data.iterkeys():
@@ -33,6 +35,7 @@ def dumpReminders(fn, data):
     try: f.close()
     except IOError: pass
     return True
+
 
 def setup(self):
     fn = self.nick + '-' + self.config.host + '.tell.db'
@@ -154,6 +157,3 @@ def message(code, input):
 
     if len(code.reminders.keys()) != remkeys:
         dumpReminders(code.tell_filename, code.reminders) # @@ tell
-
-if __name__ == '__main__':
-    print __doc__.strip()

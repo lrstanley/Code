@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 import re
 import urllib2
 import HTMLParser
+from util.hook import *
 h = HTMLParser.HTMLParser()
 
 # This is the default user to check for last fm
@@ -19,6 +20,8 @@ def getdata(user):
     if 'No user exists with this name.' in data: return False
     else: return data
 
+
+@hook(cmds=['lastfm', 'lfm'], ex='lastfm liamraystanley', rate=10)
 def lastfm(code, input):
     # just .lfm
     if defaultuser and not input.group(2):
@@ -40,9 +43,3 @@ def lastfm(code, input):
             song = re.compile(r'<title>.*?</title>').findall(data)[1]
             song = re.sub(r'\<.*?\>', '', song).strip()
             code.reply('{purple}%s{c} {red}(via Last.Fm)' % song)
-lastfm.commands = ['lastfm', 'lfm']
-lastfm.example = 'lfm liamraystanley'
-lastfm.rate = 10
-
-if __name__ == '__main__':
-    print __doc__.strip()
