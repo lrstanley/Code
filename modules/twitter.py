@@ -9,13 +9,16 @@ import re
 import urllib2, urllib
 from util import web
 from util.hook import *
+from util import database
+from modules.calc import hash
 from json import loads, dumps
 import thread, time
 
 
-auto_check = 30 # Time in seconds to check for new tweets
+auto_check = 15 # Time in seconds to check for new tweets
 
 # Input checking...
+r_uid = re.compile(r'(@[a-zA-Z0-9_]{1,15})')
 r_fullname = re.compile(r'<strong class="fullname">(.*?)</strong>')
 r_username = re.compile(r'<span class="username">.*?<span>@</span>(.*?)</span>')
 r_time = re.compile(r'<td class="timestamp">.*?</td>')
@@ -27,7 +30,7 @@ uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
 
 def get_tweets(url):
     try:
-        data = urllib2.urlopen(url).read().replace('\r','').replace('\n','')
+        data = urllib2.urlopen(url).read().replace('\r','').replace('\n',' ')
         data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
     except: return
     tweets = []
@@ -41,8 +44,11 @@ def get_tweets(url):
             urls = r_url.findall(tweet_data)
             for url in urls:
                 url = list(url)
-                tweet_data = tweet_data.replace(url[1], url[0])
+                tweet_data = tweet_data.replace(url[1], web.shorten(url[0]))
             tmp['text'] = web.htmlescape(web.striptags(tweet_data).strip())
+            uids = r_uid.findall(tmp['text'])
+            for uid in uids:
+                tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@'))
             tweets.append(tmp)
         except:
             continue
@@ -53,7 +59,7 @@ def get_tweets(url):
 
 
 def format(tweet):
-    return '(Twitter) {b}{teal}%s{c} ({purple}%s - @%s{c}){b}' % (tweet['text'], tweet['full'], tweet['user'])
+    return '{teal}(Twitter){c} %s ({purple}{b}@{b}%s{c})' % (tweet['text'], tweet['user'])
 
 
 @hook(cmds=['tw','twitter'],ex='twitter liamraystanley', args=True, rate=0)
@@ -92,13 +98,20 @@ def daemon(code, tc):
                 if not data:
                     continue
                 data = data[0]
-                db = code.get('twitter/%s/%s' % (channel, tweet_item))
+                hash_str = hash(data['text'])
+                db = database.get('twitter')
                 if not db: # New data on new database, don't output anywhere..
-                    code.set('twitter/%s/%s' % (channel, tweet_item), data['text'])
+                    database.set([], 'twitter')
                     continue
-                if db == data['text']:
+                if hash_str in db:
                     continue # Same
 
-                code.set('twitter/%s/%s' % (channel, tweet_item), data['text'])
+                db.append(hash_str)
+                database.set(db, 'twitter')
                 msg = format(data)
                 code.msg(channel, msg.decode('ascii', 'ignore'))
+            db = database.get('twitter')
+            if db:
+                if len(db) > 30:
+                    db = db[:30]
+                    database.set(db, 'twitter')
