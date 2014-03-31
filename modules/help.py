@@ -9,7 +9,7 @@ http://code.liamstanley.io/
 from util.hook import *
 
 
-@hook(cmds['commands', 'cmds'], priority='low')
+@hook(cmds=['commands', 'cmds'], priority='low')
 def commands(code, input):
     """Get a list of function-names (commands), that the bot has."""
     if input.group(2): return help(code, input)
@@ -44,7 +44,7 @@ def commands(code, input):
                           'help for.') % code.prefix)
 
 
-@hook(cmds['help'], ex='help fml', rate=30)
+@hook(cmds=['help'], ex='help fml', rate=30)
 def help(code, input):
     #pretty(code.doc)
     if input.group(2):
@@ -91,7 +91,7 @@ def about(code, input):
     code.reply(response)
 
 
-@hook(cmds['issue', 'report', 'bug', 'issues'], priority='low', rate=60)
+@hook(cmds=['issue', 'report', 'bug', 'issues'], priority='low', rate=60)
 def issue(code, input):
     code.reply('Having an issue with {b}' + code.nick + '{b}? Post a bug report here:')
     code.say('https://github.com/Liamraystanley/Code/issues/new')

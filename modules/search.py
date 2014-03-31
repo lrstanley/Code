@@ -27,7 +27,7 @@ def google_search(query):
     return json(data)
 
 
-@hook(cmds['search','google','g'], ex='search Twitter API', rate=10, args=True)
+@hook(cmds=['search','google','g'], ex='search Twitter API', rate=10, args=True)
 def search(code, input):
     """Queries Google for the specified input."""
     r = google_search(input.group(2))

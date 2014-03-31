@@ -136,7 +136,7 @@ def hug(code, input):
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', types, text[1], hugtype, '\x01'])
 
 
-@hook(cmds['8ball', '8b'], ex='8ball Will I feel better tomorrow?', rate=15)
+@hook(cmds=['8ball', '8b'], ex='8ball Will I feel better tomorrow?', rate=15)
 def magic(code, input):
     """Use the Magic 8 Ball"""
     luck = str(random.randint(1,4))
