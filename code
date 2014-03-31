@@ -106,7 +106,7 @@ def create_default_config(fn):
         #run_webserver = True
         #webserver_pass = 'herpderptrains'
 
-        # But admin.py is disabled by default, as follows:
+        # Some modules are disabled by default because they require further setup
         exclude = ['admin_channel', 'webserver']
 
         # If you want to enumerate a list of modules rather than disabling
