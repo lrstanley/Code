@@ -45,8 +45,9 @@ def setup(self):
             f.close()
     self.reminders = loadReminders(self.tell_filename) # @@ tell
 
+
+@hook(cmds=['tell'], ex='tell George When you get back on, I need your help!', args=True)
 def f_remind(code, input):
-    if empty(code, input): return
     teller = input.nick
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group())[1:].startswith("tell"):
@@ -99,15 +100,13 @@ def f_remind(code, input):
 
     if not whogets: # Only get cute if there are not legits
         rand = random.random()
-        if rand > 0.9999: response = "yeah, yeah"
-        elif rand > 0.999: response = "yeah, sure, whatever"
+        if rand > 0.9999: response = "Yeah, yeah"
+        elif rand > 0.999: response = "Yeah, sure, whatever"
 
     code.reply(response)
 
     dumpReminders(code.tell_filename, code.reminders) # @@ tell
-f_remind.rule = ('$nick', ['[tT]ell', '[aA]sk'], r'(\S+) (.*)')
-f_remind.commands = ['tell', 'to']
-f_remind.example = 'remind 10m Go to school'
+
 
 def getReminders(code, channel, key, tellee):
     lines = []
@@ -123,6 +122,8 @@ def getReminders(code, channel, key, tellee):
     except KeyError: code.msg(channel, 'Er...')
     return lines
 
+
+@hook(rule=r'(.*)', priority='low')
 def message(code, input):
     if not input.sender.startswith('#'): return
 
@@ -152,8 +153,6 @@ def message(code, input):
 
     if len(code.reminders.keys()) != remkeys:
         dumpReminders(code.tell_filename, code.reminders) # @@ tell
-message.rule = r'(.*)'
-message.priority = 'low'
 
 if __name__ == '__main__':
     print __doc__.strip()
