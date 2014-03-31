@@ -11,7 +11,7 @@ from util import output
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 5
+configv = 6
 
 
 def start():
@@ -106,6 +106,13 @@ def create_default_config(fn):
         #run_webserver = True
         #webserver_pass = 'herpderptrains'
 
+        # Auto post twitter feeds to specific channels, if uncommented below.
+        # Note, this can be in the form of @usernames, as well as #hashtags 
+        #twitter_autopost = {
+        #    '#Liam': ['@liamraystanley', '#YOLO'],
+        #    '#coding': ['@programmaster', '#coding']
+        #}
+
         # Some modules are disabled by default because they require further setup
         exclude = ['admin_channel', 'webserver']
 
@@ -116,7 +123,7 @@ def create_default_config(fn):
         # Block modules from specific channels
         # To not block anything for a channel, just don't mention it
         excludes = {
-           '##blacklist': ['!'],
+            '##blacklist': ['!'],
         }
             
         # Channel code will report all private messages sent to him to.

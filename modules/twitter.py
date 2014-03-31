@@ -9,10 +9,13 @@ import re
 import urllib2, urllib
 from util import web
 from util.hook import *
+from json import loads, dumps
+import thread, time
+
+
+auto_check = 30 # Time in seconds to check for new tweets
 
 # Input checking...
-r_username = re.compile(r'^@?[a-zA-Z0-9_]{1,15}$')
-r_hash = re.compile(r'^#[a-zA-Z0-9_]{1,15}$')
 r_fullname = re.compile(r'<strong class="fullname">(.*?)</strong>')
 r_username = re.compile(r'<span class="username">.*?<span>@</span>(.*?)</span>')
 r_time = re.compile(r'<td class="timestamp">.*?</td>')
@@ -26,22 +29,20 @@ def get_tweets(url):
     try:
         data = urllib2.urlopen(url).read().replace('\r','').replace('\n','')
         data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
-    except:
-        return
+    except: return
     tweets = []
-
     for tweet in data:
         try:
             tmp = {}
-            tmp['full'] = r_fullname.findall(tweet)[0].strip()
+            tmp['full'] = web.htmlescape(r_fullname.findall(tweet)[0].strip())
             tmp['user'] = r_username.findall(tweet)[0].strip()
-            tmp['time'] = web.htmlescape(r_time.findall(tweet)[0]).strip()
-            tweet_data = t_tweet.findall(tweet)[0].strip()
+            tmp['time'] = web.striptags(r_time.findall(tweet)[0]).strip()
+            tweet_data = r_tweet.findall(tweet)[0].strip()
             urls = r_url.findall(tweet_data)
             for url in urls:
                 url = list(url)
                 tweet_data = tweet_data.replace(url[1], url[0])
-            tmp['text'] = web.htmlescape(tweet_data).strip()
+            tmp['text'] = web.htmlescape(web.striptags(tweet_data).strip())
             tweets.append(tmp)
         except:
             continue
@@ -51,19 +52,53 @@ def get_tweets(url):
         return False
 
 
-def format(tweet, username):
-    return '{b}{teal}%s{c} ({purple}@%s{c}){b}' % (tweet, username)
+def format(tweet):
+    return '(Twitter) {b}{teal}%s{c} ({purple}%s - @%s{c}){b}' % (tweet['text'], tweet['full'], tweet['user'])
 
 
-@hook(cmds=['tw','twitter'],ex='twitter liamraystanley', args=True)
+@hook(cmds=['tw','twitter'],ex='twitter liamraystanley', args=True, rate=0)
 def twitter(code, input):
     """twitter <hashtag|username> - Return twitter results for search"""
     err = '{red}{b}Unabled to find any tweets with that search!'
-    if r_hash.match(input.group(2)):
-        data = get_tweets(uri_hash % urllib.quote(input.group(2)))
+    args = input.group(2).strip()
+    if args.startswith('#'):
+        data = get_tweets(uri_hash % urllib.quote(args))
         if not data: return code.say(err)
-        code.say(format(data[0]['text'], data[0]['user']))
-    elif r_username.match(input.group(2)):
-        data = get_tweets(uri_user % input.group(2))
+        return code.say(format(data[0]))
+    else:
+        data = get_tweets(uri_user % urllib.quote(args.strip('@')))
         if not data: return code.say(err)
-        code.say(format(data[0]['text'], data[0]['user']))
+        return code.say(format(data[0]))
+    return code.say(err)
+
+def setup(code):
+    if not hasattr(code.config, 'twitter_autopost'): return
+    tc = code.config.twitter_autopost
+    if not tc: return
+    thread.start_new_thread(daemon, (code, tc,))
+
+
+def daemon(code, tc):
+    while True:
+        time.sleep(auto_check)
+
+        # Here we do the work...
+        for channel in tc:
+            for tweet_item in tc[channel]:
+                if tweet_item.startswith('#'): # ID
+                    data = get_tweets(uri_hash % urllib.quote(tweet_item))
+                else:
+                    data = get_tweets(uri_user % urllib.quote(tweet_item))
+                if not data:
+                    continue
+                data = data[0]
+                db = code.get('twitter/%s/%s' % (channel, tweet_item))
+                if not db: # New data on new database, don't output anywhere..
+                    code.set('twitter/%s/%s' % (channel, tweet_item), data['text'])
+                    continue
+                if db == data['text']:
+                    continue # Same
+
+                code.set('twitter/%s/%s' % (channel, tweet_item), data['text'])
+                msg = format(data)
+                code.msg(channel, msg.decode('ascii', 'ignore'))

@@ -61,11 +61,10 @@ def entity(match):
 
 
 def htmlescape(message):
-    #return h.unescape(message.encode('utf-8', 'ignore'))
-    return re.compile(r'(?ims)<[^>]+>').sub('', message)
+    return h.unescape(message.encode('utf-8', 'ignore'))
 
 def striptags(message):
-    return re.sub(r'\<.*?\>', '', message)
+    return re.compile(r'(?ims)<[^>]+>').sub('', message)
 
 def decode(html):
     return r_entity.sub(entity, html)
