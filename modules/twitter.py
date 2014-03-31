@@ -101,7 +101,7 @@ def daemon(code, tc):
                 hash_str = hash(data['text'])
                 db = database.get('twitter')
                 if not db: # New data on new database, don't output anywhere..
-                    database.set([], 'twitter')
+                    database.set([hash_str], 'twitter')
                     continue
                 if hash_str in db:
                     continue # Same
