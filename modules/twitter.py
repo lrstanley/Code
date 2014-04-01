@@ -47,9 +47,9 @@ def get_tweets(url):
                 url = list(url)
                 tweet_data = tweet_data.replace(url[1], url[0])
             tmp['text'] = web.htmlescape(web.striptags(tweet_data).strip())
-            uids = r_uid.findall(tmp['text'])
+            uids = r_uid.findall(' ' + tmp['text'])
             for uid in uids:
-                tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@'))
+                tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
             tweets.append(tmp)
         except:
             continue
