@@ -53,7 +53,7 @@ def get_tweets(url, sender_uid=False):
             
             # Check if it's a retweet
             if sender_uid:
-                if sender_uid.lower() != tmp['user'].lower():
+                if sender_uid.lower().strip('@') != tmp['user'].lower().strip('@'):
                     tmp['text'] = tmp['text'] + ' ({purple}{b}@{b}%s{c})' % tmp['user']
                     tmp['user'] = sender_uid.strip('@') + ' {blue}{b}retweeted{c}{b}'
             tweets.append(tmp)
