@@ -194,24 +194,24 @@ class Bot(asynchat.async_chat):
     def initiate_connect(self, host, port):
         count = 0
         max_attempts = 5
-        reconnect_wait = 20
+        if hasattr(self.config, 'delay'):
+            delay = int(self.config.delay)
+        else:
+            delay = 20
         while True:
             if count >= max_attempts:
                 break
             try:
                 count += 1
                 if count > 1:
-                    output.error('Failed to connect! Trying again in %s seconds.' % str(reconnect_wait))
-                    time.sleep(reconnect_wait)
+                    output.error('Failed to connect! Trying again in %s seconds.' % str(delay))
+                    time.sleep(delay)
                 if self.verbose:
                     output.normal('Connecting to %s:%s... (try %s)' % (host, port, str(count)), 'STATUS')
                 self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.connect((host, port))
-                try:
-                    count = 0
-                    asyncore.loop()
-                except KeyboardInterrupt:
-                    os_exit(0)
+                count = 0
+                asyncore.loop()
             except:
                 pass
         output.error('Too many failed attempts. Exiting.')

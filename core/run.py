@@ -6,8 +6,8 @@ http://code.liamstanley.io/
 """
 
 import sys, os, time, threading, signal
-#import bot
 from core import bot
+from util import output
 
 class Watcher(object):
     def __init__(self):
@@ -19,6 +19,7 @@ class Watcher(object):
         try:
             os.wait()
         except KeyboardInterrupt:
+            output.error('Terminating the bot...')
             self.kill()
         sys.exit()
 
@@ -31,7 +32,8 @@ class Watcher(object):
 def run_code(config):
     if hasattr(config, 'delay'):
         delay = config.delay
-    else: delay = 20
+    else:
+        delay = 20
 
     def connect(config):
         p = bot.Code(config)
@@ -39,7 +41,7 @@ def run_code(config):
 
     try: Watcher()
     except Exception, e:
-        print >> sys.stderr, 'Warning:', e, '(in __init__.py)'
+        output.error('%s (in __init__.py)' % e)
 
     while True:
         try: connect(config)
@@ -49,15 +51,12 @@ def run_code(config):
         if not isinstance(delay, int):
             break
 
-        warning = 'Warning: Disconnected. Reconnecting in %s seconds...' % delay
-        print >> sys.stderr, warning
+        output.error('Disconnected. Reconnecting in %s seconds...' % delay)
         time.sleep(delay)
 
 def run(config):
     t = threading.Thread(target=run_code, args=(config,))
-    if hasattr(t, 'run'):
-        t.run()
-    else: t.start()
+    t.run()
 
 if __name__ == '__main__':
     print __doc__
