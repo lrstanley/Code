@@ -29,7 +29,7 @@ r_basicurl = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0
 uri_user = 'https://mobile.twitter.com/%s/'
 uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
 
-def get_tweets(url):
+def get_tweets(url, sender_uid=False):
     try:
         data = urllib2.urlopen(url).read().replace('\r','').replace('\n',' ')
         data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
@@ -50,6 +50,12 @@ def get_tweets(url):
             uids = r_uid.findall(' ' + tmp['text'])
             for uid in uids:
                 tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
+            
+            # Check if it's a retweet
+            if sender_uid:
+                if sender_uid.lower() != tmp['user'].lower():
+                    tmp['text'] = tmp['text'] + ' ({purple}{b}@{b}%s{c})' % tmp['user']
+                    tmp['user'] = sender_uid.strip('@') + ' {blue}{b}retweeted{c}{b}'
             tweets.append(tmp)
         except:
             continue
@@ -95,7 +101,7 @@ def daemon(code, tc):
                 if tweet_item.startswith('#'): # ID
                     data = get_tweets(uri_hash % urllib.quote(tweet_item))
                 else:
-                    data = get_tweets(uri_user % urllib.quote(tweet_item))
+                    data = get_tweets(uri_user % urllib.quote(tweet_item), tweet_item)
                 if not data:
                     continue
                 data = data[0]

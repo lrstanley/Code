@@ -28,6 +28,6 @@ def dinner(code, input):
         if hasattr(code.config, 'shortenurls'):
             if code.config.shortenurls:
                 url = shorten(url)
-        code.say('WHY DON\'T YOU EAT SOME FUCKING %s. HERE IS THE RECIPE: %s' % (food.upper(), url))
+        code.say('WHY DON\'T YOU EAT SOME FUCKING {b}%s{b}. HERE IS THE RECIPE: %s' % (food.upper(), url))
     except:
         return code.say(err)
