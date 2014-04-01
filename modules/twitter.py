@@ -124,6 +124,6 @@ def daemon(code, tc):
                 code.msg(channel, msg.decode('ascii', 'ignore'))
             db = database.get('twitter')
             if db:
-                if len(db) > 30:
-                    db = db[30:]
+                if len(db) > 200:
+                    db = db[200:]
                     database.set(db, 'twitter')
