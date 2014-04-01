@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 import re
 from urllib2 import urlopen as get
 from util.hook import *
+from util.web import shorten
 
 uri = 'http://www.whatthefuckshouldimakefordinner.com'
 re_mark = re.compile(r'<dt><a href="(.*?)" target="_blank">(.*?)</a></dt>')
@@ -21,4 +22,7 @@ def dinner(code, input):
     if not results:
         return code.say('EAT LEFT OVER PIZZA FOR ALL I CARE.')
     url, food = results[0][0], results[0][1]
+    if hasattr(code.config, 'shortenurls'):
+        if code.config.shortenurls:
+            url = shorten(url)
     code.say('WHY DON\'T YOU EAT SOME FUCKING: %s HERE IS THE RECIPE: %s' % (food, url))
