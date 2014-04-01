@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-__init__.py - Code Init Module
+run.py - Code Initialization Module
 http://code.liamstanley.io/
 """
 
@@ -16,14 +16,17 @@ class Watcher(object):
             self.watch()
 
     def watch(self):
-        try: os.wait()
+        try:
+            os.wait()
         except KeyboardInterrupt:
             self.kill()
         sys.exit()
 
     def kill(self):
-        try: os.kill(self.child, signal.SIGKILL)
-        except OSError: pass
+        try:
+            os.kill(self.child, signal.SIGKILL)
+        except OSError:
+            pass
 
 def run_code(config):
     if hasattr(config, 'delay'):

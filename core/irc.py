@@ -11,6 +11,8 @@ import socket, asyncore, asynchat
 import os, codecs
 from util import output
 
+
+debug = True
 IRC_CODES = ('251', '252', '254', '255', '265', '266', '250', '333', '353', '366', '372', '375', '376', 'QUIT', 'NICK')
 cwd = os.getcwd()
 
@@ -190,13 +192,30 @@ class Bot(asynchat.async_chat):
         self.initiate_connect(host, port)
 
     def initiate_connect(self, host, port):
-        if self.verbose:
-            output.normal('Connecting to %s:%s...' % (host, port), 'STATUS')
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connect((host, port))
-        try: asyncore.loop()
-        except KeyboardInterrupt:
-            sys.exit()
+        count = 0
+        max_attempts = 5
+        reconnect_wait = 20
+        while True:
+            if count >= max_attempts:
+                break
+            try:
+                count += 1
+                if count > 1:
+                    output.error('Failed to connect! Trying again in %s seconds.' % str(reconnect_wait))
+                    time.sleep(reconnect_wait)
+                if self.verbose:
+                    output.normal('Connecting to %s:%s... (try %s)' % (host, port, str(count)), 'STATUS')
+                self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.connect((host, port))
+                try:
+                    count = 0
+                    asyncore.loop()
+                except KeyboardInterrupt:
+                    os_exit(0)
+            except:
+                pass
+        output.error('Too many failed attempts. Exiting.')
+        os._exit(1)
 
     def handle_connect(self):
         if self.verbose:
@@ -245,6 +264,9 @@ class Bot(asynchat.async_chat):
                 log_raw(data)
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip()
+            global debug
+            if debug:
+                print line
             try:
                 reg = {
                     'PRIVMSG': r'^\:(.*?)\!(.*?)\@(.*\s?) PRIVMSG (.*\s?) \:(.*?)$',
