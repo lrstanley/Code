@@ -17,12 +17,16 @@ re_mark = re.compile(r'<dt><a href="(.*?)" target="_blank">(.*?)</a></dt>')
 @hook(cmds=['fucking_dinner','fd','dinner'], priority='low')
 def dinner(code, input):
     """fd -- WHAT DO YOU WANT FOR FUCKING DINNER?"""
-    data = get(uri).read()
-    results = re_mark.findall(data)
-    if not results:
-        return code.say('EAT LEFT OVER PIZZA FOR ALL I CARE.')
-    url, food = results[0][0], results[0][1]
-    if hasattr(code.config, 'shortenurls'):
-        if code.config.shortenurls:
-            url = shorten(url)
-    code.say('WHY DON\'T YOU EAT SOME FUCKING: %s HERE IS THE RECIPE: %s' % (food, url))
+    err = '{red}EAT LEFT OVER PIZZA FOR ALL I CARE.'
+    try:
+        data = get(uri).read()
+        results = re_mark.findall(data)
+        if not results:
+            return code.say(err)
+        url, food = results[0][0], results[0][1]
+        if hasattr(code.config, 'shortenurls'):
+            if code.config.shortenurls:
+                url = shorten(url)
+        code.say('WHY DON\'T YOU EAT SOME FUCKING: %s. HERE IS THE RECIPE: %s' % (food.upper(), url))
+    except:
+        return code.say(err)
