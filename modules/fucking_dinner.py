@@ -9,6 +9,7 @@ import re
 from urllib2 import urlopen as get
 from util.hook import *
 from util.web import shorten
+from util.web import htmlescape
 
 uri = 'http://www.whatthefuckshouldimakefordinner.com'
 re_mark = re.compile(r'<dt><a href="(.*?)" target="_blank">(.*?)</a></dt>')
@@ -23,10 +24,10 @@ def dinner(code, input):
         results = re_mark.findall(data)
         if not results:
             return code.say(err)
-        url, food = results[0][0], results[0][1]
+        url, food = results[0][0], htmlescape(results[0][1])
         if hasattr(code.config, 'shortenurls'):
             if code.config.shortenurls:
                 url = shorten(url)
-        code.say('WHY DON\'T YOU EAT SOME FUCKING: %s. HERE IS THE RECIPE: %s' % (food.upper(), url))
+        code.say('WHY DON\'T YOU EAT SOME FUCKING %s. HERE IS THE RECIPE: %s' % (food.upper(), url))
     except:
         return code.say(err)
