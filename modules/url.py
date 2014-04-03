@@ -10,14 +10,14 @@ import re
 from urllib import quote
 from urllib2 import urlopen
 from HTMLParser import HTMLParser
-from util.web import shorten
+from util import web
 from util.hook import *
 h = HTMLParser()
 
 url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-notitle_len = 4
-title_len = 80
-nourl_len = 15
+notitle_len = 7
+title_len = 70
+nourl_len = 5
 url_len = 70
 ignored = ['git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com','ci.liamstanley.io']
 
@@ -26,7 +26,7 @@ def get_url_data(url):
     if len(url) > url_len or len(url) < nourl_len:
         return False# URL is either really long, or really short. Don't need shortening.
     try:
-        uri = urlopen(url)
+        uri = web.get(url)
         headers = uri.info().headers
         if not uri.info().maintype == 'text':
             return False
@@ -46,7 +46,7 @@ def get_url_data(url):
         if len(title) > title_len or len(title) < notitle_len: # Title output too large/short
             return False
 
-        return unicode(title)
+        return title
     except:
         return False
 
@@ -57,10 +57,10 @@ def clean_url(url):
 
 
 
-@hook(rule='(?iu).*%s.*' % url_re, priority='high')
+@hook(rule='(?i).*%s.*' % url_re, priority='high')
 def get_title_auto(code, input):
     if input.startswith(code.prefix) or input.startswith('?'): return # Prevent triggering of other plugins
-    urls = re.findall('(?iu)' + url_re, input)
+    urls = re.findall('(?i)' + url_re, input)
     # If a user wants to spam... lets limit is to 3 URLs max, per line
     if len(urls) > 3:
         urls = urls[0:3]
@@ -75,10 +75,11 @@ def get_title_auto(code, input):
         if data:
             if hasattr(code.config, 'shortenurls'):
                 if code.config.shortenurls:
-                    url = shorten(url)
+                    url = web.shorten(url)
                 else:
                     url = clean_url(url)
             else:
                 url = clean_url(url)
+            data = data.decode('utf-8')
             output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     return code.say(' | '.join(output))
