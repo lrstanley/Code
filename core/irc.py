@@ -98,9 +98,9 @@ class Bot(asynchat.async_chat):
     def format(self, message, legacy=None):
         '''formatting to support color/bold/italic/etc assignment in Codes responses'''
         if not hasattr(self.config, 'textstyles'):
-            return message
+            return self.clear_format(message)
         if not self.config.textstyles:
-            return message
+            return self.clear_format(message)
         if legacy:
             message = '{%s}%s{%s}' % (legacy, message, legacy)
         find_char = re.compile(r'{.*?}')
@@ -116,10 +116,14 @@ class Bot(asynchat.async_chat):
                     message = message.replace(formatted_char, self.special_chars[char],1)
             return message
         except:
-            for custom in charlist:
-                message = message.replace(custom,'',1)
-            return message
+            return self.clear_format(message)
 
+    def clear_format(self, message):
+        find_char = re.compile(r'{.*?}')
+        charlist = find_char.findall(message)
+        for custom in charlist:
+            message = message.replace(custom,'',1)
+        return message
 
     def color(self, color, message):
         return self.format(message, color)
@@ -170,7 +174,8 @@ class Bot(asynchat.async_chat):
         except IndexError:
             return
 
-    def write(self, args, text=None, raw=False):
+    def write(self, args, text=None, raw=False, output=True):
+        # output isn't used /yet/
         try:
             args = [self.safe(arg, u=True) for arg in args]
             if text is not None:
@@ -221,9 +226,9 @@ class Bot(asynchat.async_chat):
         if self.verbose:
             output.success('Connected!', 'STATUS')
         if self.serverpass:
-            self.write(('PASS', self.serverpass))
-        self.write(('NICK', self.nick))
-        self.write(('USER', self.user, '+iw', self.nick), self.name)
+            self.write(('PASS', self.serverpass), output=False)
+        self.write(('NICK', self.nick), output=False)
+        self.write(('USER', self.user, '+iw', self.nick), self.name, output=False)
 
     def changenick(self, nick):
         chars = set('`+=;,<>?')
@@ -245,10 +250,6 @@ class Bot(asynchat.async_chat):
     def handle_error(self):
         '''Handle any uncaptured error in the core. Overrides asyncore's handle_error'''
         trace = traceback.format_exc()
-        try:
-            output.error(trace)
-        except:
-            pass
         output.error('Fatal error in core, please review exception below:')
         output.error('Exception: ' + trace)
 
@@ -488,6 +489,7 @@ class Bot(asynchat.async_chat):
                     return
 
         self.__write(('PRIVMSG', self.safe(recipient)), self.safe(text))
+        output.normal('(%s) %s' % (self.nick, self.clear_format(self.safe(text))), self.safe(recipient))
         if log:
             self.stack_log.append((time.time(), text))
         else:
@@ -500,9 +502,12 @@ class Bot(asynchat.async_chat):
     def notice(self, dest, text):
         '''Send an IRC NOTICE to a user or a channel. See IRC protocol
            documentation for more information'''
+        text = self.format(text)
         self.write(('NOTICE', dest), text)
 
     def action(self, dest, text):
+        '''Send an action (/me) to a user or a channel'''
+        text = self.format(text)
         self.write(('PRIVMSG', dest), '\x01ACTION ' + text + '\x01')
 
     def error(self, origin):

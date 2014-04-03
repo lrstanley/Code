@@ -57,7 +57,7 @@ def startup(code, input):
     import time
 
     if hasattr(code.config, 'password'):
-        code.msg('NickServ', 'IDENTIFY %s' % code.config.password)
+        code.write(['PRIVMSG','NickServ'], 'IDENTIFY %s' % code.config.password, output=False)
         time.sleep(5)
 
     for channel in code.channels:
