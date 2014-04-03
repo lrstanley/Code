@@ -104,7 +104,7 @@ class Bot(asynchat.async_chat):
         if legacy:
             message = '{%s}%s{%s}' % (legacy, message, legacy)
         find_char = re.compile(r'{.*?}')
-        charlist = find_char.findall(unicode(message))
+        charlist = find_char.findall(message)
         try:
             message = unicode(message)
 
