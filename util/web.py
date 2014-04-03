@@ -6,7 +6,8 @@ http://code.liamstanley.io/
 """
 
 import re
-import urllib, urllib2, json
+import urllib, urllib2
+from json import loads, dumps
 from htmlentitydefs import name2codepoint
 import HTMLParser
 h = HTMLParser.HTMLParser()
@@ -20,7 +21,7 @@ exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 def get(uri, timeout=5):
     uri = uri.encode("utf-8")
-    req = urllib2.Request(uri, headers={'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (Code)'})
+    req = urllib2.Request(uri, headers={'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; Code)'})
     try:
         u = urllib2.urlopen(req, None, timeout)
     except urllib2.HTTPError, e:
@@ -29,6 +30,26 @@ def get(uri, timeout=5):
         raise
     return u
 
+def json(uri, timeout=5):
+    try:
+        data = get(uri, timeout).read()
+        print data
+        if data[0] == '[' and data[-1] == ']':
+            data = '{"json": %s}' % data
+            data = loads(data)['json']
+        else:
+            data = loads(data)
+    except urllib2.HTTPError, e:
+        return e.fp
+    except:
+        raise
+    return data
+
+def quote(string):
+    return urllib2.quote(string)
+
+def urlencode(data):
+    return urllib.urlencode(data)
 
 def head(uri):
     if not uri.startswith('http'): return
@@ -61,7 +82,7 @@ def entity(match):
 
 
 def htmlescape(message):
-    return h.unescape(message.encode('utf-8', 'ignore'))
+    return h.unescape(message)
 
 def striptags(message):
     return re.compile(r'(?ims)<[^>]+>').sub('', message)
@@ -107,7 +128,7 @@ def haste(text, ext='txt'):
     """ pastes text to a hastebin server """
     uri = urllib2.Request(paste_url + '/documents', text)
     page = urllib2.urlopen(uri).read()
-    data = json.loads(page)
+    data = loads(page)
     return ("%s/%s.%s" % (paste_url, data['key'], ext))
 
 

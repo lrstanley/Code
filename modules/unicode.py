@@ -188,9 +188,8 @@ def u(code, input):
         else: code.reply('{red}Sorry, your input is too long!')
 
 
-@hook(cmds=['bytes'], ex='bytes \xe3\x8b\xa1')
+@hook(cmds=['bytes'], ex='bytes \xe3\x8b\xa1', args=True)
 def bytes(code, input): 
     """Show the input as pretty printed bytes."""
-    if empty(code, input): return
     b = input.bytes
     code.reply('%r' % b[b.find(' ') + 1:])

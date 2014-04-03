@@ -7,6 +7,7 @@ http://code.liamstanley.io/
 """
 
 import threading, time
+from util import output
 from util.hook import *
 
 def setup(code):
@@ -18,7 +19,7 @@ def setup(code):
         except: pass
 
         def close():
-            print "Nobody PONGed our PING, restarting"
+            output.error("Nobody PONGed our PING, restarting")
             code.handle_close()
 
         def pingloop():

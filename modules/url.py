@@ -7,12 +7,8 @@ http://code.liamstanley.io/
 
 import json
 import re
-from urllib import quote
-from urllib2 import urlopen
-from HTMLParser import HTMLParser
 from util import web
 from util.hook import *
-h = HTMLParser()
 
 url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 notitle_len = 7
@@ -32,7 +28,7 @@ def get_url_data(url):
             return False
         data = uri.read(1024) # Only read soo much of a large site.
         title = re.compile('<title>(.*?)</title>', re.IGNORECASE|re.DOTALL).search(data).group(1)
-        title = h.unescape(title)
+        title = web.htmlescape(title)
         title = title.replace('\n', '').replace('\r', '')
 
         # Remove spaces...
