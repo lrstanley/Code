@@ -175,7 +175,7 @@ def u(code, input):
             result = codepoint_simple(arg)
             if result is not None: 
                 code.say(result)
-            else: code.reply(code.color('red', 'Sorry, no results for %r.' % arg))
+            else: code.reply('{red}Sorry, no results for %r.' % arg)
     else: 
         text = arg.decode('utf-8')
         # look up less than three codepoints
@@ -185,7 +185,7 @@ def u(code, input):
         # look up more than three codepoints
         elif len(text) <= 10: 
             code.reply(' '.join('U+%04X' % ord(c) for c in text))
-        else: code.reply(code.color('red', 'Sorry, your input is too long!'))
+        else: code.reply('{red}Sorry, your input is too long!')
 
 
 @hook(cmds=['bytes'], ex='bytes \xe3\x8b\xa1')

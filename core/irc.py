@@ -97,6 +97,7 @@ class Bot(asynchat.async_chat):
 
     def format(self, message, legacy=None):
         '''formatting to support color/bold/italic/etc assignment in Codes responses'''
+        message = message.decode('utf-8')
         if not hasattr(self.config, 'textstyles'):
             return self.clear_format(message)
         if not self.config.textstyles:

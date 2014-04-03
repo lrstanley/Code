@@ -80,6 +80,6 @@ def get_title_auto(code, input):
                     url = clean_url(url)
             else:
                 url = clean_url(url)
-            data = data.decode('utf-8')
+            #data = data.decode('utf-8')
             output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     return code.say(' | '.join(output))
