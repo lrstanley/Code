@@ -11,46 +11,37 @@ from util import web
 from util.hook import *
 
 url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-notitle_len = 7
-title_len = 70
-nourl_len = 5
-url_len = 70
+title_min_length = 3
+url_min_length = 5
 ignored = ['git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com','ci.liamstanley.io']
 
 
 def get_url_data(url):
-    if len(url) > url_len or len(url) < nourl_len:
-        return False# URL is either really long, or really short. Don't need shortening.
-    try:
-        uri = web.get(url)
-        if not uri.info().maintype == 'text':
-            return False
-        data = uri.read(1024) # Only read soo much of a large site.
-        title = re.compile('<title>(.*?)</title>', re.IGNORECASE|re.DOTALL).search(data).group(1)
-        title = web.htmlescape(title)
-        title = title.replace('\n', '').replace('\r', '')
-
-        for item in uri.info().headers:
-            if 'charset=' in item:
-                charset = item.split('charset=')[1].strip('\n').strip('\r')
-                break
-            else:
-                charset = False
-
-        # Remove spaces...
-        while '  ' in title:
-            title = title.replace('  ', ' ')
-
-        # Shorten LONG urls
-        if len(title) > 200:
-            title = title[:200] + '[...]'
-
-        if len(title) > title_len or len(title) < notitle_len: # Title output too large/short
-            return False
-
-        return title, charset
-    except:
+    if len(url) < url_min_length:
+       return False # URL is really short. Don't need shortening.
+    #try:
+    uri = web.get(url)
+    if not uri.info().maintype == 'text':
         return False
+    data = uri.read(1024) # Only read soo much of a large site.
+    title = re.compile('<title>(.*?)</title>', re.IGNORECASE|re.DOTALL).search(data).group(1)
+    title = web.htmlescape(title)
+    title = title.replace('\n', '').replace('\r', '')
+
+    # Remove spaces...
+    while '  ' in title:
+        title = title.replace('  ', ' ')
+
+    # Shorten LONG urls
+    if len(title) > 200:
+        title = title[:200] + '[...]'
+
+    if len(title) < title_min_length: # Title output too short
+       return False
+
+    return title
+    #except:
+    #    return False
 
 
 def clean_url(url):
@@ -73,7 +64,8 @@ def get_title_auto(code, input):
             if bad.lower() in url.lower():
                 continue
         # Lets get some data!
-        data, charset = get_url_data(url)
+        data = get_url_data(url)
+        print data
         if data:
             if hasattr(code.config, 'shortenurls'):
                 if code.config.shortenurls:
@@ -82,8 +74,7 @@ def get_title_auto(code, input):
                     url = clean_url(url)
             else:
                 url = clean_url(url)
-            if charset:
-                print charset
-                data = data.encode(charset, 'ignore')
             output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
+    if not output:
+        return
     return code.say(' | '.join(output))

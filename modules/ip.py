@@ -6,10 +6,9 @@ ip.py - Code IP lookup Module
 http://code.liamstanley.io/
 """
 
-import json
-import urllib2
 from socket import getfqdn as rdns
 from util.hook import *
+from util import web
 
 base = 'http://geo.liamstanley.io/json/%s'
 
@@ -42,7 +41,7 @@ def ip(code, input):
 
     # Try to get data from GeoIP server...
     try:
-        data = json.loads(urllib2.urlopen(base % host).read())
+        data = web.json(base % host, timeout=4)
     except:
         return code.reply(doc['error'] % host)
 
@@ -82,7 +81,7 @@ def geoip(code, input):
     if input.nick == code.nick or not channel.lower() in allowed:
         return
     try:
-        r = json.loads(urllib2.urlopen(base % host).read())
+        r = web.json(base % host, timeout=4)
         output, location = [], ['region_name', 'country_name']
         for val in location:
             if not val in r:

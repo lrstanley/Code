@@ -24,7 +24,6 @@ def rps(code, input):
         state = 'lost'
         color = 'red'
                # 1=tie, 2=win, 3=loss
-    syntax = 'The syntax is .(rock/paper/scissors)'
     if input.group(1) == 'rock':
         if cpu == 1:
             response = 'rock'
