@@ -6,7 +6,6 @@ http://code.liamstanley.io/
 """
 
 import sys, os.path, time, imp, subprocess
-from core import irc
 from util.hook import *
 from util import output
 

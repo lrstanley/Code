@@ -5,7 +5,7 @@ url.py - Code Url Module
 http://code.liamstanley.io/
 """
 
-import json
+
 import re
 from util import web
 from util.hook import *
@@ -23,13 +23,19 @@ def get_url_data(url):
         return False# URL is either really long, or really short. Don't need shortening.
     try:
         uri = web.get(url)
-        headers = uri.info().headers
         if not uri.info().maintype == 'text':
             return False
         data = uri.read(1024) # Only read soo much of a large site.
         title = re.compile('<title>(.*?)</title>', re.IGNORECASE|re.DOTALL).search(data).group(1)
         title = web.htmlescape(title)
         title = title.replace('\n', '').replace('\r', '')
+
+        for item in uri.info().headers:
+            if 'charset=' in item:
+                charset = item.split('charset=')[1].strip('\n').strip('\r')
+                break
+            else:
+                charset = False
 
         # Remove spaces...
         while '  ' in title:
@@ -42,7 +48,7 @@ def get_url_data(url):
         if len(title) > title_len or len(title) < notitle_len: # Title output too large/short
             return False
 
-        return title
+        return title, charset
     except:
         return False
 
@@ -67,7 +73,7 @@ def get_title_auto(code, input):
             if bad.lower() in url.lower():
                 continue
         # Lets get some data!
-        data = get_url_data(url)
+        data, charset = get_url_data(url)
         if data:
             if hasattr(code.config, 'shortenurls'):
                 if code.config.shortenurls:
@@ -76,6 +82,8 @@ def get_title_auto(code, input):
                     url = clean_url(url)
             else:
                 url = clean_url(url)
-            #data = data.decode('utf-8')
+            if charset:
+                print charset
+                data = data.encode(charset, 'ignore')
             output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     return code.say(' | '.join(output))

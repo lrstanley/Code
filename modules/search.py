@@ -8,7 +8,6 @@ http://code.liamstanley.io/
 import re
 from json import loads as json
 from urllib import quote
-import urllib2
 import util.web
 from util.hook import *
 import HTMLParser
@@ -77,6 +76,5 @@ def gc(code, input):
         return code.reply("Problem getting data from Google.")
     if not r['responseData']['results']:
         return code.reply("No results found for '{purple}%s{c}'." % input.group(2))
-    urls = r['responseData']['results']
     return code.say('%s: {b}%s{b} results found.' % (input.group(2), r['responseData']['cursor']['resultCount']))
     code.say(query + ': ' + num)

@@ -73,8 +73,8 @@ class Code(irc.Bot):
             name = os.path.basename(filename)[:-3]
             if name in excluded_modules:
                 continue
-            # if name in sys.modules:
-            #     del sys.modules[name]
+            if name in sys.modules:
+                del sys.modules[name]
             try:
                 module = imp.load_source(name, filename)
             except Exception as e:
@@ -282,13 +282,13 @@ class Code(irc.Bot):
                         # block function call if channel is blacklisted
                         print 'Blocked:', input.sender, func.name, func.func_code.co_filename
                         return
-        except Exception, e:
+        except:
             output.error("Error attempting to block: ", str(func.name))
             self.error(origin)
 
         try:
             func(code, input)
-        except Exception, e:
+        except:
             self.error(origin)
 
     def limit(self, origin, func):
@@ -380,6 +380,3 @@ class Code(irc.Bot):
             return True
         except:
             return False
-
-if __name__ == '__main__':
-    print __doc__

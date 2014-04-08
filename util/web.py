@@ -7,7 +7,7 @@ http://code.liamstanley.io/
 
 import re
 import urllib, urllib2
-from json import loads, dumps
+from json import loads
 from htmlentitydefs import name2codepoint
 import HTMLParser
 h = HTMLParser.HTMLParser()

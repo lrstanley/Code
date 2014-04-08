@@ -5,10 +5,9 @@ weather.py - Code Weather Module
 http://code.liamstanley.io/
 """
 
-import re
+
 import urllib, urllib2
 import json
-import HTMLParser
 from util.hook import *
 
 user = 'code'

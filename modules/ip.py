@@ -6,7 +6,7 @@ ip.py - Code IP lookup Module
 http://code.liamstanley.io/
 """
 
-import json, re
+import json
 import urllib2
 from socket import getfqdn as rdns
 from util.hook import *
@@ -28,9 +28,9 @@ def ip(code, input):
         ['longitude', 'Long']
     ]
     doc = {
-               'invalid': '{red}Invalid input: \'.whois [ip|hostname]\'{c}',
-               'error': '{red}Couldn\'t receive information for %s{c}',
-               'na': '{red}N/A{c}'
+                'invalid': '{red}Invalid input: \'.whois [ip|hostname]\'{c}',
+                'error': '{red}Couldn\'t receive information for %s{c}',
+                'na': '{red}N/A{c}'
     }
     if not input.group(2):
         host = input.host.strip()

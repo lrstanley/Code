@@ -11,7 +11,6 @@ import hashlib
 from util.hook import *
 from util import web
 
-
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
 
@@ -39,7 +38,7 @@ def py(code, input):
             return code.reply(answer)
         else:
             return code.reply('Sorry, no {b}%s{b}')
-    except Exception, e:
+    except:
         return code.reply('{red}The server did not return an answer.')
 
 

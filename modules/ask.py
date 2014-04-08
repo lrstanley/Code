@@ -5,8 +5,7 @@ ask.py - Code Ask Module
 http://code.liamstanley.io/
 """
 
-import random, time
-import re
+import random
 from util.hook import *
 
 

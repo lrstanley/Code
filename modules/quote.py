@@ -57,7 +57,6 @@ def delquote(code, input):
     except:
         return code.reply('{red}No quotes to delete.')
     lines = fn.readlines()
-    MAX = len(lines)
     fn.close()
     try:
         number = int(text)

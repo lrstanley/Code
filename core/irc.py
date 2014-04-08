@@ -95,9 +95,8 @@ class Bot(asynchat.async_chat):
     #def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
-    def format(self, message, legacy=None):
+    def format(self, message, legacy=None, charset=None):
         '''formatting to support color/bold/italic/etc assignment in Codes responses'''
-        message = message.decode('utf-8')
         if not hasattr(self.config, 'textstyles'):
             return self.clear_format(message)
         if not self.config.textstyles:
@@ -185,7 +184,7 @@ class Bot(asynchat.async_chat):
                 self.__write(args, text, raw)
             else:
                 self.__write(args, text)
-        except Exception, e: pass
+        except: pass
 
     def safe(self, input, u=False):
         if input:
@@ -266,6 +265,7 @@ class Bot(asynchat.async_chat):
                 log_raw(data)
             self.raw = data.replace('\x02','').replace('\r','')
             line = self.raw.strip()
+            default = {'normal': True, 'voiced': False, 'op': False}
             global debug
             if debug:
                 print line
@@ -314,7 +314,6 @@ class Bot(asynchat.async_chat):
                         except:
                             return
                         output.normal('%s sets MODE %s' % (nick, args), 'MODE')
-                    default = {'normal': True, 'voiced': False, 'op': False}
 
                     if code == '353':
                         channel, user_list = line[1::].split(':',1)
@@ -527,21 +526,3 @@ class Bot(asynchat.async_chat):
 
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
         except: self.msg(origin.sender, '{red}Got an error.')
-
-class TestBot(Bot):
-    def f_ping(self, origin, match, args):
-        delay = match.group(1)
-        if delay is not None:
-            #import time
-            time.sleep(int(delay))
-            self.msg(origin.sender, 'pong (%s)' % delay)
-        else: self.msg(origin.sender, 'pong')
-    f_ping.rule = r'^\.ping(?:[ \t]+(\d+))?$'
-
-def main():
-    # bot = TestBot('TestBot', ['#L'])
-    # bot.run('irc.esper.net')
-    print __doc__
-
-if __name__ == "__main__":
-    main()

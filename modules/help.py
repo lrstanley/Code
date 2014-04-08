@@ -21,7 +21,6 @@ def commands(code, input):
         if code.doc[module]['commands']:
             commands.append(code.doc[module]['commands'][0])
     commands = list(set(commands))
-    full = len(commands)
     count = 0
     tmp, cmds = [], []
     # Make a list, of lists, of lines. :)
@@ -54,7 +53,6 @@ def help(code, input):
             if input.group(2).lower() in code.doc[module]['commands'] or \
                input.group(2).lower() == module.lower():
                 mod = code.doc[module]
-                name = module
                 break
         if not mod:
             return code.reply('{red}{b}There is no such command!')

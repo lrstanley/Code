@@ -7,7 +7,7 @@ http://code.liamstanley.io/
 """
 
 
-import os, re, time, random
+import os, time, random
 from util.hook import *
 
 maximum = 4
@@ -80,7 +80,6 @@ def f_remind(code, input):
             code.say("Nickname {b}%s{b} is too long." % (tellee))
             continue
         if not tellee.lower() in (teller.lower(), code.nick): # @@
-            warn = False
             if not tellee.lower() in whogets:
                 whogets.append(tellee)
                 if tellee not in code.reminders:

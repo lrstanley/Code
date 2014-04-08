@@ -55,8 +55,6 @@ def setup(code):
 
 @hook(rule=r'.*', event='251', priority='low')
 def startup(code, input):
-    import time
-
     if hasattr(code.config, 'password'):
         code.write(['PRIVMSG','NickServ'], 'IDENTIFY %s' % code.config.password, output=False)
         time.sleep(5)

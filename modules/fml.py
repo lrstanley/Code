@@ -6,7 +6,6 @@ http://code.liamstanley.io/
 """
 
 import re
-import urllib
 import urllib2
 import HTMLParser
 from util.hook import *
@@ -74,8 +73,6 @@ def fml_random():
 
 def fml_search(query, id): #ID is index of search query
     """fml - Retrieve FML search results, via FMyLife.com's dev API."""
-    if mature: is_mature = '/nosex'
-    else: is_mature = ''
     # Try to query FML
     try:
         query = re.sub(r'[^\w\s]', '+', query)
@@ -115,6 +112,3 @@ def fml_id_search(query_id):
             'fml-id': fmlid[0].replace('<item id="','',1).replace('">','',1).strip(),
             '+': re.sub(r'\<.*?\>', '', agree[0]).strip(),
             '-': re.sub(r'\<.*?\>', '', deserved[0]).strip()}
-
-if __name__ == '__main__':
-    print __doc__.strip()

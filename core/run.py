@@ -41,7 +41,7 @@ def run_code(config):
 
     try: Watcher()
     except Exception, e:
-        output.error('%s (in __init__.py)' % e)
+        output.error('%s (in core/__init__.py)' % e)
 
     while True:
         try: connect(config)
@@ -57,6 +57,3 @@ def run_code(config):
 def run(config):
     t = threading.Thread(target=run_code, args=(config,))
     t.run()
-
-if __name__ == '__main__':
-    print __doc__

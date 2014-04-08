@@ -11,8 +11,6 @@ from util import web
 from util.hook import *
 from util import database
 from modules.calc import hash
-from json import loads, dumps
-import thread, time
 
 
 auto_check = 15 # Time in seconds to check for new tweets

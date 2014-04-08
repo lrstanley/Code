@@ -24,7 +24,6 @@ def start():
     outer = (largest + (1 * 4)) * symbol
     output.normal(outer, False)
     for line in lines:
-        difference = largest - (1 * 2) - len(line)
         tmp = symbol + (1 * ' ') + line
         sidedif = (largest + (1 * 4)) - len(tmp) - 1
         tmp += ' '*sidedif + symbol

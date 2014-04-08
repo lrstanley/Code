@@ -5,7 +5,7 @@ isup.py - Code Isup Module
 http://code.liamstanley.io/
 """
 
-import re
+
 from urllib import urlopen
 from util.hook import *
 

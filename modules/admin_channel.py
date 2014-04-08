@@ -232,7 +232,6 @@ def topic(code, input):
     topic = ' '.join(text[1:])
     if topic == '':
         return
-    channel = input.sender
     code.write(['PRIVMSG', 'ChanServ'], 'TOPIC %s %s' % (input.sender, topic))
     return
 topic.commands = ['topic']

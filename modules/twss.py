@@ -6,9 +6,9 @@ twss.py - Code 'That's what she said' Module
 http://code.liamstanley.io/
 """
 
-import urllib2
+
 import urllib
-import re, os, sys
+import re, os
 from util.hook import *
 
 

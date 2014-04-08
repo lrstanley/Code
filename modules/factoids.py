@@ -5,8 +5,6 @@ factoids.py - Code Factoids Module
 http://code.liamstanley.io/
 '''
 
-import os, string, re
-import json
 from urllib2 import urlopen
 from util.hook import *
 from util import database, web
