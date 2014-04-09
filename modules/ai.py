@@ -168,7 +168,7 @@ def ty3(code, input):
     ty(code, input)
 
 
-@hooK(rule=r'(?i)$nickname\:\s+(.*)')
+@hook(rule=r'(?i)$nickname\:\s+(.*)')
 def random_resp(code, input):
     human = random.random()
     if 0 <= human <= 0.025:
