@@ -65,7 +65,12 @@ def get_title_auto(code, input):
         # check to see if we should ignore this URL...
         for bad in ignored:
             if bad.lower() in url.lower():
-                continue
+                skip = True
+                break
+            else:
+                skip = False
+        if skip:
+            break
         # Lets get some data!
         data = get_url_data(url)
         if data:
