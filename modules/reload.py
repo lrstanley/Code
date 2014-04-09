@@ -26,7 +26,11 @@ def f_reload(code, input):
         code.variables = None
         code.commands = None
         code.setup()
-        output.info('Reloaded all modules.')
+        try:
+            output.info('Reloaded all modules.')
+        except:
+            from util import output
+            output.info('Reloaded all modules')
         return code.reply('{b}Reloaded all modules.')
 
     # if a user supplies the module with the extension

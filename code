@@ -104,6 +104,11 @@ def create_default_config(fn):
         # List of channels to check for locations
         #geoip = ['#stalker']
 
+        # Check each user that joins the channel to see if they are in the
+        # Project Honeypot IP Abuser Database. IP's that are in that Database
+        # Are involved in spam, DDoS, and more.
+        honeypot = True
+
         # Would you like to run a webserver alongside Code? This is only for development purposes
         # And is accessable with the raw IRC command, and password below (required)
         # E.g: http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23MyChannel&data=I+love+trains
