@@ -36,6 +36,7 @@ def format_colors(message):
 
 
 def template(message, prefix, color, error=False):
+    message, prefix, color = str(message), str(prefix), str(color)
     if not prefix:
         prefix = ''
     if not parse:
