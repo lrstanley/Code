@@ -8,10 +8,13 @@ http://code.liamstanley.io/
 
 
 import urllib
+import socket
 import re
 import os
 from util.hook import *
 
+
+socket.setdefaulttimeout(5)
 
 last = "DEBUG_ME"  # Dont find this in terminal, you might want to flip shit.
 if not os.path.exists('modules/twss.db'):
