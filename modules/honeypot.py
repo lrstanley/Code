@@ -9,10 +9,12 @@ http://code.liamstanley.io/
 from util.hook import *
 from util import web
 from util import output
+from util import database
 import re
 import socket
 
 base = 'https://www.projecthoneypot.org/ip_%s'
+db = []
 
 
 @hook(rule=r'.*', event='JOIN', rate=10)
@@ -22,8 +24,16 @@ def auto_honeypot(code, input):
         return
     if not code.config.honeypot:
         return
-    abuser = check(get_ip(input.host))
+    global db
+
+    ip = get_ip(input.host)
+    abuser = check(ip)
     if abuser:
+        # First, we need to check if we've already checked for it, and got a match...
+        if ip in db:
+            return
+        db.append(ip)
+        database.set(db, 'honeypot')
         code.say(abuser)
 
 
@@ -78,3 +88,10 @@ def get_ip(hostname):
         return socket.gethostbyname(socket.getfqdn())
     except:
         return hostname
+
+
+def setup(code):
+    global db
+    db = database.get('honeypot')
+    if not db:
+        db = []
