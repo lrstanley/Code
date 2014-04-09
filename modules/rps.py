@@ -8,12 +8,13 @@ http://code.liamstanley.io/
 import random
 from util.hook import *
 
-@hook(cmds=['rock','paper','scissors'], rate=15)
+
+@hook(cmds=['rock', 'paper', 'scissors'], rate=15)
 def rps(code, input):
     """Play some Rock-Paper-Scissors with Code!"""
     text = input.group().lower()
     text = text.split()
-    cpu = random.randint(1,3)
+    cpu = random.randint(1, 3)
     if cpu == 1:
         state = 'had a draw'
         color = 'blue'
@@ -23,7 +24,7 @@ def rps(code, input):
     else:
         state = 'lost'
         color = 'red'
-               # 1=tie, 2=win, 3=loss
+    # 1=tie, 2=win, 3=loss
     if input.group(1) == 'rock':
         if cpu == 1:
             response = 'rock'
@@ -45,5 +46,6 @@ def rps(code, input):
             response = 'paper'
         else:
             response = 'rock'
-    return code.say('*Rock... Paper... Scissors!* You {%s}{b}%s{b}! %s had {b}%s{b}!' % (color,
-                    state, code.nick, response))
+    return code.say('*Rock... Paper... Scissors!* You {%s}{b}%s{b}! %s had {b}%s{b}!' % (
+        color, state, code.nick, response
+    ))

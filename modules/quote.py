@@ -20,6 +20,7 @@ def addquote(code, input):
     fn.close()
     code.reply('Quote added.')
 
+
 @hook(cmds=['quote'], priority='low', ex='quote 2', rate=30)
 def retrievequote(code, input):
     '''quote <number> -- displays a given quote'''
@@ -38,10 +39,12 @@ def retrievequote(code, input):
         if number < 0:
             number = MAX - abs(number) + 1
     except:
-        try: number = random.randint(1, MAX)
-        except: return code.reply('{red}I\'m sorry, there currently aren\'t any quote in the database. Use .addquote to add one!')
+        try:
+            number = random.randint(1, MAX)
+        except:
+            return code.reply('{red}I\'m sorry, there currently aren\'t any quote in the database. Use .addquote to add one!')
     if not (0 <= number <= MAX):
-        code.reply(code.color('red','I\'m not sure which quote you would like to see.'))
+        code.reply(code.color('red', 'I\'m not sure which quote you would like to see.'))
     else:
         line = lines[number - 1]
         code.reply('Quote {blue}%s{c} of {blue}%s{c}: ' % (number, MAX) + line)
@@ -63,7 +66,7 @@ def delquote(code, input):
     except:
         code.reply('Please enter the quote number you would like to delete.')
         return
-    newlines = lines[:number-1] + lines[number:]
+    newlines = lines[:number - 1] + lines[number:]
     fn = open('quotes.txt', 'w')
     for line in newlines:
         txt = uc.encode(line)

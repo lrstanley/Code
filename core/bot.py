@@ -6,28 +6,43 @@ bot.py - Code IRC Bot
 http://code.liamstanley.io/
 """
 
-import time, sys, os, re, threading, imp
-#import irc
+import time
+import sys
+import os
+import re
+import threading
+import imp
 from core import irc
 from util import output
 
 home = os.getcwd()
 
+
 def decode(bytes):
-    try: text = bytes.decode('utf-8')
+    try:
+        text = bytes.decode('utf-8')
     except UnicodeDecodeError:
-        try: text = bytes.decode('iso-8859-1')
+        try:
+            text = bytes.decode('iso-8859-1')
         except UnicodeDecodeError:
             text = bytes.decode('cp1252')
     return text
 
+
 class Code(irc.Bot):
     def __init__(self, config):
-        if hasattr(config, "logchan_pm"): lc_pm = config.logchan_pm
-        else: lc_pm = None
-        if hasattr(config, "logging"): logging = config.logging
-        else: logging = False
-        args = (config.nick, config.name, config.channels, config.serverpass, lc_pm, logging)
+        if hasattr(config, "logchan_pm"):
+            lc_pm = config.logchan_pm
+        else:
+            lc_pm = None
+        if hasattr(config, "logging"):
+            logging = config.logging
+        else:
+            logging = False
+        args = (
+            config.nick, config.name, config.channels,
+            config.serverpass, lc_pm, logging
+        )
         irc.Bot.__init__(self, *args)
         self.config = config
         self.prefix = self.config.prefix
@@ -87,7 +102,8 @@ class Code(irc.Bot):
 
         if self.modules:
             output.info('Registered modules: ' + ', '.join(self.modules))
-        else: output.warning("Couldn't find any modules")
+        else:
+            output.warning('Couldn\'t find any modules')
 
         self.bind_commands()
 
@@ -101,7 +117,6 @@ class Code(irc.Bot):
         self.commands = {'high': {}, 'medium': {}, 'low': {}}
 
         def bind(self, priority, regexp, func):
-            #print '[INFO] Loading %s (%s) (%s)' % (func, priority, regexp.pattern.encode('utf-8'))
             if not hasattr(func, 'name'):
                 func.name = func.__name__
             self.commands[priority].setdefault(regexp, []).append(func)
@@ -133,7 +148,8 @@ class Code(irc.Bot):
 
             if not hasattr(func, 'event'):
                 func.event = 'PRIVMSG'
-            else: func.event = func.event.upper()
+            else:
+                func.event = func.event.upper()
 
             if not hasattr(func, 'rate'):
                 if hasattr(func, 'commands'):
@@ -160,7 +176,9 @@ class Code(irc.Bot):
                         prefix = self.config.prefix
                         commands, pattern = func.rule
                         for command in commands:
-                            command = r'(?i)(\%s)\b(?: +(?:%s))?' % (command, pattern)
+                            command = r'(?i)(\%s)\b(?: +(?:%s))?' % (
+                                command, pattern
+                            )
                             regexp = re.compile(prefix + command)
                             bind(self, func.priority, regexp, func)
 
@@ -194,8 +212,11 @@ class Code(irc.Bot):
             def __getattr__(self, attr):
                 sender = origin.sender or text
                 if attr == 'reply':
-                    return (lambda msg:
-                        self.bot.msg(sender, origin.nick + ': ' + msg))
+                    return (
+                        lambda msg: self.bot.msg(
+                            sender, origin.nick + ': ' + msg
+                        )
+                    )
                 elif attr == 'say':
                     return lambda msg: self.bot.msg(sender, msg)
                 elif attr == 'action':
@@ -219,7 +240,7 @@ class Code(irc.Bot):
                 if not hasattr(s, 'data'):
                     s.data = {}
                 s.admin = origin.nick in self.config.admins
-                if s.admin == False:
+                if not s.admin:
                     for each_admin in self.config.admins:
                         re_admin = re.compile(each_admin)
                         if re_admin.findall(origin.host):
@@ -230,8 +251,10 @@ class Code(irc.Bot):
                             if re_host.findall(origin.host):
                                 s.admin = True
                 s.owner = origin.nick + '@' + origin.host == self.config.owner
-                if s.owner == False: s.owner = origin.nick == self.config.owner
-                if s.owner: s.admin = True
+                if not s.owner:
+                    s.owner = origin.nick == self.config.owner
+                if s.owner:
+                    s.admin = True
                 s.host = origin.host
                 return s
 
@@ -259,8 +282,12 @@ class Code(irc.Bot):
             return code.say('{b}{red}You must be owner to use that command!')
 
         if func.args and not input.group(2):
-            return code.say('{red}No arguments supplied! Try: "{b}{purple}%shelp %s{b}{r}"' % (code.prefix, \
-                      code.doc[func.name]['commands'][0]))
+            msg = '{red}No arguments supplied! Try: ' + \
+                  '"{b}{purple}%shelp %s{b}{r}"'
+            return code.say(msg % (
+                code.prefix,
+                code.doc[func.name]['commands'][0])
+            )
 
         nick = (input.nick).lower()
         if nick in self.times:
@@ -269,7 +296,8 @@ class Code(irc.Bot):
                     if time.time() - self.times[nick][func] < func.rate:
                         self.times[nick][func] = time.time()
                         return
-        else: self.times[nick] = dict()
+        else:
+            self.times[nick] = dict()
         self.times[nick][func] = time.time()
         try:
             if hasattr(self, 'excludes'):
@@ -280,7 +308,10 @@ class Code(irc.Bot):
                     fname = func.func_code.co_filename.split('/')[-1].split('.')[0]
                     if fname in self.excludes[input.sender]:
                         # block function call if channel is blacklisted
-                        print 'Blocked:', input.sender, func.name, func.func_code.co_filename
+                        print (
+                            'Blocked:', input.sender, func.name,
+                            func.func_code.co_filename
+                        )
                         return
         except:
             output.error("Error attempting to block: ", str(func.name))
@@ -307,14 +338,18 @@ class Code(irc.Bot):
             items = self.commands[priority].items()
             for regexp, funcs in items:
                 for func in funcs:
-                    if event != func.event: continue
+                    if event != func.event:
+                        continue
 
                     match = regexp.match(text)
                     if match:
-                        if self.limit(origin, func): continue
+                        if self.limit(origin, func):
+                            continue
 
                         code = self.wrapped(origin, text, match)
-                        input = self.input(origin, text, bytes, match, event, args)
+                        input = self.input(
+                            origin, text, bytes, match, event, args
+                        )
 
                         nick = (input.nick).lower()
 
@@ -324,11 +359,15 @@ class Code(irc.Bot):
                             contents = g.readlines()
                             g.close()
 
-                            try: bad_masks = contents[0].split(',')
-                            except: bad_masks = ['']
+                            try:
+                                bad_masks = contents[0].split(',')
+                            except:
+                                bad_masks = ['']
 
-                            try: bad_nicks = contents[1].split(',')
-                            except: bad_nicks = ['']
+                            try:
+                                bad_nicks = contents[1].split(',')
+                            except:
+                                bad_nicks = ['']
 
                             # check for blocked hostmasks
                             if len(bad_masks) > 0:
@@ -336,7 +375,8 @@ class Code(irc.Bot):
                                 host = host.lower()
                                 for hostmask in bad_masks:
                                     hostmask = hostmask.replace("\n", "").strip()
-                                    if len(hostmask) < 1: continue
+                                    if len(hostmask) < 1:
+                                        continue
                                     try:
                                         re_temp = re.compile(hostmask)
                                         if re_temp.findall(host):
@@ -348,7 +388,8 @@ class Code(irc.Bot):
                             if len(bad_nicks) > 0:
                                 for nick in bad_nicks:
                                     nick = nick.replace("\n", "").strip()
-                                    if len(nick) < 1: continue
+                                    if len(nick) < 1:
+                                        continue
                                     try:
                                         re_temp = re.compile(nick)
                                         if re_temp.findall(input.nick):
@@ -361,10 +402,12 @@ class Code(irc.Bot):
                             targs = (func, origin, code, input)
                             t = threading.Thread(target=self.call, args=targs)
                             t.start()
-                        else: self.call(func, origin, code, input)
+                        else:
+                            self.call(func, origin, code, input)
 
                         for source in [origin.sender, origin.nick]:
-                            try: self.stats[(func.name, source)] += 1
+                            try:
+                                self.stats[(func.name, source)] += 1
                             except KeyError:
                                 self.stats[(func.name, source)] = 1
 

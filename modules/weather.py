@@ -6,7 +6,8 @@ http://code.liamstanley.io/
 """
 
 
-import urllib, urllib2
+import urllib
+import urllib2
 import json
 from util.hook import *
 
@@ -14,6 +15,7 @@ user = 'code'
 
 api_key = 'a8881902cd797573d33785cbebda6012'
 api_uri = 'https://api.forecast.io/forecast/%s/%s,%s'
+
 
 def location(name):
     name = urllib.quote(name)
@@ -29,14 +31,14 @@ def location(name):
 
 
 @hook(cmds=['weather'], ex='weather Eaton Rapids, Michigan', args=True)
-def weather(code,input):
+def weather(code, input):
     """weather <city, state|country|zip> - Return weather results for specified address"""
     # Here, we check if it's an actual area, if the geo returns the lat/long then it is..
     name, country, lat, lng = location(input.group(2))
     if not name or not country or not lat or not lng:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     try:
-        data = json.loads(urllib2.urlopen(api_uri % (api_key,lat,lng)).read())['currently']
+        data = json.loads(urllib2.urlopen(api_uri % (api_key, lat, lng)).read())['currently']
     except:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     output = []
@@ -47,27 +49,31 @@ def weather(code,input):
     if 'temperature' in data:
         if data['temperature'] == data['apparentTemperature']:
             # Feels like is the same, don't use both of them
-            output.append('{b}{blue}%s%s{b}{c}' % (data['temperature'],degree))
+            output.append('{b}{blue}%s%s{b}{c}' % (data['temperature'], degree))
         else:
-            output.append('{b}{blue}%s%s{b}{c} ({b}{blue}%s%s{b}{c})' % (data['temperature'], degree,
-                                           data['apparentTemperature'], degree))
+            output.append('{b}{blue}%s%s{b}{c} ({b}{blue}%s%s{b}{c})' % (
+                data['temperature'], degree, data['apparentTemperature'], degree
+            ))
     if 'precipIntensity' in data and 'precipType' in data and 'precipIntensity' in data:
         # Nothing happening
         if data['precipIntensity'] == 0 and 'precipProbability' in data:
             # If probability above 0%
             if data['precipProbability'] != '0':
-                output.append('{b}{blue}%s\%{b}{blue} chance of {b}{blue}%s{b}{c}' % (data['precipProbability'],
-                                                    data['precipType']))
+                output.append('{b}{blue}%s\%{b}{blue} chance of {b}{blue}%s{b}{c}' % (
+                    data['precipProbability'], data['precipType']
+                ))
         # Pricipitation
         else:
-            output.append('{b}{blue}%s{b}{c} of {b}{blue}%s{b}{c}' % (data['precipType'],data['precipIntensity']))
+            output.append('{b}{blue}%s{b}{c} of {b}{blue}%s{b}{c}' % (
+                data['precipType'], data['precipIntensity']
+            ))
     if 'dewPoint' in data:
-        output.append('{b}{blue}Dew:{b}{c} %s%s' % (data['dewPoint'],degree))
+        output.append('{b}{blue}Dew:{b}{c} %s%s' % (data['dewPoint'], degree))
     if 'humidity' in data:
         output.append('{b}{blue}Humidity:{b}{c} %s' % data['humidity'])
     if 'windSpeed' in data:
-        output.append('{b}{blue}Wind speed:{b}{c} %smph ({b}{blue}Bearing %s%s{b}{c})' % (data['windSpeed'],
-                                                      data['windBearing'],degree))
+        output.append('{b}{blue}Wind speed:{b}{c} %smph ({b}{blue}Bearing %s%s{b}{c})' % (
+            data['windSpeed'], data['windBearing'], degree))
     if 'visibility' in data:
         output.append('{b}{blue}Visibility{b}{c} %s' % data['visibility'])
     if 'cloudCover' in data:

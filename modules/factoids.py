@@ -16,10 +16,10 @@ def factoid(code, input):
         ?<word> -- Shows what data is associated with <word>.
         ? <add|delete|info> [args] -- for management
     """
-    
+
     if len(input.group().strip()) == 1:
         return
-    
+
     # If it's a management command...
     if input.group().startswith('? '):
         if not input.admin:
@@ -35,16 +35,16 @@ def factoid(code, input):
     else:
         id, arguments = input.group(1).split(' ', 1)
 
-    if not id in db:
+    if id not in db:
         return code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}? add <name> <data>{red}")')
 
     f = db[id]
 
     if f.startswith('<py>'):
         data = f[4:].strip()
-        variables = 'input="""{}"""; nick="{}"; sender="{}"; bot="{}";'.format(arguments.replace('"', '\\"'),
-                                                                                  input.nick, input.sender,
-                                                                                  code.nick)
+        variables = 'input="""{}"""; nick="{}"; sender="{}"; bot="{}";'.format(
+            arguments.replace('"', '\\"'), input.nick, input.sender, code.nic
+        )
         result = web.pyexec(variables + data, multiline=False)
         return code.say(result)
     elif f.startswith('<act>'):
@@ -66,23 +66,23 @@ def factoid_manage(data, code, input):
     if len(data.split()) == 1:
         cmd, args = data, False
     else:
-        cmd, args = data.split(' ',1)
+        cmd, args = data.split(' ', 1)
     if args:
         name = args.split()[0].lower()
     db = database.get('factoids')
-    if cmd.lower() in ['add','create','new']:
+    if cmd.lower() in ['add', 'create', 'new']:
         if args:
             if name in db:
                 return code.reply('{red}That factoid already exists!')
             elif len(args.strip().split()) > 1:
-                db[name] = args.split(' ',1)[1]
+                db[name] = args.split(' ', 1)[1]
                 database.set(db, 'factoids')
                 return code.reply('{green}Successfully create the factoid "{purple}%s{green}"!' % name)
         return code.reply(('{red}Use "{purple}? add <name> <args>{red}" to create a new factoid. Use <py>, '
                            '<act>, <url> in front of args for different responses.'))
     elif cmd.lower() in ['del', 'rem', 'delete', 'remove']:
         if args:
-            if not name in db:
+            if name not in db:
                 return code.reply('{red}That factoid does not exist!')
             else:
                 del db[name]

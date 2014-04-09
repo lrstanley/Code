@@ -63,6 +63,7 @@ def movie(code, input):
     except:
         return
 
+
 def build_response(data):
     response = list()
     response.append(['Title', data['Title']])

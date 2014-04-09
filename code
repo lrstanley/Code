@@ -5,7 +5,10 @@ Source: https://github.com/Liamraystanley/Code
 Documentation: http://code.liamstanley.io/
 """
 
-import sys, os, imp, optparse
+import sys
+import os
+import imp
+import optparse
 from textwrap import dedent as trim
 from util import output
 
@@ -26,15 +29,17 @@ def start():
     for line in lines:
         tmp = symbol + (1 * ' ') + line
         sidedif = (largest + (1 * 4)) - len(tmp) - 1
-        tmp += ' '*sidedif + symbol
+        tmp += ' ' * sidedif + symbol
         output.normal(tmp, False)
     output.normal(outer, False)
     output.normal('Initializing the bot', 'START')
+
 
 def check_python_version():
     if sys.version_info < (2, 7):
         output.error('Requires Python 2.7 or later, from www.python.org')
         sys.exit(1)
+
 
 def create_default_config(fn):
     f = open(fn, 'w')
@@ -109,7 +114,7 @@ def create_default_config(fn):
         #webserver_pass = 'herpderptrains'
 
         # Auto post twitter feeds to specific channels, if uncommented below.
-        # Note, this can be in the form of @usernames, as well as #hashtags 
+        # Note, this can be in the form of @usernames, as well as #
         #twitter_autopost = {
         #    '#Liam': ['@liamraystanley', '#YOLO'],
         #    '#coding': ['@programmaster', '#coding']
@@ -127,7 +132,7 @@ def create_default_config(fn):
         excludes = {
             '##blacklist': ['!'],
         }
-            
+
         # Channel code will report all private messages sent to him to.
         # This includes server notices.
         #logchan_pm = '#code-log'
@@ -145,23 +150,30 @@ def create_default_config(fn):
     print >> f, trim(output)
     f.close()
 
+
 def create_configfile(dotdir):
 
     if not os.path.isdir(dotdir):
         output.info('Creating a config in directory ~/.code...')
-        try: os.mkdir(dotdir)
+        try:
+            os.mkdir(dotdir)
         except Exception, e:
             output.error('There was a problem creating %s:' % dotdir)
             output.error(str(e))
             output.error('Please fix this and then run code again.')
             sys.exit(1)
     create_default_config(configpath)
-    output.info('Config file generated. Please edit it at %s and run ./code again.' % configpath)
+    output.info(
+        'Config file generated. Please edit it '
+        'at %s and run ./code again.' % configpath
+    )
     sys.exit(0)
+
 
 def check_dotdir():
     if not os.path.isdir(dotdir) or not os.path.isfile(configpath):
         create_configfile(dotdir)
+
 
 def config_names(config):
     config = config or 'default'
@@ -188,6 +200,7 @@ def config_names(config):
 
     sys.exit(1)
 
+
 def main(argv=None):
     # pre-process. Documentation output
     start()
@@ -195,14 +208,16 @@ def main(argv=None):
     # Step One: Parse The Command Line
 
     parser = optparse.OptionParser('%prog [options]')
-    parser.add_option('-c', '--config', metavar='fn',
-        help='use this configuration file or directory')
+    parser.add_option(
+        '-c', '--config', metavar='fn',
+        help='use this configuration file or directory'
+    )
     opts, args = parser.parse_args(argv)
 
     # Step Two: Check Dependencies
 
-    check_python_version() # require python2.7 or later
-    check_dotdir() # require ~/.code, or make it and exit
+    check_python_version()  # require python2.7 or later
+    check_dotdir()  # require ~/.code, or make it and exit
 
     # Step Three: Load The Configurations
 
@@ -212,7 +227,10 @@ def main(argv=None):
         try:
             module = imp.load_source(name, config_name)
         except:
-            output.error("The config file has syntax errors. Please fix them and run Code again!")
+            output.error(
+                'The config file has syntax errors. '
+                'Please fix them and run Code again!'
+            )
             sys.exit(1)
         module.filename = config_name
 
@@ -220,9 +238,15 @@ def main(argv=None):
             try:
                 cv = int(module.version)
                 if configv > cv:
-                    output.warning('Configuration is not up to date. You will likely recieve errors.')
+                    output.warning(
+                        'Configuration is not up to date. '
+                        'You will likely recieve errors.'
+                    )
             except:
-                output.warning('Configuration is not up to date. You will likely recieve errors.')
+                output.warning(
+                    'Configuration is not up to date. '
+                    'You will likely recieve errors.'
+                )
 
         if not hasattr(module, 'website'):
             module.website = 'http://code.liamstanley.io'
@@ -230,8 +254,8 @@ def main(argv=None):
         if not hasattr(module, 'prefix'):
             module.prefix = '.'
 
-        if not hasattr(module, 'name'): 
-           module.name = '\x0307Python IRC Bot - %s' % module.website
+        if not hasattr(module, 'name'):
+            module.name = '\x0307Python IRC Bot - %s' % module.website
 
         if not hasattr(module, 'port'):
             module.port = 6667
@@ -240,8 +264,10 @@ def main(argv=None):
             module.serverpass = None
 
         if module.host == 'irc.example.net':
-            error = ('You must edit the config file first!\n' +
-                        "You're currently using %s" % module.filename)
+            error = (
+                'You must edit the config file first!\n'
+                'You\'re currently using %s' % module.filename
+            )
             output.error(error)
             sys.exit(1)
 
@@ -249,9 +275,11 @@ def main(argv=None):
 
     # Step Four: Load code
 
-    try: from core.run import run
+    try:
+        from core.run import run
     except ImportError:
-        try: from code import run
+        try:
+            from code import run
         except ImportError:
             output.error("Couldn't find code to import")
             sys.exit(1)
@@ -260,7 +288,7 @@ def main(argv=None):
 
     # @@ ignore SIGHUP
     for config_module in config_modules:
-        run(config_module) # @@ thread this
+        run(config_module)  # @@ thread this
 
 if __name__ == '__main__':
     main()

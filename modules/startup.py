@@ -6,17 +6,21 @@ startup.py - Code Startup Module
 http://code.liamstanley.io/
 """
 
-import threading, time
+import threading
+import time
 from util import output
 from util.hook import *
+
 
 def setup(code):
     code.data = {}
     refresh_delay = 300.0
 
     if hasattr(code.config, 'refresh_delay'):
-        try: refresh_delay = float(code.config.refresh_delay)
-        except: pass
+        try:
+            refresh_delay = float(code.config.refresh_delay)
+        except:
+            pass
 
         def close():
             output.error("Nobody PONGed our PING, restarting")
@@ -36,7 +40,8 @@ def setup(code):
                 code.data['startup.setup.timer'].cancel()
                 time.sleep(refresh_delay + 60.0)
                 pingloop()
-            except: pass
+            except:
+                pass
         pong.event = 'PONG'
         pong.thread = True
         pong.rule = r'.*'
@@ -56,7 +61,7 @@ def setup(code):
 @hook(rule=r'.*', event='251', priority='low')
 def startup(code, input):
     if hasattr(code.config, 'password'):
-        code.write(['PRIVMSG','NickServ'], 'IDENTIFY %s' % code.config.password, output=False)
+        code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % code.config.password, output=False)
         time.sleep(5)
 
     for channel in code.channels:

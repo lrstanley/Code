@@ -5,9 +5,14 @@ run.py - Code Initialization Module
 http://code.liamstanley.io/
 """
 
-import sys, os, time, threading, signal
+import sys
+import os
+import time
+import threading
+import signal
 from core import bot
 from util import output
+
 
 class Watcher(object):
     def __init__(self):
@@ -29,6 +34,7 @@ class Watcher(object):
         except OSError:
             pass
 
+
 def run_code(config):
     if hasattr(config, 'delay'):
         delay = config.delay
@@ -39,12 +45,14 @@ def run_code(config):
         p = bot.Code(config)
         p.run(config.host, config.port)
 
-    try: Watcher()
+    try:
+        Watcher()
     except Exception, e:
         output.error('%s (in core/__init__.py)' % e)
 
     while True:
-        try: connect(config)
+        try:
+            connect(config)
         except KeyboardInterrupt:
             sys.exit()
 
@@ -53,6 +61,7 @@ def run_code(config):
 
         output.error('Disconnected. Reconnecting in %s seconds...' % delay)
         time.sleep(delay)
+
 
 def run(config):
     t = threading.Thread(target=run_code, args=(config,))

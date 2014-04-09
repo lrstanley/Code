@@ -8,11 +8,12 @@ http://code.liamstanley.io/
 
 
 import urllib
-import re, os
+import re
+import os
 from util.hook import *
 
 
-last = "DEBUG_ME" # Dont find this in terminal, you might want to flip shit.
+last = "DEBUG_ME"  # Dont find this in terminal, you might want to flip shit.
 if not os.path.exists('modules/twss.db'):
     print '[DOWNLOADING] "That\'s What She Said" library from http://misc.liamstanley.io/twss.txt'
     urllib.urlretrieve('http://misc.liamstanley.io/twss.txt', 'modules/twss.db')
@@ -38,7 +39,8 @@ def say_it(code, input):
 
 @hook(cmds=['twss'], priority='low', thread=False, admin=True)
 def add_twss(code, input):
-    if len(last) < 5: return
+    if len(last) < 5:
+        return
     print last
     with open('modules/twss_ua.db', 'a') as f:
         f.write(re.sub(r'[^\w\s]', '', last.lower()) + '\n')

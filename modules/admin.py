@@ -10,6 +10,7 @@ from util.hook import *
 
 defaultnick = None
 
+
 @hook(cmds=['modules'], rate=20, priority='high', op=True)
 def listmods(code, input):
     '''Send a list of the loaded modules to the user.'''
@@ -19,8 +20,8 @@ def listmods(code, input):
 @hook(cmds=['join'], ex='join #example or .join #example key', admin=True, args=True)
 def join(code, input):
     '''Join the specified channel. This is an admin-only command.'''
-    if len(input.group(2).split()) > 1: # Channel + key
-        return code.write(['JOIN', input.group(2).split(' ',1)])
+    if len(input.group(2).split()) > 1:  # Channel + key
+        return code.write(['JOIN', input.group(2).split(' ', 1)])
     else:
         return code.write(['JOIN'], input.group(2).strip())
 
@@ -57,11 +58,12 @@ def nick(code, input):
             __import__('os')._exit(1)
 
 
-@hook(cmds=['msg','say'], ex='msg #L I LOVE PENGUINS.', priority='low', admin=True, args=True)
+@hook(cmds=['msg', 'say'], ex='msg #L I LOVE PENGUINS.', priority='low', admin=True, args=True)
 def msg(code, input):
     '''Send a message to a channel, or a user. Admin-only.'''
     a, b = input.group(2).split()[0], input.group(2).split()[1:]
-    if not b: return
+    if not b:
+        return
     if not input.owner:
         al = a.lower()
         if al == 'chanserv' or al == 'nickserv' or al == 'hostserv' or al == 'memoserv' or al == 'saslserv' or al == 'operserv':
@@ -72,9 +74,11 @@ def msg(code, input):
 @hook(cmds=['me', 'action'], ex='me #L loves Liam', priority='low', admin=True, args=True)
 def me(code, input):
     '''Send a raw action to a channel/user. Admin-only.'''
-    if input.sender.startswith('#'): return
+    if input.sender.startswith('#'):
+        return
     a, b = input.group(2), input.group(3)
-    if not b: return
+    if not b:
+        return
     msg = '\x01ACTION %s\x01' % input.group(3)
     code.msg(input.group(2), msg, x=True)
 
@@ -99,24 +103,29 @@ def blocks(code, input):
     contents = blocks.readlines()
     blocks.close()
 
-    try: masks = contents[0].replace('\n', '').split(',')
-    except: masks = ['']
+    try:
+        masks = contents[0].replace('\n', '').split(',')
+    except:
+        masks = ['']
 
-    try: nicks = contents[1].replace('\n', '').split(',')
-    except: nicks = ['']
+    try:
+        nicks = contents[1].replace('\n', '').split(',')
+    except:
+        nicks = ['']
 
     text = input.group().strip().split()
     low = input.group().lower().strip().split()
 
-    show = ['list','show','users','blocks']
-    host = ['host','hostmask','hostname']
-    name = ['nick','name','user']
-    add = ['add','create','block']
-    delete = ['del','delete','rem','remove','unblock']
+    show = ['list', 'show', 'users', 'blocks']
+    host = ['host', 'hostmask', 'hostname']
+    name = ['nick', 'name', 'user']
+    add = ['add', 'create', 'block']
+    delete = ['del', 'delete', 'rem', 'remove', 'unblock']
     # List 'em
     if len(text) >= 2 and low[1] in show:
         syntax = 'Syntax: \'%sblocks list <nick|hostmask>\'' % code.prefix
-        if len(text) != 3: return code.reply(syntax)
+        if len(text) != 3:
+            return code.reply(syntax)
         if low[2] in host:
             if len(masks) > 0 and masks.count('') == 0:
                 for nick in masks:
@@ -141,7 +150,8 @@ def blocks(code, input):
     # Wants to add a block
     elif len(text) >= 2 and low[1] in add:
         syntax = 'Syntax: \'%sblocks add <nick|hostmask> <args>\'' % code.prefix
-        if len(text) != 4: return code.reply(syntax)
+        if len(text) != 4:
+            return code.reply(syntax)
         if low[2] in name:
             nicks.append(text[3])
         elif low[2] in host:
@@ -154,7 +164,8 @@ def blocks(code, input):
     # Wants to delete a block
     elif len(text) >= 2 and low[1] in delete:
         syntax = 'Syntax: \'%sblocks del <nick|hostmask> <args>\'' % code.prefix
-        if len(text) != 4: return code.reply(syntax)
+        if len(text) != 4:
+            return code.reply(syntax)
         if low[2] in name:
             try:
                 nicks.remove(text[3])
@@ -188,13 +199,13 @@ def blocks(code, input):
     blocks.close()
 
 char_replace = {
-        r'\x01': chr(1),
-        r'\x02': chr(2),
-        r'\x03': chr(3),
-        }
+    r'\x01': chr(1),
+    r'\x02': chr(2),
+    r'\x03': chr(3),
+}
 
 
-@hook(cmds=['write','raw'], priority='high', thread=False, owner=True, args=True)
+@hook(cmds=['write', 'raw'], priority='high', thread=False, owner=True, args=True)
 def write_raw(code, input):
     '''Send a raw command to the server. WARNING THIS IS DANGEROUS! Owner-only.'''
     secure = '{red}That seems like an insecure message. Nope!'

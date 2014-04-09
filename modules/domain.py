@@ -21,15 +21,22 @@ def domain(code, input):
     re_m = re.match(re.compile(r'http[s]?://([a-zA-Z0-9_.]{0,40}.*?)/?'), url)
     if re_m:
         url = re_m.group(1)
-    try: data = loads(get(uri % url).read())
-    except: return code.say(err)
-    if not data['query']: return code.say(err)
+    try:
+        data = loads(get(uri % url).read())
+    except:
+        return code.say(err)
+    if not data['query']:
+        return code.say(err)
     for domain in data['results']:
         status = domain['availability']
-        if status in ['taken', 'unavailable']: color = 'red'
-        elif status == 'tld': continue
-        elif status == 'available': color = 'green'
-        elif status == 'maybe': color = 'grey'
+        if status in ['taken', 'unavailable']:
+            color = 'red'
+        elif status == 'tld':
+            continue
+        elif status == 'available':
+            color = 'green'
+        elif status == 'maybe':
+            color = 'grey'
         else:
             print domain
             continue

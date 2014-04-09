@@ -8,11 +8,13 @@ http://code.liamstanley.io/
 import random
 from util.hook import *
 
-@hook(cmds=['sm','sexymeter'], ex='sm Code', rate=20)
+
+@hook(cmds=['sm', 'sexymeter'], ex='sm Code', rate=20)
 def sexymeter(code, input):
     """Rate people in terms of sexy, and not!"""
     text = input.group().split()
-    if len(text) > 2: return
+    if len(text) > 2:
+        return
     try:
         name = text[1]
         name = True
@@ -20,28 +22,28 @@ def sexymeter(code, input):
         name = False
     if not name:
         nick = input.nick
-        rand = str(random.randint(0,100))
+        rand = str(random.randint(0, 100))
         code.say('Rating {b}%s{b} on a scale of 1-100 of sexiness. Result: {b}%s{b}. {b}%s{b}' % (nick, rand,
                  sexycomment(rand)))
     else:
         nick = text[1]
         ishot = nick.lower() in hotuser
         isnot = nick.lower() in notuser
-        rand = str(random.randint(0,100))
+        rand = str(random.randint(0, 100))
         if len(nick) > 20:
             code.say('%s: {red}The syntax is .sexymeter <name>.' % input.nick)
             return
         if nick.lower() == code.nick.lower():
             nick = 'myself'
             rand = '100'
-        elif text[1].lower() in map(str.lower,code.config.admins):
-            rand = str(random.randint(81,100))
+        elif text[1].lower() in map(str.lower, code.config.admins):
+            rand = str(random.randint(81, 100))
         elif nick.lower() == 'myself' or nick.lower() == 'me':
             nick = input.nick
         elif ishot:
-            rand = str(random.randint(81,100))
+            rand = str(random.randint(81, 100))
         elif isnot:
-            rand = str(random.randint(0,20))
+            rand = str(random.randint(0, 20))
         else:
             nick = text[1]
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (nick, rand,

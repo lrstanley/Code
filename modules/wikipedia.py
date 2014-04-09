@@ -50,7 +50,7 @@ def wikiDefine(term, url):
         else:
             # Assume found a result. Now, find and return the title/contents.
             if pageData['extract'].startswith('REDIRECT'):
-                return False # This means it's a redirect page according to MediaWiki API
+                return False  # This means it's a redirect page according to MediaWiki API
             title = pageData['title']
             content = pageData['extract'].encode('ascii', 'ignore').replace('\n', ' ')
             while '  ' in content:
@@ -58,16 +58,16 @@ def wikiDefine(term, url):
             return [title, content]
 
 
-@hook(cmds=['wiki','w'], ex='wiki speaker', args=True)
+@hook(cmds=['wiki', 'w'], ex='wiki speaker', args=True)
 def wikipedia(code, input):
     """Pull definitions/search from wikipedia.org"""
     try:
         # Try to get the definition of what they WANT
-        data = wikiDefine(input.group(2).strip(), wikipedia_url) # 1:title, 2:content
+        data = wikiDefine(input.group(2).strip(), wikipedia_url)  # 1:title, 2:content
         if not data:
             # Assume it's working, just no definition..
             # Try and give them search results
-            search = wikiSearch(input.group(2).strip(), wikipedia_url) # list() of results
+            search = wikiSearch(input.group(2).strip(), wikipedia_url)  # list() of results
             if not search:
                 # Crap. No results for this either?
                 return code.say('No Wiki page for %s! (Try \'.wsearch\')' % input.group(2).strip())
@@ -82,11 +82,11 @@ def wikipedia(code, input):
         return code.say('Failed to get the definition!')
 
 
-@hook(cmds=['wdefine','wsearch','wikisearch','swiki'], ex='wsearch yellow', args=True)
+@hook(cmds=['wdefine', 'wsearch', 'wikisearch', 'swiki'], ex='wsearch yellow', args=True)
 def wikipediaSearch(code, input):
     """Pull search results from wikipedia.org"""
     try:
-        search = wikiSearch(input.group(2).strip(), wikipedia_url) # list() of results
+        search = wikiSearch(input.group(2).strip(), wikipedia_url)  # list() of results
         if not search:
             # Crap. No results for this either?
             return code.say('No Wiki page for {purple}%s{c}!' % input.group(2).strip())

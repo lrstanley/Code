@@ -6,7 +6,8 @@ http://code.liamstanley.io/
 """
 
 import re
-import urllib, urllib2
+import urllib
+import urllib2
 from json import loads
 from htmlentitydefs import name2codepoint
 import HTMLParser
@@ -30,6 +31,7 @@ def get(uri, timeout=5):
         raise
     return u
 
+
 def json(uri, timeout=5):
     try:
         data = get(uri, timeout).read()
@@ -45,14 +47,18 @@ def json(uri, timeout=5):
         raise
     return data
 
+
 def quote(string):
     return urllib2.quote(string)
+
 
 def urlencode(data):
     return urllib.urlencode(data)
 
+
 def head(uri):
-    if not uri.startswith('http'): return
+    if not uri.startswith('http'):
+        return
     u = urllib.urlopen(uri)
     info = u.info()
     u.close()
@@ -60,7 +66,8 @@ def head(uri):
 
 
 def post(uri, query):
-    if not uri.startswith('http'): return
+    if not uri.startswith('http'):
+        return
     data = urllib.urlencode(query)
     u = urllib.urlopen(uri, data)
     bytes = u.read()
@@ -84,8 +91,10 @@ def entity(match):
 def htmlescape(message):
     return h.unescape(message)
 
+
 def striptags(message):
     return re.compile(r'(?ims)<[^>]+>').sub('', message)
+
 
 def decode(html):
     return r_entity.sub(entity, html)

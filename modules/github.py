@@ -7,23 +7,24 @@ http://code.liamstanley.io/
 from datetime import datetime
 from util.hook import *
 from subprocess import *
-import json, urllib2
+import json
+import urllib2
 
-repo_api = 'https://api.github.com/repos/%s' # Username/Repo
-user_api = 'https://api.github.com/users/%s' # Username
+repo_api = 'https://api.github.com/repos/%s'  # Username/Repo
+user_api = 'https://api.github.com/users/%s'  # Username
 
 
-@hook(cmds=['github','git'], ex='github Liamraystanley/Code', rate=15, args=True)
+@hook(cmds=['github', 'git'], ex='github Liamraystanley/Code', rate=15, args=True)
 def github(code, input):
     """github <user}user/repo> - Get username data, or user/repo data from Github"""
     syntax = 'Syntax: \'.github <user|user/repo>\''
     failed = 'Failed to get data from Githubs API :('
     if len(input.group(2).strip().split()) != 1:
         return code.say(syntax)
-    
+
     spacer = ' {blue}|{c} '
 
-    if not '/' in input.group(2):
+    if '/' not in input.group(2):
         # Assume a single username
         try:
             tmp = json.loads(urllib2.urlopen(user_api % input.group(2).strip()).read())
@@ -38,7 +39,7 @@ def github(code, input):
         if 'message' in response:
             # Assume failed
             return code.say(failed)
-        
+
         # Here is where we build the response
         output = []
         if 'name' in response:
@@ -59,9 +60,9 @@ def github(code, input):
             output.append('%s Gists' % response['public_gists'])
         if 'html_url' in response:
             output.append(response['html_url'])
-        
+
         return code.say(spacer.join(output))
-      
+
     else:
         # Assume Username/Repo
         try:
@@ -75,12 +76,12 @@ def github(code, input):
         output = []
         output.append('%s (%s)' % (response['name'], response['owner']['login']))
         output.append(response['description'])
-        output.append('%s %s' % (response['stargazers_count'],u'\u2605'))
-        output.append('%s %s' % (response['watchers_count'],u'\u231A'))
-        output.append('%s %s' % (response['forks_count'],u'\u2442'))
-        output.append('%s %s' % (response['open_issues_count'],u'\u2602'))
-        output.append('%s %s' % (response['network_count'],u'\U0001F46C'))
-        output.append('%s %s' % (response['subscribers_count'],u'\u2764'))
+        output.append('%s %s' % (response['stargazers_count'], u'\u2605'))
+        output.append('%s %s' % (response['watchers_count'], u'\u231A'))
+        output.append('%s %s' % (response['forks_count'], u'\u2442'))
+        output.append('%s %s' % (response['open_issues_count'], u'\u2602'))
+        output.append('%s %s' % (response['network_count'], u'\U0001F46C'))
+        output.append('%s %s' % (response['subscribers_count'], u'\u2764'))
         output.append(response['html_url'])
         return code.say(spacer.join(output))
 
@@ -94,7 +95,7 @@ def git_info():
     return commit, author, date
 
 
-@hook(cmds=['version','v'], rate=30)
+@hook(cmds=['version', 'v'], rate=30)
 def version(code, input):
     """Try to get version (commit) data from git (if installed)"""
     try:
@@ -113,16 +114,19 @@ def ctcp_version(code, input):
     commit, author, date = git_info()
     date = date.replace("  ", "")
 
-    code.write(('NOTICE', input.nick),
-            '\x01VERSION {0} : {1}\x01'.format(commit, date))
+    code.write(
+        ('NOTICE', input.nick), '\x01VERSION {0} : {1}\x01'.format(commit, date)
+    )
 
 
 @hook(rule='\x01SOURCE\x01', rate=20)
 def ctcp_source(code, input):
-    code.write(('NOTICE', input.nick),
-            '\x01SOURCE https://github.com/Liamraystanley/Code/\x01')
-    code.write(('NOTICE', input.nick),
-            '\x01SOURCE\x01')
+    code.write(
+        ('NOTICE', input.nick), '\x01SOURCE https://github.com/Liamraystanley/Code/\x01'
+    )
+    code.write(
+        ('NOTICE', input.nick), '\x01SOURCE\x01'
+    )
 
 
 @hook(rule='\x01PING\s(.*)\x01', rate=10)
@@ -130,13 +134,15 @@ def ctcp_ping(code, input):
     text = input.group()
     text = text.replace('PING ', '')
     text = text.replace('\x01', '')
-    code.write(('NOTICE', input.nick),
-            '\x01PING {0}\x01'.format(text))
+    code.write(
+        ('NOTICE', input.nick), '\x01PING {0}\x01'.format(text)
+    )
 
 
 @hook(rule='\x01TIME\x01', rate=20)
 def ctcp_time(code, input):
     dt = datetime.now()
     current_time = dt.strftime('%A, %d. %B %Y %I:%M%p')
-    code.write(('NOTICE', input.nick),
-            '\x01TIME {0}\x01'.format(current_time))
+    code.write(
+        ('NOTICE', input.nick), '\x01TIME {0}\x01'.format(current_time)
+    )

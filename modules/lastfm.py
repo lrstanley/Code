@@ -14,11 +14,16 @@ h = HTMLParser.HTMLParser()
 # This is the default user to check for last fm
 defaultuser = 'liamraystanley'
 
+
 def getdata(user):
-    try: data = urllib2.urlopen('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (user)).read()
-    except: return False
-    if 'No user exists with this name.' in data: return False
-    else: return data
+    try:
+        data = urllib2.urlopen('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (user)).read()
+    except:
+        return False
+    if 'No user exists with this name.' in data:
+        return False
+    else:
+        return data
 
 
 @hook(cmds=['lastfm', 'lfm'], ex='lastfm liamraystanley', rate=10)

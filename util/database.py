@@ -13,6 +13,7 @@ import json
 db_name = 'data.db'
 mod_name = 'module.%s.db'
 
+
 def get(module=False):
     if module:
         fn = mod_name % str(module)
@@ -29,6 +30,7 @@ def get(module=False):
         except ValueError:
             data = str(f.read())
     return data
+
 
 def set(data, module=False):
     if module:

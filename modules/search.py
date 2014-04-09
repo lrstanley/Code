@@ -15,6 +15,7 @@ h = HTMLParser.HTMLParser()
 
 uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
 
+
 def google_search(query):
     """Search using Googles AjaxSearch functionality."""
     try:
@@ -26,7 +27,7 @@ def google_search(query):
     return json(data)
 
 
-@hook(cmds=['search','google','g'], ex='search Twitter API', rate=10, args=True)
+@hook(cmds=['search', 'google', 'g'], ex='search Twitter API', rate=10, args=True)
 def search(code, input):
     """Queries Google for the specified input."""
     r = google_search(input.group(2))
@@ -42,11 +43,11 @@ def search(code, input):
     # Make the count prettified
     count_commas = [m.start() for m in re.finditer(r'{}'.format(re.escape(',')), count)]
     if len(count_commas) == 1:
-        count = count.split(',',1)[0] + 'k'
+        count = count.split(',', 1)[0] + 'k'
     elif len(count_commas) == 2:
-        count = count.split(',',1)[0] + 'm'
+        count = count.split(',', 1)[0] + 'm'
     elif len(count_commas) == 3:
-        count = count.split(',',1)[0] + 'b'
+        count = count.split(',', 1)[0] + 'b'
     output = []
     r_type = code.format('{b}{title}{b}{c} - {link}')
     colors, color_count = ['{blue}', '{teal}', '{green}'], 0

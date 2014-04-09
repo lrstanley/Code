@@ -5,8 +5,10 @@ calc.py - Code Calculations Module
 http://code.liamstanley.io/
 """
 
-import re, json
-import urllib, urllib2
+import re
+import json
+import urllib
+import urllib2
 import hashlib
 from util.hook import *
 from util import web
@@ -14,10 +16,10 @@ from util import web
 uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 
 
-@hook(cmds=['c','calc','calculate'], ex='calc 5 + 3', args=True)
+@hook(cmds=['c', 'calc', 'calculate'], ex='calc 5 + 3', args=True)
 def calc(code, input):
     try:
-        data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2).replace('^','**'))).read())
+        data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2).replace('^', '**'))).read())
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip()
@@ -26,7 +28,7 @@ def calc(code, input):
         return code.reply('Failed to calculate!')
 
 
-@hook(cmds=['py','python'], ex='py print(int(1.0) + int(3))', args=True)
+@hook(cmds=['py', 'python'], ex='py print(int(1.0) + int(3))', args=True)
 def py(code, input):
     """python <commands> -- Execute Python inside of a sandbox"""
     query = input.group(2).encode('utf-8')
@@ -34,7 +36,7 @@ def py(code, input):
     try:
         answer = urllib2.urlopen(uri + urllib.quote(query)).read()
         if answer:
-            answer = answer.replace('\n',' ').replace('\t',' ').replace('\r','')
+            answer = answer.replace('\n', ' ').replace('\t', ' ').replace('\r', '')
             return code.reply(answer)
         else:
             return code.reply('Sorry, no {b}%s{b}')
@@ -48,7 +50,7 @@ def wa(code, input):
     query = input.group(2)
     uri = 'http://tumbolia.appspot.com/wa/'
     answer = urllib2.urlopen(uri + urllib.quote(query)).read()
-    if answer and not 'json stringified precioussss' in answer:
+    if answer and 'json stringified precioussss' not in answer:
         answer = answer.split(';')
         if len(answer) > 3:
             answer = answer[1]

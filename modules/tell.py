@@ -7,10 +7,13 @@ http://code.liamstanley.io/
 """
 
 
-import os, time, random
+import os
+import time
+import random
 from util.hook import *
 
 maximum = 4
+
 
 def loadReminders(fn):
     result = {}
@@ -18,8 +21,10 @@ def loadReminders(fn):
     for line in f:
         line = line.strip()
         if line:
-            try: tellee, teller, verb, timenow, msg = line.split('\t', 4)
-            except ValueError: continue # @@ hmm
+            try:
+                tellee, teller, verb, timenow, msg = line.split('\t', 4)
+            except ValueError:
+                continue
             result.setdefault(tellee, []).append((teller, verb, timenow, msg))
     f.close()
     return result
@@ -30,10 +35,14 @@ def dumpReminders(fn, data):
     for tellee in data.iterkeys():
         for remindon in data[tellee]:
             line = '\t'.join((tellee,) + remindon)
-            try: f.write(line + '\n')
-            except IOError: break
-    try: f.close()
-    except IOError: pass
+            try:
+                f.write(line + '\n')
+            except IOError:
+                break
+    try:
+        f.close()
+    except IOError:
+        pass
     return True
 
 
@@ -41,21 +50,23 @@ def setup(self):
     fn = self.nick + '-' + self.config.host + '.tell.db'
     self.tell_filename = os.path.join(os.path.expanduser('~/.code'), fn)
     if not os.path.exists(self.tell_filename):
-        try: f = open(self.tell_filename, 'w')
-        except OSError: pass
+        try:
+            f = open(self.tell_filename, 'w')
+        except OSError:
+            pass
         else:
             f.write('')
             f.close()
-    self.reminders = loadReminders(self.tell_filename) # @@ tell
+    self.reminders = loadReminders(self.tell_filename)  # @@ tell
 
 
 @hook(cmds=['tell'], ex='tell George When you get back on, I need your help!', args=True)
 def f_remind(code, input):
     """tell <user> -- Save a note so that when a user gets back online it plays for them"""
     teller = input.nick
-    # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
     if input.group() and (input.group())[1:].startswith("tell"):
-        if input.group(2).lower().split()[0] in ['liam', 'lime']: return
+        if input.group(2).lower().split()[0] in ['liam', 'lime']:
+            return
         verb = "tell".encode('utf-8')
         line = input.groups()
         line_txt = line[1].split()
@@ -63,7 +74,6 @@ def f_remind(code, input):
         msg = ' '.join(line_txt[1:])
     else:
         verb, tellee, msg = input.groups()
-    #unicode, mate
     verb = verb.encode('utf-8')
     tellee = tellee.encode('utf-8')
     msg = msg.encode('utf-8')
@@ -79,7 +89,7 @@ def f_remind(code, input):
         if len(tellee) > 20:
             code.say("Nickname {b}%s{b} is too long." % (tellee))
             continue
-        if not tellee.lower() in (teller.lower(), code.nick): # @@
+        if not tellee.lower() in (teller.lower(), code.nick):
             if not tellee.lower() in whogets:
                 whogets.append(tellee)
                 if tellee not in code.reminders:
@@ -101,14 +111,16 @@ def f_remind(code, input):
         else:
             response = response % (whogets[0])
 
-    if not whogets: # Only get cute if there are not legits
+    if not whogets:  # Only get cute if there are not legits
         rand = random.random()
-        if rand > 0.9999: response = "Yeah, yeah"
-        elif rand > 0.999: response = "Yeah, sure, whatever"
+        if rand > 0.9999:
+            response = "Yeah, yeah"
+        elif rand > 0.999:
+            response = "Yeah, sure, whatever"
 
     code.reply(response)
 
-    dumpReminders(code.tell_filename, code.reminders) # @@ tell
+    dumpReminders(code.tell_filename, code.reminders)
 
 
 def getReminders(code, channel, key, tellee):
@@ -121,19 +133,23 @@ def getReminders(code, channel, key, tellee):
             datetime = datetime[len(today) + 1:]
         lines.append(template % (tellee, datetime, teller, verb, tellee, msg))
 
-    try: del code.reminders[key]
-    except KeyError: code.msg(channel, 'Er...')
+    try:
+        del code.reminders[key]
+    except KeyError:
+        code.msg(channel, 'Er...')
     return lines
 
 
 @hook(rule=r'(.*)', priority='low')
 def message(code, input):
-    if not input.sender.startswith('#'): return
+    if not input.sender.startswith('#'):
+        return
 
     tellee = input.nick
     channel = input.sender
 
-    if not os: return
+    if not os:
+        return
     if not os.path.exists(code.tell_filename):
         return
 
@@ -155,4 +171,4 @@ def message(code, input):
             code.msg(tellee, line)
 
     if len(code.reminders.keys()) != remkeys:
-        dumpReminders(code.tell_filename, code.reminders) # @@ tell
+        dumpReminders(code.tell_filename, code.reminders)

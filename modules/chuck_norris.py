@@ -12,7 +12,7 @@ from util.hook import *
 h = HTMLParser.HTMLParser()
 
 
-@hook(cmds=['chuck','cn'], rate=10)
+@hook(cmds=['chuck', 'cn'], rate=10)
 def chuck(code, input):
     """Get random Chuck Norris facts. I bet he's better than you. :P"""
     try:

@@ -9,10 +9,10 @@ import random
 from util.hook import *
 
 
-@hook(cmds=['rr','roulette'], ex='roulette Timothy', rate=20)
+@hook(cmds=['rr', 'roulette'], ex='roulette Timothy', rate=20)
 def roulette(code, input):
     """Play a little gruesome russian roulette."""
-    chance = str(random.randint(1,6))
+    chance = str(random.randint(1, 6))
     if chance == '1':
         response = '{b}{red}dies! :O'
     else:
@@ -33,22 +33,27 @@ def roulette(code, input):
 def slap(code, input):
     """Slaps a person using random methods"""
     text = input.group().split()
-    if len(text) < 2 or text[1].startswith('#'): return
+    if len(text) < 2 or text[1].startswith('#'):
+        return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or \
        text[1].lower() == 'everybody' or text[1].lower() == 'himself':
         if (input.nick not in code.config.admins):
             text[1] = input.nick
-        else: text[1] = 'himself'
-    if text[1].lower() in map(str.lower,code.config.admins):
+        else:
+            text[1] = 'himself'
+    if text[1].lower() in map(str.lower, code.config.admins):
         if (input.nick not in code.config.admins):
             text[1] = input.nick
 
-    verb = random.choice(('slaps', 'kicks', 'destroys', 'annihilates', 'punches', \
-    'roundhouse kicks', 'rusty hooks', 'pwns', 'owns', 'karate chops', 'kills', \
-    'disintegrates', 'demolishes', 'Pulverizes'))
-    afterfact = random.choice(('to death', 'out of the channel', \
-    'into a hole, till death', 'into mid-air disintegration', \
-    'into a pancake'))
+    verb = random.choice((
+        'slaps', 'kicks', 'destroys', 'annihilates', 'punches',
+        'roundhouse kicks', 'rusty hooks', 'pwns', 'owns', 'karate chops',
+        'kills', 'disintegrates', 'demolishes', 'Pulverizes'
+    ))
+    afterfact = random.choice((
+        'to death', 'out of the channel', 'into a hole, till death',
+        'into mid-air disintegration', 'into a pancake'
+    ))
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', verb, text[1], afterfact, '\x01'])
 
 
@@ -56,11 +61,13 @@ def slap(code, input):
 def hug(code, input):
     """Hugs <target>"""
     text = input.group().split()
-    if len(text) < 2 or text[1].startswith('#'): return
+    if len(text) < 2 or text[1].startswith('#'):
+        return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'himself':
         if (input.nick not in code.config.admins):
             text[1] = input.nick
-        else: text[1] = 'himself'
+        else:
+            text[1] = 'himself'
     types = random.choice(('hugs', 'snuggles'))
     hugtype = random.choice(('real tight', 'strongly', 'like a bear', 'tight', ''))
     code.write(['PRIVMSG', input.sender, ' :\x01ACTION', types, text[1], hugtype, '\x01'])

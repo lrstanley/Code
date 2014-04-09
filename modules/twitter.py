@@ -6,14 +6,15 @@ http://code.liamstanley.io/
 """
 
 import re
-import urllib2, urllib
+import urllib2
+import urllib
 from util import web
 from util.hook import *
 from util import database
 from modules.calc import hash
 
 
-auto_check = 15 # Time in seconds to check for new tweets
+auto_check = 15  # Time in seconds to check for new tweets
 
 # Input checking...
 r_uid = re.compile(r'\s(@[a-zA-Z0-9_]{1,15})')
@@ -27,11 +28,13 @@ r_basicurl = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0
 uri_user = 'https://mobile.twitter.com/%s/'
 uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
 
+
 def get_tweets(url, sender_uid=False):
     try:
-        data = urllib2.urlopen(url).read().replace('\r','').replace('\n',' ')
+        data = urllib2.urlopen(url).read().replace('\r', '').replace('\n', ' ')
         data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
-    except: return
+    except:
+        return
     tweets = []
     for tweet in data:
         try:
@@ -48,7 +51,7 @@ def get_tweets(url, sender_uid=False):
             uids = r_uid.findall(' ' + tmp['text'])
             for uid in uids:
                 tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
-            
+
             # Check if it's a retweet
             if sender_uid:
                 if sender_uid.lower().strip('@') != tmp['user'].lower().strip('@'):
@@ -67,25 +70,30 @@ def format(tweet):
     return '{teal}(Twitter){c} %s ({purple}{b}@{b}%s{c})' % (tweet['text'], tweet['user'])
 
 
-@hook(cmds=['tw','twitter'],ex='twitter liamraystanley', args=True, rate=0)
+@hook(cmds=['tw', 'twitter'], ex='twitter liamraystanley', args=True, rate=0)
 def twitter(code, input):
     """twitter <hashtag|username> - Return twitter results for search"""
     err = '{red}{b}Unabled to find any tweets with that search!'
     args = input.group(2).strip()
     if args.startswith('#'):
         data = get_tweets(uri_hash % urllib.quote(args))
-        if not data: return code.say(err)
+        if not data:
+            return code.say(err)
         return code.say(format(data[0]))
     else:
         data = get_tweets(uri_user % urllib.quote(args.strip('@')))
-        if not data: return code.say(err)
+        if not data:
+            return code.say(err)
         return code.say(format(data[0]))
     return code.say(err)
 
+
 def setup(code):
-    if not hasattr(code.config, 'twitter_autopost'): return
+    if not hasattr(code.config, 'twitter_autopost'):
+        return
     tc = code.config.twitter_autopost
-    if not tc: return
+    if not tc:
+        return
     thread.start_new_thread(daemon, (code, tc,))
 
 
@@ -96,7 +104,7 @@ def daemon(code, tc):
         # Here we do the work...
         for channel in tc:
             for tweet_item in tc[channel]:
-                if tweet_item.startswith('#'): # ID
+                if tweet_item.startswith('#'):  # ID
                     data = get_tweets(uri_hash % urllib.quote(tweet_item))
                 else:
                     data = get_tweets(uri_user % urllib.quote(tweet_item), tweet_item)
@@ -105,11 +113,11 @@ def daemon(code, tc):
                 data = data[0]
                 hash_str = hash(data['text'])
                 db = database.get('twitter')
-                if not db: # New data on new database, don't output anywhere..
+                if not db:  # New data on new database, don't output anywhere..
                     database.set([hash_str], 'twitter')
                     continue
                 if hash_str in db:
-                    continue # Same
+                    continue  # Same
 
                 db.append(hash_str)
                 database.set(db, 'twitter')

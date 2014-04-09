@@ -5,7 +5,11 @@ reload.py - Code Reload Module
 http://code.liamstanley.io/
 """
 
-import sys, os.path, time, imp, subprocess
+import sys
+import os.path
+import time
+import imp
+import subprocess
 from util.hook import *
 from util import output
 
@@ -29,7 +33,7 @@ def f_reload(code, input):
     if name.endswith('.py'):
         name = os.path.splitext(name)[0]
 
-    if not sys.modules.has_key(name):
+    if name not in sys.modules:
         return code.reply('%s: No such module!' % code.bold(name))
 
     # Thanks to moot for prodding me on this

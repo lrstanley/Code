@@ -5,7 +5,8 @@ soundcloud.py - Code Soundcloud Module
 http://code.liamstanley.io/
 """
 
-import json, urllib2
+import json
+import urllib2
 from util.hook import *
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
@@ -18,9 +19,9 @@ def soundcloud(code, input):
     """Automatically find the information from a soundcloud url and display it
        to users in a channel"""
     try:
-        id = input.group().split('soundcloud.com/',1)[1].split()[0].strip()
+        id = input.group().split('soundcloud.com/', 1)[1].split()[0].strip()
         # Should look like 'artist/song'
-        data = json.loads(urllib2.urlopen(uri % (id,client)).read())
+        data = json.loads(urllib2.urlopen(uri % (id, client)).read())
         output = []
         # Get date first so we can add to the title
         year, month, day = data['created_at'].split()[0].split('/')
@@ -53,14 +54,15 @@ def soundcloud(code, input):
     except:
         return
 
-def convert_time(seconds): # data[17]
+
+def convert_time(seconds):  # data[17]
     length = seconds
     lenout = ''
-    #if length / 86400: # > 1 day
+    # if length / 86400: # > 1 day
     #    lenout += '%dd ' % (length / 86400)
     if length / 3600:  # > 1 hour
         lenout += '%dh ' % (length / 3600)
-    if length / 60: # > Minutes
+    if length / 60:  # > Minutes
         lenout += '%dm ' % (length / 60 % 60)
         lenout += "%ds" % (length % 60)
     return lenout

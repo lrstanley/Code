@@ -10,10 +10,11 @@ from urllib import urlopen
 from util.hook import *
 
 
-@hook(cmds=['isup','isdown','check','up','down'], ex='isup http://google.com', args=True)
-def isup(code,input):
+@hook(cmds=['isup', 'isdown', 'check', 'up', 'down'], ex='isup http://google.com', args=True)
+def isup(code, input):
     """isup <url> - Is it down for everyone, or just you?"""
-    if len(input.group(2).split()) != 1: return error(code)
+    if len(input.group(2).split()) != 1:
+        return error(code)
     try:
         data = urlopen('http://isup.me/%s' % input.group(2)).read()
         if 'not just you' in data:

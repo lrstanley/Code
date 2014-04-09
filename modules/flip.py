@@ -8,6 +8,7 @@ http://code.liamstanley.io/
 from util.hook import *
 import random
 
+
 @hook(cmds=['coin', 'flip'], ex='flip 3', priority='low')
 def flip(code, input):
     """flip [amount] -- Flips # of coins and prints output"""

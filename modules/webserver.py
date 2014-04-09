@@ -7,7 +7,8 @@ http://code.liamstanley.io/
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
-import threading, thread
+import threading
+import thread
 import time
 from random import randint as gen
 from util import output
@@ -16,6 +17,9 @@ from util import output
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
 host = '0.0.0.0'
 port = 8888
+
+# Not important
+data, password = [], None
 
 
 class WebServer(BaseHTTPRequestHandler):
@@ -36,7 +40,6 @@ class WebServer(BaseHTTPRequestHandler):
         self.end_headers()
 
 
-data = []
 class CollectData(threading.Thread):
     def __init__(self, code, input, id):
         super(CollectData, self).__init__()
@@ -51,20 +54,23 @@ class CollectData(threading.Thread):
         while True:
             if self.code.get('webserver.object') != self.id:
                 return False
-            time.sleep (2)
+            time.sleep(2)
             if len(data) < 1:
                 continue
             # Parse data before we do anything with it
             try:
                 for query in data:
                     # Query is everything that's sent, as a dict()
-                    if not 'pass' in query: continue
-                    if query['pass'] != self.password: continue
+                    if 'pass' not in query:
+                        continue
+                    if query['pass'] != self.password:
+                        continue
 
                     # Authenticated.. Now we need to find some variables in the query
                     # 1. args (used for IRC commands)
                     # 2. data (The arguement for the IRC command (the arguements arguement!))
-                    if not 'args' in query or not 'data' in query: continue
+                    if 'args' not in query or 'data' not in query:
+                        continue
                     self.code.write(query['args'].split(), query['data'])
             except:
                 output.error('Failed to parse data! (%s)' % data)
@@ -83,14 +89,13 @@ def init(host, port):
     server.serve_forever()
 
 
-password = None
 def setup(code):
     # global started
     # if started == True:
     #     return
 
     # started = True
-    id = str(gen(0,10000000))
+    id = str(gen(0, 10000000))
     code.set('webserver.object', id)
 
     # Nasty area, we check for configuration options, some are required and some arent
@@ -102,5 +107,5 @@ def setup(code):
         output.error('To use webserver.py you must have a password setup in default.py!')
         return
     Sender = CollectData(code, input, id)
-    Sender.start() # Initiate the thread.
+    Sender.start()  # Initiate the thread.
     thread.start_new_thread(init, (str(host), int(port),))

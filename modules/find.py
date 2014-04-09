@@ -7,7 +7,8 @@ http://code.liamstanley.io/
 """
 
 import modules.unicode as uc
-import os, re
+import os
+import re
 from util.hook import *
 
 
@@ -26,17 +27,19 @@ def load_db():
         line = uc.encode(line)
         a = line.replace(r'\n', '')
         new = a.split(r',')
-        if len(new) < 3: continue
+        if len(new) < 3:
+            continue
         channel = new[0]
         nick = new[1]
-        if len(new) < 2: continue
+        if len(new) < 2:
+            continue
         if channel not in search_dict:
             search_dict[channel] = dict()
         if nick not in search_dict[channel]:
             search_dict[channel][nick] = list()
         if len(new) > 3:
             result = ",".join(new[2:])
-            result = result.replace('\n','')
+            result = result.replace('\n', '')
         elif len(new) == 3:
             result = new[-1]
             if len(result) > 0:
@@ -73,7 +76,8 @@ def collectlines(code, input):
     # don't log things in PM
     channel = (input.sender).encode("utf-8")
     nick = (input.nick).encode("utf-8")
-    if not channel.startswith('#'): return
+    if not channel.startswith('#'):
+        return
     search_dict = load_db()
     if channel not in search_dict:
         search_dict[channel] = dict()
@@ -99,45 +103,48 @@ def findandreplace(code, input):
     channel = (input.sender).encode("utf-8")
     nick = (input.nick).encode("utf-8")
 
-    if not channel.startswith('#'): return
+    if not channel.startswith('#'):
+        return
 
     search_dict = load_db()
 
-    rnick = input.group(1) or nick # Correcting other person vs self.
+    rnick = input.group(1) or nick  # Correcting other person vs self.
 
     # only do something if there is conversation to work with
-    if channel not in search_dict or rnick not in search_dict[channel]: return
+    if channel not in search_dict or rnick not in search_dict[channel]:
+        return
 
     sep = input.group(2)
     rest = input.group(3).split(sep)
-    me = False # /me command
+    me = False  # /me command
     flags = ''
     if len(rest) < 2:
-        return # need at least a find and replacement value
+        return  # need at least a find and replacement value
     elif len(rest) > 2:
         # Word characters immediately after the second separator
         # are considered flags (only g and i now have meaning)
-        flags = re.match(r'\w*',rest[2], re.U).group(0)
-    #else (len == 2) do nothing special
+        flags = re.match(r'\w*', rest[2], re.U).group(0)
+    # else (len == 2) do nothing special
 
-    count = 'g' in flags and -1 or 1 # Replace unlimited times if /g, else once
+    count = 'g' in flags and -1 or 1  # Replace unlimited times if /g, else once
     if 'i' in flags:
-        regex = re.compile(re.escape(rest[0]),re.U|re.I)
-        repl = lambda s: re.sub(regex,rest[1],s,count == 1)
+        regex = re.compile(re.escape(rest[0]), re.U | re.I)
+        repl = lambda s: re.sub(regex, rest[1], s, count == 1)
     else:
-        repl = lambda s: s.replace(rest[0],rest[1],count)
+        repl = lambda s: s.replace(rest[0], rest[1], count)
 
     for line in reversed(search_dict[channel][rnick]):
         if line.startswith("\x01ACTION"):
-            me = True # /me command
+            me = True  # /me command
             line = line[8:]
         else:
             me = False
         new_phrase = repl(line)
-        if new_phrase != line: # we are done
+        if new_phrase != line:  # we are done
             break
 
-    if not new_phrase or new_phrase == line: return # Didn't find anything
+    if not new_phrase or new_phrase == line:
+        return  # Didn't find anything
 
     # Save the new "edited" message.
     templist = search_dict[channel][rnick]
@@ -146,6 +153,10 @@ def findandreplace(code, input):
     save_db(search_dict)
 
     # output
-    phrase = nick + (input.group(1) and ' thinks ' + rnick or '') + (me and ' ' or " \x02meant\x02 to say: ") + new_phrase
-    if me and not input.group(1): phrase = '\x02' + phrase + '\x02'
+    phrase = (
+        nick + (input.group(1) and ' thinks ' + rnick or '') +
+        (me and ' ' or " \x02meant\x02 to say: ") + new_phrase
+    )
+    if me and not input.group(1):
+        phrase = '\x02' + phrase + '\x02'
     code.say(phrase)

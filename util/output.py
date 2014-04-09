@@ -5,7 +5,8 @@ output.py - Code Printing Module
 http://code.liamstanley.io/
 """
 
-import sys, platform
+import sys
+import platform
 
 colors = True
 parse = True
@@ -73,22 +74,28 @@ def template(message, prefix, color, error=False):
 def error(message, prefix='ERROR', color='red'):
     template(message, prefix, color, True)
 
+
 def info(message, prefix='INFO', color='cyan'):
     template(message, prefix, color)
+
 
 def warning(message, prefix='WARNING', color='yellow'):
     template(message, prefix, color)
 
+
 def success(message, prefix='SUCCESS', color='green'):
     template(message, prefix, color)
+
 
 def normal(message, prefix, color='white'):
     template(message, prefix, color)
 
+
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
     for i in xrange(0, len(l), n):
-        yield l[i:i+n]
+        yield l[i:i + n]
+
 
 def split_len(seq, length):
-    return [seq[i:i+length] for i in range(0, len(seq), length)]
+    return [seq[i:i + length] for i in range(0, len(seq), length)]

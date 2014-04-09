@@ -3,25 +3,24 @@ echo "------------------------------------------------------"
 echo "         Code Copyright Liam Stanley 2012-2014        "
 echo "This way of debugging Code is still under development."
 echo "         -----------------------------------          "
-echo "If you get Python not found errors, add Python to     "
-echo "Your PATH variable, or edit this file to point to it."
+echo "If you get pep8 not found errors, add pep8 to Your    "
+echo " PATH variable, or edit this file to point to it.     "
 echo "------------------------------------------------------"
-echo "-------------------------------------"
-echo "Compiling all in $PWD starting now..."
-echo "-------------------------------------"
-python -m compileall $PWD/../core/*.py || { echo 'Compiling method failed...' ; exit 1; }
-echo "-------------------------------"
-echo "Compiling ./code in $PWD now..."
-echo "-------------------------------"
-python -m py_compile $PWD/../code || { echo 'Compiling method failed...' ; exit 1; }
-echo "---------------------------------------------"
-echo "Compiling all modules in $PWD starting now..."
-echo "---------------------------------------------"
-python -m compileall $PWD/../modules/*.py || { echo 'Compiling method failed...' ; }
-echo "---------------------------------------------"
-echo "Compiling all utilities in $PWD starting now..."
-echo "---------------------------------------------"
-python -m compileall $PWD/../util/*.py || { echo 'Compiling method failed...' ; }
-echo "-------------------------------------------"
-echo "If no errors resided, then were good to go!"
-echo "-------------------------------------------"
+
+cd ..
+echo "Running pep8 on Python files in $PWD"
+pep8 --ignore=E501,E265.F403 code || { echo 'Failed to pep8' ; exit 1; }
+
+cd ./core
+echo "Running pep8 on Python files in $PWD"
+pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
+
+cd ../util
+echo "Running pep8 on Python files in $PWD"
+pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
+
+cd ../modules
+echo "Running pep8 on Python files in $PWD"
+pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
+
+echo "No errors? Success!"

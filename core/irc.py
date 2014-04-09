@@ -6,15 +6,25 @@ irc.py - Code A Utility IRC Bot
 http://code.liamstanley.io/
 """
 
-import sys, re, time, traceback
-import socket, asyncore, asynchat
-import os, codecs
+import sys
+import re
+import time
+import traceback
+import socket
+import asyncore
+import asynchat
+import os
+import codecs
 from util import output
 
 
 debug = False
-IRC_CODES = ('251', '252', '254', '255', '265', '266', '250', '333', '353', '366', '372', '375', '376', 'QUIT', 'NICK')
+IRC_CODES = (
+    '251', '252', '254', '255', '265', '266', '250', '333', '353', '366',
+    '372', '375', '376', 'QUIT', 'NICK'
+)
 cwd = os.getcwd()
+
 
 class Origin(object):
     source = re.compile(r'([^!]*)!?([^@]*)@?(.*)')
@@ -25,22 +35,27 @@ class Origin(object):
 
         if len(args) > 1:
             target = args[1]
-        else: target = None
+        else:
+            target = None
 
         mappings = {bot.nick: self.nick, None: None}
         self.sender = mappings.get(target, target)
 
+
 def create_logdir():
-    try: os.mkdir(cwd + '/logs')
+    try:
+        os.mkdir(cwd + '/logs')
     except Exception, e:
         output.error('There was a problem creating the logs directory.')
         output.error(e.__class__, str(e))
         output.error('Please fix this and then run code again.')
         sys.exit(1)
 
+
 def check_logdir():
     if not os.path.isdir(cwd + '/logs'):
         create_logdir()
+
 
 def log_raw(line):
     check_logdir()
@@ -57,6 +72,7 @@ def log_raw(line):
     f.write(temp)
     f.write('\n')
     f.close()
+
 
 class Bot(asynchat.async_chat):
     def __init__(self, nick, name, channels, serverpass=None, logchan_pm=None, logging=False):
@@ -77,26 +93,31 @@ class Bot(asynchat.async_chat):
         self.logging = logging
         self.chan = {}
         self.special_chars = {
-            'white': '\x0300', 'black': '\x0301', 'blue': '\x0302', 'navy': '\x0302',
-            'green': '\x0303', 'red': '\x0304', 'brown': '\x0305', 'maroon': '\x0305',
-            'purple': '\x0306', 'orange': '\x0307', 'olive': '\x0307', 'gold': '\x0307',
-            'yellow': '\x0308', 'lightgreen': '\x0309', 'lime': '\x0309', 'teal': '\x0310',
-            'cyan': '\x0311', 'lightblue': '\x0312', 'royal': '\x0312', 'lightpurple': '\x0313',
-            'pink': '\x0313', 'fuchsia': '\x0313', 'grey': '\x0314', 'gray': '\x0314',
+            'white': '\x0300', 'black': '\x0301', 'blue': '\x0302',
+            'navy': '\x0302', 'green': '\x0303', 'red': '\x0304',
+            'brown': '\x0305', 'maroon': '\x0305', 'purple': '\x0306',
+            'orange': '\x0307', 'olive': '\x0307', 'gold': '\x0307',
+            'yellow': '\x0308', 'lightgreen': '\x0309', 'lime': '\x0309',
+            'teal': '\x0310', 'cyan': '\x0311', 'lightblue': '\x0312',
+            'royal': '\x0312', 'lightpurple': '\x0313', 'pink': '\x0313',
+            'fuchsia': '\x0313', 'grey': '\x0314', 'gray': '\x0314',
             'lightgrey': '\x0315', 'silver': '\x0315',
             # Even more special...
-            'bold': '\x02', 'b': '\x02', 'italic': '\x16', 'underline': '\x1f', 'reset': '\x0f',
-            'r': '\x0f', 'clear': '\x03', 'c': '\x03'
+            'bold': '\x02', 'b': '\x02', 'italic': '\x16', 'underline': '\x1f',
+            'reset': '\x0f', 'r': '\x0f', 'clear': '\x03', 'c': '\x03'
         }
 
         import threading
         self.sending = threading.RLock()
 
-    #def push(self, *args, **kargs):
+    # def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
     def format(self, message, legacy=None, charset=None):
-        '''formatting to support color/bold/italic/etc assignment in Codes responses'''
+        '''
+            formatting to support color/bold/italic/etc assignment
+            in Codes responses
+        '''
         try:
             message = unicode(message, 'utf8')
         except:
@@ -114,9 +135,11 @@ class Bot(asynchat.async_chat):
             for formatted_char in charlist:
                 char = formatted_char[1:-1]
                 if char.startswith('/'):
-                    char = char[1::] # Assume closing {/char}
+                    char = char[1::]  # Assume closing {/char}
                 if char in self.special_chars:
-                    message = message.replace(formatted_char, self.special_chars[char],1)
+                    message = message.replace(
+                        formatted_char, self.special_chars[char], 1
+                    )
             return message
         except:
             return self.clear_format(message)
@@ -125,7 +148,7 @@ class Bot(asynchat.async_chat):
         find_char = re.compile(r'{.*?}')
         charlist = find_char.findall(message)
         for custom in charlist:
-            message = message.replace(custom,'',1)
+            message = message.replace(custom, '', 1)
         return message
 
     def color(self, color, message):
@@ -133,7 +156,7 @@ class Bot(asynchat.async_chat):
 
     def bold(self, message):
         return self.format(message, 'bold')
-            
+
     def italic(self, message):
         return self.format(message, 'italic')
 
@@ -142,7 +165,8 @@ class Bot(asynchat.async_chat):
 
     def quit(self, message=None):
         '''Disconnect from IRC and close the bot'''
-        if not message: message = 'Terminating Code.'
+        if not message:
+            message = 'Terminating Code.'
         self.write(['QUIT'], message)
         self.hasquit = True
         __import__('os')._exit(0)
@@ -160,14 +184,12 @@ class Bot(asynchat.async_chat):
             self.write(['JOIN', channel, password])
 
     def __write(self, args, text=None, raw=False):
-        #print '[WRITE] %r %r' % (args, text)
-        # Not needed anymore
         try:
             if raw:
                 temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
             elif not raw:
                 if text:
-                    # 510 because CR and LF count too, as nyuszika7h points out
+                    # 510 because CR and LF count too
                     temp = (' '.join(args) + ' :' + text)[:510] + '\r\n'
                 else:
                     temp = ' '.join(args)[:510] + '\r\n'
@@ -187,7 +209,8 @@ class Bot(asynchat.async_chat):
                 self.__write(args, text, raw)
             else:
                 self.__write(args, text)
-        except: pass
+        except:
+            pass
 
     def safe(self, input, u=False):
         if input:
@@ -212,7 +235,10 @@ class Bot(asynchat.async_chat):
             try:
                 count += 1
                 if count > 1:
-                    output.error('Failed to connect! Trying again in %s seconds.' % str(delay))
+                    output.error(
+                        'Failed to connect! Trying again in '
+                        '%s seconds.' % str(delay)
+                    )
                     time.sleep(delay)
                 if self.verbose:
                     output.normal('Connecting to %s:%s... (try %s)' % (host, port, str(count)), 'STATUS')
@@ -236,12 +262,13 @@ class Bot(asynchat.async_chat):
     def changenick(self, nick):
         chars = set('`+=;,<>?')
         if not any((c in chars) for c in nick) and nick[0] != '-' and \
-        len(nick) > 1 and len(nick) <= 20:
+           len(nick) > 1 and len(nick) <= 20:
             self.write(('NICK', self.nick))
-            self.nick = nick.encode('ascii','ignore') # we can't tell yet if the
-                                                      # nick successfully changed,
-                                                      # so this variable will get
-                                                      # messed up, if unsuccessful.
+            self.nick = nick.encode('ascii', 'ignore')
+            # we can't tell yet if the
+            # nick successfully changed,
+            # so this variable will get
+            # messed up, if unsuccessful.
             return True
         else:
             return None
@@ -270,7 +297,7 @@ class Bot(asynchat.async_chat):
         if self.logging:
             log_raw(data)
 
-        self.raw = data.replace('\x02','').replace('\r','')
+        self.raw = data.replace('\x02', '').replace('\r', '')
         line = self.raw.strip()
 
         global debug
@@ -287,12 +314,12 @@ class Bot(asynchat.async_chat):
             code = line.split()[1]
             getattr(self, 'trigger_%s' % code)(line)
         except AttributeError:
-           return
+            return
         except IndexError:
             return
 
     def trigger_250(self, line):
-        msg, sender = line.split(':',2)[2], line.split(':',2)[1].split()[0]
+        msg, sender = line.split(':', 2)[2], line.split(':', 2)[1].split()[0]
         output.normal('(%s) %s' % (sender, msg), 'NOTICE')
 
     def trigger_251(self, line):
@@ -303,9 +330,9 @@ class Bot(asynchat.async_chat):
 
     def trigger_353(self, line):
         # NAMES event
-        channel, user_list = line[1::].split(':',1)
-        channel, user_list = '#' + channel.split('#',1)[1].strip(), user_list.strip().split()
-        if not channel in self.chan:
+        channel, user_list = line[1::].split(':', 1)
+        channel, user_list = '#' + channel.split('#', 1)[1].strip(), user_list.strip().split()
+        if channel not in self.chan:
             self.chan[channel] = {}
         for user in user_list:
             if user.startswith('@'):
@@ -320,7 +347,7 @@ class Bot(asynchat.async_chat):
         output.warning('Nickname %s is already in use. Trying another..' % self.nick)
         nick = self.nick + '_'
         self.write(('NICK', nick))
-        self.nick = nick.encode('ascii','ignore')
+        self.nick = nick.encode('ascii', 'ignore')
 
     def trigger_437(self, line):
         re_tmp = r'^.*?\:(.*?)$'
@@ -329,38 +356,38 @@ class Bot(asynchat.async_chat):
         sys.exit(1)
 
     def trigger_NICK(self, line):
-        nick = line[1::].split('!',1)[0]
-        new_nick = line[1::].split(':',1)[1]
+        nick = line[1::].split('!', 1)[0]
+        new_nick = line[1::].split(':', 1)[1]
         output.normal('%s is now known as %s' % (nick, new_nick), 'NICK')
-    
+
     def trigger_PRIVMSG(self, line):
         re_tmp = r'^\:(.*?)\!(.*?)\@(.*\s?) PRIVMSG (.*\s?) \:(.*?)$'
         nick, ident, host, sender, msg = re.compile(re_tmp).match(line).groups()
         msg = self.stripcolors(msg)
         if msg.startswith('\x01'):
-            msg = '(me) ' + msg.split(' ',1)[1].strip('\x01')
+            msg = '(me) ' + msg.split(' ', 1)[1].strip('\x01')
         output.normal('(%s) %s' % (nick, msg), sender)
-        
+
         # Stuff for user_list
         if sender.startswith('#'):
-            if not nick in self.chan[sender]:
+            if nick not in self.chan[sender]:
                 self.chan[sender][nick] = {'normal': True, 'voiced': False, 'op': False}
 
     def trigger_NOTICE(self, line):
         re_tmp = r'^\:(.*?) NOTICE (.*\s?) \:(.*?)$'
         nick, sender, msg = re.compile(re_tmp).match(line).groups()
         output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
-    
+
     def trigger_KICK(self, line):
         re_tmp = r'^\:(.*?)\!(.*?)\@(.*\s?) KICK (.*\s?) (.*\s?) \:(.*?)$'
         nick, ident, host, sender, kicked, reason = re.compile(re_tmp).match(line).groups()
         output.normal('%s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason), 'KICK', 'red')
 
         # Stuff for user_list
-        tmp = line.split('#',1)[1].split()
+        tmp = line.split('#', 1)[1].split()
         channel, name = '#' + tmp[0], tmp[1]
         del self.chan[channel][name]
-    
+
     def trigger_MODE(self, line):
         re_tmp = r'^\:(.*?)\!(.*?)\@(.*\s?) MODE (.*?)$'
         try:
@@ -368,11 +395,11 @@ class Bot(asynchat.async_chat):
         except:
             return
         output.normal('%s sets MODE %s' % (nick, args), 'MODE')
-        
+
         # Stuff for user_list
-        data = line.split('MODE',1)[1]
+        data = line.split('MODE', 1)[1]
         if len(data.split()) >= 3:
-            channel, modes, users = data.strip().split(' ',2)
+            channel, modes, users = data.strip().split(' ', 2)
             users = users.split()
             tmp = []
 
@@ -423,18 +450,18 @@ class Bot(asynchat.async_chat):
                         self.chan[channel][name]['voiced'] = True
 
     def trigger_JOIN(self, line):
-        name = line[1::].split('!',1)[0]
-        channel = line.split('JOIN',1)[1].strip()
+        name = line[1::].split('!', 1)[0]
+        channel = line.split('JOIN', 1)[1].strip()
         if name != self.nick:
             self.chan[channel][name] = {'normal': True, 'voiced': False, 'op': False}
-            
+
     def trigger_PART(self, line):
-        name = line[1::].split('!',1)[0]
-        channel = line.split('PART',1)[1].split()[0]
+        name = line[1::].split('!', 1)[0]
+        channel = line.split('PART', 1)[1].split()[0]
         del self.chan[channel][name]
 
     def trigger_QUIT(self, line):
-        name = line[1::].split('!',1)[0]
+        name = line[1::].split('!', 1)[0]
         for channel in self.chan:
             if name in channel:
                 del self.chan[channel][name]
@@ -442,12 +469,15 @@ class Bot(asynchat.async_chat):
     def stripcolors(self, data):
         """STRIP ALL ZE COLORS! Note: the replacement method is CRUCIAL to keep from
            left over color digits. Order is very important."""
-        colors = [u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
-                  u"\x032", u"\x033", u"\x034", u"\x035", u"\x0306", u"\x0307", u"\x0308",
-                  u"\x0309", u"\x0310", u"\x0311", u"\x036", u"\x037", u"\x038", u"\x039",
-                  u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x030", u"\x031", u"\x03",
-                  u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"]
-        
+        colors = [
+            u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
+            u"\x032", u"\x033", u"\x034", u"\x035", u"\x0306", u"\x0307",
+            u"\x0308", u"\x0309", u"\x0310", u"\x0311", u"\x036", u"\x037",
+            u"\x038", u"\x039", u"\x0312", u"\x0313", u"\x0314", u"\x0315",
+            u"\x030", u"\x031", u"\x03", u"\x02", u"\x09", u"\x13", u"\x0f",
+            u"\x15"
+        ]
+
         for color in colors:
             data = data.replace(color, '')
         return str(data.encode('ascii', 'ignore'))
@@ -486,11 +516,13 @@ class Bot(asynchat.async_chat):
         text = self.format(text)
 
         if isinstance(text, unicode):
-            try: text = text.encode('utf-8')
+            try:
+                text = text.encode('utf-8')
             except UnicodeEncodeError, e:
                 text = e.__class__ + ': ' + str(e)
         if isinstance(recipient, unicode):
-            try: recipient = recipient.encode('utf-8')
+            try:
+                recipient = recipient.encode('utf-8')
             except UnicodeEncodeError, e:
                 return
 
@@ -545,7 +577,7 @@ class Bot(asynchat.async_chat):
 
     def error(self, origin):
         try:
-            #import traceback
+            # import traceback
             trace = traceback.format_exc()
             output.error(trace)
             lines = list(reversed(trace.splitlines()))
@@ -555,7 +587,9 @@ class Bot(asynchat.async_chat):
                 if line.startswith('File "/'):
                     report.append(line[0].lower() + line[1:])
                     break
-            else: report.append('{red}Source unknown.')
+            else:
+                report.append('{red}Source unknown.')
 
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
-        except: self.msg(origin.sender, '{red}Got an error.')
+        except:
+            self.msg(origin.sender, '{red}Got an error.')

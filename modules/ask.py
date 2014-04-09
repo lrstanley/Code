@@ -15,7 +15,7 @@ def ask(code, input):
     choices = input.group(2)
     random.seed()
 
-    if choices == None:
+    if not choices:
         code.reply("Please try a valid question.")
     elif choices.lower() == "what is the answer to life, the universe, and everything?":
         code.reply("42")
@@ -24,8 +24,8 @@ def ask(code, input):
         if len(list_choices) == 1:
             code.reply(random.choice(['yes', 'no']))
         else:
-            choices = choices.replace('?','')
-            choices = choices.replace('!','')
+            choices = choices.replace('?', '')
+            choices = choices.replace('!', '')
             code.reply((random.choice(list_choices)).encode('utf-8'))
 
 
@@ -35,11 +35,11 @@ def rand(code, input):
     syntax = 'Syntax: \'%srand <number> <number>\'' % code.prefix
     toolong = 'Woah man! That\'s really long!'
     msg = input.group(2)
-    
+
     try:
         if ',' in msg:
             # Assume the user is doing .rand #,#
-            first,second = msg.strip().split(',',1)
+            first, second = msg.strip().split(',', 1)
             first = int(first)
             second = int(second)
             if too_long(first) or too_long(second):
@@ -53,7 +53,7 @@ def rand(code, input):
 
         elif ' ' in msg and len(msg.split()) == 2:
             # Assume the user is doing .rand # #
-            first,second = msg.strip().split()
+            first, second = msg.strip().split()
             first = int(first)
             second = int(second)
             if too_long(first) or too_long(second):
@@ -68,7 +68,7 @@ def rand(code, input):
             return code.reply(syntax)
 
         # Now respond
-        number = str(random.randint(small,big))
+        number = str(random.randint(small, big))
         return code.reply('Your random integer is: {red}%s' % number)
     except:
         return code.reply(syntax)

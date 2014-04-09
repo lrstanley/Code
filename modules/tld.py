@@ -36,8 +36,9 @@ def gettld(code, input):
         desc = matches[2]
         if len(desc) > 400:
             desc = desc[:400] + "..."
-        reply = "%s -- %s. IDN: %s, DNSSEC: %s" % (matches[1], desc,
-                matches[3], matches[4])
+        reply = "%s -- %s. IDN: %s, DNSSEC: %s" % (
+            matches[1], desc, matches[3], matches[4]
+        )
         code.say(reply)
     else:
         search = r'<td><a href="\S+" title="\S+">.{0}</a></td>\n<td><span class="flagicon"><img.*?\">(.*?)</a></td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n'
@@ -54,8 +55,10 @@ def gettld(code, input):
                 dict_val[key] = r_tag.sub('', dict_val[key])
             if len(dict_val["notes"]) > 400:
                 dict_val["notes"] = dict_val["notes"][:400] + "..."
-            reply = "%s (%s, %s). IDN: %s, DNSSEC: %s, SLD: %s" % (dict_val["country"], dict_val["expl"],
-                 dict_val["notes"], dict_val["idn"], dict_val["dnssec"], dict_val["sld"])
+            reply = "%s (%s, %s). IDN: %s, DNSSEC: %s, SLD: %s" % (
+                dict_val["country"], dict_val["expl"], dict_val["notes"],
+                dict_val["idn"], dict_val["dnssec"], dict_val["sld"]
+            )
         else:
             reply = "No matches found for TLD: {0}".format(unicode(input.group(2)))
         code.say(reply)

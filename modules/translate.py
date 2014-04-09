@@ -7,7 +7,6 @@ http://code.liamstanley.io/
 """
 
 import json
-import time
 import urllib
 import urllib2
 import util.web
@@ -32,20 +31,20 @@ def translate(text, input='auto', output='en'):
 
     uri = 'https://translate.google.com/translate_a/t?'
     params = {
-            'sl': input,
-            'tl': output,
-            'js': 'n',
-            'prev': '_t',
-            'hl': 'en',
-            'ie': 'UTF-8',
-            'text': text,
-            'client': 't',
-            'multires': '1',
-            'sc': '1',
-            'uptl': 'en',
-            'tsel': '0',
-            'ssel': '0',
-            'otf': '1',
+        'sl': input,
+        'tl': output,
+        'js': 'n',
+        'prev': '_t',
+        'hl': 'en',
+        'ie': 'UTF-8',
+        'text': text,
+        'client': 't',
+        'multires': '1',
+        'sc': '1',
+        'uptl': 'en',
+        'tsel': '0',
+        'ssel': '0',
+        'otf': '1',
     }
 
     for x in params:
@@ -53,8 +52,8 @@ def translate(text, input='auto', output='en'):
 
     result = opener.open(uri).read()
 
-    ## this is hackish
-    ## this makes the returned data parsable by the json module
+    # this is hackish
+    # this makes the returned data parsable by the json module
     result = result.replace(',,', ',').replace('[,', '["",')
 
     while ',,' in result:
@@ -86,7 +85,8 @@ def tr(code, input):
     args = ['auto', 'en']
 
     for i in xrange(2):
-        if not ' ' in command: break
+        if ' ' not in command:
+            break
         prefix, cmd = command.split(' ', 1)
         if langcode(prefix):
             args[i] = prefix[1:]
@@ -104,7 +104,9 @@ def tr(code, input):
         if msg:
             msg = util.web.decode(msg)
             msg = '"%s" ({b}{purple}%s{c}{b} to {b}{purple}%s{c}{b})' % (msg, src, dest)
-        else: msg = '{red}The %s to %s translation failed, sorry!' % (src, dest)
+        else:
+            msg = '{red}The %s to %s translation failed, sorry!' % (src, dest)
 
         code.reply(msg)
-    else: code.say('{red}Language guessing failed, so try suggesting one!')
+    else:
+        code.say('{red}Language guessing failed, so try suggesting one!')
