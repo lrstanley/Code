@@ -16,6 +16,7 @@ import asynchat
 import os
 import codecs
 from util import output
+from util.web import uncharset
 
 
 debug = False
@@ -118,11 +119,7 @@ class Bot(asynchat.async_chat):
             formatting to support color/bold/italic/etc assignment
             in Codes responses
         '''
-        try:
-            message = unicode(message, 'utf8')
-        except:
-            pass
-        message = message.encode('utf8', 'replace')
+        message = uncharset(message)
         if not hasattr(self.config, 'textstyles'):
             return self.clear_format(message)
         if not self.config.textstyles:

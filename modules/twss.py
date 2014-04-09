@@ -12,13 +12,14 @@ import socket
 import re
 import os
 from util.hook import *
+from util import output
 
 
 socket.setdefaulttimeout(5)
 
 last = "DEBUG_ME"  # Dont find this in terminal, you might want to flip shit.
 if not os.path.exists('modules/twss.db'):
-    print '[DOWNLOADING] "That\'s What She Said" library from http://misc.liamstanley.io/twss.txt'
+    output.info('"That\'s What She Said" library from http://misc.liamstanley.io/twss.txt', 'DL')
     urllib.urlretrieve('http://misc.liamstanley.io/twss.txt', 'modules/twss.db')
 
     f = open('modules/twss.db', 'w')

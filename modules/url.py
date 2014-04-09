@@ -68,7 +68,6 @@ def get_title_auto(code, input):
                 continue
         # Lets get some data!
         data = get_url_data(url)
-        print data
         if data:
             if hasattr(code.config, 'shortenurls'):
                 if code.config.shortenurls:
@@ -77,7 +76,7 @@ def get_title_auto(code, input):
                     url = clean_url(url)
             else:
                 url = clean_url(url)
-            output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
+            output.append('{blue}{b}%s{b}{c} - %s' % (web.uncharset(data), url))
     if not output:
         return
     return code.say(' | '.join(output))

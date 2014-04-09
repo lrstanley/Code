@@ -99,6 +99,23 @@ def striptags(message):
 def decode(html):
     return r_entity.sub(entity, html)
 
+
+def uncharset(string):
+    try:
+        string = unicode(string, 'utf-8')
+    except:
+        pass
+    try:
+        string = string.encode('utf8', 'ignore')
+    except:
+        pass
+    try:
+        string = unicode(string, 'utf-8')
+    except:
+        pass
+    return string
+
+
 r_string = re.compile(r'("(\\.|[^"\\])*")')
 r_json = re.compile(r'^[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]+$')
 env = {'__builtins__': None, 'null': None, 'true': True, 'false': False}
