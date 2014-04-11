@@ -358,7 +358,7 @@ class Bot(asynchat.async_chat):
         output.normal('%s is now known as %s' % (nick, new_nick), 'NICK')
 
     def trigger_PRIVMSG(self, line):
-        re_tmp = r'^\:(.*?)\!(.*?)\@(.*\s?) PRIVMSG (.*\s?) \:(.*?)$'
+        re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) PRIVMSG (.*?) \:(.*?)$'
         nick, ident, host, sender, msg = re.compile(re_tmp).match(line).groups()
         msg = self.stripcolors(msg)
         if msg.startswith('\x01'):
@@ -371,12 +371,12 @@ class Bot(asynchat.async_chat):
                 self.chan[sender][nick] = {'normal': True, 'voiced': False, 'op': False}
 
     def trigger_NOTICE(self, line):
-        re_tmp = r'^\:(.*?) NOTICE (.*\s?) \:(.*?)$'
+        re_tmp = r'^\:(.*?) NOTICE (.*?) \:(.*?)$'
         nick, sender, msg = re.compile(re_tmp).match(line).groups()
         output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
 
     def trigger_KICK(self, line):
-        re_tmp = r'^\:(.*?)\!(.*?)\@(.*\s?) KICK (.*\s?) (.*\s?) \:(.*?)$'
+        re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) KICK (.*?) (.*?) \:(.*?)$'
         nick, ident, host, sender, kicked, reason = re.compile(re_tmp).match(line).groups()
         output.normal('%s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason), 'KICK', 'red')
 
@@ -386,7 +386,7 @@ class Bot(asynchat.async_chat):
         del self.chan[channel][name]
 
     def trigger_MODE(self, line):
-        re_tmp = r'^\:(.*?)\!(.*?)\@(.*\s?) MODE (.*?)$'
+        re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) MODE (.*?)$'
         try:
             nick, ident, host, args = re.compile(re_tmp).match(line).groups()
         except:
@@ -468,11 +468,10 @@ class Bot(asynchat.async_chat):
            left over color digits. Order is very important."""
         colors = [
             u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
-            u"\x032", u"\x033", u"\x034", u"\x035", u"\x0306", u"\x0307",
-            u"\x0308", u"\x0309", u"\x0310", u"\x0311", u"\x036", u"\x037",
-            u"\x038", u"\x039", u"\x0312", u"\x0313", u"\x0314", u"\x0315",
-            u"\x030", u"\x031", u"\x03", u"\x02", u"\x09", u"\x13", u"\x0f",
-            u"\x15"
+            u"\x0306", u"\x0307", u"\x0308", u"\x0309", u"\x0310", u"\x0311",
+            u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x031", u"\x032",
+            u"\x033", u"\x034", u"\x035", u"\x036", u"\x037", u"\x038", u"\x039",
+            u"\x030", u"\x03", u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"
         ]
 
         for color in colors:
@@ -551,7 +550,7 @@ class Bot(asynchat.async_chat):
                     return
 
         self.__write(('PRIVMSG', self.safe(recipient)), self.safe(text))
-        output.normal('(%s) %s' % (self.nick, self.clear_format(self.safe(text))), self.safe(recipient))
+        output.normal('(%s) %s' % (self.nick, self.stripcolors(self.clear_format(self.safe(text)))), self.safe(recipient))
         if log:
             self.stack_log.append((time.time(), text))
         else:
