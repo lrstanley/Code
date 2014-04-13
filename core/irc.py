@@ -473,7 +473,7 @@ class Bot(asynchat.async_chat):
             u"\x033", u"\x034", u"\x035", u"\x036", u"\x037", u"\x038", u"\x039",
             u"\x030", u"\x03", u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"
         ]
-
+        data = uncharset(data)
         for color in colors:
             data = data.replace(color, '')
         return str(data.encode('ascii', 'ignore'))
