@@ -67,8 +67,6 @@ def get_title_auto(code, input):
             break
         if url.startswith('.') or url.endswith('.'):
             break
-        if dot_count < 2:
-            break
         for bad in ignored:
             if bad.lower() in url.lower():
                 skip = True
