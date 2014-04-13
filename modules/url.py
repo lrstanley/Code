@@ -63,7 +63,7 @@ def get_title_auto(code, input):
     output = []
     for url in urls:
         # check to see if we should ignore this URL...
-        if not '.' in url:
+        if '.' not in url:
             break
         if url.startswith('.') or url.endswith('.'):
             break
