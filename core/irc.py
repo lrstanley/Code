@@ -19,7 +19,7 @@ from util import output
 from util.web import uncharset
 
 
-debug = True
+debug = False
 IRC_CODES = (
     '251', '252', '254', '255', '265', '266', '250', '333', '353', '366',
     '372', '375', '376', 'QUIT', 'NICK'
@@ -227,7 +227,7 @@ class Bot(asynchat.async_chat):
         else:
             delay = 20
         while True:
-            if count > max_attempts:
+            if count >= max_attempts:
                 break
             try:
                 count += 1
@@ -241,8 +241,8 @@ class Bot(asynchat.async_chat):
                     output.normal('Connecting to %s:%s... (try %s)' % (host, port, str(count)), 'STATUS')
                 self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.connect((host, port))
-                asyncore.loop()
                 count = 0
+                asyncore.loop()
             except:
                 pass
         output.error('Too many failed attempts. Exiting.')
