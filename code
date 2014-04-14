@@ -148,7 +148,7 @@ def create_default_config(fn):
 
         # Directories to load user modules from
         # e.g. /path/to/my/modules
-        extra = ['""" + os.getcwd() + '/modules/' + """']
+        # extra = ['""" + os.getcwd() + '/modules/' + """']
 
         # EOF
         """

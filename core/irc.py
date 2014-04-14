@@ -19,7 +19,7 @@ from util import output
 from util.web import uncharset
 
 
-debug = False
+debug = True
 IRC_CODES = (
     '251', '252', '254', '255', '265', '266', '250', '333', '353', '366',
     '372', '375', '376', 'QUIT', 'NICK'
@@ -310,9 +310,7 @@ class Bot(asynchat.async_chat):
 
             code = line.split()[1]
             getattr(self, 'trigger_%s' % code)(line)
-        except AttributeError:
-            return
-        except IndexError:
+        except (AttributeError, IndexError, KeyError):
             return
 
     def trigger_250(self, line):
