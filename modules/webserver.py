@@ -9,7 +9,6 @@ from util import output
 # Example command...
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
 host = '0.0.0.0'
-port = 8888
 
 # Not important
 data, password = [], None
@@ -75,7 +74,7 @@ def init(host, port):
     """Tries to start the webserver. Fails if someone initiates a reload, or port is already in use."""
     try:
         time.sleep(5)
-        server = HTTPServer(('0.0.0.0', 8888), WebServer)
+        server = HTTPServer(('0.0.0.0', port), WebServer)
         output.success('Starting HTTP server on %s:%s' % (host, port), 'WEBSERVER')
     except:
         return
@@ -83,11 +82,6 @@ def init(host, port):
 
 
 def setup(code):
-    # global started
-    # if started == True:
-    #     return
-
-    # started = True
     id = str(gen(0, 10000000))
     code.set('webserver.object', id)
 
@@ -99,6 +93,10 @@ def setup(code):
     if not code.config.webserver_pass:
         output.error('To use webserver.py you must have a password setup in default.py!')
         return
+    if not hasattr(code.config, 'webserver_port'):
+        port = 8888
+    else:
+        port = code.config.webserver_port
     Sender = CollectData(code, input, id)
     Sender.start()  # Initiate the thread.
     thread.start_new_thread(init, (str(host), int(port),))
