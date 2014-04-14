@@ -227,7 +227,7 @@ class Bot(asynchat.async_chat):
         else:
             delay = 20
         while True:
-            if count >= max_attempts:
+            if count > max_attempts:
                 break
             try:
                 count += 1
