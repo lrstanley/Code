@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-twitter.py - Code Twitter Module
-http://code.liamstanley.io/
-"""
-
 import re
 import urllib2
 import urllib

@@ -1,9 +1,3 @@
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-github.py - Code Github Module
-http://code.liamstanley.io/
-"""
-
 from datetime import datetime
 from util.hook import *
 from subprocess import *

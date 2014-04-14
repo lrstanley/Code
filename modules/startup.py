@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-startup.py - Code Startup Module
-http://code.liamstanley.io/
-"""
-
 import threading
 import time
 from util import output

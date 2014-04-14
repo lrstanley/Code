@@ -1,12 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-twss.py - Code 'That's what she said' Module
-http://code.liamstanley.io/
-"""
-
-
 import urllib
 import socket
 import re

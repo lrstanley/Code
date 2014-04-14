@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-lmgtfy.py - Code 'Let Me Google That For You' Module
-http://code.liamstanley.io/
-"""
-
 import re
 from util.hook import *
 from util.web import shorten

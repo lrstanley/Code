@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-search.py - Code Search Module
-http://code.liamstanley.io/
-"""
-
 import re
 from json import loads as json
 from urllib import quote

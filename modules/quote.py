@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-quote.py - Code Quote Module
-http://code.liamstanley.io/
-"""
-
 import random
 import modules.unicode as uc
 from util.hook import *

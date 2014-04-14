@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-unicode.py - Code Unicode Module
-http://code.liamstanley.io/
-"""
-
 import re
 import unicodedata
 import urlparse

@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-weather.py - Code Weather Module
-http://code.liamstanley.io/
-"""
-
-
 import urllib
 import urllib2
 import json

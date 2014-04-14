@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-translate.py - Code Translation Module
-http://code.liamstanley.io/
-"""
-
 import json
 import urllib
 import urllib2

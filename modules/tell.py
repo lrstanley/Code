@@ -1,12 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-tell.py - Code Tell Module
-http://code.liamstanley.io/
-"""
-
-
 import os
 import time
 import random

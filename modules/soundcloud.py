@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-soundcloud.py - Code Soundcloud Module
-http://code.liamstanley.io/
-"""
-
 import json
 import urllib2
 from util.hook import *

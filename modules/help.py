@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-help.py - Code Help Module
-http://code.liamstanley.io/
-"""
-
-
 from util.hook import *
 
 

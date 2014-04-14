@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-magic.py - Code Magic Module
-http://code.liamstanley.io/
-"""
-
 import random
 from util.hook import *
 

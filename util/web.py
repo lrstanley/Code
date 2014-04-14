@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-web.py - Code Web Facilities
-http://code.liamstanley.io/
-"""
-
 import re
 import urllib
 import urllib2

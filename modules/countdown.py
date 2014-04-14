@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-countdown.py - Code Countdown Module
-http://code.liamstanley.io/
-"""
-
 import datetime
 from util.hook import *
 

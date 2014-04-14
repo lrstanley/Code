@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-ip.py - Code IP lookup Module
-http://code.liamstanley.io/
-"""
-
 from socket import getfqdn as rdns
 from util.hook import *
 from util import web

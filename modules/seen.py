@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-seen.py - Code Seen Module
-http://code.liamstanley.io/
-"""
-
 import time
 from util.hook import *
 

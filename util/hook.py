@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-hook.py - Code Hook Module
-http://code.liamstanley.io/
-"""
-
-
 def deprecated(old):
     def new(code, input, old=old):
         self = code

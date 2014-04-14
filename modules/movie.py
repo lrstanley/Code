@@ -1,10 +1,3 @@
-# -*- coding: utf8 -*-
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-movie.py - Code Movie Module
-http://code.liamstanley.io/
-"""
-
 import urllib
 import urllib2
 import json

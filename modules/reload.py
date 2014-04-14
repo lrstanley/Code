@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-reload.py - Code Reload Module
-http://code.liamstanley.io/
-"""
-
 import sys
 import os.path
 import time

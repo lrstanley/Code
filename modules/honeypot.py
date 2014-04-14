@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-honeypot.py - Code IP Abuse Checker Module
-http://code.liamstanley.io/
-"""
-
-
 from util.hook import *
 from util import web
 from util import output

@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-url.py - Code Url Module
-http://code.liamstanley.io/
-"""
-
-
 import re
 from util import web
 from util.hook import *

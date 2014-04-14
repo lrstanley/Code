@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-wikipedia.py - Code Wikipedia Module
-http://code.liamstanley.io/
-"""
-
 from urllib import quote as urlify
 from urllib2 import urlopen as get
 from json import loads as jsonify

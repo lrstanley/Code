@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-isup.py - Code Isup Module
-http://code.liamstanley.io/
-"""
-
-
 from urllib import urlopen
 from util.hook import *
 

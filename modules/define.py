@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-wiktionary.py - Code Wiktionary Module
-http://code.liamstanley.io/
-"""
-
 import re
 from urllib import quote
 from urllib2 import urlopen

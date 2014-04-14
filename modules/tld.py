@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-'''
-Code Copyright (C) 2012-2014 Liam Stanley
-admin.py - Code TLD Module
-http://code.liamstanley.io/
-'''
-
 import util.web
 from util.hook import *
 import re

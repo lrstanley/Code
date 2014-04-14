@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
-ai.py - Code AI Module
-http://code.liamstanley.io/
-"""
-
 import random
 import time
 import difflib

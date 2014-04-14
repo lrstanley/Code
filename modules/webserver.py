@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-webserver.py - Code Webserver-API Module
-http://code.liamstanley.io/
-"""
-
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
 import threading

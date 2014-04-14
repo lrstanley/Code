@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-output.py - Code Printing Module
-http://code.liamstanley.io/
-"""
-
 import sys
 import platform
 

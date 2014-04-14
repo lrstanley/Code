@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-fucking_dinner.py - Code Fucking Dinner Module
-http://code.liamstanley.io/
-"""
-
 import re
 from urllib2 import urlopen as get
 from util.hook import *

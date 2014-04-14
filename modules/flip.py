@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-flip.py - Code Coin Flip Module
-http://code.liamstanley.io/
-"""
-
 from util.hook import *
 import random
 

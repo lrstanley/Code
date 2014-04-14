@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-database.py - Code Module Database Manager
-http://code.liamstanley.io/
-"""
-
-
 import os
 import json
 
