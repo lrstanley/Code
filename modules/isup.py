@@ -5,8 +5,6 @@ from util.hook import *
 @hook(cmds=['isup', 'isdown', 'check', 'up', 'down'], ex='isup http://google.com', args=True)
 def isup(code, input):
     """isup <url> - Is it down for everyone, or just you?"""
-    if len(input.group(2).split()) != 1:
-        return error(code)
     try:
         data = urlopen('http://isup.me/%s' % input.group(2)).read()
         if 'not just you' in data:
@@ -14,6 +12,6 @@ def isup(code, input):
         elif 'It\'s just you.' in data:
             return code.say('{green}%s is up! Must just be you!' % input.group(2))
         else:
-            return error(code)
+            return code.say('{red}Failed to get the status of the website!')
     except:
-        return error(code)
+        return code.say('{red}Failed to get the status of the website!')
