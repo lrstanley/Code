@@ -64,7 +64,7 @@ def create_default_config(fn):
 
         # serverpass is the server password. Not required if your server doesn't
         # require any form of authentication.
-        #serverpass  'example'
+        #serverpass = 'example'
 
         # password is the nickserv password to use when authenticating with
         # NickServ based IRC servers
