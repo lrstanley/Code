@@ -6,7 +6,7 @@ import time
 from util import web
 from util.hook import *
 from util import database
-from modules.calc import hash
+from util.tools import hash
 
 
 auto_check = 15  # Time in seconds to check for new tweets
@@ -107,15 +107,15 @@ def daemon(code, tc):
                     continue
                 data = data[0]
                 hash_str = hash(data['text'])
-                db = database.get('twitter')
+                db = database.get(code.nick, 'twitter')
                 if not db:  # New data on new database, don't output anywhere..
-                    database.set([hash_str], 'twitter')
+                    database.set(code.nick, [hash_str], 'twitter')
                     continue
                 if hash_str in db:
                     continue  # Same
 
                 db.append(hash_str)
-                database.set(db, 'twitter')
+                database.set(code.nick, db, 'twitter')
                 msg = format(data)
                 if hasattr(code.config, 'shortenurls'):
                     if code.config.shortenurls:
@@ -123,8 +123,8 @@ def daemon(code, tc):
                         for url in urls:
                             msg = msg.replace(url, web.shorten(url))
                 code.msg(channel, msg.decode('ascii', 'ignore'))
-            db = database.get('twitter')
+            db = database.get(code.nick, 'twitter')
             if db:
                 if len(db) > 200:
                     db = db[200:]
-                    database.set(db, 'twitter')
+                    database.set(code.nick, db, 'twitter')

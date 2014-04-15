@@ -2,15 +2,15 @@ import os
 import json
 
 
-db_name = 'data.db'
-mod_name = 'module.%s.db'
+db_name = '%s.data.db'
+mod_name = '%s.module.%s.db'
 
 
-def get(module=False):
+def get(bot, module=False):
     if module:
-        fn = mod_name % str(module)
+        fn = mod_name % (bot, str(module))
     else:
-        fn = db_name
+        fn = db_name % bot
     module_filename = os.path.join(os.path.expanduser('~/.code'), fn)
     if not os.path.exists(module_filename):
         return False
@@ -24,11 +24,11 @@ def get(module=False):
     return data
 
 
-def set(data, module=False):
+def set(bot, data, module=False):
     if module:
-        fn = mod_name % str(module)
+        fn = mod_name % (bot, str(module))
     else:
-        fn = db_name
+        fn = db_name % bot
     module_filename = os.path.join(os.path.expanduser('~/.code'), fn)
     with open(module_filename, 'w') as f:
         if isinstance(data, dict):

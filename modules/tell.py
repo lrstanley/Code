@@ -1,165 +1,108 @@
-import os
 import time
-import random
 from util.hook import *
-
-maximum = 4
-
-
-def loadReminders(fn):
-    result = {}
-    f = open(fn)
-    for line in f:
-        line = line.strip()
-        if line:
-            try:
-                tellee, teller, verb, timenow, msg = line.split('\t', 4)
-            except ValueError:
-                continue
-            result.setdefault(tellee, []).append((teller, verb, timenow, msg))
-    f.close()
-    return result
+from util import database
+from util import tools
 
 
-def dumpReminders(fn, data):
-    f = open(fn, 'w')
-    for tellee in data.iterkeys():
-        for remindon in data[tellee]:
-            line = '\t'.join((tellee,) + remindon)
-            try:
-                f.write(line + '\n')
-            except IOError:
-                break
-    try:
-        f.close()
-    except IOError:
-        pass
-    return True
+maxchars = 400
+db = {}
+bot = ''
 
 
-def setup(self):
-    fn = self.nick + '-' + self.config.host + '.tell.db'
-    self.tell_filename = os.path.join(os.path.expanduser('~/.code'), fn)
-    if not os.path.exists(self.tell_filename):
-        try:
-            f = open(self.tell_filename, 'w')
-        except OSError:
-            pass
-        else:
-            f.write('')
-            f.close()
-    self.reminders = loadReminders(self.tell_filename)  # @@ tell
+def setup(code):
+    """
+        Read the database and globalize the variable on module-load.
+        Reading/writing is ONLY done when adding data, removing data,
+        or the module is being initialized. Less read-write than the
+        old tell.py module.
+    """
+    global bot
+    bot = code.nick
+    read_db()
 
 
-@hook(cmds=['tell'], ex='tell George When you get back on, I need your help!', args=True)
-def f_remind(code, input):
-    """tell <user> -- Save a note so that when a user gets back online it plays for them"""
-    teller = input.nick
-    if input.group() and (input.group())[1:].startswith("tell"):
-        if input.group(2).lower().split()[0] in ['liam', 'lime']:
-            return
-        verb = "tell".encode('utf-8')
-        line = input.groups()
-        line_txt = line[1].split()
-        tellee = line_txt[0]
-        msg = ' '.join(line_txt[1:])
+def read_db():
+    """Read from the tell database"""
+    global db
+    db = database.get(bot, 'tell')
+    if not db:
+        db = {}
+
+
+def save_db():
+    """Save the local db variable to the database"""
+    global db
+    database.set(bot, db, 'tell')
+
+
+@hook(cmds=['tell', 'note'], ex='tell Allen PM me your password!', args=True)
+def tell(code, input):
+    """tell <user> -- Save a note so that when <user> gets on it replays"""
+    global db
+    if not input.sender.startswith('#'):
+        return code.say('{b}You must use this in a channel')
+
+    if len(input.group(2)) < 2:
+        return code.say('{red}{b}Invalid usage. Use %shelp tell' % code.prefix)
+
+    location, msg = input.group(2).split(' ', 1)
+    if location.lower() in db:
+        for entry in db[location.lower()]:
+            if msg == entry['msg'] and input.nick.lower() == entry['sender'].lower():
+                return code.reply('{red}That message is already pending!')
+    curr = int(time.time())
+    entry = {'time': curr, 'msg': msg, 'sender': input.nick}
+    if not location.lower() in db:
+        db[location.lower()] = [entry]
     else:
-        verb, tellee, msg = input.groups()
-    verb = verb.encode('utf-8')
-    tellee = tellee.encode('utf-8')
-    msg = msg.encode('utf-8')
-
-    tellee = tellee.rstrip('.,:;')
-
-    if not os.path.exists(code.tell_filename):
-        return
-
-    timenow = time.strftime('%d %b %H:%MZ', time.gmtime())
-    whogets = list()
-    for tellee in tellee.split(','):
-        if len(tellee) > 20:
-            code.say("Nickname {b}%s{b} is too long." % (tellee))
-            continue
-        if not tellee.lower() in (teller.lower(), code.nick):
-            if not tellee.lower() in whogets:
-                whogets.append(tellee)
-                if tellee not in code.reminders:
-                    code.reminders[tellee] = [(teller, verb, timenow, msg)]
-                else:
-                    # if len(code.reminders[tellee]) >= maximum:
-                    #   warn = True
-                    code.reminders[tellee].append((teller, verb, timenow, msg))
-    response = str()
-    if teller.lower() == tellee.lower() or tellee.lower() == 'me':
-        response = 'You can %s yourself that.' % (verb)
-    elif tellee.lower() == code.nick.lower():
-        response = "Hey, I'm not that derp you know!"
-    else:
-        response = "I'll pass that on when %s is around."
-        if len(whogets) > 1:
-            listing = ", ".join(whogets[:-1]) + " or " + whogets[-1]
-            response = response % (listing)
-        else:
-            response = response % (whogets[0])
-
-    if not whogets:  # Only get cute if there are not legits
-        rand = random.random()
-        if rand > 0.9999:
-            response = "Yeah, yeah"
-        elif rand > 0.999:
-            response = "Yeah, sure, whatever"
-
-    code.reply(response)
-
-    dumpReminders(code.tell_filename, code.reminders)
-
-
-def getReminders(code, channel, key, tellee):
-    lines = []
-    template = "%s: %s <%s> %s %s %s"
-    today = time.strftime('%d %b', time.gmtime())
-
-    for (teller, verb, datetime, msg) in code.reminders[key]:
-        if datetime.startswith(today):
-            datetime = datetime[len(today) + 1:]
-        lines.append(template % (tellee, datetime, teller, verb, tellee, msg))
-
-    try:
-        del code.reminders[key]
-    except KeyError:
-        code.msg(channel, 'Er...')
-    return lines
+        db[location.lower()].append(entry)
+    save_db()
+    code.reply('{b}I\'ll let them know when I see them.')
 
 
 @hook(rule=r'(.*)', priority='low')
-def message(code, input):
+def tell_trigger(code, input):
+    """Dispatch notes to users if their name was found in the database"""
     if not input.sender.startswith('#'):
         return
 
-    tellee = input.nick
-    channel = input.sender
-
-    if not os:
-        return
-    if not os.path.exists(code.tell_filename):
+    if input.nick.lower() not in db:
         return
 
-    reminders = []
-    remkeys = list(reversed(sorted(code.reminders.keys())))
-    for remkey in remkeys:
-        if not remkey.endswith('*') or remkey.endswith(':'):
-            if tellee.lower() == remkey.lower():
-                reminders.extend(getReminders(code, channel, remkey, tellee))
-        elif tellee.lower().startswith(remkey.rstrip('*:').lower()):
-            reminders.extend(getReminders(code, channel, remkey, tellee))
+    if not db[input.nick.lower()]:
+        return
 
-    for line in reminders[:maximum]:
-        code.say(line)
+    count = 0
+    lines = 1
+    queue = ''
+    template = '{b}(%s){b} {b}<%s>{b} %s'
+    note_nick = '{blue}{b}%s{b}, you have notes!:{c}' % input.nick
+    note_more = '{blue}{b}And more notes..{c}{b}'
+    for entry in db[input.nick.lower()]:
+        count += 1
+        if lines == 1:
+            note_msg = note_nick
+        else:
+            note_msg = note_more
+        if (len(queue) + 25 + len(entry['msg'])) > maxchars:
+            code.say('%s %s' % (note_msg, queue))
+            lines += 1
+            queue = template % (time_diff(entry['time']), entry['sender'], entry['msg'])
+        else:
+            tmp = template % (time_diff(entry['time']), entry['sender'], entry['msg'])
+            # if queue:
+            #     queue = queue + ' {b}|{b} '
+            queue = queue + ' ' + tmp
+    if lines == 1:
+        note_msg = note_nick
+    else:
+        note_msg = note_more
+    del db[input.nick.lower()]
+    save_db()
+    code.say('%s %s' % (note_msg, queue))
 
-    if reminders[maximum:]:
-        code.say('{b}Further messages sent privately')
-        for line in reminders[maximum:]:
-            code.msg(tellee, line)
 
-    if len(code.reminders.keys()) != remkeys:
-        dumpReminders(code.tell_filename, code.reminders)
+def time_diff(checked):
+    """Get the time, in differences between stored and current"""
+    curr = int(time.time())
+    return tools.relative(seconds=int(curr - int(checked)))[0] + ' ago'

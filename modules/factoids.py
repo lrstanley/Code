@@ -19,7 +19,7 @@ def factoid(code, input):
             return code.reply('{red}You need to be an admin to use that command!')
         return factoid_manage(input.group().split(' ', 1)[1], code, input)
 
-    db = database.get('factoids')
+    db = database.get(code.nick, 'factoids')
     if not db:
         db = []
 
@@ -62,14 +62,16 @@ def factoid_manage(data, code, input):
         cmd, args = data.split(' ', 1)
     if args:
         name = args.split()[0].lower()
-    db = database.get('factoids')
+    db = database.get(code.nick, 'factoids')
+    if not db:
+        db = {}
     if cmd.lower() in ['add', 'create', 'new']:
         if args:
             if name in db:
                 return code.reply('{red}That factoid already exists!')
             elif len(args.strip().split()) > 1:
                 db[name] = args.split(' ', 1)[1]
-                database.set(db, 'factoids')
+                database.set(code.nick, db, 'factoids')
                 return code.reply('{green}Successfully create the factoid "{purple}%s{green}"!' % name)
         return code.reply(('{red}Use "{purple}? add <name> <args>{red}" to create a new factoid. Use <py>, '
                            '<act>, <url> in front of args for different responses.'))
@@ -79,7 +81,7 @@ def factoid_manage(data, code, input):
                 return code.reply('{red}That factoid does not exist!')
             else:
                 del db[name]
-                database.set(db, 'factoids')
+                database.set(code.nick, db, 'factoids')
                 return code.reply('{green}Successfully deleted the factoid "{purple}%s{green}"!' % name)
         return code.reply('{red}Use "{purple}? del <name>{red}" to delete a factoid.')
     elif cmd.lower() in ['info', 'raw', 'show', 'view']:
