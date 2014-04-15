@@ -46,6 +46,10 @@ def tell(code, input):
         return code.say('{red}{b}Invalid usage. Use %shelp tell' % code.prefix)
 
     location, msg = input.group(2).split(' ', 1)
+
+    if location.lower() in ['code', code.nick.lower()]:
+        return '{b}Thanks for letting me know.'
+
     if location.lower() in db:
         for entry in db[location.lower()]:
             if msg == entry['msg'] and input.nick.lower() == entry['sender'].lower():
