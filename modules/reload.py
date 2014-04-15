@@ -50,8 +50,6 @@ def f_reload(code, input):
 
     code.register(vars(module))
     code.bind_commands()
-    # It wants to fail to do this correctly..
-    from util import output
     output.info('Reloaded %s' % module)
     module = str(module)
     module_name, module_location = module.split()[1].strip('\''), module.split()[3].strip('\'').strip('>')
