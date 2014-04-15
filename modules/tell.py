@@ -90,9 +90,9 @@ def tell_trigger(code, input):
             queue = template % (time_diff(entry['time']), entry['sender'], entry['msg'])
         else:
             tmp = template % (time_diff(entry['time']), entry['sender'], entry['msg'])
-            # if queue:
-            #     queue = queue + ' {b}|{b} '
-            queue = queue + ' ' + tmp
+            if queue:
+                queue = queue + ' '
+            queue = queue + tmp
     if lines == 1:
         note_msg = note_nick
     else:
