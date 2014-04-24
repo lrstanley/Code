@@ -2,7 +2,7 @@ from socket import getfqdn as rdns
 from util.hook import *
 from util import web
 
-base = 'http://geo.liamstanley.io/json/%s'
+base = 'http://geoip.cf/json/%s'
 
 
 @hook(cmds=['ip', 'host', 'whois', 'geo', 'geoip'], ex='whois 8.8.8.8')

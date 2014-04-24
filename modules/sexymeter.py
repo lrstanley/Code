@@ -20,8 +20,6 @@ def sexymeter(code, input):
                  sexycomment(rand)))
     else:
         nick = text[1]
-        ishot = nick.lower() in hotuser
-        isnot = nick.lower() in notuser
         rand = str(random.randint(0, 100))
         if len(nick) > 20:
             code.say('%s: {red}The syntax is .sexymeter <name>.' % input.nick)
@@ -33,10 +31,6 @@ def sexymeter(code, input):
             rand = str(random.randint(81, 100))
         elif nick.lower() == 'myself' or nick.lower() == 'me':
             nick = input.nick
-        elif ishot:
-            rand = str(random.randint(81, 100))
-        elif isnot:
-            rand = str(random.randint(0, 20))
         else:
             nick = text[1]
         code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (nick, rand,
