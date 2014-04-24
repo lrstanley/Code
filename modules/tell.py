@@ -48,7 +48,7 @@ def tell(code, input):
     location, msg = input.group(2).split(' ', 1)
 
     if location.lower() in ['code', code.nick.lower()]:
-        return '{b}Thanks for letting me know.'
+        return code.reply('{b}Thanks for letting me know.')
 
     if location.lower() in db:
         for entry in db[location.lower()]:
