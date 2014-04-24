@@ -1,43 +1,39 @@
-import urllib
-import socket
 import re
-import os
 from util.hook import *
 from util import output
+from util import database
+from util import web
+
+# Globals
+enabled = False
+db = []
 
 
-socket.setdefaulttimeout(5)
-
-last = "DEBUG_ME"  # Dont find this in terminal, you might want to flip shit.
-if not os.path.exists('modules/twss.db'):
-    output.info('"That\'s What She Said" library from http://misc.liamstanley.io/twss.txt', 'DL')
-    urllib.urlretrieve('http://misc.liamstanley.io/twss.txt', 'modules/twss.db')
-
-    f = open('modules/twss.db', 'w')
+def setup(code):
+    # Read the databases here, make global variables. If we can't read the db
+    #   then we need to disable the module..
+    global enabled
+    global db
+    # Try to read the db...
+    db = database.get(code.nick, 'twss')
+    if not db:
+        try:
+            db = web.json('http://misc.liamstanley.io/twss.json')['lines']
+            database.set(code.nick, db, 'twss')
+            output.info('Downloaded "That\'s What She Said" library and saved')
+        except:
+            output.error((
+                'Failed to download "That\'s What She Said" library. '
+                'Disabling twss.py.'
+            ))
+    if db:
+        enabled = True
 
 
 @hook(rule=r'(.*)', priority='low')
-def say_it(code, input):
-    global last
-    user_quotes = None
-    with open('modules/twss.db') as f:
-        scraped_quotes = frozenset([line.rstrip() for line in f])
-    if os.path.exists('modules/twss_ua.db'):
-        with open('modules/twss_ua.db') as f2:
-            user_quotes = frozenset([line.rstrip() for line in f2])
-    quotes = scraped_quotes.union(user_quotes) if user_quotes else scraped_quotes
-    formatted = input.group(1).lower()
-    if re.sub('[^\w\s]', '', formatted) in quotes:
-        code.say('That\'s what she said.')
-    last = re.sub('[^\w\s]', '', formatted)
-
-
-@hook(cmds=['twss'], priority='low', thread=False, admin=True)
-def add_twss(code, input):
-    if len(last) < 5:
+def twss(code, input):
+    if not enabled:
         return
-    print last
-    with open('modules/twss_ua.db', 'a') as f:
-        f.write(re.sub(r'[^\w\s]', '', last.lower()) + '\n')
-        f.close()
-    code.say('That\'s what she said.')
+    # Check if what they said is in the database
+    if re.sub('[^\w\s]', '', input.group(1).lower()) in db:
+        return code.say('That\'s what she said.')
