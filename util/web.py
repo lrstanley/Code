@@ -28,7 +28,6 @@ def get(uri, timeout=5):
 def json(uri, timeout=5):
     try:
         data = get(uri, timeout).read()
-        print data
         if data[0] == '[' and data[-1] == ']':
             data = '{"json": %s}' % data
             data = loads(data)['json']
