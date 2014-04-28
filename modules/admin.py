@@ -10,7 +10,7 @@ def listmods(code, input):
     return code.say('Modules: %s.' % ', '.join(code.modules))
 
 
-@hook(cmds=['join'], ex='join #example or .join #example key', admin=True, args=True)
+@hook(cmds=['join'], ex='join #example key', admin=True, args=True)
 def join(code, input):
     '''Join the specified channel. This is an admin-only command.'''
     if len(input.group(2).split()) > 1:  # Channel + key
@@ -53,14 +53,13 @@ def nick(code, input):
 
 @hook(cmds=['msg', 'say'], ex='msg #L I LOVE PENGUINS.', priority='low', admin=True, args=True)
 def msg(code, input):
-    '''Send a message to a channel, or a user. Admin-only.'''
-    a, b = input.group(2).split()[0], input.group(2).split()[1:]
-    if not b:
-        return
-    if not input.owner:
-        al = a.lower()
-        if al == 'chanserv' or al == 'nickserv' or al == 'hostserv' or al == 'memoserv' or al == 'saslserv' or al == 'operserv':
-            return
+    '''msg <channel|username> <msg> - Send a message to a channel, or a user. Admin-only.'''
+    msg = input.group(2).split()
+    if len(msg) < 2:
+        return code.say('{red}{b}Incorrect usage!: %smsg <channel|username> <msg>' % code.prefix)
+    a, b = msg[0], msg[1:]
+    if not input.owner and a.lower() in ['chanserv', 'nickserv', 'hostserv', 'memoserv', 'saslserv', 'operserv']:
+        return code.say('{red}{b}You\'re not authorized to message those services!')
     code.msg(a, b)
 
 
@@ -79,7 +78,6 @@ def me(code, input):
 @hook(cmds=['announce', 'broadcast'], ex='announce Some important message here', priority='low', admin=True, args=True)
 def announce(code, input):
     '''Send an announcement to all channels the bot is in'''
-    print code.channels
     for channel in code.channels:
         code.msg(channel, '{b}{purple}[ANNOUNCMENT] %s' % input.group(2))
 
