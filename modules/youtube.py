@@ -4,8 +4,7 @@ import urllib2
 import time
 from util.hook import *
 
-yt_regex = r'https?://.*?\.(youtube\.com|youtu\.be)\/watch.*?v=(.*\w)'
-
+yt_regex = r'.*https?://(www\.)?(youtube\.com|youtu\.be)\/watch.+?v=(.*\w?).*?'
 api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=jsonc&start-index=%s&q=%s'
 
@@ -15,10 +14,10 @@ def youtube(code, input):
     """Automatically find the information from a youtube url and display it
        to users in a channel"""
     try:
-        id = re.findall(yt_regex, str(input.group()))
+        id = list(re.findall(yt_regex, str(input.group())))
         if not id:
             return
-        id = id[0][1].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
+        id = id[0][2].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
         data = json.loads(urllib2.urlopen(api_url % id).read())['data']
 
         # Set some variables, because we'll have to modify a vew before we spit them back out!
