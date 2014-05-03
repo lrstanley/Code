@@ -63,7 +63,7 @@ class CollectData(threading.Thread):
                     # 2. data (The arguement for the IRC command (the arguements arguement!))
                     if 'args' not in query or 'data' not in query:
                         continue
-                    self.code.write(query['args'].split(), query['data'])
+                    self.code.write(query['args'].split(), self.code.format(query['data']))
             except:
                 output.error('Failed to parse data! (%s)' % data)
                 continue
