@@ -19,11 +19,8 @@ def f_reload(code, input):
         code.variables = None
         code.commands = None
         code.setup()
-        try:
-            output.info('Reloaded all modules.')
-        except:
-            from util import output
-            output.info('Reloaded all modules')
+        from util import output
+        output.info('Reloaded all modules')
         return code.reply('{b}Reloaded all modules.')
 
     # if a user supplies the module with the extension
@@ -50,6 +47,8 @@ def f_reload(code, input):
 
     code.register(vars(module))
     code.bind_commands()
+    # re import util.output because we're erasing slates
+    from util import output
     output.info('Reloaded %s' % module)
     module = str(module)
     module_name, module_location = module.split()[1].strip('\''), module.split()[3].strip('\'').strip('>')

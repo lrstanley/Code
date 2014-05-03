@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+"""
+Code Copyright (C) 2012-2014 Liam Stanley
+run.py - Code Initialization Module
+http://code.liamstanley.io/
+"""
+
 from util import output
 import re
 

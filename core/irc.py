@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-Credits: Sean B. Palmer, Michael Yanovich
 irc.py - Code A Utility IRC Bot
 http://code.liamstanley.io/
 """
