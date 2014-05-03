@@ -126,5 +126,5 @@ def daemon(code, tc):
             db = database.get(code.nick, 'twitter')
             if db:
                 if len(db) > 200:
-                    db = db[200:]
+                    db = db[-200:]
                     database.set(code.nick, db, 'twitter')
