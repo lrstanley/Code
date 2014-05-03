@@ -17,6 +17,7 @@ import os
 import codecs
 from util import output
 from util.web import uncharset
+from core import triggers
 
 
 debug = False
@@ -309,157 +310,9 @@ class Bot(asynchat.async_chat):
                 return
 
             code = line.split()[1]
-            getattr(self, 'trigger_%s' % code)(line)
+            getattr(triggers, 'trigger_%s' % code)(self, line,)
         except (AttributeError, IndexError, KeyError):
             return
-
-    def trigger_250(self, line):
-        msg, sender = line.split(':', 2)[2], line.split(':', 2)[1].split()[0]
-        output.normal('(%s) %s' % (sender, msg), 'NOTICE')
-
-    def trigger_251(self, line):
-        return self.trigger_250(line)
-
-    def trigger_255(self, line):
-        return self.trigger_250(line)
-
-    def trigger_353(self, line):
-        # NAMES event
-        channel, user_list = line[1::].split(':', 1)
-        channel, user_list = '#' + channel.split('#', 1)[1].strip(), user_list.strip().split()
-        if channel not in self.chan:
-            self.chan[channel] = {}
-        for user in user_list:
-            if user.startswith('@'):
-                name, normal, voiced, op = user[1::], True, True, True
-            elif user.startswith('+'):
-                name, normal, voiced, op = user[1::], True, True, False
-            else:
-                name, normal, voiced, op = user, True, False, False
-            self.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op}
-
-    def trigger_433(self, line):
-        output.warning('Nickname %s is already in use. Trying another..' % self.nick)
-        nick = self.nick + '_'
-        self.write(('NICK', nick))
-        self.nick = nick.encode('ascii', 'ignore')
-
-    def trigger_437(self, line):
-        re_tmp = r'^.*?\:(.*?)$'
-        msg = re.compile(re_tmp).match(line).groups()
-        output.error(msg)
-        sys.exit(1)
-
-    def trigger_NICK(self, line):
-        nick = line[1::].split('!', 1)[0]
-        new_nick = line[1::].split(':', 1)[1]
-        output.normal('%s is now known as %s' % (nick, new_nick), 'NICK')
-
-    def trigger_PRIVMSG(self, line):
-        re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) PRIVMSG (.*?) \:(.*?)$'
-        nick, ident, host, sender, msg = re.compile(re_tmp).match(line).groups()
-        msg = self.stripcolors(msg)
-        if msg.startswith('\x01'):
-            msg = '(me) ' + msg.split(' ', 1)[1].strip('\x01')
-        output.normal('(%s) %s' % (nick, msg), sender)
-
-        # Stuff for user_list
-        if sender.startswith('#'):
-            if nick not in self.chan[sender]:
-                self.chan[sender][nick] = {'normal': True, 'voiced': False, 'op': False}
-
-    def trigger_NOTICE(self, line):
-        re_tmp = r'^\:(.*?) NOTICE (.*?) \:(.*?)$'
-        nick, sender, msg = re.compile(re_tmp).match(line).groups()
-        output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
-
-    def trigger_KICK(self, line):
-        re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) KICK (.*?) (.*?) \:(.*?)$'
-        nick, ident, host, sender, kicked, reason = re.compile(re_tmp).match(line).groups()
-        output.normal('%s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason), 'KICK', 'red')
-
-        # Stuff for user_list
-        tmp = line.split('#', 1)[1].split()
-        channel, name = '#' + tmp[0], tmp[1]
-        del self.chan[channel][name]
-
-    def trigger_MODE(self, line):
-        re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) MODE (.*?)$'
-        try:
-            nick, ident, host, args = re.compile(re_tmp).match(line).groups()
-        except:
-            return
-        output.normal('%s sets MODE %s' % (nick, args), 'MODE')
-
-        # Stuff for user_list
-        data = line.split('MODE', 1)[1]
-        if len(data.split()) >= 3:
-            channel, modes, users = data.strip().split(' ', 2)
-            users = users.split()
-            tmp = []
-
-            def remove(old, sign):
-                tmp = []
-                modes = []
-                for char in old:
-                    modes.append(char)
-                while sign in modes:
-                    i = modes.index(sign)
-                    tmp.append(i)
-                    del modes[i]
-                return tmp, ''.join(modes)
-
-            if modes.startswith('+'):
-                _plus, new_modes = remove(modes, '+')
-                _minus, new_modes = remove(new_modes, '-')
-            else:
-                _minus, new_modes = remove(modes, '-')
-                _plus, new_modes = remove(new_modes, '+')
-
-            for index in range(len(users)):
-                _usr = users[index]
-                _mode = new_modes[index]
-                _sign = ''
-                if index in _plus:
-                    _sign = '+'
-                if index in _minus:
-                    _sign = '-'
-                tmp.append({'name': _usr, 'mode': _mode, 'sign': _sign})
-
-            last_used = ''
-
-            for index in range(len(tmp)):
-                if not last_used:
-                    last_used = tmp[index]['sign']
-                if not tmp[index]['sign'] or len(tmp[index]['sign']) == 0:
-                    tmp[index]['sign'] = last_used
-                else:
-                    last_used = tmp[index]['sign']
-
-            names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
-            for user in tmp:
-                if user['mode'] in names and user['sign'] in names:
-                    mode, name, sign = names[user['mode']], user['name'], names[user['sign']]
-                    self.chan[channel][name][mode] = sign
-                    if mode == 'op' and sign:
-                        self.chan[channel][name]['voiced'] = True
-
-    def trigger_JOIN(self, line):
-        name = line[1::].split('!', 1)[0]
-        channel = line.split('JOIN', 1)[1].strip()
-        if name != self.nick:
-            self.chan[channel][name] = {'normal': True, 'voiced': False, 'op': False}
-
-    def trigger_PART(self, line):
-        name = line[1::].split('!', 1)[0]
-        channel = line.split('PART', 1)[1].split()[0]
-        del self.chan[channel][name]
-
-    def trigger_QUIT(self, line):
-        name = line[1::].split('!', 1)[0]
-        for channel in self.chan:
-            if name in channel:
-                del self.chan[channel][name]
 
     def stripcolors(self, data):
         """STRIP ALL ZE COLORS! Note: the replacement method is CRUCIAL to keep from
