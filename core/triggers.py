@@ -7,6 +7,8 @@ http://code.liamstanley.io/
 
 from util import output
 import re
+import time
+
 
 def trigger_250(code, line):
     msg, sender = line.split(':', 2)[2], line.split(':', 2)[1].split()[0]
@@ -31,7 +33,7 @@ def trigger_353(code, line):
             name, normal, voiced, op = user[1::], True, True, False
         else:
             name, normal, voiced, op = user, True, False, False
-        code.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op}
+        code.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op, 'count': 0, 'messages': []}
 
 def trigger_433(code, line):
     output.warning('Nickname %s is already in use. Trying another..' % code.nick)
@@ -61,7 +63,11 @@ def trigger_PRIVMSG(code, line):
     # Stuff for user_list
     if sender.startswith('#'):
         if nick not in code.chan[sender]:
-            code.chan[sender][nick] = {'normal': True, 'voiced': False, 'op': False}
+            code.chan[sender][nick] = {'normal': True, 'voiced': False, 'op': False, 'count': 0, 'messages': []}
+        code.chan[sender][nick]['count'] += 1
+        code.chan[sender][nick]['messages'].append({'time': int(time.time()), 'message': msg})
+        # Ensure it's not more than 20 of the last messages
+        code.chan[sender][nick]['messages'] = code.chan[sender][nick]['messages'][-20:]
 
 def trigger_NOTICE(code, line):
     re_tmp = r'^\:(.*?) NOTICE (.*?) \:(.*?)$'
@@ -143,7 +149,7 @@ def trigger_JOIN(code, line):
     name = line[1::].split('!', 1)[0]
     channel = line.split('JOIN', 1)[1].strip()
     if name != code.nick:
-        code.chan[channel][name] = {'normal': True, 'voiced': False, 'op': False}
+        code.chan[channel][name] = {'normal': True, 'voiced': False, 'op': False, 'count': 0, 'messages': []}
 
 def trigger_PART(code, line):
     name = line[1::].split('!', 1)[0]
