@@ -74,6 +74,13 @@ class Code(irc.Bot):
                     for n in os.listdir(fn):
                         if n.endswith('.py') and not n.startswith('_'):
                             filenames.append(os.path.join(fn, n))
+ 
+        # Add system modules that the user should always require. Still can
+        #  be removed by deleting them or moving them out of the system
+        #  modules directory
+        for fn in os.listdir(os.path.join(home, 'core/modules')):
+            if fn.endswith('.py') and not fn.startswith('_'):
+                filenames.append(os.path.join(home, 'core/modules', fn))
 
         # Should fix
         excluded_modules = getattr(self.config, 'exclude', [])

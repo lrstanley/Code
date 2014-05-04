@@ -14,11 +14,14 @@ def trigger_250(code, line):
     msg, sender = line.split(':', 2)[2], line.split(':', 2)[1].split()[0]
     output.normal('(%s) %s' % (sender, msg), 'NOTICE')
 
+
 def trigger_251(code, line):
     return trigger_250(code, line)
 
+
 def trigger_255(code, line):
     return trigger_250(code, line)
+
 
 def trigger_353(code, line):
     # NAMES event
@@ -35,11 +38,13 @@ def trigger_353(code, line):
             name, normal, voiced, op = user, True, False, False
         code.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op, 'count': 0, 'messages': []}
 
+
 def trigger_433(code, line):
     output.warning('Nickname %s is already in use. Trying another..' % code.nick)
     nick = code.nick + '_'
     code.write(('NICK', nick))
     code.nick = nick.encode('ascii', 'ignore')
+
 
 def trigger_437(code, line):
     re_tmp = r'^.*?\:(.*?)$'
@@ -47,10 +52,12 @@ def trigger_437(code, line):
     output.error(msg)
     sys.exit(1)
 
+
 def trigger_NICK(code, line):
     nick = line[1::].split('!', 1)[0]
     new_nick = line[1::].split(':', 1)[1]
     output.normal('%s is now known as %s' % (nick, new_nick), 'NICK')
+
 
 def trigger_PRIVMSG(code, line):
     re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) PRIVMSG (.*?) \:(.*?)$'
@@ -69,10 +76,12 @@ def trigger_PRIVMSG(code, line):
         # Ensure it's not more than 20 of the last messages
         code.chan[sender][nick]['messages'] = code.chan[sender][nick]['messages'][-20:]
 
+
 def trigger_NOTICE(code, line):
     re_tmp = r'^\:(.*?) NOTICE (.*?) \:(.*?)$'
     nick, sender, msg = re.compile(re_tmp).match(line).groups()
     output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
+
 
 def trigger_KICK(code, line):
     re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) KICK (.*?) (.*?) \:(.*?)$'
@@ -83,6 +92,7 @@ def trigger_KICK(code, line):
     tmp = line.split('#', 1)[1].split()
     channel, name = '#' + tmp[0], tmp[1]
     del code.chan[channel][name]
+
 
 def trigger_MODE(code, line):
     re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) MODE (.*?)$'
@@ -145,16 +155,19 @@ def trigger_MODE(code, line):
                 if mode == 'op' and sign:
                     code.chan[channel][name]['voiced'] = True
 
+
 def trigger_JOIN(code, line):
     name = line[1::].split('!', 1)[0]
     channel = line.split('JOIN', 1)[1].strip()
     if name != code.nick:
         code.chan[channel][name] = {'normal': True, 'voiced': False, 'op': False, 'count': 0, 'messages': []}
 
+
 def trigger_PART(code, line):
     name = line[1::].split('!', 1)[0]
     channel = line.split('PART', 1)[1].split()[0]
     del code.chan[channel][name]
+
 
 def trigger_QUIT(code, line):
     name = line[1::].split('!', 1)[0]
