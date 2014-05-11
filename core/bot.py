@@ -74,7 +74,7 @@ class Code(irc.Bot):
                     for n in os.listdir(fn):
                         if n.endswith('.py') and not n.startswith('_'):
                             filenames.append(os.path.join(fn, n))
- 
+
         # Add system modules that the user should always require. Still can
         #  be removed by deleting them or moving them out of the system
         #  modules directory
