@@ -9,6 +9,7 @@ import sys
 import re
 import time
 import traceback
+import threading
 import socket
 import asyncore
 import asynchat
@@ -108,8 +109,12 @@ class Bot(asynchat.async_chat):
             'reset': '\x0f', 'r': '\x0f', 'clear': '\x03', 'c': '\x03'
         }
 
-        import threading
         self.sending = threading.RLock()
+
+    def initiate_send(self):
+        self.sending.acquire()
+        asynchat.async_chat.initiate_send(self)
+        self.sending.release()
 
     # def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
