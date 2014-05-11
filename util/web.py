@@ -9,7 +9,6 @@ h = HTMLParser.HTMLParser()
 
 paste_url = 'http://paste.ml'
 short_ignored = ['bit.ly', 'is.gd', 'goo.gl', 'links.ml']
-shorten_uri = 'http://links.ml/submit?link=%s&api=True'
 exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 
@@ -155,9 +154,10 @@ def shorten(url):
         for bad in short_ignored:
             if bad in url.lower():
                 return url
-        data = urllib2.urlopen(shorten_uri % urllib.quote(url)).read()
-        if 'Bad request' in data:
+        postdata = urllib.urlencode({url: ''})
+        data = loads(urllib2.urlopen('http://links.ml/add', postdata).read())
+        if not data['success']:
             return url
+        return data['url']
     except:
-        return url
-    return data
+       return url
