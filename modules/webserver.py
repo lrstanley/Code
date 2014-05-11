@@ -21,10 +21,8 @@ class WebServer(BaseHTTPRequestHandler):
         path = self.path
         global data
         if '?' in path:
-            path, tmp = path.split('?', 1)
-            args_tmp = urlparse.parse_qs(tmp)
-            for name, data in args_tmp.iteritems():
-                args[name] = data[0]
+            tmp = path.split('?', 1)[1]
+            args = urlparse.parse_qs(tmp)
             data.append(args)
 
         self.send_response(200)
@@ -46,28 +44,27 @@ class CollectData(threading.Thread):
         while True:
             if self.code.get('webserver.object') != self.id:
                 return False
-            time.sleep(2)
+            time.sleep(1)
             if len(data) < 1:
                 continue
             # Parse data before we do anything with it
             try:
-                for query in data:
-                    # Query is everything that's sent, as a dict()
-                    if 'pass' not in query:
-                        continue
-                    if query['pass'] != self.password:
-                        continue
+                event = data[0]
+                del data[0]
 
-                    # Authenticated.. Now we need to find some variables in the query
-                    # 1. args (used for IRC commands)
-                    # 2. data (The arguement for the IRC command (the arguements arguement!))
-                    if 'args' not in query or 'data' not in query:
-                        continue
-                    self.code.write(query['args'].split(), self.code.format(query['data']))
+                if 'pass' not in event:
+                    continue
+                if event['pass'][0] != self.password:
+                    continue
+
+                # Authenticated.. Now we need to find some variables in the event
+                # 1. args (used for IRC commands)
+                # 2. data (The argument for the IRC command (the arguments argument!))
+                if 'args' not in event or 'data' not in event:
+                    continue
+                self.code.write(event['args'][0].split(), self.code.format(event['data'][0]))
             except:
-                output.error('Failed to parse data! (%s)' % data)
                 continue
-            data = []
 
 
 def init(host, port):
