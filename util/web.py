@@ -14,7 +14,9 @@ exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 def get(uri, timeout=5):
     uri = uri.encode("utf-8")
-    req = urllib2.Request(uri, headers={'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; Code)'})
+    req = urllib2.Request(uri, headers={
+        'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.4 (KHTML, '
+        'like Gecko) Chrome/22.0.1229.79 Safari/537.4'})
     try:
         u = urllib2.urlopen(req, None, timeout)
     except urllib2.HTTPError, e:
