@@ -30,7 +30,8 @@ def trigger_353(code, line):
     if channel not in code.chan:
         code.chan[channel] = {}
     for user in user_list:
-        if user.startswith('@'):
+        # Support servers with %, &, and ~, as well as standard @, and +
+        if user.startswith('@') or user.startswith('%') or user.startswith('&') or user.startswith('~'):
             name, normal, voiced, op = user[1::], True, True, True
         elif user.startswith('+'):
             name, normal, voiced, op = user[1::], True, True, False
