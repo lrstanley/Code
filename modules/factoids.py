@@ -36,7 +36,7 @@ def factoid(code, input):
     if f.startswith('<py>'):
         data = f[4:].strip()
         variables = 'input="""{}"""; nick="{}"; sender="{}"; bot="{}";'.format(
-            arguments.replace('"', '\\"'), input.nick, input.sender, code.nic
+            arguments.replace('"', '\\"'), input.nick, input.sender, code.nick
         )
         result = web.pyexec(variables + data, multiline=False)
         return code.say(result)
