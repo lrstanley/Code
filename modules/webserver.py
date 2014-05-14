@@ -1,70 +1,78 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
-import threading
 import thread
 import time
 from random import randint as gen
 from util import output
+import json
 
 # Example command...
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
 host = '0.0.0.0'
 
 # Not important
-data, password = [], None
+bot, password = None, None
 
 
 class WebServer(BaseHTTPRequestHandler):
     """The actual webserver that responds to things that received via GET queries."""
+    def log_message(self, format, *args):
+        msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(), format % args)
+        output.info(msg, 'WEBSERVER')
+
     def do_GET(self):
+        def finish(data=''):
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            if isinstance(data, dict):
+                data = json.dumps(data, indent=2)
+            self.wfile.write(data)
         args = {}
         path = self.path
-        global data
         if '?' in path:
             tmp = path.split('?', 1)[1]
             args = urlparse.parse_qs(tmp)
-            data.append(args)
 
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-
-
-class CollectData(threading.Thread):
-    def __init__(self, code, input, id):
-        super(CollectData, self).__init__()
-        self.daemon = True
-        self.code = code
-        self.input = input
-        self.id = id
-        self.password = self.code.config.webserver_pass
-
-    def run(self):
-        global data
-        while True:
-            if self.code.get('webserver.object') != self.id:
-                return False
-            time.sleep(1)
-            if len(data) < 1:
-                continue
-            # Parse data before we do anything with it
+            # Manage here
             try:
-                event = data[0]
-                del data[0]
+                if 'pass' not in args:
+                    return finish({'success': False, 'message': 'Password required'})
+                if args['pass'][0] != password:
+                    return finish({'success': False, 'message': 'Password incorrect'})
 
-                if 'pass' not in event:
-                    continue
-                if event['pass'][0] != self.password:
-                    continue
-
-                # Authenticated.. Now we need to find some variables in the event
+                # Authenticated.. Now we need to find some variables in the args
                 # 1. args (used for IRC commands)
                 # 2. data (The argument for the IRC command (the arguments argument!))
-                if 'args' not in event or 'data' not in event:
-                    continue
-                self.code.write(event['args'][0].split(), self.code.format(event['data'][0]))
-            except:
-                continue
+                if 'args' not in args or 'data' not in args:
+                    data = {
+                        'chan_data': bot.chan,
+                        'nick': bot.nick,
+                        'admins': bot.config.admins,
+                        'owner': bot.config.owner,
+                        'modules': bot.modules,
+                        'host': bot.config.host,
+                        'port': bot.config.port
+                    }
+                    return finish({'success': True, 'data': data})
+
+                bot.write(args['args'][0].split(), bot.format(args['data'][0]))
+                return finish({'success': True, 'message': 'Data sent to server'})
+            except Exception as e:
+                return finish({'success': False, 'message': 'An exception has occured', 'error': str(e)})
+        else:
+            return finish({'success': False, 'message': 'Password required'})
+        finish()
+
+
+def checkstate(bot, input, id):
+    global password
+    password = bot.config.webserver_pass
+
+    while True:
+        if bot.get('webserver.object') != id:
+            return False
+        time.sleep(1)
 
 
 def init(host, port):
@@ -79,21 +87,22 @@ def init(host, port):
 
 
 def setup(code):
+    global bot
+    bot = code
     id = str(gen(0, 10000000))
-    code.set('webserver.object', id)
+    bot.set('webserver.object', id)
 
     # Nasty area, we check for configuration options, some are required and some arent
-    if not hasattr(code.config, 'run_webserver') or not hasattr(code.config, 'webserver_pass'):
+    if not hasattr(bot.config, 'run_webserver') or not hasattr(bot.config, 'webserver_pass'):
         return
-    if not code.config.run_webserver:
+    if not bot.config.run_webserver:
         return
-    if not code.config.webserver_pass:
+    if not bot.config.webserver_pass:
         output.error('To use webserver.py you must have a password setup in default.py!')
         return
-    if not hasattr(code.config, 'webserver_port'):
+    if not hasattr(bot.config, 'webserver_port'):
         port = 8888
     else:
-        port = code.config.webserver_port
-    Sender = CollectData(code, input, id)
-    Sender.start()  # Initiate the thread.
+        port = bot.config.webserver_port
+    thread.start_new_thread(checkstate, (bot, input, id,))
     thread.start_new_thread(init, (str(host), int(port),))
