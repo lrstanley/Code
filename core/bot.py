@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2014 Liam Stanley
 bot.py - Code IRC Bot
-http://code.liamstanley.io/
+https://www.liamstanley.io/Code.git
 """
 
 import time

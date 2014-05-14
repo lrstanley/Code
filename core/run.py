@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2014 Liam Stanley
 run.py - Code Initialization Module
-http://code.liamstanley.io/
+https://www.liamstanley.io/Code.git
 """
 
 import sys
