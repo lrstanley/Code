@@ -180,6 +180,10 @@ class Bot(asynchat.async_chat):
     def join(self, channel, password=None):
         '''Join a channel'''
         output.info('Attempting to join channel %s' % channel, 'JOIN')
+        try:
+            channel = unicode(channel, 'utf-8')
+        except:
+            pass
         if password is None:
             self.write(['JOIN', channel])
         else:
