@@ -82,7 +82,7 @@ class Bot(asynchat.async_chat):
     # def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
-    def format(self, message, legacy=None, charset=None):
+    def format(self, message):
         '''
             formatting to support color/bold/italic/etc assignment
             in Codes responses
@@ -92,19 +92,8 @@ class Bot(asynchat.async_chat):
             return self.clear_format(message)
         if not self.config.textstyles:
             return self.clear_format(message)
-        if legacy:
-            message = '{%s}%s{%s}' % (legacy, message, legacy)
-        find_char = re.compile(r'{.*?}')
-        charlist = find_char.findall(message)
         try:
-            for formatted_char in charlist:
-                char = formatted_char[1:-1]
-                if char.startswith('/'):
-                    char = char[1::]  # Assume closing {/char}
-                if char in self.special_chars:
-                    message = message.replace(
-                        formatted_char, self.special_chars[char], 1
-                    )
+            message = message.format(**self.special_chars)
             return message
         except:
             return self.clear_format(message)
@@ -115,18 +104,6 @@ class Bot(asynchat.async_chat):
         for custom in charlist:
             message = message.replace(custom, '', 1)
         return message
-
-    def color(self, color, message):
-        return self.format(message, color)
-
-    def bold(self, message):
-        return self.format(message, 'bold')
-
-    def italic(self, message):
-        return self.format(message, 'italic')
-
-    def underline(self, message):
-        return self.format(message, 'underline')
 
     def quit(self, message=None):
         '''Disconnect from IRC and close the bot'''
