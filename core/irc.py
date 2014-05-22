@@ -140,7 +140,7 @@ class Bot(asynchat.async_chat):
                 else:
                     temp = ' '.join(args)[:510] + '\r\n'
             self.push(temp)
-            if self.debug and not 'nickserv' in temp.lower():
+            if self.debug and 'nickserv' not in temp.lower():
                 output.warning(' > ' + temp, 'DEBUG')
         except IndexError:
             return

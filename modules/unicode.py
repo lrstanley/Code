@@ -103,6 +103,7 @@ def gen_db(botname):
         cp_names[tmp[0]] = name
     database.set(botname, {'uc': uc, 'uc_names': uc_names, 'cp_names': cp_names, 'time': int(time.time())}, 'unicodedata')
 
+
 def setup(code):
     global uc_names, cp_names, uc
     curr = int(time.time())
@@ -122,6 +123,7 @@ def setup(code):
 @hook(cmds=['us'], ex='us SPACE')
 def us(code, input):
     u(code, input, search=True)
+
 
 def u_converter(string):
     chars = string.split('\u')

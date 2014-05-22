@@ -6,7 +6,6 @@ https://www.liamstanley.io/Code.git
 """
 
 import time
-import sys
 import os
 import re
 import threading
