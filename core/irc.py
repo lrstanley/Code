@@ -5,7 +5,6 @@ irc.py - Code A Utility IRC Bot
 https://www.liamstanley.io/Code.git
 """
 
-import sys
 import re
 import time
 import traceback
@@ -14,13 +13,11 @@ import socket
 import asyncore
 import asynchat
 import os
-import codecs
 from util import output
 from util.web import uncharset
 from core import triggers
 
 
-debug = False
 IRC_CODES = (
     '251', '252', '254', '255', '265', '266', '250', '333', '353', '366',
     '372', '375', '376', 'QUIT', 'NICK'
@@ -44,40 +41,8 @@ class Origin(object):
         self.sender = mappings.get(target, target)
 
 
-def create_logdir():
-    try:
-        os.mkdir(cwd + '/logs')
-    except Exception, e:
-        output.error('There was a problem creating the logs directory.')
-        output.error(e.__class__, str(e))
-        output.error('Please fix this and then run code again.')
-        sys.exit(1)
-
-
-def check_logdir():
-    if not os.path.isdir(cwd + '/logs'):
-        create_logdir()
-
-
-def log_raw(line):
-    check_logdir()
-    f = codecs.open(cwd + '/logs/raw.log', 'a', encoding='utf-8')
-    f.write(str(time.time()) + "\t")
-    temp = line.replace('\n', '')
-    try:
-        temp = temp.decode('utf-8')
-    except UnicodeDecodeError:
-        try:
-            temp = temp.decode('iso-8859-1')
-        except UnicodeDecodeError:
-            temp = temp.decode('cp1252')
-    f.write(temp)
-    f.write('\n')
-    f.close()
-
-
 class Bot(asynchat.async_chat):
-    def __init__(self, nick, name, channels, serverpass=None, logchan_pm=None, logging=False):
+    def __init__(self, nick, name, channels, serverpass=None, debug=False):
         asynchat.async_chat.__init__(self)
         self.set_terminator('\n')
         self.buffer = ''
@@ -90,9 +55,7 @@ class Bot(asynchat.async_chat):
         self.verbose = True
         self.channels = channels or list()
         self.stack = list()
-        self.stack_log = list()
-        self.logchan_pm = logchan_pm
-        self.logging = logging
+        self.debug = debug
         self.chan = {}
         self.special_chars = {
             'white': '\x0300', 'black': '\x0301', 'blue': '\x0302',
@@ -200,8 +163,8 @@ class Bot(asynchat.async_chat):
                 else:
                     temp = ' '.join(args)[:510] + '\r\n'
             self.push(temp)
-            if self.logging:
-                log_raw(temp)
+            if self.debug and not 'nickserv' in temp.lower():
+                output.warning(' > ' + temp, 'DEBUG')
         except IndexError:
             return
 
@@ -294,21 +257,11 @@ class Bot(asynchat.async_chat):
         if not data:
             return
 
-        if self.logchan_pm:
-            dlist = data.split()
-            if len(dlist) >= 3:
-                if '#' not in dlist[2] and dlist[1].strip() not in IRC_CODES:
-                    self.msg(self.logchan_pm, data, True)
-
-        if self.logging:
-            log_raw(data)
+        if self.debug:
+            output.warning(data, 'DEBUG')
 
         self.raw = data.replace('\x02', '').replace('\r', '')
         line = self.raw.strip()
-
-        global debug
-        if debug:
-            print line
 
         if not line.startswith(':'):
             return
@@ -366,7 +319,7 @@ class Bot(asynchat.async_chat):
     def dispatch(self, origin, args):
         pass
 
-    def msg(self, recipient, text, log=False, x=False):
+    def msg(self, recipient, text, x=False):
         self.sending.acquire()
         text = self.format(text)
 
@@ -394,28 +347,21 @@ class Bot(asynchat.async_chat):
                     wait = 0.8 + penalty
                     if elapsed < wait:
                         time.sleep(wait - elapsed)
-        if log:
-            wait(self.stack_log, text)
-        else:
-            wait(self.stack, text)
+
+        wait(self.stack, text)
 
         # Loop detection
-        if not log:
-            messages = [m[1] for m in self.stack[-8:]]
-            if messages.count(text) >= 5:
-                text = '...'
-                if messages.count('...') > 2:
-                    self.sending.release()
-                    return
+        messages = [m[1] for m in self.stack[-8:]]
+        if messages.count(text) >= 5:
+            text = '...'
+            if messages.count('...') > 2:
+                self.sending.release()
+                return
 
         self.__write(('PRIVMSG', self.safe(recipient)), self.safe(text))
         output.normal('(%s) %s' % (self.nick, self.stripcolors(self.clear_format(self.safe(text)))), self.safe(recipient))
-        if log:
-            self.stack_log.append((time.time(), text))
-        else:
-            self.stack.append((time.time(), text))
+        self.stack.append((time.time(), text))
         self.stack = self.stack[-10:]
-        self.stack_log = self.stack_log[-10:]
 
         self.sending.release()
 

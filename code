@@ -14,7 +14,7 @@ from util import output
 
 dotdir = os.path.expanduser('~/.code')
 configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 5
+configv = 6
 
 
 def start():
@@ -138,17 +138,12 @@ def create_default_config(fn):
             '##blacklist': ['!'],
         }
 
-        # Channel code will report all private messages sent to him to.
-        # This includes server notices.
-        #logchan_pm = '#code-log'
-
-        # Enable raw logging of everything code sees.
-        # logged to the folder 'log'
-        logging = False
+        # Show debug/raw server data in console
+        debug = False
 
         # Directories to load user modules from
         # e.g. /path/to/my/modules
-        # extra = ['""" + os.getcwd() + '/modules/' + """']
+        #extra = []
 
         # EOF
         """
@@ -254,7 +249,7 @@ def main(argv=None):
                 )
 
         if not hasattr(module, 'website'):
-            module.website = 'http://code.liamstanley.io'
+            module.website = 'https://www.liamstanley.io/Code.git'
 
         if not hasattr(module, 'prefix'):
             module.prefix = '.'

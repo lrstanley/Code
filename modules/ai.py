@@ -8,10 +8,6 @@ conversation = False
 low = 0
 high = 1
 owner_gone = True
-greet_user = ''
-global lastuser
-lastuser = ''
-greeting = ['Hello', 'Hi', 'Ello']
 random.seed()
 
 # Functions that deal with the state of AI being on or off.
@@ -60,37 +56,6 @@ def goodbye(code, input):
 def similar(a, b):
     seq = difflib.SequenceMatcher(a=a.lower(), b=b.lower())
     return seq.ratio()
-
-
-@hook(event='JOIN')
-def welcomemessage(code, input):
-    """Sends a welcome message on join to users on join, unless in exclude list"""
-    global lastuser  # doesn't sent a message if the last user that joined is the same
-    if not hasattr(code.config, 'greetchans'):
-        return
-    try:
-        greetchanlist, greetchans = code.config.greetchans, []
-        for channel in greetchanlist:
-            greetchans.append(channel.lower())
-        try:
-            excludeuserlist, excludeusers = code.config.excludeusers, []
-            for user in excludeuserlist:
-                excludeusers.append(user.lower())
-        except:
-            excludeusers = []
-        global aistate
-        if any([
-            not aistate, input.nick == code.nick,
-            input.nick.lower() in excludeusers,
-            similar(lastuser, input.nick) > 0.70
-        ]):
-            return
-        elif input.sender.lower() in greetchans:
-            code.say('%s %s, welcome to {b}%s{b}!' % (random.choice(greeting), input.nick, input.sender))
-            lastuser = input.nick
-            return
-    except:
-        return
 
 
 @hook(rule=r'(?i)(hey|hi|hello)\b.*(code|$nickname)\b.*$')

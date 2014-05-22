@@ -30,17 +30,13 @@ def decode(bytes):
 
 class Code(irc.Bot):
     def __init__(self, config):
-        if hasattr(config, "logchan_pm"):
-            lc_pm = config.logchan_pm
+        if hasattr(config, "debug"):
+            debug = config.debug
         else:
-            lc_pm = None
-        if hasattr(config, "logging"):
-            logging = config.logging
-        else:
-            logging = False
+            debug = False
         args = (
             config.nick, config.name, config.channels,
-            config.serverpass, lc_pm, logging
+            config.serverpass, debug
         )
         irc.Bot.__init__(self, *args)
         self.config = config
