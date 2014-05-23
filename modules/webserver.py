@@ -49,7 +49,7 @@ class WebServer(BaseHTTPRequestHandler):
                     for key, value in bot.config().iteritems():
                         # Add configuration to web-requests, but ensure
                         #  no passwords exists to prevent security issues
-                        if not 'pass' in key.lower():
+                        if 'pass' not in key.lower():
                             config[key] = value
                     data = {
                         'chan_data': bot.chan,

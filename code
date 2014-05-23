@@ -108,7 +108,7 @@ def main(argv=None):
     }
 
     for key, value in defaults.iteritems():
-        if not key in config:
+        if key not in config:
             config[key] = value
             continue
         if not config[key]:
