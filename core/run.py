@@ -43,7 +43,7 @@ def run_code(config):
 
     def connect(config):
         p = bot.Code(config)
-        p.run(config.host, config.port)
+        p.run(config['host'], config['port'])
 
     try:
         Watcher()

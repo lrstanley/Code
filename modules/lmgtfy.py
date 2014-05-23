@@ -1,6 +1,5 @@
 import re
 from util.hook import *
-from util.web import shorten
 
 
 @hook(cmds=['lmgtfy'], ex='lmgtfy linux', args=True)
@@ -13,7 +12,4 @@ def lmgtfy(code, input):
     while lmgtfy.find(' ') > -1:
         lmgtfy = lmgtfy.replace(" ", "").strip(" ")
     lmgtfyurl = "http://lmgtfy.com/?q=" + lmgtfy
-    if hasattr(code.config, 'shortenurls'):
-        if code.config.shortenurls:
-            lmgtfyurl = shorten(lmgtfyurl)
     code.say(input.nick + ": " + lmgtfyurl)

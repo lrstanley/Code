@@ -42,15 +42,15 @@ class Origin(object):
 
 
 class Bot(asynchat.async_chat):
-    def __init__(self, nick, name, channels, serverpass=None, debug=False):
+    def __init__(self, nick, name, user, channels, server_password=None, debug=False):
         asynchat.async_chat.__init__(self)
         self.set_terminator('\n')
         self.buffer = ''
 
         self.nick = nick
-        self.user = 'code'
         self.name = name
-        self.serverpass = serverpass
+        self.user = user
+        self.server_password = server_password
 
         self.verbose = True
         self.channels = channels or list()
@@ -88,9 +88,7 @@ class Bot(asynchat.async_chat):
             in Codes responses
         '''
         message = uncharset(message)
-        if not hasattr(self.config, 'textstyles'):
-            return self.clear_format(message)
-        if not self.config.textstyles:
+        if not self.config('text_decorations'):
             return self.clear_format(message)
         try:
             message = message.format(**self.special_chars)
@@ -165,14 +163,14 @@ class Bot(asynchat.async_chat):
                 input = input.encode('utf-8')
         return input
 
-    def run(self, host, port=6667):
+    def run(self, host, port):
         self.initiate_connect(host, port)
 
     def initiate_connect(self, host, port):
         count = 0
         max_attempts = 5
-        if hasattr(self.config, 'delay'):
-            delay = int(self.config.delay)
+        if self.config('connect_delay'):
+            delay = int(self.config('connect_delay'))
         else:
             delay = 20
         while True:
@@ -200,8 +198,8 @@ class Bot(asynchat.async_chat):
     def handle_connect(self):
         if self.verbose:
             output.success('Connected!', 'STATUS')
-        if self.serverpass:
-            self.write(('PASS', self.serverpass), output=False)
+        if self.server_password:
+            self.write(('PASS', self.server_password), output=False)
         self.write(('NICK', self.nick), output=False)
         self.write(('USER', self.user, '+iw', self.nick), self.name, output=False)
 

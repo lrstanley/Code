@@ -52,8 +52,12 @@ def setup(code):
 
 @hook(rule=r'.*', event='251', priority='low')
 def startup(code, input):
-    if hasattr(code.config, 'password'):
-        code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % code.config.password, output=False)
+    if code.config('nickserv_password'):
+        if code.config('nickserv_username'):
+            args = code.config('nickserv_username') + ' ' + code.config('nickserv_password')
+        else:
+            args = code.config('nickserv_password')
+        code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % args, output=False)
         time.sleep(5)
 
     for channel in code.channels:

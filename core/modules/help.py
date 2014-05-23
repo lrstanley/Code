@@ -69,7 +69,7 @@ def help(code, input):
             'Hi, I\'m a bot. Say "{purple}%scmds{c}" to me in private for a list ' +
             'of my commands, or see %s for more general details.' +
             ' {red}%s{c} is my owner.')
-        code.reply(response % (code.prefix, code.config.website, code.config.owner))
+        code.reply(response % (code.prefix, code.config('website'), code.config('owner')))
 
 
 @hook(cmds=['about'], priority='low', rate=60)

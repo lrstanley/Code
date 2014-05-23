@@ -1,9 +1,8 @@
-default.py
-testing.py
+/*.json
+!/example.json
 *.pyc
 *.txt
 *.db
-@*.py
 @*
 *~
 *.out

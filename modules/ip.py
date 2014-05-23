@@ -56,13 +56,11 @@ def ip(code, input):
 @hook(rule=r'.*', event='JOIN', rate=10)
 def geoip(code, input):
     """GeoIP user on join."""
-    if not hasattr(code.config, 'geoip'):
-        return
-    if not code.config.geoip:
+    if not code.config('geoip_on_join'):
         return
 
     allowed = []
-    for channel_name in code.config.geoip:
+    for channel_name in code.config('geoip_on_join', []):
         allowed.append(channel_name.lower())
 
     # Split the line and get all the data

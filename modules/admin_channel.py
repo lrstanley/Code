@@ -109,7 +109,7 @@ def kick(code, input):
         channel = opt
         reasonidx = 3
     reason = ' '.join(text[reasonidx:])
-    if nick != code.config.nick:
+    if nick != code.nick:
         code.write(['KICK', channel, nick, reason])
 kick.commands = ['kick']
 kick.priority = 'high'

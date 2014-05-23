@@ -30,12 +30,12 @@ def slap(code, input):
         return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or \
        text[1].lower() == 'everybody' or text[1].lower() == 'himself':
-        if (input.nick not in code.config.admins):
+        if input.admin:
             text[1] = input.nick
         else:
             text[1] = 'himself'
-    if text[1].lower() in map(str.lower, code.config.admins):
-        if (input.nick not in code.config.admins):
+    if text[1].lower() in code.config('admins'):
+        if input.admin:
             text[1] = input.nick
 
     verb = random.choice((
@@ -57,7 +57,7 @@ def hug(code, input):
     if len(text) < 2 or text[1].startswith('#'):
         return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'himself':
-        if (input.nick not in code.config.admins):
+        if not input.nick:
             text[1] = input.nick
         else:
             text[1] = 'himself'

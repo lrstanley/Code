@@ -84,12 +84,9 @@ def twitter(code, input):
 
 
 def setup(code):
-    if not hasattr(code.config, 'twitter_autopost'):
+    if not code.config('twitter_autopost'):
         return
-    tc = code.config.twitter_autopost
-    if not tc:
-        return
-    thread.start_new_thread(daemon, (code, tc,))
+    thread.start_new_thread(daemon, (code, code.config('twitter_autopost', {}),))
 
 
 def daemon(code, tc):

@@ -1,7 +1,6 @@
 import re
 from urllib2 import urlopen as get
 from util.hook import *
-from util.web import shorten
 from util.web import htmlescape
 
 uri = 'http://www.whatthefuckshouldimakefordinner.com'
@@ -18,9 +17,6 @@ def dinner(code, input):
         if not results:
             return code.say(err)
         url, food = results[0][0], htmlescape(results[0][1])
-        if hasattr(code.config, 'shortenurls'):
-            if code.config.shortenurls:
-                url = shorten(url)
         code.say('WHY DON\'T YOU EAT SOME FUCKING {b}%s{b}. HERE IS THE RECIPE: %s' % (food.upper(), url))
     except:
         return code.say(err)

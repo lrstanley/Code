@@ -45,14 +45,17 @@ class WebServer(BaseHTTPRequestHandler):
                 # 1. args (used for IRC commands)
                 # 2. data (The argument for the IRC command (the arguments argument!))
                 if 'args' not in args or 'data' not in args:
+                    config = {}
+                    for key, value in bot.config().iteritems():
+                        # Add configuration to web-requests, but ensure
+                        #  no passwords exists to prevent security issues
+                        if not 'pass' in key.lower():
+                            config[key] = value
                     data = {
                         'chan_data': bot.chan,
-                        'nick': bot.nick,
-                        'admins': bot.config.admins,
-                        'owner': bot.config.owner,
                         'modules': bot.modules,
-                        'host': bot.config.host,
-                        'port': bot.config.port
+                        'docs': bot.doc,
+                        'config': config
                     }
                     return finish({'success': True, 'data': data})
 
@@ -67,7 +70,7 @@ class WebServer(BaseHTTPRequestHandler):
 
 def checkstate(bot, input, id):
     global password
-    password = bot.config.webserver_pass
+    password = bot.config('webserver_password')
 
     while True:
         if bot.get('webserver.object') != id:
@@ -93,16 +96,10 @@ def setup(code):
     bot.set('webserver.object', id)
 
     # Nasty area, we check for configuration options, some are required and some arent
-    if not hasattr(bot.config, 'run_webserver') or not hasattr(bot.config, 'webserver_pass'):
+    if not bot.config('webserver'):
         return
-    if not bot.config.run_webserver:
-        return
-    if not bot.config.webserver_pass:
-        output.error('To use webserver.py you must have a password setup in default.py!')
-        return
-    if not hasattr(bot.config, 'webserver_port'):
-        port = 8888
-    else:
-        port = bot.config.webserver_port
+    if not bot.config('webserver_password'):
+        return output.warning('To use the builtin webserver, you must set a password in the config', 'WEBSERVER')
+    port = bot.config('webserver_port', 8888)
     thread.start_new_thread(checkstate, (bot, input, id,))
     thread.start_new_thread(init, (str(host), int(port),))

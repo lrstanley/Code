@@ -7,14 +7,14 @@ Documentation: https://www.liamstanley.io/Code.git
 
 import sys
 import os
-import imp
+import re
+import json
 import optparse
-from textwrap import dedent as trim
+from core.run import run
 from util import output
 
 dotdir = os.path.expanduser('~/.code')
-configpath = os.path.expanduser(dotdir + '/default.py')
-configv = 6
+configv = 7
 
 
 def start():
@@ -35,177 +35,24 @@ def start():
     output.normal('Initializing the bot', 'START')
 
 
-def check_python_version():
-    if sys.version_info < (2, 7):
-        output.error('Requires Python 2.7 or later, from www.python.org')
-        sys.exit(1)
-
-
-def create_default_config(fn):
-    f = open(fn, 'w')
-    output = """\
-        # Code Copyright (C) 2012-2014 Liam Stanley
-        # Uncomment things you wish to add to the file
-        # lines with "#" in front of them are comments
-
-        # This needs to be changed based on the current version of Code,
-        # and the version of the file. Note if you are quite a few versions
-        # behind, it might be best just to rename the file and have Code regen it
-        version = """ + str(configv) + """
-
-        # irc bot nickname
-        nick = 'Code'
-
-        # irc server host
-        host = 'irc.example.net'
-
-        # port to use to connect
-        port = 6667
-
-        # serverpass is the server password. Not required if your server doesn't
-        # require any form of authentication.
-        #serverpass = 'example'
-
-        # password is the nickserv password to use when authenticating with
-        # NickServ based IRC servers
-        #password = 'example'
-
-        # channels to auto-join
-        channels = ['#example', '#test']
-
-        # Prefix that Code uses for commands. Default is "."
-        prefix = '.'
-
-        # Auto shorten URL's for URL responses
-        shortenurls = True
-
-        # Ammount of time to delay between failed IRC connections (and reconnections) in seconds
-        delay = 20
-
-        # channels to greet users on channel join
-        # e.g "Hello Code, welcome to #Lounge!"
-        # uncomment to enable (remember this wont work with ai.py disabled.)
-        #greetchans = ['#Example', '#Hugs']
-        # exclude users from receiving a welcome message below.
-        #excludeusers = ['Serious', 'User']
-
-        # your nickname for use in admin functions. You can also specify 'nick@hostmask'
-        # For example: code@unaffiliated/code
-        owner = 'yournickname'
-
-        # These are people who will be able to use admin.py's functions...
-        admins = ['someoneyoutrust']
-
-        # Enable or disable /ALMOST/ all color responses from Code
-        textstyles = True
-
-        # send the location of a user to the channel when they join
-        # This is both semi accurate, and broad enough to not have to worry about privacy
-        # List of channels to check for locations
-        #geoip = ['#stalker']
-
-        # Check each user that joins the channel to see if they are in the
-        # Project Honeypot IP Abuser Database. IP's that are in that Database
-        # Are involved in spam, DDoS, and more.
-        honeypot = True
-
-        # Would you like to run a webserver alongside Code? This is only for development purposes
-        # And is accessable with the raw IRC command, and password below (required)
-        # E.g: http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23MyChannel&data=I+love+trains
-        # Note that port 8888 is used by default. To change this, go into modules/webserver.py and change
-        # "port" to your custom port. NOTE: To use this, you must also remove this module from
-        # the exclude list below, and uncomment both lines
-        #run_webserver = True
-        #webserver_pass = 'herpderptrains'
-
-        # Auto post twitter feeds to specific channels, if uncommented below.
-        # Note, this can be in the form of @usernames, as well as #
-        #twitter_autopost = {
-        #    '#Liam': ['@liamraystanley', '#YOLO'],
-        #    '#coding': ['@programmaster', '#coding']
-        #}
-
-        # Some modules are disabled by default because they require further setup
-        exclude = ['admin_channel', 'webserver']
-
-        # If you want to enumerate a list of modules rather than disabling
-        # some, use "enable = ['example']", which takes precedent over exclude
-        #enable = []
-
-        # Block modules from specific channels
-        # To not block anything for a channel, just don't mention it
-        excludes = {
-            '##blacklist': ['!'],
-        }
-
-        # Show debug/raw server data in console
-        debug = False
-
-        # Directories to load user modules from
-        # e.g. /path/to/my/modules
-        #extra = []
-
-        # EOF
-        """
-    print >> f, trim(output)
-    f.close()
-
-
-def create_configfile(dotdir):
-
-    if not os.path.isdir(dotdir):
-        output.info('Creating a config in directory ~/.code...')
-        try:
-            os.mkdir(dotdir)
-        except Exception, e:
-            output.error('There was a problem creating %s:' % dotdir)
-            output.error(str(e))
-            output.error('Please fix this and then run code again.')
-            sys.exit(1)
-    create_default_config(configpath)
-    output.info(
-        'Config file generated. Please edit it '
-        'at %s and run ./code again.' % configpath
+def parse_json(filename):
+    """ remove //-- and /* -- */ style comments from JSON """
+    comment_re = re.compile(
+        '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
+        re.DOTALL | re.MULTILINE
     )
-    sys.exit(0)
+    with open(filename) as f:
+        content = f.read()
+        match = comment_re.search(content)
+        while match:
+            content = content[:match.start()] + content[match.end():]
+            match = comment_re.search(content)
 
-
-def check_dotdir():
-    if not os.path.isdir(dotdir) or not os.path.isfile(configpath):
-        create_configfile(dotdir)
-
-
-def config_names(config):
-    config = config or 'default'
-
-    def files(d):
-        names = os.listdir(d)
-        return list(os.path.join(d, fn) for fn in names if fn.endswith('.py'))
-
-    here = os.path.join('.', config)
-    if os.path.isfile(here):
-        return [here]
-    if os.path.isfile(here + '.py'):
-        return [here + '.py']
-    if os.path.isdir(here):
-        return files(here)
-
-    there = os.path.join(dotdir, config)
-    if os.path.isfile(there):
-        return [there]
-    if os.path.isfile(there + '.py'):
-        return [there + '.py']
-    if os.path.isdir(there):
-        return files(there)
-
-    sys.exit(1)
+        return json.loads(content)
 
 
 def main(argv=None):
-    # pre-process. Documentation output
-    start()
-
-    # Step One: Parse The Command Line
+    # 1: Parse The Command Line
 
     parser = optparse.OptionParser('%prog [options]')
     parser.add_option(
@@ -214,81 +61,71 @@ def main(argv=None):
     )
     opts, args = parser.parse_args(argv)
 
-    # Step Two: Check Dependencies
+    # 2: Documentation output
+    start()
 
-    check_python_version()  # require python2.7 or later
-    check_dotdir()  # require ~/.code, or make it and exit
+    # 3: Require python 2.7 or later
+    if sys.version_info < (2, 7):
+        output.error('Requires Python 2.7 or later, from www.python.org')
+        sys.exit(1)
 
-    # Step Three: Load The Configurations
-
-    config_modules = []
-    for config_name in config_names(opts.config):
-        name = os.path.basename(config_name).split('.')[0] + '_config'
-        try:
-            module = imp.load_source(name, config_name)
-        except:
-            output.error(
-                'The config file has syntax errors. '
-                'Please fix them and run Code again!'
-            )
-            sys.exit(1)
-        module.filename = config_name
-
-        if hasattr(module, 'version'):
+    # 4. Create ~/.code if not made already
+    if not os.path.isdir(dotdir):
+        if not os.path.isdir(dotdir):
             try:
-                cv = int(module.version)
-                if configv > cv:
-                    output.warning(
-                        'Configuration is not up to date. '
-                        'You will likely recieve errors.'
-                    )
-            except:
-                output.warning(
-                    'Configuration is not up to date. '
-                    'You will likely recieve errors.'
-                )
+                output.info('Creating creating database directory in ~/.code...')
+                os.mkdir(dotdir)
+            except Exception, e:
+                output.error('There was a problem creating %s:' % dotdir)
+                output.error(str(e))
+                output.error('Please fix this and then run code again.')
+                sys.exit(1)
 
-        if not hasattr(module, 'website'):
-            module.website = 'https://www.liamstanley.io/Code.git'
+    # 5: Load The Configuration
+    bot_config = opts.config or 'config.json'
 
-        if not hasattr(module, 'prefix'):
-            module.prefix = '.'
-
-        if not hasattr(module, 'name'):
-            module.name = '\x0307Python IRC Bot - %s' % module.website
-
-        if not hasattr(module, 'port'):
-            module.port = 6667
-
-        if not hasattr(module, 'serverpass'):
-            module.serverpass = None
-
-        if module.host == 'irc.example.net':
-            error = (
-                'You must edit the config file first!\n'
-                'You\'re currently using %s' % module.filename
-            )
-            output.error(error)
-            sys.exit(1)
-
-        config_modules.append(module)
-
-    # Step Four: Load code
+    # and check if exists
+    if not os.path.isfile(bot_config):
+        output.error(
+            'Configuration file "%s" does not exist. Please copy '
+            'the example.json to config.json then run Code again' % bot_config)
 
     try:
-        from core.run import run
-    except ImportError:
-        try:
-            from code import run
-        except ImportError:
-            output.error("Couldn't find code to import")
-            sys.exit(1)
+        config = parse_json(bot_config)
+    except:
+        output.error(
+            'The config file has syntax errors. Please fix them and run Code again!'
+        )
+        sys.exit(1)
+    config['filename'] = bot_config
 
-    # Step Five: Initialise And Run The codeeees
+    defaults = {
+        'website': 'https://www.liamstanley.io/Code.git',
+        'name': '\x0307Code -- Python IRC Bot',
+        'user': 'code',
+        'port': 6667,
+        'server_password': None
+    }
+
+    for key, value in defaults.iteritems():
+        if not key in config:
+            config[key] = value
+            continue
+        if not config[key]:
+            config[key] = value
+
+    if config['host'] == 'irc.example.net':
+        error = (
+            'You must edit the config file first!\n'
+            'You\'re currently using %s' % config.filename
+        )
+        output.error(error)
+        sys.exit(1)
+
+    # 6: Initialise And Run The codeeees
 
     # @@ ignore SIGHUP
-    for config_module in config_modules:
-        run(config_module)  # @@ thread this
+    run(config)  # @@ thread this
 
 if __name__ == '__main__':
     main()

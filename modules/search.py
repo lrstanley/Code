@@ -51,9 +51,6 @@ def search(code, input):
             title = title[0:44] + '[...]'
         # Shorten URL to fit more responses cleaner
         link = url['url']
-        if hasattr(code.config, 'shortenurls'):
-            if code.config.shortenurls:
-                link = util.web.shorten(url['url'])
         output.append(color + r_type.format(title=title, link=link))
     code.say('%s ({b}%s{b}, {b}%s{b} results)' % (' | '.join(output), time, count))
 

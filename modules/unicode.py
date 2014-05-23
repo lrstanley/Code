@@ -142,7 +142,7 @@ def u_converter(string):
     return chinese
 
 
-@hook(cmds=['bytes'], ex='bytes \xe3\x8b\xa1', args=True)
+@hook(cmds=['bytes'], ex='bytes \\xe3\\x8b\\xa1', args=True)
 def bytes(code, input):
     """Show the input as pretty printed bytes."""
     b = input.bytes

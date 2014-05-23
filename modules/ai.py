@@ -15,7 +15,7 @@ random.seed()
 
 @hook(cmds=['off'], priority='high')
 def off(code, input):
-    if input.nick == code.config.owner:
+    if input.owner:
         code.reply('{b}{red}Feature has been disabled.')
         global aistate
         aistate = False
@@ -25,7 +25,7 @@ def off(code, input):
 
 @hook(cmds=['on'], priority='high')
 def on(code, input):
-    if input.nick == code.config.owner:
+    if input.owner:
         code.reply('{b}{green}Feature has been enabled.')
         global aistate
         aistate = True

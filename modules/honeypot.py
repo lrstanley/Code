@@ -12,9 +12,7 @@ db = []
 @hook(rule=r'.*', event='JOIN', rate=10)
 def auto_honeypot(code, input):
     """Check joining users against the Project Honeypot Database"""
-    if not hasattr(code.config, 'honeypot'):
-        return
-    if not code.config.honeypot:
+    if not code.config('honeypot_on_join'):
         return
     global db
 

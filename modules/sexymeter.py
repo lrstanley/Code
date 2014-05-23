@@ -27,7 +27,7 @@ def sexymeter(code, input):
         if nick.lower() == code.nick.lower():
             nick = 'myself'
             rand = '100'
-        elif text[1].lower() in map(str.lower, code.config.admins):
+        elif text[1].lower() in code.config('admins', []):
             rand = str(random.randint(81, 100))
         elif nick.lower() == 'myself' or nick.lower() == 'me':
             nick = input.nick

@@ -28,41 +28,43 @@ def decode(bytes):
 
 
 class Code(irc.Bot):
-    def __init__(self, config):
-        if hasattr(config, "debug"):
-            debug = config.debug
-        else:
-            debug = False
+    def __init__(self, raw_config):
+        self.raw_config = raw_config
+        debug = self.config('debug', False)
         args = (
-            config.nick, config.name, config.channels,
-            config.serverpass, debug
+            raw_config['nick'], raw_config['name'], raw_config['user'],
+            raw_config['channels'], raw_config['server_password'], debug
         )
         irc.Bot.__init__(self, *args)
-        self.config = config
-        self.prefix = self.config.prefix
+        self.prefix = self.config('prefix', '.')
         self.doc = {}
         self.stats = {}
         self.times = {}
         self.modules = []
         self.cmds = {}
-        if hasattr(config, 'excludes'):
-            self.excludes = config.excludes
+        self.excludes = self.config('excluded_per_channel', [])
         self.setup()
+
+    def config(self, key=None, default=None):
+        if not key:
+            return self.raw_config
+        if key in self.raw_config:
+            return self.raw_config[key]
+        else:
+            if default:
+                return default
+            return False
 
     def setup(self):
         self.variables = {}
 
         filenames = []
-        if not hasattr(self.config, 'enable'):
-            for fn in os.listdir(os.path.join(home, 'modules')):
-                if fn.endswith('.py') and not fn.startswith('_'):
-                    filenames.append(os.path.join(home, 'modules', fn))
-        else:
-            for fn in self.config.enable:
-                filenames.append(os.path.join(home, 'modules', fn + '.py'))
+        for fn in os.listdir(os.path.join(home, 'modules')):
+            if fn.endswith('.py') and not fn.startswith('_'):
+                filenames.append(os.path.join(home, 'modules', fn))
 
-        if hasattr(self.config, 'extra'):
-            for fn in self.config.extra:
+        if self.config('extra'):
+            for fn in self.config('extra'):
                 if os.path.isfile(fn):
                     filenames.append(fn)
                 elif os.path.isdir(fn):
@@ -78,7 +80,7 @@ class Code(irc.Bot):
                 filenames.append(os.path.join(home, 'core/modules', fn))
 
         # Should fix
-        excluded_modules = getattr(self.config, 'exclude', [])
+        excluded_modules = self.config('excluded_modules', [])
         filenames = sorted(list(set(filenames)))
         # Reset some variables that way we don't get dups
         self.modules = []
@@ -131,7 +133,9 @@ class Code(irc.Bot):
             # print name, func
             self.doc[name] = {'commands': [], 'info': None, 'example': None}
             if func.__doc__:
-                doc = func.__doc__
+                doc = func.__doc__.replace('\n', '')
+                while '  ' in doc:
+                    doc = doc.replace('  ', ' ')
             else:
                 doc = None
             if hasattr(func, 'example'):
@@ -174,7 +178,7 @@ class Code(irc.Bot):
 
                     # 2) e.g. (['p', 'q'], '(.*)')
                     elif len(func.rule) == 2 and isinstance(func.rule[0], list):
-                        prefix = self.config.prefix
+                        prefix = self.prefix
                         commands, pattern = func.rule
                         for command in commands:
                             command = r'(?i)(\%s)\b(?: +(?:%s))?' % (
@@ -196,7 +200,7 @@ class Code(irc.Bot):
                 self.doc[name]['commands'] = list(func.commands)
                 for command in list(func.commands):
                     template = r'(?i)^\%s(%s)(?: +(.*))?$'
-                    pattern = template % (self.config.prefix, command)
+                    pattern = template % (self.prefix, command)
                     regexp = re.compile(pattern)
                     bind(self, func.priority, regexp, func)
 
@@ -240,9 +244,9 @@ class Code(irc.Bot):
                 s.args = args
                 if not hasattr(s, 'data'):
                     s.data = {}
-                s.admin = origin.nick in self.config.admins
+                s.admin = origin.nick in self.config('admins', [])
                 if not s.admin:
-                    for each_admin in self.config.admins:
+                    for each_admin in self.config('admins', []):
                         re_admin = re.compile(each_admin)
                         if re_admin.findall(origin.host):
                             s.admin = True
@@ -251,9 +255,9 @@ class Code(irc.Bot):
                             re_host = re.compile(temp[1])
                             if re_host.findall(origin.host):
                                 s.admin = True
-                s.owner = origin.nick + '@' + origin.host == self.config.owner
+                s.owner = origin.nick + '@' + origin.host == self.config('owner')
                 if not s.owner:
-                    s.owner = origin.nick == self.config.owner
+                    s.owner = origin.nick == self.config('owner')
                 if s.owner:
                     s.admin = True
                 s.host = origin.host
@@ -323,14 +327,6 @@ class Code(irc.Bot):
         except:
             self.error(origin)
 
-    def limit(self, origin, func):
-        if origin.sender and origin.sender.startswith('#'):
-            if hasattr(self.config, 'limit'):
-                limits = self.config.limit.get(origin.sender)
-                if limits and (func.__module__ not in limits):
-                    return True
-        return False
-
     def dispatch(self, origin, args):
         bytes, event, args = args[0], args[1], args[2:]
         text = decode(bytes)
@@ -344,8 +340,6 @@ class Code(irc.Bot):
 
                     match = regexp.match(text)
                     if match:
-                        if self.limit(origin, func):
-                            continue
 
                         code = self.wrapped(origin, text, match)
                         input = self.input(
