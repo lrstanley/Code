@@ -53,7 +53,7 @@
         // or "#IRCcloud": ["@IRCcloud"]
     },
     // Enable this to output all data to console
-    "debug": true,
+    "debug": false,
     // Extra modules not in the modules directory
     "extra": [
         // e.g. "/path/to/my/modules"
