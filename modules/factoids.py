@@ -72,7 +72,7 @@ def factoid_manage(data, code, input):
             elif len(args.strip().split()) > 1:
                 db[name] = args.split(' ', 1)[1]
                 database.set(code.nick, db, 'factoids')
-                return code.reply('{green}Successfully create the factoid "{purple}%s{green}"!' % name)
+                return code.reply('{green}Successfully created the factoid "{purple}%s{green}"!' % name)
         return code.reply(('{red}Use "{purple}? add <name> <args>{red}" to create a new factoid. Use <py>, '
                            '<act>, <url> in front of args for different responses.'))
     elif cmd.lower() in ['del', 'rem', 'delete', 'remove']:
