@@ -8,6 +8,7 @@ https://www.liamstanley.io/Code.git
 from util import output
 import re
 import time
+import os
 
 
 def trigger_250(code, line):
@@ -48,10 +49,8 @@ def trigger_433(code, line):
 
 
 def trigger_437(code, line):
-    re_tmp = r'^.*?\:(.*?)$'
-    msg = re.compile(re_tmp).match(line).groups()
-    output.error(msg)
-    sys.exit(1)
+    output.error(line.split(':', 2)[2])
+    os._exit(1)
 
 
 def trigger_NICK(code, line):
@@ -81,6 +80,9 @@ def trigger_PRIVMSG(code, line):
 def trigger_NOTICE(code, line):
     re_tmp = r'^\:(.*?) NOTICE (.*?) \:(.*?)$'
     nick, sender, msg = re.compile(re_tmp).match(line).groups()
+    if 'Invalid password for ' in msg:
+        output.error('Invalid NickServ password')
+        os._exit(1)
     output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
 
 
