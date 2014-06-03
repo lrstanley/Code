@@ -12,7 +12,7 @@ def f_reload(code, input):
     """Reloads a module, for use by admins only."""
 
     name = input.group(2)
-    if name == code.config.owner:
+    if name == code.config('owner'):
         return code.reply('What?')
 
     if (not name) or (name == '*'):
