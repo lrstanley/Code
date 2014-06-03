@@ -19,7 +19,7 @@ $('.modal-password').modal({
 
 function populate() {
     // $.cookie('code_pass')
-    $.get('/', $.param({pass: 'standerp', callback: '?'}))
+    $.get('/', $.param({pass: 'testing123', callback: '?'}))
         .done(function(data) {
             code = data;
         });
