@@ -19,7 +19,8 @@ def movie_search(code, input):
         # Pull response from API, and load into a JSON based dict()
         data = json.loads(urllib2.urlopen(search_uri % (search)).read())
 
-        # If we get an error from the API. (Other errors are caught from the try:;except:)
+        # If we get an error from the API. (Other errors are caught from the
+        # try:;except:)
         if data['Response'] == 'False':
             return code.reply(error)
 
@@ -43,7 +44,8 @@ def movie(code, input):
             id = id.split('/', 1)[0]
         data = json.loads(urllib2.urlopen(id_uri % id).read())
 
-        # If we get an error from the API. (Other errors are caught from the try:;except:)
+        # If we get an error from the API. (Other errors are caught from the
+        # try:;except:)
         if data['Response'] == 'False':
             return
 

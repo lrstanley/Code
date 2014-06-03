@@ -24,7 +24,7 @@ Easy-To-use API
 - When creating your own modules, it is always very easy to have a fully documented API and easy to understand functions.
 
 Open-Source
-- Found a bug, feature, or technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code) page to make requests and post bugs. Heck, even fork Code as your own and make your own modifications!</dd>
+- Found a bug, feature, or technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code) page to make requests and post bugs. Heck, even fork Code as your own and make your own modifications!
 
 Configuration
 - By default, Code has the ability to change his username (including NickServ Authentication), server (including server password), and excluded channel/modules, and more.
@@ -40,12 +40,11 @@ Unix & Unix-like OS:
 --------------------
 
     1) Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
-       - (packaged in lots of *nix distros)
     2) Run `git clone https://github.com/Liamraystanley/Code.git`
        - if you do not have git installed, simply install it via your package manager.
          e.i, `sudo apt-get install git`
-    3) Run `./code`- this creates a default config file 
-    4) Edit ~/.code/default.py 
+    3) rename the `example.json` configuration file to `config.json` (`cp -rf example.json config.json`)
+    4) Edit `config.json`
     5) Run `./code` - this now runs code with your settings 
 
 Full command would be: 
@@ -66,34 +65,15 @@ Windows:
 
     1) Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
     2) Download Code here: `https://github.com/Liamraystanley/Code/zipball/master` and unzip it.
-    3) Configure Code's default.py file, located in your user directory.
-       - This is often, `C:\\users\(your username)\.code\default.py`.
-       - Note, notepad is not prefered. If anything, use Notepad++ under windows.
+    3) Configure Code's configuration file, located in the bot directory.
+       - Copy and rename `example.json` to `config.json`
+       - Note, notepad is not prefered. If anything, use Notepad++ under Windows.
     3) You can open up command prompt, `cd` to Codes directory, and execute Code with `python code`.
        - Note, if command prompt says that `python` is not a internal or external command/program,
          that means Python failed to be added to your system-wide %PATH% file.
          So, you need to add it to the %PATH% variable.
          Feel free to google that one, Code is not COMPLETELY noob-friendly.
 
-
-Configuration & Personalization 
-===============================
-_______________________________
-
-Warning! Once you install Code using the method above, you need to configure him to point to the server you wish to connect him to, as well as add a module path, and administrators/owners.
-
-Unix & Unix-like OS: 
---------------------
-
-Edit the file located at `~/.code/default.py`.
-
-Windows
--------
-
-Edit the file located in your Documents folder, which should be located at: 
-`C:\\users\myusername\.code\default.py` (for Windows Vista/7/8)
-`default.py` might be located in the same spot as the UNIX location listed above.
-You should see configuration file.
 
 Licensing
 ---------

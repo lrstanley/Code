@@ -19,7 +19,8 @@ def roulette(code, input):
             nick = input.nick
     else:
         nick = input.nick
-    code.say('*Points gun at %s, and pulls the trigger* %s %s' % (nick, nick, response))
+    code.say('*Points gun at %s, and pulls the trigger* %s %s' %
+             (nick, nick, response))
 
 
 @hook(cmds=['slap'], rate=20, args=True)
@@ -47,7 +48,8 @@ def slap(code, input):
         'to death', 'out of the channel', 'into a hole, till death',
         'into mid-air disintegration', 'into a pancake'
     ))
-    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', verb, text[1], afterfact, '\x01'])
+    code.write(['PRIVMSG', input.sender, ' :\x01ACTION',
+               verb, text[1], afterfact, '\x01'])
 
 
 @hook(cmds=['hug'], rate=5)
@@ -62,5 +64,7 @@ def hug(code, input):
         else:
             text[1] = 'himself'
     types = random.choice(('hugs', 'snuggles'))
-    hugtype = random.choice(('real tight', 'strongly', 'like a bear', 'tight', ''))
-    code.write(['PRIVMSG', input.sender, ' :\x01ACTION', types, text[1], hugtype, '\x01'])
+    hugtype = random.choice(
+        ('real tight', 'strongly', 'like a bear', 'tight', ''))
+    code.write(['PRIVMSG', input.sender, ' :\x01ACTION',
+               types, text[1], hugtype, '\x01'])

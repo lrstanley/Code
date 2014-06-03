@@ -22,13 +22,13 @@ from util.hook import *
 #             timer = threading.Timer(refresh_delay, close, ())
 #             code.data['startup.setup.timer'] = timer
 #             code.data['startup.setup.timer'].start()
-#             # print "PING!"
+# print "PING!"
 #             code.write(('PING', code.config.host))
 #         code.data['startup.setup.pingloop'] = pingloop
 
 #         def pong(code, input):
 #             try:
-#                 # print "PONG!"
+# print "PONG!"
 #                 code.data['startup.setup.timer'].cancel()
 #                 time.sleep(refresh_delay + 60.0)
 #                 pingloop()
@@ -39,7 +39,7 @@ from util.hook import *
 #         pong.rule = r'.*'
 #         code.variables['pong'] = pong
 
-#         # Need to wrap handle_connect to start the loop.
+# Need to wrap handle_connect to start the loop.
 #         inner_handle_connect = code.handle_connect
 
 #         def outer_handle_connect():
@@ -54,7 +54,8 @@ from util.hook import *
 def startup(code, input):
     if code.config('nickserv_password'):
         if code.config('nickserv_username'):
-            args = code.config('nickserv_username') + ' ' + code.config('nickserv_password')
+            args = code.config('nickserv_username') + ' ' + \
+                code.config('nickserv_password')
         else:
             args = code.config('nickserv_password')
         code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % args, output=False)

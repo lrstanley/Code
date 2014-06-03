@@ -27,7 +27,8 @@ def trigger_255(code, line):
 def trigger_353(code, line):
     # NAMES event
     channel, user_list = line[1::].split(':', 1)
-    channel, user_list = '#' + channel.split('#', 1)[1].strip(), user_list.strip().split()
+    channel, user_list = '#' + \
+        channel.split('#', 1)[1].strip(), user_list.strip().split()
     if channel not in code.chan:
         code.chan[channel] = {}
     for user in user_list:
@@ -38,11 +39,13 @@ def trigger_353(code, line):
             name, normal, voiced, op = user[1::], True, True, False
         else:
             name, normal, voiced, op = user, True, False, False
-        code.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op, 'count': 0, 'messages': []}
+        code.chan[channel][name] = {'normal': normal, 'voiced':
+                                    voiced, 'op': op, 'count': 0, 'messages': []}
 
 
 def trigger_433(code, line):
-    output.warning('Nickname %s is already in use. Trying another..' % code.nick)
+    output.warning('Nickname %s is already in use. Trying another..' %
+                   code.nick)
     nick = code.nick + '_'
     code.write(('NICK', nick))
     code.nick = nick.encode('ascii', 'ignore')
@@ -70,11 +73,14 @@ def trigger_PRIVMSG(code, line):
     # Stuff for user_list
     if sender.startswith('#'):
         if nick not in code.chan[sender]:
-            code.chan[sender][nick] = {'normal': True, 'voiced': False, 'op': False, 'count': 0, 'messages': []}
+            code.chan[sender][nick] = {'normal': True, 'voiced':
+                                       False, 'op': False, 'count': 0, 'messages': []}
         code.chan[sender][nick]['count'] += 1
-        code.chan[sender][nick]['messages'].append({'time': int(time.time()), 'message': msg})
+        code.chan[sender][nick]['messages'].append(
+            {'time': int(time.time()), 'message': msg})
         # Ensure it's not more than 20 of the last messages
-        code.chan[sender][nick]['messages'] = code.chan[sender][nick]['messages'][-20:]
+        code.chan[sender][nick]['messages'] = code.chan[
+            sender][nick]['messages'][-20:]
 
 
 def trigger_NOTICE(code, line):
@@ -88,8 +94,10 @@ def trigger_NOTICE(code, line):
 
 def trigger_KICK(code, line):
     re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) KICK (.*?) (.*?) \:(.*?)$'
-    nick, ident, host, sender, kicked, reason = re.compile(re_tmp).match(line).groups()
-    output.normal('%s has kicked %s from %s. Reason: %s' % (nick, kicked, sender, reason), 'KICK', 'red')
+    nick, ident, host, sender, kicked, reason = re.compile(
+        re_tmp).match(line).groups()
+    output.normal('%s has kicked %s from %s. Reason: %s' %
+                  (nick, kicked, sender, reason), 'KICK', 'red')
 
     # Stuff for user_list
     tmp = line.split('#', 1)[1].split()
@@ -153,7 +161,8 @@ def trigger_MODE(code, line):
         names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
         for user in tmp:
             if user['mode'] in names and user['sign'] in names:
-                mode, name, sign = names[user['mode']], user['name'], names[user['sign']]
+                mode, name, sign = names[user['mode']
+                                         ], user['name'], names[user['sign']]
                 code.chan[channel][name][mode] = sign
                 if mode == 'op' and sign:
                     code.chan[channel][name]['voiced'] = True
@@ -163,7 +172,8 @@ def trigger_JOIN(code, line):
     name = line[1::].split('!', 1)[0]
     channel = line.split('JOIN', 1)[1].strip()
     if name != code.nick:
-        code.chan[channel][name] = {'normal': True, 'voiced': False, 'op': False, 'count': 0, 'messages': []}
+        code.chan[channel][name] = {'normal': True, 'voiced':
+                                    False, 'op': False, 'count': 0, 'messages': []}
 
 
 def trigger_PART(code, line):

@@ -91,9 +91,11 @@ def tell_trigger(code, input):
         if (len(queue) + 25 + len(entry['msg'])) > maxchars:
             code.say('%s %s' % (note_msg, queue))
             lines += 1
-            queue = template % (time_diff(entry['time']), entry['sender'], entry['msg'])
+            queue = template % (
+                time_diff(entry['time']), entry['sender'], entry['msg'])
         else:
-            tmp = template % (time_diff(entry['time']), entry['sender'], entry['msg'])
+            tmp = template % (
+                time_diff(entry['time']), entry['sender'], entry['msg'])
             if queue:
                 queue = queue + ' '
             queue = queue + tmp

@@ -16,8 +16,9 @@ def sexymeter(code, input):
     if not name:
         nick = input.nick
         rand = str(random.randint(0, 100))
-        code.say('Rating {b}%s{b} on a scale of 1-100 of sexiness. Result: {b}%s{b}. {b}%s{b}' % (nick, rand,
-                 sexycomment(rand)))
+        code.say(
+            'Rating {b}%s{b} on a scale of 1-100 of sexiness. Result: {b}%s{b}. {b}%s{b}' % (nick, rand,
+                                                                                             sexycomment(rand)))
     else:
         nick = text[1]
         rand = str(random.randint(0, 100))
@@ -33,16 +34,20 @@ def sexymeter(code, input):
             nick = input.nick
         else:
             nick = text[1]
-        code.say('Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (nick, rand,
-                 sexycomment(rand)))
+        code.say(
+            'Rating %s on a scale of 1-100 of sexiness. Result: %s. %s' % (nick, rand,
+                                                                           sexycomment(rand)))
 
 
 def sexycomment(rand):
     """finds a random comment dependant on what the rating was."""
     rand = int(rand)
-    high = ['Now that\'s sexy!', 'Damn!', 'Nice!', 'Sweet!', 'Very sexy!', 'You\'re on fire!']
-    medium = ['You could do better..', 'Nice man..', 'That\'s alright..', 'Not as sexy as me!']
-    low = ['Try harder next time...', 'Ouch.', 'Uhh...', 'You don\'t even match me!', 'HA!', 'Oh man! DX']
+    high = ['Now that\'s sexy!', 'Damn!', 'Nice!',
+            'Sweet!', 'Very sexy!', 'You\'re on fire!']
+    medium = ['You could do better..', 'Nice man..',
+              'That\'s alright..', 'Not as sexy as me!']
+    low = ['Try harder next time...', 'Ouch.', 'Uhh...',
+           'You don\'t even match me!', 'HA!', 'Oh man! DX']
     if rand == 100:
         response = 'You\'re perfect!'
     if rand > 80:

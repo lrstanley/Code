@@ -6,7 +6,8 @@ from util.hook import *
 def lmgtfy(code, input):
     """Let my Google That For You"""
     lmgtfy = input.group(2)
-    lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy).replace(".", " ").replace(" ", "+")
+    lmgtfy = re.sub(r"[^\w\s]", ' ', lmgtfy).replace(
+        ".", " ").replace(" ", "+")
     while lmgtfy.find('++') > -1:
         lmgtfy = lmgtfy.replace("++", "+").strip("+")
     while lmgtfy.find(' ') > -1:

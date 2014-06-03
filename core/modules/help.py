@@ -63,12 +63,14 @@ def help(code, input):
                 listcmds = ' {green}(%s){c}' % ', '.join(cmds)
             code.say('{purple}{b}Help{c}%s{b}: %s' % (listcmds, mod['info']))
         if mod['example']:
-            code.say('{purple}{b}Example{b}{c}: %s%s' % (code.prefix, mod['example']))
+            code.say('{purple}{b}Example{b}{c}: %s%s' %
+                     (code.prefix, mod['example']))
     else:
         response = (
             'Hi, I\'m a bot. Say "{purple}%scmds{c}" to me in private for a list ' +
             'of my commands, or see %s for more general details. {red}%s{c} is my owner.')
-        code.msg(input.sender, response % (code.prefix, code.config('website'), code.config('owner')), shorten_urls=False)
+        code.msg(input.sender, response %
+                 (code.prefix, code.config('website'), code.config('owner')), shorten_urls=False)
 
 
 @hook(cmds=['about'], priority='low', rate=60)
@@ -83,7 +85,8 @@ def about(code, input):
 
 @hook(cmds=['issue', 'report', 'bug', 'issues'], priority='low', rate=60)
 def issue(code, input):
-    code.reply('Having an issue with {b}' + code.nick + '{b}? Post a bug report here:')
+    code.reply('Having an issue with {b}' +
+               code.nick + '{b}? Post a bug report here:')
     code.say('https://github.com/Liamraystanley/Code/issues/new')
 
 

@@ -95,7 +95,8 @@ def tr(code, input):
             msg = msg.decode('utf-8')
         if msg:
             msg = util.web.decode(msg)
-            msg = '"%s" ({b}{purple}%s{c}{b} to {b}{purple}%s{c}{b})' % (msg, src, dest)
+            msg = '"%s" ({b}{purple}%s{c}{b} to {b}{purple}%s{c}{b})' % (
+                msg, src, dest)
         else:
             msg = '{red}The %s to %s translation failed, sorry!' % (src, dest)
 

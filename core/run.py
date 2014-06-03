@@ -15,6 +15,7 @@ from util import output
 
 
 class Watcher(object):
+
     def __init__(self):
         self.child = os.fork()
         if self.child != 0:

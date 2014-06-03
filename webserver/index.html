@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Code &middot; Python IRC Bot</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
+   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div id="page"></div>
+
+    <!-- Non page specific stuff -->
+    <div class="modal fade modal-password">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-body">
+            <center>
+                <h2 id="password-text">Password:</h2>
+                <div class="input-group" id="password-box">
+                  <input type="password" class="form-control" name="password" id="password" required>
+                  <span class="input-group-btn">
+                     <button type="button" class="btn btn-primary" onclick="login();">Login</button>
+                  </span>
+                </div><!-- /input-group -->
+            </center>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <script src="/js/handlebars.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

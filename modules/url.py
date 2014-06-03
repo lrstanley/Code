@@ -19,7 +19,8 @@ def get_url_data(url):
         if not uri.info().maintype == 'text':
             return False
         data = uri.read(1024)  # Only read soo much of a large site.
-        title = re.compile('<title>(.*?)</title>', re.IGNORECASE | re.DOTALL).search(data).group(1)
+        title = re.compile('<title>(.*?)</title>',
+                           re.IGNORECASE | re.DOTALL).search(data).group(1)
         title = web.htmlescape(title)
         title = title.replace('\n', '').replace('\r', '')
 
@@ -71,7 +72,8 @@ def get_title_auto(code, input):
         data = get_url_data(url)
         if data:
             url = clean_url(url)
-            output.append('{blue}{b}%s{b}{c} - %s' % (web.uncharset(data), url))
+            output.append('{blue}{b}%s{b}{c} - %s' %
+                          (web.uncharset(data), url))
     if not output:
         return
     return code.say(' | '.join(output))

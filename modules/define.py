@@ -25,7 +25,8 @@ def define(code, input):
         return code.say('Definition for {b}%s{b} not found' % input.group(2))
 
     # Everything below here is for colors only
-    word = '{b}{purple}%s{c}{b}: %s' % (data['query'], word[len(data['query']) + 1::])
+    word = '{b}{purple}%s{c}{b}: %s' % (
+        data['query'], word[len(data['query']) + 1::])
     word = word.replace('(', '{purple}{b}(').replace(')', '){b}{c}')
     if len(word) > 250:
         word = word[:245] + '{c}{b}[...]'

@@ -115,11 +115,10 @@ env = {'__builtins__': None, 'null': None, 'true': True, 'false': False}
 
 
 def haste(text, extension='txt'):
-    """ pastes text to a hastebin server """
     uri = urllib2.Request(paste_url + '/documents', text)
     page = urllib2.urlopen(uri).read()
     data = loads(page)
-    return ('%s/%s.%s' % (paste_url, data['key'], extension))
+    return '%s/%s.%s' % (paste_url, data['key'], extension)
 
 
 def shorten(url):
