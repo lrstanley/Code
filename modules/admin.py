@@ -57,7 +57,7 @@ def msg(code, input):
     msg = input.group(2).split()
     if len(msg) < 2:
         return code.say('{red}{b}Incorrect usage!: %smsg <channel|username> <msg>' % code.prefix)
-    a, b = msg[0], msg[1:]
+    a, b = msg[0], ' '.join(msg[1:])
     if not input.owner and a.lower() in ['chanserv', 'nickserv', 'hostserv', 'memoserv', 'saslserv', 'operserv']:
         return code.say('{red}{b}You\'re not authorized to message those services!')
     code.msg(a, b)
