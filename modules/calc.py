@@ -12,7 +12,8 @@ uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 @hook(cmds=['c', 'calc', 'calculate'], ex='calc 5 + 3', args=True)
 def calc(code, input):
     try:
-        data = json.loads(urllib2.urlopen(uri % urllib.quote(input.group(2).replace('^', '**'))).read())
+        data = json.loads(urllib2.urlopen(uri %
+                          urllib.quote(input.group(2).replace('^', '**'))).read())
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip()
@@ -29,7 +30,8 @@ def py(code, input):
     try:
         answer = urllib2.urlopen(uri + urllib.quote(query)).read()
         if answer:
-            answer = answer.replace('\n', ' ').replace('\t', ' ').replace('\r', '')
+            answer = answer.replace('\n', ' ').replace(
+                '\t', ' ').replace('\r', '')
             return code.reply(answer)
         else:
             return code.reply('Sorry, no {b}%s{b}')

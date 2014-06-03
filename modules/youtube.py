@@ -20,7 +20,8 @@ def youtube(code, input):
         id = id[0][2].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
         data = json.loads(urllib2.urlopen(api_url % id).read())['data']
 
-        # Set some variables, because we'll have to modify a vew before we spit them back out!
+        # Set some variables, because we'll have to modify a vew before we spit
+        # them back out!
         reply = create_response(data, url=False)
         return code.say(' - '.join(reply))
     except:
@@ -38,7 +39,8 @@ def get_search(code, input):
         numerical = 1
     try:
         query = input.group(2).replace(' ', '+')
-        data = json.loads(urllib2.urlopen(search_url % (str(numerical), query)).read())['data']
+        data = json.loads(urllib2.urlopen(search_url %
+                          (str(numerical), query)).read())['data']
         reply = create_response(data['items'][0], url=True)
         return code.say(' - '.join(reply))
     except:
@@ -69,7 +71,8 @@ def create_response(data, url=False):
     if 'viewCount' in data:
         reply.append('%s {b}views{b}' % data['viewCount'])
     upload_time = parse_date(data['uploaded'])
-    reply.append('by {fuchsia}{b}%s{b}{c} on {b}%s{b}' % (data['uploader'], upload_time))
+    reply.append('by {fuchsia}{b}%s{b}{c} on {b}%s{b}' %
+                 (data['uploader'], upload_time))
     # Dis shit not be child appr0ved
     if 'contentRating' in data:
         reply.append('{red}{b}NSFW{b}{red}')

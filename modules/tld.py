@@ -41,7 +41,8 @@ def gettld(code, input):
         if matches:
             matches = matches[0]
             dict_val = dict()
-            dict_val["country"], dict_val["expl"], dict_val["notes"], dict_val["idn"], dict_val["dnssec"], dict_val["sld"] = matches
+            dict_val["country"], dict_val["expl"], dict_val["notes"], dict_val[
+                "idn"], dict_val["dnssec"], dict_val["sld"] = matches
             for key in dict_val:
                 if dict_val[key] == "&#160;":
                     dict_val[key] = "N/A"
@@ -53,5 +54,6 @@ def gettld(code, input):
                 dict_val["idn"], dict_val["dnssec"], dict_val["sld"]
             )
         else:
-            reply = "No matches found for TLD: {0}".format(unicode(input.group(2)))
+            reply = "No matches found for TLD: {0}".format(
+                unicode(input.group(2)))
         code.say(reply)

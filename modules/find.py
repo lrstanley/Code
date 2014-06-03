@@ -20,7 +20,8 @@ def findandreplace(code, input):
         #   are considered flags (only g and i now have meaning)
         flags = re.match(r'\w*', line[2], re.U).group(0)
 
-    count = 'g' in flags and -1 or 1  # Replace unlimited times if /g, else once
+    # Replace unlimited times if /g, else once
+    count = 'g' in flags and -1 or 1
 
     if 'i' in flags:
         regex = re.compile(re.escape(line[0]), re.U | re.I)
@@ -47,5 +48,6 @@ def findandreplace(code, input):
     # Save the new "edited" message.
     # Remember, the above index is reversed so unreverse it.
     new_id = (len(umsg) - 1) - msg_index
-    code.chan[input.sender][input.nick]['messages'][new_id]['message'] = new_msg
+    code.chan[input.sender][input.nick][
+        'messages'][new_id]['message'] = new_msg
     code.say('%s {b}meant{b} to say: %s' % (input.nick, new_msg))

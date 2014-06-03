@@ -25,7 +25,8 @@ def empty(code, input, response=None):
 
 
 def error(code):
-    code.say('Incorrect usage! Try: "{b}{purple}%shelp <command>{b}{r}"' % code.prefix)
+    code.say('Incorrect usage! Try: "{b}{purple}%shelp <command>{b}{r}"' %
+             code.prefix)
 
 
 def admin(code, input):
@@ -48,9 +49,10 @@ def owner(code, input):
 #    in bot.py and defaults in bind_commands() (mainly admin/owner)
 
 
-def hook(commands=None, command=None, cmds=None, cmd=None, example=None, ex=None,
-         rate=None, rule=None, priority=None, thread=None, event=None, args=None,
-         admin=None, owner=None, voiced=None, op=None):
+def hook(
+    commands=None, command=None, cmds=None, cmd=None, example=None, ex=None,
+    rate=None, rule=None, priority=None, thread=None, event=None, args=None,
+        admin=None, owner=None, voiced=None, op=None):
     def add_attribute(func):
         # This is kinda ugly looking, but it does quite the job.
         if commands is not None:

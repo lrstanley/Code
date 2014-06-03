@@ -36,5 +36,6 @@ def domain(code, input):
         r = '{%s}%s{c}' % (color, domain['domain'])
         domains.append(r.replace('.', '{%s}.' % color))
         # Add colors to the above twice because some clients auto parse URLs.
-        #  and... hopefully by adding colorcodes in the middle we can prevent that
+        # and... hopefully by adding colorcodes in the middle we can prevent
+        # that
     code.say('Domains: %s' % ' | '.join(domains))

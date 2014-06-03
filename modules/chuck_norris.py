@@ -9,4 +9,5 @@ def chuck(code, input):
         data = web.json('http://api.icndb.com/jokes/random')
     except:
         return code.say('Chuck seems to be in the way. I\'m not fucking with him.')
-    code.say('#{blue}%s{c} - %s' % (data['value']['id'], web.htmlescape(data['value']['joke'])))
+    code.say('#{blue}%s{c} - %s' %
+             (data['value']['id'], web.htmlescape(data['value']['joke'])))

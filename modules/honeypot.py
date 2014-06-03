@@ -22,7 +22,8 @@ def auto_honeypot(code, input):
     except:
         return output.error('Failed to get IP information. Project Honeypot seems to be down!')
     if abuser:
-        # First, we need to check if we've already checked for it, and got a match...
+        # First, we need to check if we've already checked for it, and got a
+        # match...
         if ip in db:
             return
         db.append(ip)
@@ -45,7 +46,8 @@ def honeypot(code, input):
 
 def check(ip):
     ip = str(ip)
-    data = web.get(base % web.quote(ip)).read().replace('\n', '').replace('\r', '')
+    data = web.get(base %
+                   web.quote(ip)).read().replace('\n', '').replace('\r', '')
     items = re.compile(r'<div class="contain">.*?<p>(.*?)</p>').findall(data)
     if not items:
         return
@@ -65,7 +67,8 @@ def check(ip):
     if 'This IP has not seen any suspicious activity' in data:
         if 'the IP address' in item:
             item = item.replace('the IP address', '%s' % ip)
-        output.warning(str(item) + 'This is an old record so it might be invalid.')
+        output.warning(str(item) +
+                       'This is an old record so it might be invalid.')
         return
 
     if 'the IP address' in item:

@@ -27,9 +27,11 @@ def search(code, input):
     if len(urls) > 3:
         urls = urls[0:3]
 
-    count, time = r['responseData']['cursor']['resultCount'], r['responseData']['cursor']['searchResultTime'] + 's'
+    count, time = r['responseData']['cursor']['resultCount'], r[
+        'responseData']['cursor']['searchResultTime'] + 's'
     # Make the search count prettified
-    count_commas = [m.start() for m in re.finditer(r'{}'.format(re.escape(',')), count)]
+    count_commas = [m.start()
+                    for m in re.finditer(r'{}'.format(re.escape(',')), count)]
     if len(count_commas) == 1:
         count = count.split(',', 1)[0] + 'k'
     elif len(count_commas) == 2:
@@ -52,7 +54,8 @@ def search(code, input):
         # Shorten URL to fit more responses cleaner
         link = url['url']
         output.append(color + r_type.format(title=title, link=link))
-    code.say('%s ({b}%s{b}, {b}%s{b} results)' % (' | '.join(output), time, count))
+    code.say('%s ({b}%s{b}, {b}%s{b} results)' %
+             (' | '.join(output), time, count))
 
 
 @hook(cmds=['gc'], priority='high', ex='gc extrapolate', rate=10, args=True)

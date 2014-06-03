@@ -7,7 +7,8 @@ parse = True
 
 # Note: Background would be 4#
 black, red, green, yellow, blue, magenta, cyan, white = range(8)
-colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
+colors = ['black', 'red', 'green', 'yellow',
+          'blue', 'magenta', 'cyan', 'white']
 raw_color, reset, bold = "\x1b[3%dm", "\033[0m", "\033[1m"
 pad = 12
 split_at = 60
@@ -21,7 +22,8 @@ def format_colors(message):
     if platform.system().lower() != 'windows' or not colors:
         message = message.replace('$reset', reset).replace('$bold', bold)
         for color in colors:
-            message = message.replace('$' + color, raw_color % colorcodes[color])
+            message = message.replace('$' + color, raw_color %
+                                      colorcodes[color])
     else:
         message = message.replace('$reset', '').replace('$bold', '')
         for color in colors:

@@ -33,7 +33,8 @@ def wikiDefine(term, url):
     """Use MediaWikis API to define a value from wiktionary and wikipedia"""
     # First, we need to grab the data, and serialize it in JSON
     url_query = urlify(term)
-    data = jsonify(get(full_define % (lang, url, maxlen, url_query)).read())['query']['pages']
+    data = jsonify(get(full_define % (lang, url, maxlen, url_query))
+                   .read())['query']['pages']
 
     # We need to see if it was found. If it wasn't it'll be a -1 page
     for pageNumber, pageData in data.iteritems():
@@ -43,9 +44,11 @@ def wikiDefine(term, url):
         else:
             # Assume found a result. Now, find and return the title/contents.
             if pageData['extract'].startswith('REDIRECT'):
-                return False  # This means it's a redirect page according to MediaWiki API
+                # This means it's a redirect page according to MediaWiki API
+                return False
             title = pageData['title']
-            content = pageData['extract'].encode('ascii', 'ignore').replace('\n', ' ')
+            content = pageData['extract'].encode(
+                'ascii', 'ignore').replace('\n', ' ')
             while '  ' in content:
                 content = content.replace('  ', ' ')
             return [title, content]
@@ -56,16 +59,19 @@ def wikipedia(code, input):
     """Pull definitions/search from wikipedia.org"""
     try:
         # Try to get the definition of what they WANT
-        data = wikiDefine(input.group(2).strip(), wikipedia_url)  # 1:title, 2:content
+        # 1:title, 2:content
+        data = wikiDefine(input.group(2).strip(), wikipedia_url)
         if not data:
             # Assume it's working, just no definition..
             # Try and give them search results
-            search = wikiSearch(input.group(2).strip(), wikipedia_url)  # list() of results
+            # list() of results
+            search = wikiSearch(input.group(2).strip(), wikipedia_url)
             if not search:
                 # Crap. No results for this either?
                 return code.say('No Wiki page for %s! (Try \'.wsearch\')' % input.group(2).strip())
             else:
-                # Make nice sexy results, because we're sorry we couldn't find it...
+                # Make nice sexy results, because we're sorry we couldn't find
+                # it...
                 return code.say('Unable to find results. Try: {purple}%s{c}' % ', '.join(search))
         else:
             # Working, print out a nice clean definition.
@@ -79,12 +85,14 @@ def wikipedia(code, input):
 def wikipediaSearch(code, input):
     """Pull search results from wikipedia.org"""
     try:
-        search = wikiSearch(input.group(2).strip(), wikipedia_url)  # list() of results
+        # list() of results
+        search = wikiSearch(input.group(2).strip(), wikipedia_url)
         if not search:
             # Crap. No results for this either?
             return code.say('No Wiki page for {purple}%s{c}!' % input.group(2).strip())
         else:
-            # Make nice sexy results, because we're sorry we couldn't find it...
+            # Make nice sexy results, because we're sorry we couldn't find
+            # it...
             return code.say('Suggestions: {purple}%s{c}' % ', '.join(search))
     except:
         return code.say('{red}No suggestions found!')

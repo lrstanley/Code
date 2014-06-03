@@ -28,6 +28,7 @@ def decode(bytes):
 
 
 class Code(irc.Bot):
+
     def __init__(self, raw_config):
         self.raw_config = raw_config
         debug = self.config('debug', False)
@@ -212,6 +213,7 @@ class Code(irc.Bot):
 
     def wrapped(self, origin, text, match):
         class CodeWrapper(object):
+
             def __init__(self, code):
                 self.bot = code
 
@@ -233,6 +235,7 @@ class Code(irc.Bot):
 
     def input(self, origin, text, bytes, match, event, args):
         class CommandInput(unicode):
+
             def __new__(cls, text, origin, bytes, match, event, args):
                 s = unicode.__new__(cls, text)
                 s.sender = origin.sender
@@ -256,7 +259,8 @@ class Code(irc.Bot):
                             re_host = re.compile(temp[1])
                             if re_host.findall(origin.host):
                                 s.admin = True
-                s.owner = origin.nick + '@' + origin.host == self.config('owner')
+                s.owner = origin.nick + '@' + \
+                    origin.host == self.config('owner')
                 if not s.owner:
                     s.owner = origin.nick == self.config('owner')
                 if s.owner:
@@ -311,10 +315,11 @@ class Code(irc.Bot):
                     if '!' in self.excludes[input.sender]:
                         # block all function calls for this channel
                         return
-                    fname = func.func_code.co_filename.split('/')[-1].split('.')[0]
+                    fname = func.func_code.co_filename.split(
+                        '/')[-1].split('.')[0]
                     if fname in self.excludes[input.sender]:
                         # block function call if channel is blacklisted
-                        print (
+                        print(
                             'Blocked:', input.sender, func.name,
                             func.func_code.co_filename
                         )
@@ -370,7 +375,8 @@ class Code(irc.Bot):
                                 host = origin.host
                                 host = host.lower()
                                 for hostmask in bad_masks:
-                                    hostmask = hostmask.replace("\n", "").strip()
+                                    hostmask = hostmask.replace(
+                                        "\n", "").strip()
                                     if len(hostmask) < 1:
                                         continue
                                     try:

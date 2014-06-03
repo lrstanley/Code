@@ -11,7 +11,8 @@ api_uri = 'https://api.forecast.io/forecast/%s/%s,%s'
 
 def location(name):
     name = urllib.quote(name)
-    data = json.loads(urllib2.urlopen('http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user)).read())
+    data = json.loads(urllib2.urlopen(
+        'http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user)).read())
     try:
         name = data['geonames'][0]['name']
     except IndexError:
@@ -25,12 +26,14 @@ def location(name):
 @hook(cmds=['weather'], ex='weather Eaton Rapids, Michigan', args=True)
 def weather(code, input):
     """weather <city, state|country|zip> - Return weather results for specified address"""
-    # Here, we check if it's an actual area, if the geo returns the lat/long then it is..
+    # Here, we check if it's an actual area, if the geo returns the lat/long
+    # then it is..
     name, country, lat, lng = location(input.group(2))
     if not name or not country or not lat or not lng:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     try:
-        data = json.loads(urllib2.urlopen(api_uri % (api_key, lat, lng)).read())['currently']
+        data = json.loads(urllib2.urlopen(api_uri %
+                          (api_key, lat, lng)).read())['currently']
     except:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     output = []
@@ -41,10 +44,12 @@ def weather(code, input):
     if 'temperature' in data:
         if data['temperature'] == data['apparentTemperature']:
             # Feels like is the same, don't use both of them
-            output.append('{b}{blue}%s%s{b}{c}' % (data['temperature'], degree))
+            output.append('{b}{blue}%s%s{b}{c}' %
+                          (data['temperature'], degree))
         else:
             output.append('{b}{blue}%s%s{b}{c} ({b}{blue}%s%s{b}{c})' % (
-                data['temperature'], degree, data['apparentTemperature'], degree
+                data['temperature'], degree, data[
+                    'apparentTemperature'], degree
             ))
     if 'precipIntensity' in data and 'precipType' in data and 'precipIntensity' in data:
         # Nothing happening

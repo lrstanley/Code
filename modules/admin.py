@@ -168,12 +168,14 @@ def blocks(code, input):
                 masks.remove(text[3])
                 code.reply('Successfully deleted block: %s' % (text[3]))
             except:
-                code.reply('No matching hostmask block found for: %s' % (text[3]))
+                code.reply('No matching hostmask block found for: %s' %
+                           (text[3]))
                 return
         else:
             return code.reply(syntax)
     else:
-        code.reply('Syntax: \'%sblocks <add|del|list> <nick|hostmask> [args]\'' % code.prefix)
+        code.reply(
+            'Syntax: \'%sblocks <add|del|list> <nick|hostmask> [args]\'' % code.prefix)
 
     os.remove('blocks')
     blocks = open('blocks', 'w')
@@ -200,7 +202,8 @@ def write_raw(code, input):
     '''Send a raw command to the server. WARNING THIS IS DANGEROUS! Owner-only.'''
     secure = '{red}That seems like an insecure message. Nope!'
     r = input.group(2).encode('ascii', 'ignore')
-    bad = ['ns', 'nickserv', 'chanserv', 'cs', 'q', 'authserv', 'botserv', 'operserv']
+    bad = ['ns', 'nickserv', 'chanserv', 'cs',
+           'q', 'authserv', 'botserv', 'operserv']
     for bot in bad:
         if (' %s ' % bot) in r.lower():
             return code.reply(secure)

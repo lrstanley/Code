@@ -19,23 +19,29 @@ def soundcloud(code, input):
         # Get date first so we can add to the title
         year, month, day = data['created_at'].split()[0].split('/')
         # Should always have a title
-        output.append('\x0313\x02%s\x02\x03 (\x0313\x02%s/%s/%s\x02\x03)' % (data['title'], month, day, year))
+        output.append('\x0313\x02%s\x02\x03 (\x0313\x02%s/%s/%s\x02\x03)' %
+                      (data['title'], month, day, year))
         # Should always have an artist
-        output.append('uploaded by \x0313\x02%s\x02\x03' % data['user']['username'])
+        output.append('uploaded by \x0313\x02%s\x02\x03' %
+                      data['user']['username'])
         # Genre!
         output.append('\x0313\x02' + data['genre'] + '\x02\x03')
         # Playback count, if none, obviously don't add it
         if int(data['playback_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 plays' % data['playback_count'])
+            output.append('\x0313\x02%s\x02\x03 plays' %
+                          data['playback_count'])
         # Download count, if none, obviously don't add it
         if int(data['download_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 downloads' % data['download_count'])
+            output.append('\x0313\x02%s\x02\x03 downloads' %
+                          data['download_count'])
         # And the same thing with the favorites count
         if int(data['favoritings_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 favs' % data['favoritings_count'])
+            output.append('\x0313\x02%s\x02\x03 favs' %
+                          data['favoritings_count'])
         # Comments too!
         if int(data['comment_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 comments' % data['comment_count'])
+            output.append('\x0313\x02%s\x02\x03 comments' %
+                          data['comment_count'])
         # Tags!
         if len(data['tag_list'].split()) > 0:
             tmp = data['tag_list'].split()

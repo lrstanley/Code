@@ -16,9 +16,12 @@ bot, password = None, None
 
 
 class WebServer(BaseHTTPRequestHandler):
+
     """The actual webserver that responds to things that received via GET queries."""
+
     def log_message(self, format, *args):
-        msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(), format % args)
+        msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
+                                    format % args)
         output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
@@ -54,7 +57,8 @@ class WebServer(BaseHTTPRequestHandler):
 
                 # Authenticated.. Now we need to find some variables in the args
                 # 1. args (used for IRC commands)
-                # 2. data (The argument for the IRC command (the arguments argument!))
+                # 2. data (The argument for the IRC command (the arguments
+                # argument!))
                 if 'args' not in args or 'data' not in args:
                     config = {}
                     for key, value in bot.config().iteritems():
@@ -106,7 +110,8 @@ def init(host, port):
     try:
         time.sleep(5)
         server = HTTPServer(('0.0.0.0', port), WebServer)
-        output.success('Starting HTTP server on %s:%s' % (host, port), 'WEBSERVER')
+        output.success('Starting HTTP server on %s:%s' %
+                       (host, port), 'WEBSERVER')
     except:
         return
     server.serve_forever()
@@ -118,7 +123,8 @@ def setup(code):
     id = str(gen(0, 10000000))
     bot.set('webserver.object', id)
 
-    # Nasty area, we check for configuration options, some are required and some arent
+    # Nasty area, we check for configuration options, some are required and
+    # some arent
     if not bot.config('webserver'):
         return
     if not bot.config('webserver_password'):

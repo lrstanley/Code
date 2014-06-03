@@ -29,7 +29,8 @@ def fml(code, input):
                      web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('Failed to retrieve FML via ID.')
-    # Input/Assume search query, with (possible) number at end indicating FML index
+    # Input/Assume search query, with (possible) number at end indicating FML
+    # index
     else:
         msg = input.group(2).lower().strip()
         parts = msg.split()
@@ -45,8 +46,9 @@ def fml(code, input):
             query = msg.replace(' ', '+')
         try:
             r = fml_search(query, id)
-            code.say('(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (r['id'], r['max'], str(r['fml-id']),
-                     web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+            code.say(
+                '(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (r['id'], r['max'], str(r['fml-id']),
+                                                                 web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('Failed to search for FML.')
 
@@ -79,7 +81,9 @@ def fml_search(query, id):  # ID is index of search query
         query = query.replace('.', '+')
         while query.find('++') > -1:
             query = query.replace('++', '+').strip('+')
-        r = web.get('http://api.fmylife.com/view/search?search=%s&language=%s&key=%s' % (query, language, key)).read()
+        r = web.get(
+            'http://api.fmylife.com/view/search?search=%s&language=%s&key=%s' %
+            (query, language, key)).read()
     except:
         return
     # find god awful FML

@@ -21,9 +21,11 @@ def github(code, input):
     if '/' not in input.group(2):
         # Assume a single username
         try:
-            tmp = json.loads(urllib2.urlopen(user_api % input.group(2).strip()).read())
+            tmp = json.loads(urllib2.urlopen(user_api %
+                             input.group(2).strip()).read())
             response = {}
-            # Remove dem ugly nulled values. It's a dictionary so we have to loop differently.
+            # Remove dem ugly nulled values. It's a dictionary so we have to
+            # loop differently.
             for key, value in tmp.iteritems():
                 if value != '' or len(value) != 0 or value != 'null':
                     response[key] = value
@@ -60,7 +62,8 @@ def github(code, input):
     else:
         # Assume Username/Repo
         try:
-            response = json.loads(urllib2.urlopen(repo_api % input.group(2).strip()).read())
+            response = json.loads(
+                urllib2.urlopen(repo_api % input.group(2).strip()).read())
         except:
             return code.say(failed)
         if 'message' in response:
@@ -68,7 +71,8 @@ def github(code, input):
             return code.say(failed)
         # Here is where we build the response
         output = []
-        output.append('%s (%s)' % (response['name'], response['owner']['login']))
+        output.append('%s (%s)' %
+                      (response['name'], response['owner']['login']))
         output.append(response['description'])
         output.append('%s %s' % (response['stargazers_count'], u'\u2605'))
         output.append('%s %s' % (response['watchers_count'], u'\u231A'))
@@ -98,9 +102,12 @@ def version(code, input):
         code.say('  ' + commit)
         code.say('  ' + author)
         code.say('  ' + date)
-        code.say('  ' + '{b}Source:{b} https://github.com/Liamraystanley/Code/')
+        code.say('  ' +
+                 '{b}Source:{b} https://github.com/Liamraystanley/Code/')
     except:
-        code.say('%s does not use Github file management. Unable to determine version.' % code.nick)
+        code.say(
+            '%s does not use Github file management. Unable to determine version.' %
+            code.nick)
 
 
 @hook(rule='\x01VERSION\x01', rate=20)
@@ -109,14 +116,16 @@ def ctcp_version(code, input):
     date = date.replace("  ", "")
 
     code.write(
-        ('NOTICE', input.nick), '\x01VERSION {0} : {1}\x01'.format(commit, date)
+        ('NOTICE', input.nick), '\x01VERSION {0} : {1}\x01'.format(
+            commit, date)
     )
 
 
 @hook(rule='\x01SOURCE\x01', rate=20)
 def ctcp_source(code, input):
     code.write(
-        ('NOTICE', input.nick), '\x01SOURCE https://github.com/Liamraystanley/Code/\x01'
+        ('NOTICE',
+         input.nick), '\x01SOURCE https://github.com/Liamraystanley/Code/\x01'
     )
     code.write(
         ('NOTICE', input.nick), '\x01SOURCE\x01'

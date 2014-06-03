@@ -14,11 +14,14 @@ auto_check = 15  # Time in seconds to check for new tweets
 # Input checking...
 r_uid = re.compile(r'\s(@[a-zA-Z0-9_]{1,15})')
 r_fullname = re.compile(r'<strong class="fullname">(.*?)</strong>')
-r_username = re.compile(r'<span class="username">.*?<span>@</span>(.*?)</span>')
+r_username = re.compile(
+    r'<span class="username">.*?<span>@</span>(.*?)</span>')
 r_time = re.compile(r'<td class="timestamp">.*?</td>')
 r_tweet = re.compile(r'<tr class="tweet-container">.*?</tr>')
-r_url = re.compile(r'<a href=".*?" class="twitter_external_link.*?" data-url="(.*?)" dir=".*?" rel=".*?" target=".*?">(.*?)</a>')
-r_basicurl = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+r_url = re.compile(
+    r'<a href=".*?" class="twitter_external_link.*?" data-url="(.*?)" dir=".*?" rel=".*?" target=".*?">(.*?)</a>')
+r_basicurl = re.compile(
+    'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 
 uri_user = 'https://mobile.twitter.com/%s/'
 uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
@@ -45,13 +48,16 @@ def get_tweets(url, sender_uid=False):
             tmp['text'] = web.htmlescape(web.striptags(tweet_data).strip())
             uids = r_uid.findall(' ' + tmp['text'])
             for uid in uids:
-                tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
+                tmp['text'] = tmp['text'].replace(
+                    uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
 
             # Check if it's a retweet
             if sender_uid:
                 if sender_uid.lower().strip('@') != tmp['user'].lower().strip('@'):
-                    tmp['text'] = tmp['text'] + ' ({purple}{b}@{b}%s{c})' % tmp['user']
-                    tmp['user'] = sender_uid.strip('@') + ' {blue}{b}retweeted{c}{b}'
+                    tmp['text'] = tmp['text'] + \
+                        ' ({purple}{b}@{b}%s{c})' % tmp['user']
+                    tmp['user'] = sender_uid.strip(
+                        '@') + ' {blue}{b}retweeted{c}{b}'
             tweets.append(tmp)
         except:
             continue
@@ -86,7 +92,8 @@ def twitter(code, input):
 def setup(code):
     if not code.config('twitter_autopost'):
         return
-    thread.start_new_thread(daemon, (code, code.config('twitter_autopost', {}),))
+    thread.start_new_thread(
+        daemon, (code, code.config('twitter_autopost', {}),))
 
 
 def daemon(code, tc):
@@ -99,7 +106,8 @@ def daemon(code, tc):
                 if tweet_item.startswith('#'):  # ID
                     data = get_tweets(uri_hash % urllib.quote(tweet_item))
                 else:
-                    data = get_tweets(uri_user % urllib.quote(tweet_item), tweet_item)
+                    data = get_tweets(uri_user %
+                                      urllib.quote(tweet_item), tweet_item)
                 if not data:
                     continue
                 data = data[0]

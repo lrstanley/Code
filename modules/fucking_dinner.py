@@ -17,6 +17,7 @@ def dinner(code, input):
         if not results:
             return code.say(err)
         url, food = results[0][0], htmlescape(results[0][1])
-        code.say('WHY DON\'T YOU EAT SOME FUCKING {b}%s{b}. HERE IS THE RECIPE: %s' % (food.upper(), url))
+        code.say('WHY DON\'T YOU EAT SOME FUCKING {b}%s{b}. HERE IS THE RECIPE: %s' % (
+            food.upper(), url))
     except:
         return code.say(err)

@@ -43,6 +43,7 @@ class Origin(object):
 
 
 class Bot(asynchat.async_chat):
+
     def __init__(self, nick, name, user, channels, server_password=None, debug=False):
         asynchat.async_chat.__init__(self)
         self.set_terminator('\n')
@@ -195,7 +196,8 @@ class Bot(asynchat.async_chat):
                     )
                     time.sleep(delay)
                 if self.verbose:
-                    output.normal('Connecting to %s:%s... (try %s)' % (host, port, str(count)), 'STATUS')
+                    output.normal('Connecting to %s:%s... (try %s)' %
+                                  (host, port, str(count)), 'STATUS')
                 self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.connect((host, port))
                 count = 0
@@ -211,7 +213,8 @@ class Bot(asynchat.async_chat):
         if self.server_password:
             self.write(('PASS', self.server_password), output=False)
         self.write(('NICK', self.nick), output=False)
-        self.write(('USER', self.user, '+iw', self.nick), self.name, output=False)
+        self.write(('USER', self.user, '+iw', self.nick),
+                   self.name, output=False)
 
     def changenick(self, nick):
         chars = set('`+=;,<>?')
@@ -344,7 +347,8 @@ class Bot(asynchat.async_chat):
                 return
 
         self.__write(('PRIVMSG', self.safe(recipient)), self.safe(text))
-        output.normal('(%s) %s' % (self.nick, self.stripcolors(self.clear_format(self.safe(text)))), self.safe(recipient))
+        output.normal('(%s) %s' %
+                      (self.nick, self.stripcolors(self.clear_format(self.safe(text)))), self.safe(recipient))
         self.stack.append((time.time(), text))
         self.stack = self.stack[-10:]
 

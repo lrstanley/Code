@@ -10,7 +10,8 @@ defaultuser = 'liamraystanley'
 
 def getdata(user):
     try:
-        data = urllib2.urlopen('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (user)).read()
+        data = urllib2.urlopen(
+            'http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (user)).read()
     except:
         return False
     if 'No user exists with this name.' in data:

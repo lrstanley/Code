@@ -87,7 +87,8 @@ def gau(code, input):
     global conversation
     global greet_user
     if aistate and conversation and greet_user == input.nick:
-        randmsg = random.choice(['That\'s good to hear!', 'That\'s great to hear!'])
+        randmsg = random.choice(
+            ['That\'s good to hear!', 'That\'s great to hear!'])
         time.sleep(random.randint(0, 2))
         code.reply(randmsg)
         conversation = False
@@ -170,7 +171,8 @@ def love3(code, input):
 
 @hook(rule=r'(?i)(hi|hello|hey|sup|ello|erro|ohai) $nickname[ \t]*$')
 def hello(code, input):
-    greeting = random.choice(('Hi', 'Hey', 'Hello', 'sup', 'Ohai', 'Erro', 'Ello', 'Ohaider'))
+    greeting = random.choice(
+        ('Hi', 'Hey', 'Hello', 'sup', 'Ohai', 'Erro', 'Ello', 'Ohaider'))
     punctuation = random.choice(('', '!'))
     code.say('%s %s%s!' % (greeting, input.nick, punctuation))
 

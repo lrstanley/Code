@@ -30,4 +30,5 @@ def magic(code, input):
             'Concentrate and ask again.'
         ))
         response = '{yellow}' + response
-    code.say('*%s shakes the Magic 8 Ball...* {b}%s{c}{b}' % (code.nick, response))
+    code.say('*%s shakes the Magic 8 Ball...* {b}%s{c}{b}' %
+             (code.nick, response))

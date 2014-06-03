@@ -16,8 +16,10 @@ def fucking_weather(code, input):
     try:
         text = quote(input.group(2))
         data = get('http://thefuckingweather.com/?where=%s' % text).read()
-        temp = re.compile(r'<p class="large"><span class="temperature" tempf=".*?">.*?</p>').findall(data)[0]
-        temp = re.sub(r'\<.*?\>', '', temp).strip().replace(' ', '').replace('"', '')
+        temp = re.compile(
+            r'<p class="large"><span class="temperature" tempf=".*?">.*?</p>').findall(data)[0]
+        temp = re.sub(r'\<.*?\>', '', temp).strip().replace(' ',
+                                                            '').replace('"', '')
         remark = re.compile(r'<p class="remark">.*?</p>').findall(data)[0]
         remark = re.sub(r'\<.*?\>', '', remark).strip()
         flavor = re.compile(r'<p class="flavor">.*?</p>').findall(data)[0]
