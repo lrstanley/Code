@@ -28,14 +28,14 @@ def f_reload(code, input):
         name = os.path.splitext(name)[0]
 
     if name not in sys.modules:
-        return code.reply('%s: No such module!' % code.bold(name))
+        return code.reply('{b}%s{b}: No such module!' % name)
 
     # Thanks to moot for prodding me on this
     path = sys.modules[name].__file__
     if path.endswith('.pyc') or path.endswith('.pyo'):
         path = path[:-1]
     if not os.path.isfile(path):
-        return code.reply('Found %s, but not the source file' % code.bold(name))
+        return code.reply('Found {b}%s{b}, but not the source file' % name)
 
     module = imp.load_source(name, path)
     sys.modules[name] = module
@@ -59,10 +59,10 @@ def f_reload(code, input):
 def update(code, input):
     """Pulls the latest versions of all modules from Git"""
     if not sys.platform.startswith('linux'):
-        code.say('Warning: %s' % code.bold('Using a non-linux OS, might fail to work!'))
+        code.say('Warning: {b}Using a non-linux OS, might fail to work!')
     proc = subprocess.Popen('git pull', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     data = proc.communicate()[0]
     while '  ' in data:
         data = data.replace('  ', ' ')
-    code.say('Github: ' + code.bold(data))
+    code.say('Github: {b}' + data)
     f_reload(code, input)
