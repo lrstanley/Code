@@ -17,7 +17,10 @@ def auto_honeypot(code, input):
     global db
 
     ip = get_ip(input.host)
-    abuser = check(ip)
+    try:
+        abuser = check(ip)
+    except:
+        return output.error('Failed to get IP information. Project Honeypot seems to be down!')
     if abuser:
         # First, we need to check if we've already checked for it, and got a match...
         if ip in db:
