@@ -114,11 +114,6 @@ def daemon(code, tc):
                 db.append(hash_str)
                 database.set(code.nick, db, 'twitter')
                 msg = format(data)
-                if hasattr(code.config, 'shortenurls'):
-                    if code.config.shortenurls:
-                        urls = r_basicurl.findall(msg)
-                        for url in urls:
-                            msg = msg.replace(url, web.shorten(url))
                 code.msg(channel, msg.decode('ascii', 'ignore'))
             db = database.get(code.nick, 'twitter')
             if db:

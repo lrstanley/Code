@@ -114,41 +114,12 @@ r_json = re.compile(r'^[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]+$')
 env = {'__builtins__': None, 'null': None, 'true': True, 'false': False}
 
 
-def pyexec(data, multiline=True):
-    attempts = 0
-
-    while True:
-        try:
-            output = urllib2.urlopen(exec_uri % urllib.quote(data)).read().rstrip('\n')
-            # sometimes the API returns a blank string on first attempt, lets try again
-            # and make sure it is actually supposed to be a blank string. ._.
-            if output == "":
-                output = urllib2.urlopen(exec_uri % urllib.quote(data)).read().rstrip('\n')
-            break
-        except:
-            if attempts > 2:
-                return "Failed to execute code."
-            else:
-                attempts += 1
-                continue
-
-    if "Traceback (most recent call last):" in output:
-        status = "Python error: "
-    else:
-        status = "Code executed sucessfully: "
-
-    if "\n" in output and multiline:
-        return status + haste(output)
-    else:
-        return output.replace('\n', ' ')
-
-
-def haste(text, ext='txt'):
+def haste(text, extension='txt'):
     """ pastes text to a hastebin server """
     uri = urllib2.Request(paste_url + '/documents', text)
     page = urllib2.urlopen(uri).read()
     data = loads(page)
-    return ("%s/%s.%s" % (paste_url, data['key'], ext))
+    return ('%s/%s.%s' % (paste_url, data['key'], extension))
 
 
 def shorten(url):

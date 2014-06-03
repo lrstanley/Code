@@ -15,6 +15,7 @@ import asynchat
 import os
 from util import output
 from util.web import uncharset
+from util.web import shorten
 from core import triggers
 
 
@@ -82,12 +83,21 @@ class Bot(asynchat.async_chat):
     # def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
-    def format(self, message):
+    def format(self, message, shorten_urls=True):
         '''
             formatting to support color/bold/italic/etc assignment
-            in Codes responses
+            and URL shortening in Codes responses
         '''
         message = uncharset(message)
+        if self.config('shorten_urls') and shorten_urls:
+            regex = re.compile(
+                r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
+                re.IGNORECASE).findall(message)
+            for url in regex:
+                try:
+                    message = message.replace(url, shorten(url))
+                except:
+                    pass
         if not self.config('text_decorations'):
             return self.clear_format(message)
         try:
@@ -294,9 +304,9 @@ class Bot(asynchat.async_chat):
     def dispatch(self, origin, args):
         pass
 
-    def msg(self, recipient, text, x=False):
+    def msg(self, recipient, text, x=False, shorten_urls=True):
         self.sending.acquire()
-        text = self.format(text)
+        text = self.format(text, shorten_urls=shorten_urls)
 
         if isinstance(text, unicode):
             try:
