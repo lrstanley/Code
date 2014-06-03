@@ -54,10 +54,10 @@ def nick(code, input):
 @hook(cmds=['msg', 'say'], ex='msg #L I LOVE PENGUINS.', priority='low', admin=True, args=True)
 def msg(code, input):
     '''msg <channel|username> <msg> - Send a message to a channel, or a user. Admin-only.'''
-    msg = input.group(2).split()
-    if len(msg) < 2:
+    msg = input.group(2)
+    if len(msg.split()) < 2:
         return code.say('{red}{b}Incorrect usage!: %smsg <channel|username> <msg>' % code.prefix)
-    a, b = msg[0], ' '.join(msg[1:])
+    a, b = msg.split(' ', 1)
     if not input.owner and a.lower() in ['chanserv', 'nickserv', 'hostserv', 'memoserv', 'saslserv', 'operserv']:
         return code.say('{red}{b}You\'re not authorized to message those services!')
     code.msg(a, b)
@@ -65,14 +65,13 @@ def msg(code, input):
 
 @hook(cmds=['me', 'action'], ex='me #L loves Liam', priority='low', admin=True, args=True)
 def me(code, input):
-    '''Send a raw action to a channel/user. Admin-only.'''
-    if input.sender.startswith('#'):
-        return
-    a, b = input.group(2), input.group(3)
+    '''me <channel|username> <msg> - Send a raw action to a channel/user. Admin-only.'''
+    msg = input.group(2)
+    a, b = msg.split(' ', 1)
     if not b:
         return
-    msg = '\x01ACTION %s\x01' % input.group(3)
-    code.msg(input.group(2), msg, x=True)
+    msg = '\x01ACTION %s\x01' % b
+    code.msg(a, msg, x=True)
 
 
 @hook(cmds=['announce', 'broadcast'], ex='announce Some important message here', priority='low', admin=True, args=True)

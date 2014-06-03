@@ -42,6 +42,7 @@ class Code(irc.Bot):
         self.times = {}
         self.modules = []
         self.cmds = {}
+        self.data = {}
         self.excludes = self.config('excluded_per_channel', [])
         self.setup()
 
