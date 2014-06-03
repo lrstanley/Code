@@ -3,18 +3,18 @@ from util.hook import *
 from util import database, web
 
 
-@hook(rule='^\?(.*)$')
+@hook(rule='^\`(.*)$')
 def factoid(code, input):
     """
-        ?<word> -- Shows what data is associated with <word>.
-        ? <add|delete|info> [args] -- for management
+        `<word> -- Shows what data is associated with <word>.
+        ` <add|delete|info> [args] -- for management
     """
 
     if len(input.group().strip()) == 1:
         return
 
     # If it's a management command...
-    if input.group().startswith('? '):
+    if input.group().startswith('` '):
         if not input.admin:
             return code.reply('{red}You need to be an admin to use that command!')
         return factoid_manage(input.group().split(' ', 1)[1], code, input)
@@ -29,7 +29,7 @@ def factoid(code, input):
         id, arguments = input.group(1).split(' ', 1)
 
     if id not in db:
-        return code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}? add <name> <data>{red}")')
+        return code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}` add <name> <data>{red}")')
 
     f = db[id]
 
@@ -54,7 +54,7 @@ def factoid(code, input):
 
 
 def factoid_manage(data, code, input):
-    # This is ugly looking, but I like it built into ? to make it easier to remember commands.
+    # This is ugly looking, but I like it built into ` to make it easier to remember commands.
     #   - (Rather than if/fi, af/fa, fr/rf/fd/df)
     if len(data.split()) == 1:
         cmd, args = data, False
@@ -73,7 +73,7 @@ def factoid_manage(data, code, input):
                 db[name] = args.split(' ', 1)[1]
                 database.set(code.nick, db, 'factoids')
                 return code.reply('{green}Successfully created the factoid "{purple}%s{green}"!' % name)
-        return code.reply(('{red}Use "{purple}? add <name> <args>{red}" to create a new factoid. Use <py>, '
+        return code.reply(('{red}Use "{purple}` add <name> <args>{red}" to create a new factoid. Use <py>, '
                            '<act>, <url> in front of args for different responses.'))
     elif cmd.lower() in ['del', 'rem', 'delete', 'remove']:
         if args:
@@ -83,21 +83,21 @@ def factoid_manage(data, code, input):
                 del db[name]
                 database.set(code.nick, db, 'factoids')
                 return code.reply('{green}Successfully deleted the factoid "{purple}%s{green}"!' % name)
-        return code.reply('{red}Use "{purple}? del <name>{red}" to delete a factoid.')
+        return code.reply('{red}Use "{purple}` del <name>{red}" to delete a factoid.')
     elif cmd.lower() in ['info', 'raw', 'show', 'view']:
         if args:
             if name in db:
                 return code.say('Raw: ' + db[name])
             else:
                 return code.say('{red}That factoid does not exist!')
-        return code.reply('{red}Use "{purple}? info <name>{red}" to view the factoid in raw form.')
+        return code.reply('{red}Use "{purple}` info <name>{red}" to view the factoid in raw form.')
     elif cmd.lower() in ['list', 'all']:
         factoids = db.keys()
         if len(factoids) < 1:
             return code.say('There are no factoids yet!')
         tmp = []
         for factoid in factoids:
-            tmp.append('?%s' % factoid)
+            tmp.append('`%s' % factoid)
         return code.say('{b}List of factoids:{b} %s' % (', '.join(tmp)))
     else:
-        return code.reply('{red} Usage: "{purple}? <add|delete|info> [args]{red}"')
+        return code.reply('{red} Usage: "{purple}` <add|delete|info> [args]{red}"')
