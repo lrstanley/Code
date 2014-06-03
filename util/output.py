@@ -10,7 +10,7 @@ black, red, green, yellow, blue, magenta, cyan, white = range(8)
 colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
 raw_color, reset, bold = "\x1b[3%dm", "\033[0m", "\033[1m"
 pad = 12
-split_at = 100
+split_at = 60
 
 
 def format_colors(message):

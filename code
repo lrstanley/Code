@@ -73,7 +73,8 @@ def main(argv=None):
     if not os.path.isdir(dotdir):
         if not os.path.isdir(dotdir):
             try:
-                output.info('Creating creating database directory in ~/.code...')
+                output.info(
+                    'Creating creating database directory in ~/.code...')
                 os.mkdir(dotdir)
             except Exception, e:
                 output.error('There was a problem creating %s:' % dotdir)
@@ -94,7 +95,8 @@ def main(argv=None):
         config = parse_json(bot_config)
     except:
         output.error(
-            'The config file has syntax errors. Please fix them and run Code again!'
+            'The config file has syntax errors.'
+            ' Please fix them and run Code again!'
         )
         sys.exit(1)
     config['filename'] = bot_config

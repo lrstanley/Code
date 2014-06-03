@@ -1,0 +1,52 @@
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">{{data.config.nick}} &middot; Python IRC Bot</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav side-nav">
+        <li class="active"><a href="index.html"><i class="fa fa-dashboard"></i> {{data.config.host}}</a></li>
+      {{#each data.chan_data}}
+          <li><a href="#" class="channel">{{@key}}</a></li>
+      {{/each}}
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right navbar-user">
+        <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+        <li><a href="#"><i class="fa fa-power-off"></i> Log Out ({{data.config.owner}})</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+
+  <div id="page-wrapper">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <h1>Dashboard ({{data.config.host}}) <small>Statistics Overview</small></h1>
+        <ol class="breadcrumb">
+          <li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
+        </ol>
+        <div class="alert alert-success alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          Welcome text here blah blah blah omg wtf is ur prob nigga ok more stuff here.
+        </div>
+      </div>
+    </div><!-- /.row -->
+
+    <div class="row">
+      <div class="col-lg-3">
+      </div>
+    </div><!-- /.row -->
+  </div><!-- /#page-wrapper -->
+</div><!-- /#wrapper -->

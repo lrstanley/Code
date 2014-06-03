@@ -5,6 +5,7 @@ import time
 from random import randint as gen
 from util import output
 import json
+import os
 
 # Example command...
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
@@ -21,25 +22,35 @@ class WebServer(BaseHTTPRequestHandler):
         output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
-        def finish(data=''):
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
+        def readfile(fn):
+            if not os.path.isfile('webserver/%s' % fn):
+                return False
+            try:
+                with open('webserver/%s' % fn, 'r') as f:
+                    return f.read()
+            except:
+                return False
+
+        def finish(data='', content='application/json', code=200):
+            self.send_response(code)
+            self.send_header("Content-type", content)
             self.end_headers()
             if isinstance(data, dict):
                 data = json.dumps(data, indent=2)
             self.wfile.write(data)
+
         args = {}
-        path = self.path
-        if '?' in path:
+        path = self.path.replace('?callback=?', '')
+        if path.startswith('/?'):
             tmp = path.split('?', 1)[1]
             args = urlparse.parse_qs(tmp)
 
             # Manage here
             try:
                 if 'pass' not in args:
-                    return finish({'success': False, 'message': 'Password required'})
+                    return finish({'success': False, 'message': 'Password required'}, code=403)
                 if args['pass'][0] != password:
-                    return finish({'success': False, 'message': 'Password incorrect'})
+                    return finish({'success': False, 'message': 'Password incorrect'}, code=403)
 
                 # Authenticated.. Now we need to find some variables in the args
                 # 1. args (used for IRC commands)
@@ -62,10 +73,22 @@ class WebServer(BaseHTTPRequestHandler):
                 bot.write(args['args'][0].split(), bot.format(args['data'][0]))
                 return finish({'success': True, 'message': 'Data sent to server'})
             except Exception as e:
-                return finish({'success': False, 'message': 'An exception has occured', 'error': str(e)})
+                return finish({'success': False, 'message': 'An exception has occured', 'error': str(e)}, code=500)
+        elif path.endswith('/'):
+            target = path + 'index.html'
+            filetype = 'text/html'
         else:
-            return finish({'success': False, 'message': 'Password required'})
-        finish()
+            target = path
+            if '.' in path:
+                filetype = 'text/' + path.split('.')[-1]
+            else:
+                filetype = 'text/html'
+        if filetype == 'text/js':
+            filetype = 'application/javascript'
+        f = readfile(target.strip('/'))
+        if not f:
+            return finish('404 file now found', content='text/html', code=400)
+        return finish(f, content=filetype, code=200)
 
 
 def checkstate(bot, input, id):
