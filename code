@@ -90,6 +90,7 @@ def main(argv=None):
         output.error(
             'Configuration file "%s" does not exist. Please copy '
             'the example.json to config.json then run Code again' % bot_config)
+        sys.exit(1)
 
     try:
         config = parse_json(bot_config)
