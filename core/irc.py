@@ -59,6 +59,10 @@ class Bot(asynchat.async_chat):
         self.stack = list()
         self.debug = debug
         self.chan = {}
+        self.logs = {
+            'bot': [],
+            'channel': {}
+        }
         self.special_chars = {
             'white': '\x0300', 'black': '\x0301', 'blue': '\x0302',
             'navy': '\x0302', 'green': '\x0303', 'red': '\x0304',
@@ -275,7 +279,10 @@ class Bot(asynchat.async_chat):
         ]
         data = uncharset(data)
         for color in colors:
-            data = data.replace(color, '')
+            try:
+                data = data.replace(color, '')
+            except:
+                pass
         return str(data.encode('ascii', 'ignore'))
 
     def found_terminator(self):

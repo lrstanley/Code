@@ -27,10 +27,13 @@ def trigger_255(code, line):
 def trigger_353(code, line):
     # NAMES event
     channel, user_list = line[1::].split(':', 1)
+    code.channels.append(channel)
     channel, user_list = '#' + \
         channel.split('#', 1)[1].strip(), user_list.strip().split()
     if channel not in code.chan:
         code.chan[channel] = {}
+    if channel not in code.logs['channel']:
+        code.logs['channel'][channel] = []
     for user in user_list:
         # Support servers with %, &, and ~, as well as standard @, and +
         if user.startswith('@') or user.startswith('%') or user.startswith('&') or user.startswith('~'):
@@ -76,11 +79,19 @@ def trigger_PRIVMSG(code, line):
             code.chan[sender][nick] = {'normal': True, 'voiced':
                                        False, 'op': False, 'count': 0, 'messages': []}
         code.chan[sender][nick]['count'] += 1
+        # 1. per-channel-per-user message storing...
         code.chan[sender][nick]['messages'].append(
             {'time': int(time.time()), 'message': msg})
         # Ensure it's not more than 20 of the last messages
         code.chan[sender][nick]['messages'] = code.chan[
             sender][nick]['messages'][-20:]
+        # 2. Per channel message storing...
+        tmp = {'message': msg, 'nick': nick, 'time': int(time.time()), 'channel': sender}
+        code.logs['channel'][sender].append(tmp)
+        code.logs['channel'][sender] = code.logs['channel'][sender][-20:]
+        # 3. All bot messages in/out, maxed out by n * 20 (n being number of channels)
+        code.logs['bot'].append(tmp)
+        code.logs['bot'] = code.logs['bot'][-(20*len(code.channels)):]
 
 
 def trigger_NOTICE(code, line):
@@ -179,7 +190,11 @@ def trigger_JOIN(code, line):
 def trigger_PART(code, line):
     name = line[1::].split('!', 1)[0]
     channel = line.split('PART', 1)[1].split()[0]
-    del code.chan[channel][name]
+    if name == code.nick:
+        del code.chan[channel]
+        del code.logs['channel'][channel]
+    else:
+        del code.chan[channel][name]
 
 
 def trigger_QUIT(code, line):
