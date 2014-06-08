@@ -23,12 +23,10 @@ def roulette(code, input):
              (nick, nick, response))
 
 
-@hook(cmds=['slap'], rate=20, args=True)
+@hook(cmds=['slap'], rate=5, args=True)
 def slap(code, input):
     """Slaps a person using random methods"""
     text = input.group().split()
-    if len(text) < 2 or text[1].startswith('#'):
-        return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'everyone' or \
        text[1].lower() == 'everybody' or text[1].lower() == 'himself':
         if input.admin:
@@ -52,12 +50,10 @@ def slap(code, input):
                verb, text[1], afterfact, '\x01'])
 
 
-@hook(cmds=['hug'], rate=5)
+@hook(cmds=['hug'], rate=5, args=True)
 def hug(code, input):
     """Hugs <target>"""
     text = input.group().split()
-    if len(text) < 2 or text[1].startswith('#'):
-        return
     if text[1].lower() == code.nick.lower() or text[1].lower() == 'himself':
         if not input.nick:
             text[1] = input.nick
