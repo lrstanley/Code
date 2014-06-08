@@ -60,7 +60,7 @@ class Code(irc.Bot):
     def setup(self):
         self.variables = {}
 
-        filenames = []
+        filenames, core_filenames = [], []
         for fn in os.listdir(os.path.join(home, 'modules')):
             if fn.endswith('.py') and not fn.startswith('_'):
                 filenames.append(os.path.join(home, 'modules', fn))
@@ -80,6 +80,7 @@ class Code(irc.Bot):
         for fn in os.listdir(os.path.join(home, 'core/modules')):
             if fn.endswith('.py') and not fn.startswith('_'):
                 filenames.append(os.path.join(home, 'core/modules', fn))
+                core_filenames.append(fn.split('.', 1)[0])
 
         # Should fix
         excluded_modules = self.config('excluded_modules', [])
@@ -97,16 +98,21 @@ class Code(irc.Bot):
             #     del sys.modules[name]
             try:
                 module = imp.load_source(name, filename)
-            except Exception as e:
-                output.error("Failed to load %s: %s" % (name, e))
-            else:
                 if hasattr(module, 'setup'):
                     module.setup(self)
                 self.register(vars(module))
                 self.modules.append(name)
+            except Exception as e:
+                output.error("Failed to load %s: %s" % (name, e))
 
+        tmp_modules = []
+        for module in self.modules:
+            if module not in core_filenames:
+                tmp_modules.append(module)
+        if core_filenames:
+            output.info('Loaded {} core modules: {}'.format(len(core_filenames), ', '.join(core_filenames)))
         if self.modules:
-            output.info('Registered modules: ' + ', '.join(self.modules))
+            output.info('Loaded {} modules: {}'.format(len(tmp_modules), ', '.join(tmp_modules)))
         else:
             output.warning('Couldn\'t find any modules')
 

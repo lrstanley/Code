@@ -19,10 +19,6 @@ from util.web import shorten
 from core import triggers
 
 
-IRC_CODES = (
-    '251', '252', '254', '255', '265', '266', '250', '333', '353', '366',
-    '372', '375', '376', 'QUIT', 'NICK'
-)
 cwd = os.getcwd()
 
 
@@ -88,96 +84,6 @@ class Bot(asynchat.async_chat):
     # def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
-    def format(self, message, shorten_urls=True):
-        '''
-            formatting to support color/bold/italic/etc assignment
-            and URL shortening in Codes responses
-        '''
-        message = uncharset(message)
-        if self.config('shorten_urls') and shorten_urls:
-            regex = re.compile(
-                r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
-                re.IGNORECASE).findall(message)
-            for url in regex:
-                try:
-                    message = message.replace(url, shorten(url))
-                except:
-                    pass
-        if not self.config('text_decorations'):
-            return self.clear_format(message)
-        try:
-            message = message.format(**self.special_chars)
-            return message
-        except:
-            return self.clear_format(message)
-
-    def clear_format(self, message):
-        find_char = re.compile(r'{.*?}')
-        charlist = find_char.findall(message)
-        for custom in charlist:
-            message = message.replace(custom, '', 1)
-        return message
-
-    def quit(self, message=None):
-        '''Disconnect from IRC and close the bot'''
-        if not message:
-            message = 'Terminating Code.'
-        self.write(['QUIT'], message)
-        self.hasquit = True
-        __import__('os')._exit(0)
-
-    def part(self, channel):
-        '''Part a channel'''
-        self.write(['PART'], channel)
-
-    def join(self, channel, password=None):
-        '''Join a channel'''
-        output.info('Attempting to join channel %s' % channel, 'JOIN')
-        try:
-            channel = unicode(channel, 'utf-8')
-        except:
-            pass
-        if password is None:
-            self.write(['JOIN', channel])
-        else:
-            self.write(['JOIN', channel, password])
-
-    def __write(self, args, text=None, raw=False):
-        try:
-            if raw:
-                temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
-            elif not raw:
-                if text:
-                    # 510 because CR and LF count too
-                    temp = (' '.join(args) + ' :' + text)[:510] + '\r\n'
-                else:
-                    temp = ' '.join(args)[:510] + '\r\n'
-            self.push(temp)
-            if self.debug and 'nickserv' not in temp.lower():
-                output.warning(' > ' + temp, 'DEBUG')
-        except IndexError:
-            return
-
-    def write(self, args, text=None, raw=False, output=True):
-        # output isn't used /yet/
-        try:
-            args = [self.safe(arg, u=True) for arg in args]
-            if text is not None:
-                text = self.safe(text, u=True)
-            if raw:
-                self.__write(args, text, raw)
-            else:
-                self.__write(args, text)
-        except:
-            pass
-
-    def safe(self, input, u=False):
-        if input:
-            input = input.replace('\n', '').replace('\r', '')
-            if u:
-                input = input.encode('utf-8')
-        return input
-
     def run(self, host, port):
         self.initiate_connect(host, port)
 
@@ -220,20 +126,6 @@ class Bot(asynchat.async_chat):
         self.write(('USER', self.user, '+iw', self.nick),
                    self.name, output=False)
 
-    def changenick(self, nick):
-        chars = set('`+=;,<>?')
-        if not any((c in chars) for c in nick) and nick[0] != '-' and \
-           len(nick) > 1 and len(nick) <= 20:
-            self.write(('NICK', self.nick))
-            self.nick = nick.encode('ascii', 'ignore')
-            # we can't tell yet if the
-            # nick successfully changed,
-            # so this variable will get
-            # messed up, if unsuccessful.
-            return True
-        else:
-            return None
-
     def handle_close(self):
         self.close()
         output.error('Disconnected from IRC - Reason unknown!')
@@ -246,52 +138,14 @@ class Bot(asynchat.async_chat):
 
     def collect_incoming_data(self, data):
         self.buffer += data
-        if not data:
-            return
-
-        if self.debug:
-            output.warning(data, 'DEBUG')
-
-        self.raw = data.replace('\x02', '').replace('\r', '')
-        line = self.raw.strip()
-
-        if not line.startswith(':'):
-            return
-
-        try:
-            if line[1::].split()[0] == self.nick:
-                return
-
-            code = line.split()[1]
-            getattr(triggers, 'trigger_%s' % code)(self, line,)
-        except (AttributeError, IndexError, KeyError):
-            return
-
-    def stripcolors(self, data):
-        """STRIP ALL ZE COLORS! Note: the replacement method is CRUCIAL to keep from
-           left over color digits. Order is very important."""
-        colors = [
-            u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
-            u"\x0306", u"\x0307", u"\x0308", u"\x0309", u"\x0310", u"\x0311",
-            u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x031", u"\x032",
-            u"\x033", u"\x034", u"\x035", u"\x036", u"\x037", u"\x038", u"\x039",
-            u"\x030", u"\x03", u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"
-        ]
-        data = uncharset(data)
-        for color in colors:
-            try:
-                data = data.replace(color, '')
-            except:
-                pass
-        return str(data.encode('ascii', 'ignore'))
 
     def found_terminator(self):
         line = self.buffer
+        self.raw = line
         if line.endswith('\r'):
             line = line[:-1]
         self.buffer = ''
 
-        # print line
         if line.startswith(':'):
             source, line = line[1:].split(' ', 1)
         else:
@@ -310,9 +164,76 @@ class Bot(asynchat.async_chat):
 
         if args[0] == 'PING':
             self.write(('PONG', text))
+            return
+
+        if self.debug:
+            output.warning(repr(self.raw), 'DEBUG')
+
+        try:
+            if not source or origin.nick == self.nick:
+                return
+
+            getattr(triggers, 'trigger_%s' % args[0])(self, origin, line, args, text,)
+        except AttributeError:
+            return
 
     def dispatch(self, origin, args):
         pass
+
+    def error(self, origin):
+        try:
+            trace = traceback.format_exc()
+            output.error(trace)
+            lines = list(reversed(trace.splitlines()))
+            report = [lines[0].strip()]
+            for line in lines:
+                line = line.strip()
+                if line.startswith('File "/'):
+                    report.append(line[0].lower() + line[1:])
+                    break
+            else:
+                report.append('{red}Source unknown.')
+
+            self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
+        except:
+            self.msg(origin.sender, '{red}Got an error.')
+
+    def __write(self, args, text=None, raw=False):
+        try:
+            if raw:
+                temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
+            elif not raw:
+                if text:
+                    # 510 because CR and LF count too
+                    temp = (' '.join(args) + ' :' + text)[:510] + '\r\n'
+                else:
+                    temp = ' '.join(args)[:510] + '\r\n'
+            self.push(temp)
+            if self.debug and 'nickserv' not in temp.lower():
+                output.warning(' > ' + temp, 'DEBUG')
+        except IndexError:
+            return
+
+    def write(self, args, text=None, raw=False, output=True):
+        try:
+            args = [self.safe(arg, u=True) for arg in args]
+            if text is not None:
+                text = self.safe(text, u=True)
+            if raw:
+                self.__write(args, text, raw)
+            else:
+                self.__write(args, text)
+        except:
+            pass
+
+    def safe(self, input, u=False):
+        input = input.replace('\n', '').replace('\r', '')
+        if u:
+            try:
+                input = input.encode('utf-8')
+            except:
+                pass
+        return input
 
     def msg(self, recipient, text, x=False, shorten_urls=True):
         self.sending.acquire()
@@ -361,32 +282,95 @@ class Bot(asynchat.async_chat):
 
         self.sending.release()
 
+    def format(self, message, shorten_urls=True):
+        '''
+            formatting to support color/bold/italic/etc assignment
+            and URL shortening in Codes responses
+        '''
+        message = uncharset(message)
+        if self.config('shorten_urls') and shorten_urls:
+            regex = re.compile(
+                r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
+                re.IGNORECASE).findall(message)
+            for url in regex:
+                try:
+                    message = message.replace(url, shorten(url))
+                except:
+                    pass
+        if not self.config('text_decorations'):
+            return self.clear_format(message)
+        try:
+            message = message.format(**self.special_chars)
+            return message
+        except:
+            return self.clear_format(message)
+
+    def clear_format(self, message):
+        find_char = re.compile(r'{.*?}')
+        charlist = find_char.findall(message)
+        for custom in charlist:
+            message = message.replace(custom, '', 1)
+        return message
+
+    def stripcolors(self, data):
+        '''Note: the replacement method is CRUCIAL to keep from
+           left over color digits. Order is very important.'''
+        colors = [
+            u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
+            u"\x0306", u"\x0307", u"\x0308", u"\x0309", u"\x0310", u"\x0311",
+            u"\x0312", u"\x0313", u"\x0314", u"\x0315", u"\x031", u"\x032",
+            u"\x033", u"\x034", u"\x035", u"\x036", u"\x037", u"\x038", u"\x039",
+            u"\x030", u"\x03", u"\x02", u"\x09", u"\x13", u"\x0f", u"\x15"
+        ]
+        data = uncharset(data)
+        for color in colors:
+            try:
+                data = data.replace(color, '')
+            except:
+                pass
+        return str(data.encode('ascii', 'ignore'))
+
+    def changenick(self, nick):
+        chars = set('`+=;,<>?')
+        if not any((c in chars) for c in nick) and nick[0] != '-' and \
+           len(nick) > 1 and len(nick) <= 20:
+            self.write(('NICK', self.nick))
+            self.nick = nick.encode('ascii', 'ignore')
+            return True
+        else:
+            return None
+
     def notice(self, dest, text):
         '''Send an IRC NOTICE to a user or a channel. See IRC protocol
            documentation for more information'''
         text = self.format(text)
         self.write(('NOTICE', dest), text)
 
-    def action(self, dest, text):
+    def me(self, dest, text):
         '''Send an action (/me) to a user or a channel'''
         text = self.format(text)
-        self.write(('PRIVMSG', dest), '\x01ACTION ' + text + '\x01')
+        self.write(('PRIVMSG', dest), '\x01ACTION {}\x01'.format(text))
 
-    def error(self, origin):
+    def quit(self, message=None):
+        '''Disconnect from IRC and close the bot'''
+        if not message:
+            message = 'Terminating Code.'
+        self.write(['QUIT'], message)
+        self.hasquit = True
+        __import__('os')._exit(0)
+
+    def part(self, channel):
+        '''Part a channel'''
+        self.write(['PART'], channel)
+
+    def join(self, channel, password=None):
+        '''Join a channel'''
+        output.info('Attempting to join channel %s' % channel, 'JOIN')
         try:
-            # import traceback
-            trace = traceback.format_exc()
-            output.error(trace)
-            lines = list(reversed(trace.splitlines()))
-            report = [lines[0].strip()]
-            for line in lines:
-                line = line.strip()
-                if line.startswith('File "/'):
-                    report.append(line[0].lower() + line[1:])
-                    break
-            else:
-                report.append('{red}Source unknown.')
-
-            self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
+            channel = unicode(channel, 'utf-8')
         except:
-            self.msg(origin.sender, '{red}Got an error.')
+            pass
+        if password is None:
+            self.write(['JOIN', channel])
+        else:
+            self.write(['JOIN', channel, password])

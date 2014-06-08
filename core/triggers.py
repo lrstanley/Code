@@ -11,23 +11,21 @@ import time
 import os
 
 
-def trigger_250(code, line):
-    msg, sender = line.split(':', 2)[2], line.split(':', 2)[1].split()[0]
-    output.normal('(%s) %s' % (sender, msg), 'NOTICE')
+def trigger_250(code, origin, line, args, text):
+    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 
 
-def trigger_251(code, line):
-    return trigger_250(code, line)
+def trigger_251(code, origin, line, args, text):
+    return trigger_250(code, origin, line, args, text)
 
 
-def trigger_255(code, line):
-    return trigger_250(code, line)
+def trigger_255(code, origin, line, args, text):
+    return trigger_250(code, origin, line, args, text)
 
 
-def trigger_353(code, line):
+def trigger_353(code, origin, line, args, text):
     # NAMES event
-    channel, user_list = line[1::].split(':', 1)
-    code.channels.append(channel)
+    channel, user_list = args[3], args[4]
     channel, user_list = '#' + \
         channel.split('#', 1)[1].strip(), user_list.strip().split()
     if channel not in code.chan:
@@ -46,159 +44,156 @@ def trigger_353(code, line):
                                     voiced, 'op': op, 'count': 0, 'messages': []}
 
 
-def trigger_433(code, line):
-    output.warning('Nickname %s is already in use. Trying another..' %
-                   code.nick)
+def trigger_433(code, origin, line, args, text):
+    output.warning('Nickname {} is already in use. Trying another..'.format(
+                   code.nick))
     nick = code.nick + '_'
     code.write(('NICK', nick))
     code.nick = nick.encode('ascii', 'ignore')
 
 
-def trigger_437(code, line):
-    output.error(line.split(':', 2)[2])
+def trigger_437(code, origin, line, args, text):
+    output.error(text)
     os._exit(1)
 
 
-def trigger_NICK(code, line):
-    nick = line[1::].split('!', 1)[0]
-    new_nick = line[1::].split(':', 1)[1]
-    output.normal('%s is now known as %s' % (nick, new_nick), 'NICK')
+def trigger_NICK(code, origin, line, args, text):
+    print line
+    print args
+    output.normal('{} is now known as {}'.format(origin.nick, args[1]), 'NICK')
+
+    # Rename old users to new ones in the database...
+    for channel in code.chan:
+        if origin.nick in code.chan[channel]:
+            old = code.chan[channel][origin.nick]
+            del code.chan[channel][origin.nick]
+            code.chan[channel][args[1]] = old
 
 
-def trigger_PRIVMSG(code, line):
-    re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) PRIVMSG (.*?) \:(.*?)$'
-    nick, ident, host, sender, msg = re.compile(re_tmp).match(line).groups()
-    msg = code.stripcolors(msg)
-    if msg.startswith('\x01'):
-        msg = '(me) ' + msg.split(' ', 1)[1].strip('\x01')
-    output.normal('(%s) %s' % (nick, msg), sender)
+
+def trigger_PRIVMSG(code, origin, line, args, text):
+    text = code.stripcolors(text)
+    if text.startswith('\x01'):
+        text = '(me) ' + text.split(' ', 1)[1].strip('\x01')
+    output.normal('({}) {}'.format(origin.nick, text), args[1])
 
     # Stuff for user_list
-    if sender.startswith('#'):
-        if nick not in code.chan[sender]:
-            code.chan[sender][nick] = {'normal': True, 'voiced':
+    if args[1].startswith('#'):
+        if origin.nick not in code.chan[args[1]]:
+            code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
                                        False, 'op': False, 'count': 0, 'messages': []}
-        code.chan[sender][nick]['count'] += 1
+        code.chan[args[1]][origin.nick]['count'] += 1
         # 1. per-channel-per-user message storing...
-        code.chan[sender][nick]['messages'].append(
-            {'time': int(time.time()), 'message': msg})
+        code.chan[args[1]][origin.nick]['messages'].append(
+            {'time': int(time.time()), 'message': text})
         # Ensure it's not more than 20 of the last messages
-        code.chan[sender][nick]['messages'] = code.chan[
-            sender][nick]['messages'][-20:]
+        code.chan[args[1]][origin.nick]['messages'] = code.chan[
+            args[1]][origin.nick]['messages'][-20:]
         # 2. Per channel message storing...
-        tmp = {'message': msg, 'nick': nick, 'time': int(time.time()), 'channel': sender}
-        code.logs['channel'][sender].append(tmp)
-        code.logs['channel'][sender] = code.logs['channel'][sender][-20:]
+        tmp = {'message': text, 'nick': origin.nick, 'time': int(time.time()), 'channel': args[1]}
+        code.logs['channel'][args[1]].append(tmp)
+        code.logs['channel'][args[1]] = code.logs['channel'][args[1]][-20:]
         # 3. All bot messages in/out, maxed out by n * 20 (n being number of channels)
         code.logs['bot'].append(tmp)
         code.logs['bot'] = code.logs['bot'][-(20*len(code.channels)):]
 
 
-def trigger_NOTICE(code, line):
-    re_tmp = r'^\:(.*?) NOTICE (.*?) \:(.*?)$'
-    nick, sender, msg = re.compile(re_tmp).match(line).groups()
-    if 'Invalid password for ' in msg:
+def trigger_NOTICE(code, origin, line, args, text):
+    if 'Invalid password for ' in text:
         output.error('Invalid NickServ password')
         os._exit(1)
-    output.normal('(%s) %s' % (nick.split('!')[0], msg), 'NOTICE')
+    output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
 
 
-def trigger_KICK(code, line):
-    re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) KICK (.*?) (.*?) \:(.*?)$'
-    nick, ident, host, sender, kicked, reason = re.compile(
-        re_tmp).match(line).groups()
-    output.normal('%s has kicked %s from %s. Reason: %s' %
-                  (nick, kicked, sender, reason), 'KICK', 'red')
-
-    # Stuff for user_list
-    tmp = line.split('#', 1)[1].split()
-    channel, name = '#' + tmp[0], tmp[1]
-    del code.chan[channel][name]
+def trigger_KICK(code, origin, line, args, text):
+    output.normal('{} has kicked {} from {}. Reason: {}'.format(origin.nick, args[2], args[1], args[3]), 'KICK', 'red')
+    del code.chan[args[1]][args[2]]
 
 
-def trigger_MODE(code, line):
-    re_tmp = r'^\:(.*?)\!(.*?)\@(.*?) MODE (.*?)$'
-    try:
-        nick, ident, host, args = re.compile(re_tmp).match(line).groups()
-    except:
+def trigger_MODE(code, origin, line, args, text):
+    if len(args) == 3:
+        output.normal('{} sets MODE {}'.format(origin.nick, text), 'MODE')
         return
-    output.normal('%s sets MODE %s' % (nick, args), 'MODE')
+    else:
+        output.normal('{} sets MODE {}'.format(origin.nick, args[2]), args[1])
 
     # Stuff for user_list
-    data = line.split('MODE', 1)[1]
-    if len(data.split()) >= 3:
-        channel, modes, users = data.strip().split(' ', 2)
-        users = users.split()
+    data = ' '.join(args[1:])
+
+    channel, modes, users = data.strip().split(' ', 2)
+    users = users.split()
+    tmp = []
+
+    def remove(old, sign):
         tmp = []
+        modes = []
+        for char in old:
+            modes.append(char)
+        while sign in modes:
+            i = modes.index(sign)
+            tmp.append(i)
+            del modes[i]
+        return tmp, ''.join(modes)
 
-        def remove(old, sign):
-            tmp = []
-            modes = []
-            for char in old:
-                modes.append(char)
-            while sign in modes:
-                i = modes.index(sign)
-                tmp.append(i)
-                del modes[i]
-            return tmp, ''.join(modes)
-
-        if modes.startswith('+'):
-            _plus, new_modes = remove(modes, '+')
-            _minus, new_modes = remove(new_modes, '-')
-        else:
-            _minus, new_modes = remove(modes, '-')
-            _plus, new_modes = remove(new_modes, '+')
-
-        for index in range(len(users)):
-            _usr = users[index]
-            _mode = new_modes[index]
-            _sign = ''
-            if index in _plus:
-                _sign = '+'
-            if index in _minus:
-                _sign = '-'
-            tmp.append({'name': _usr, 'mode': _mode, 'sign': _sign})
-
-        last_used = ''
-
-        for index in range(len(tmp)):
-            if not last_used:
-                last_used = tmp[index]['sign']
-            if not tmp[index]['sign'] or len(tmp[index]['sign']) == 0:
-                tmp[index]['sign'] = last_used
-            else:
-                last_used = tmp[index]['sign']
-
-        names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
-        for user in tmp:
-            if user['mode'] in names and user['sign'] in names:
-                mode, name, sign = names[user['mode']
-                                         ], user['name'], names[user['sign']]
-                code.chan[channel][name][mode] = sign
-                if mode == 'op' and sign:
-                    code.chan[channel][name]['voiced'] = True
-
-
-def trigger_JOIN(code, line):
-    name = line[1::].split('!', 1)[0]
-    channel = line.split('JOIN', 1)[1].strip()
-    if name != code.nick:
-        code.chan[channel][name] = {'normal': True, 'voiced':
-                                    False, 'op': False, 'count': 0, 'messages': []}
-
-
-def trigger_PART(code, line):
-    name = line[1::].split('!', 1)[0]
-    channel = line.split('PART', 1)[1].split()[0]
-    if name == code.nick:
-        del code.chan[channel]
-        del code.logs['channel'][channel]
+    if modes.startswith('+'):
+        _plus, new_modes = remove(modes, '+')
+        _minus, new_modes = remove(new_modes, '-')
     else:
-        del code.chan[channel][name]
+        _minus, new_modes = remove(modes, '-')
+        _plus, new_modes = remove(new_modes, '+')
+
+    for index in range(len(users)):
+        _usr = users[index]
+        _mode = new_modes[index]
+        _sign = ''
+        if index in _plus:
+            _sign = '+'
+        if index in _minus:
+            _sign = '-'
+        tmp.append({'name': _usr, 'mode': _mode, 'sign': _sign})
+
+    last_used = ''
+
+    for index in range(len(tmp)):
+        if not last_used:
+            last_used = tmp[index]['sign']
+        if not tmp[index]['sign'] or len(tmp[index]['sign']) == 0:
+            tmp[index]['sign'] = last_used
+        else:
+            last_used = tmp[index]['sign']
+
+    names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
+    for user in tmp:
+        if user['mode'] in names and user['sign'] in names:
+            mode, name, sign = names[user['mode']
+                                     ], user['name'], names[user['sign']]
+            code.chan[channel][name][mode] = sign
+            if mode == 'op' and sign:
+                code.chan[channel][name]['voiced'] = True
 
 
-def trigger_QUIT(code, line):
-    name = line[1::].split('!', 1)[0]
+def trigger_JOIN(code, origin, line, args, text):
+    if origin.nick != code.nick:
+        code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
+                                    False, 'op': False, 'count': 0, 'messages': []}
+    output.normal('{} has joined {}'.format(origin.nick, args[1]), args[1])
+
+
+def trigger_PART(code, origin, line, args, text):
+    if origin.nick == code.nick:
+        del code.chan[args[1]]
+        del code.logs['channel'][args[1]]
+    else:
+        del code.chan[args[1]][origin.nick]
+    if len(args) == 3:
+        reason = args[2]
+    else:
+        reason = 'Unknown'
+    output.normal('{} has part {}. Reason: {}'.format(origin.nick, args[1], reason), args[1])
+
+
+def trigger_QUIT(code, origin, line, args, text):
+    print args
     for channel in code.chan:
-        if name in channel:
-            del code.chan[channel][name]
+        if origin.nick in channel:
+            del code.chan[channel][origin.nick]
