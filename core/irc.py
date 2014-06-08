@@ -300,7 +300,8 @@ class Bot(asynchat.async_chat):
         if not self.config('text_decorations'):
             return self.clear_format(message)
         try:
-            message = message.format(**self.special_chars)
+            for special in self.special_chars:
+                message = message.replace('{%s}' % special, self.special_chars[special])
             return message
         except:
             return self.clear_format(message)
