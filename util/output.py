@@ -34,11 +34,17 @@ def format_colors(message):
 def template(message, prefix, color, error=False):
     if not prefix:
         prefix = ''
+
+    if isinstance(message, unicode):
+        message = message.encode('ascii', 'ignore')
+    if isinstance(prefix, unicode):
+        prefix = prefix.encode('ascii', 'ignore')
+
     if not parse:
         if error:
-            print >> sys.stderr, '[%s] %s' % (prefix, message)
+            print >> sys.stderr, '[{}] {}'.format(prefix, message)
         else:
-            print >> sys.stdout, '[%s] %s' % (prefix, message)
+            print >> sys.stdout, '[{}] {}'.format(prefix, message)
         return
     prefix_length = len(prefix) + 2
     if prefix_length >= pad:
@@ -46,20 +52,20 @@ def template(message, prefix, color, error=False):
     else:
         padding = ' ' * (pad - prefix_length)
     if len(prefix) > 1:
-        prefix = '[%s]' % prefix
+        prefix = '[' + prefix + ']'
     else:
         prefix = '  '
-    prefix = '$%s%s$bold%s$reset' % (color.lower(), padding, prefix.upper())
+    prefix = '${}{}$bold{}$reset'.format(color.lower(), padding, prefix.upper())
     clean_prefix = ' ' * pad
-    data = ' | %s$reset'
+    data = ' | {}$reset'
     for line in message.split('\n'):
         lines = split_len(line, split_at)
         count = 1
         for current in lines:
             if count == 1:
-                text = format_colors(prefix + (data % current))
+                text = format_colors(prefix + (data.format(current)))
             else:
-                text = format_colors(clean_prefix + (data % current))
+                text = format_colors(clean_prefix + (data.format(current)))
             if error:
                 print >> sys.stderr, text
             else:
