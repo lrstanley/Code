@@ -34,7 +34,7 @@ def findandreplace(code, input):
 
     umsg = list(reversed(code.chan[input.sender][input.nick]['messages']))
     for i in range(len(umsg)):
-        if umsg[i]['message'].startswith('(me)') or umsg[i]['message'].startswith('s/'):
+        if umsg[i]['message'].startswith('(me)') or ' s/' in umsg[i]['message'] or umsg[i]['message'].startswith('s/'):
             continue
 
         new_msg = repl(umsg[i]['message'])
