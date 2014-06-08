@@ -50,6 +50,9 @@ def tell(code, input):
     if location.lower() in ['code', code.nick.lower()]:
         return code.reply('{b}Thanks for letting me know.')
 
+    if location == input.nick:
+        return code.reply('{b}You can tell yourself that.')
+
     if location.lower() in db:
         for entry in db[location.lower()]:
             if msg == entry['msg'] and input.nick.lower() == entry['sender'].lower():
