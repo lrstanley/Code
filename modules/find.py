@@ -33,6 +33,7 @@ def findandreplace(code, input):
         return
 
     umsg = list(reversed(code.chan[input.sender][input.nick]['messages']))
+    msg_index = None
     for i in range(len(umsg)):
         if umsg[i]['message'].startswith('(me)') or ' s/' in umsg[i]['message'] or umsg[i]['message'].startswith('s/'):
             continue
@@ -42,8 +43,10 @@ def findandreplace(code, input):
             msg_index = i
             break
 
+    if not msg_index:
+        return code.say('{red}Nothing to replace!')
     if not new_msg or new_msg == umsg[msg_index]['message']:
-        return  # Didn't find anything
+        return
 
     # Save the new "edited" message.
     # Remember, the above index is reversed so unreverse it.
