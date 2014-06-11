@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Code Copyright (C) 2012-2014 Liam Stanley
-run.py - Code Initialization Module
+triggers.py - Code IRC Raw Trigger Module
 https://www.liamstanley.io/Code.git
 """
 
