@@ -24,7 +24,8 @@
     "text_decorations": true,
     // Some modules are disabled by default because they require further setup
     "excluded_modules": [
-        "admin_channel"
+        "admin_channel",
+        "unicode_lookup"
     ],
     // Block modules from specific channels
     // "!" being all
