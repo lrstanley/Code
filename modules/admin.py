@@ -1,4 +1,5 @@
 import os
+import sys
 from util.hook import *
 
 defaultnick = None
@@ -25,11 +26,16 @@ def part(code, input):
     return code.write(['PART', input.group(2).strip()])
 
 
-@hook(cmds=['quit', 'terminate', 'shutdown', 'stop'], owner=True)
+@hook(cmds=['restart', 'reboot', 'reconnect'], owner=True)
+def restart(code, input):
+    '''Reconnect to the server. (Fully restarts the server process) This is an owner-only command.'''
+    code.restart()
+
+
+@hook(cmds=['quit', 'disconnect', 'shutdown', 'stop'], owner=True)
 def quit(code, input):
     '''Quit from the server. This is an owner-only command.'''
-    code.write(['QUIT'], 'Terminating Bot.')
-    __import__('os')._exit(0)
+    code.quit()
 
 
 @hook(cmds=['name', 'nick', 'nickname'], priority='low', owner=True, args=True)

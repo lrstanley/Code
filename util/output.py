@@ -55,7 +55,8 @@ def template(message, prefix, color, error=False):
         prefix = '[' + prefix + ']'
     else:
         prefix = '  '
-    prefix = '${}{}$bold{}$reset'.format(color.lower(), padding, prefix.upper())
+    prefix = '${}{}$bold{}$reset'.format(
+        color.lower(), padding, prefix.upper())
     clean_prefix = ' ' * pad
     data = ' | {}$reset'
     for line in message.split('\n'):

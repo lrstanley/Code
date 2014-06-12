@@ -70,7 +70,6 @@ def trigger_NICK(code, origin, line, args, text):
             code.chan[channel][args[1]] = old
 
 
-
 def trigger_PRIVMSG(code, origin, line, args, text):
     text = code.stripcolors(text)
     if text.startswith('\x01'):
@@ -81,7 +80,7 @@ def trigger_PRIVMSG(code, origin, line, args, text):
     if args[1].startswith('#'):
         if origin.nick not in code.chan[args[1]]:
             code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
-                                       False, 'op': False, 'count': 0, 'messages': []}
+                                               False, 'op': False, 'count': 0, 'messages': []}
         code.chan[args[1]][origin.nick]['count'] += 1
         # 1. per-channel-per-user message storing...
         code.chan[args[1]][origin.nick]['messages'].append(
@@ -90,12 +89,14 @@ def trigger_PRIVMSG(code, origin, line, args, text):
         code.chan[args[1]][origin.nick]['messages'] = code.chan[
             args[1]][origin.nick]['messages'][-20:]
         # 2. Per channel message storing...
-        tmp = {'message': text, 'nick': origin.nick, 'time': int(time.time()), 'channel': args[1]}
+        tmp = {'message': text, 'nick': origin.nick,
+               'time': int(time.time()), 'channel': args[1]}
         code.logs['channel'][args[1]].append(tmp)
         code.logs['channel'][args[1]] = code.logs['channel'][args[1]][-20:]
-        # 3. All bot messages in/out, maxed out by n * 20 (n being number of channels)
+        # 3. All bot messages in/out, maxed out by n * 20 (n being number of
+        # channels)
         code.logs['bot'].append(tmp)
-        code.logs['bot'] = code.logs['bot'][-(20*len(code.channels)):]
+        code.logs['bot'] = code.logs['bot'][-(20 * len(code.channels)):]
 
 
 def trigger_NOTICE(code, origin, line, args, text):
@@ -106,7 +107,8 @@ def trigger_NOTICE(code, origin, line, args, text):
 
 
 def trigger_KICK(code, origin, line, args, text):
-    output.normal('{} has kicked {} from {}. Reason: {}'.format(origin.nick, args[2], args[1], args[3]), 'KICK', 'red')
+    output.normal('{} has kicked {} from {}. Reason: {}'.format(
+        origin.nick, args[2], args[1], args[3]), 'KICK', 'red')
     del code.chan[args[1]][args[2]]
 
 
@@ -175,7 +177,7 @@ def trigger_MODE(code, origin, line, args, text):
 def trigger_JOIN(code, origin, line, args, text):
     if origin.nick != code.nick:
         code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
-                                    False, 'op': False, 'count': 0, 'messages': []}
+                                           False, 'op': False, 'count': 0, 'messages': []}
     output.normal('{} has joined {}'.format(origin.nick, args[1]), args[1])
 
 
@@ -189,11 +191,11 @@ def trigger_PART(code, origin, line, args, text):
         reason = args[2]
     else:
         reason = 'Unknown'
-    output.normal('{} has part {}. Reason: {}'.format(origin.nick, args[1], reason), args[1])
+    output.normal('{} has part {}. Reason: {}'.format(
+        origin.nick, args[1], reason), args[1])
 
 
 def trigger_QUIT(code, origin, line, args, text):
-    print args
     for channel in code.chan:
         if origin.nick in channel:
             del code.chan[channel][origin.nick]

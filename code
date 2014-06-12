@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 """
-Code Copyright (C) 2012-2014 Liam Stanley - http://liamstanley.io
+Code Copyright (C) 2012-2014 Liam Stanley
 Source: https://github.com/Liamraystanley/Code
-Documentation: https://www.liamstanley.io/Code.git
+Docs: https://www.liamstanley.io/Code.git
 """
 
 import sys
@@ -10,14 +10,17 @@ import os
 import re
 import json
 import optparse
-from core.run import run
+import time
+from multiprocessing import Process
+from core import bot
 from util import output
 
 dotdir = os.path.expanduser('~/.code')
 configv = 7
+threads = []
 
 
-def start():
+def docstring():
     symbol = '*'
     lines = __doc__.strip().split('\n')
     largest = 0
@@ -51,6 +54,32 @@ def parse_json(filename):
         return json.loads(content)
 
 
+def setupServer(server):
+    defaults = {
+        'website': 'https://www.liamstanley.io/Code.git',
+        'name': '\x0307Code -- Python IRC Bot',
+        'user': 'code',
+        'port': 6667,
+        'server_password': None
+    }
+
+    for key, value in defaults.iteritems():
+        if key not in server:
+            server[key] = value
+            continue
+        if not server[key]:
+            server[key] = value
+
+    if server['host'] == 'irc.example.net':
+        error = (
+            'You must edit the config file first!\n'
+            'You\'re currently using %s' % server.filename
+        )
+        output.error(error)
+        sys.exit(1)
+    return server
+
+
 def main(argv=None):
     # 1: Parse The Command Line
 
@@ -62,7 +91,7 @@ def main(argv=None):
     opts, args = parser.parse_args(argv)
 
     # 2: Documentation output
-    start()
+    docstring()
 
     # 3: Require python 2.7 or later
     if sys.version_info < (2, 7):
@@ -74,9 +103,9 @@ def main(argv=None):
         if not os.path.isdir(dotdir):
             try:
                 output.info(
-                    'Creating creating database directory in ~/.code...')
+                    'Creating database directory in ~/.code...')
                 os.mkdir(dotdir)
-            except Exception, e:
+            except Exception as e:
                 output.error('There was a problem creating %s:' % dotdir)
                 output.error(str(e))
                 output.error('Please fix this and then run code again.')
@@ -94,41 +123,60 @@ def main(argv=None):
 
     try:
         config = parse_json(bot_config)
-    except:
+    except Exception as e:
         output.error(
-            'The config file has syntax errors.'
-            ' Please fix them and run Code again!'
+            'The config file has syntax errors. Please fix them and run Code again!'
+            '\n' + str(e)
         )
         sys.exit(1)
-    config['filename'] = bot_config
 
-    defaults = {
-        'website': 'https://www.liamstanley.io/Code.git',
-        'name': '\x0307Code -- Python IRC Bot',
-        'user': 'code',
-        'port': 6667,
-        'server_password': None
-    }
+    global threads
+    for server in config['servers']:
+        id = len(threads)
+        process = Process(target=connect, args=(id, setupServer(server),))
+        process.daemon = True
+        process.start()
+        threads.append({'id': id, 'config': server, 'process': process})
+        time.sleep(5)
 
-    for key, value in defaults.iteritems():
-        if key not in config:
-            config[key] = value
-            continue
-        if not config[key]:
-            config[key] = value
 
-    if config['host'] == 'irc.example.net':
-        error = (
-            'You must edit the config file first!\n'
-            'You\'re currently using %s' % config.filename
-        )
-        output.error(error)
-        sys.exit(1)
+def connect(id, config):
+    while True:
+        try:
+            # Todo, pass thread number, if more than one thread, pass in console
+            bot.Code(config).run(id, config['host'], config['port'])
+        except:
+            output.error('Error in process (Server: %s, port: %s)' % (config['host'], config['port']))
+            output.error('Terminating and restarting in 20 seconds...')
+            time.sleep(5)
+            output.error('Restarting...')
+            pass
 
-    # 6: Initialise And Run The codeeees
-
-    # @@ ignore SIGHUP
-    run(config)  # @@ thread this
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+        while True:
+            time.sleep(1)
+            if len(threads) == 0:
+                output.error('No more processes to manage. Exiting...', 'ERROR')
+                sys.exit()
+            for id in range(len(threads)):
+                p = threads[id]['process']
+                if p.exitcode == 0:
+                    # Assume it exited safely. Ignore the termination.
+                    p.terminate()
+                    output.success('Terminating process ID %s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+                    del threads[id]
+                    break
+                if p.exitcode == 1:
+                    # Exited erronously. We'll just assume it wants a reboot.
+                    p.terminate()
+                    p = Process(target=connect, args=(id, setupServer(threads[id]['config']),))
+                    p.daemon = True
+                    output.success('Regenerating process ID %s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+                    p.start()
+                    threads[id]['process'] = p
+    except KeyboardInterrupt:
+        output.success('Shutting down bot...', 'REQUEST')
+        sys.exit()

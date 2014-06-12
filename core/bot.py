@@ -11,6 +11,7 @@ import re
 import threading
 import imp
 from core import irc
+from core import functions
 from util import output
 
 home = os.getcwd()
@@ -39,7 +40,6 @@ class Code(irc.Bot):
         irc.Bot.__init__(self, *args)
         self.prefix = self.config('prefix', '.')
         self.doc = {}
-        self.stats = {}
         self.times = {}
         self.modules = []
         self.cmds = {}
@@ -110,9 +110,11 @@ class Code(irc.Bot):
             if module not in core_filenames:
                 tmp_modules.append(module)
         if core_filenames:
-            output.info('Loaded {} core modules: {}'.format(len(core_filenames), ', '.join(core_filenames)))
+            output.info('Loaded {} core modules: {}'.format(
+                len(core_filenames), ', '.join(core_filenames)))
         if self.modules:
-            output.info('Loaded {} modules: {}'.format(len(tmp_modules), ', '.join(tmp_modules)))
+            output.info('Loaded {} modules: {}'.format(
+                len(tmp_modules), ', '.join(tmp_modules)))
         else:
             output.warning('Couldn\'t find any modules')
 
@@ -412,12 +414,6 @@ class Code(irc.Bot):
                             t.start()
                         else:
                             self.call(func, origin, code, input)
-
-                        for source in [origin.sender, origin.nick]:
-                            try:
-                                self.stats[(func.name, source)] += 1
-                            except KeyError:
-                                self.stats[(func.name, source)] = 1
 
     def get(self, key):
         if key in self.data:

@@ -13,6 +13,7 @@ import socket
 import asyncore
 import asynchat
 import os
+import sys
 from util import output
 from util.web import uncharset
 from util.web import shorten
@@ -44,13 +45,11 @@ class Bot(asynchat.async_chat):
         asynchat.async_chat.__init__(self)
         self.set_terminator('\n')
         self.buffer = ''
-
+        self.id = 0
         self.nick = nick
         self.name = name
         self.user = user
         self.server_password = server_password
-
-        self.verbose = True
         self.channels = channels or list()
         self.stack = list()
         self.debug = debug
@@ -84,42 +83,25 @@ class Bot(asynchat.async_chat):
     # def push(self, *args, **kargs):
     #    asynchat.async_chat.push(self, *args, **kargs)
 
-    def run(self, host, port):
+    def run(self, id, host, port):
+        self.id = id
         self.initiate_connect(host, port)
 
     def initiate_connect(self, host, port):
-        count = 0
-        max_attempts = 5
-        if self.config('connect_delay'):
-            delay = int(self.config('connect_delay'))
-        else:
-            delay = 20
-        while True:
-            if count >= max_attempts:
-                break
-            try:
-                count += 1
-                if count > 1:
-                    output.error(
-                        'Failed to connect! Trying again in '
-                        '%s seconds.' % str(delay)
-                    )
-                    time.sleep(delay)
-                if self.verbose:
-                    output.normal('Connecting to %s:%s... (try %s)' %
-                                  (host, port, str(count)), 'STATUS')
-                self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.connect((host, port))
-                count = 0
-                asyncore.loop()
-            except:
-                pass
-        output.error('Too many failed attempts. Exiting.')
-        os._exit(1)
+        output.normal('Connecting to %s:%s... ' %
+                      (host, port), 'STATUS')
+        try:
+            self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.connect((host, port))
+            asyncore.loop()
+        except KeyboardInterrupt:
+            os._exit(0)
+        except:
+            output.error('Failed to keep connection to %s:%s!' % (host, port))
+            sys.exit()
 
     def handle_connect(self):
-        if self.verbose:
-            output.success('Connected!', 'STATUS')
+        output.success('Connected!', 'STATUS')
         if self.server_password:
             self.write(('PASS', self.server_password), output=False)
         self.write(('NICK', self.nick), output=False)
@@ -127,8 +109,7 @@ class Bot(asynchat.async_chat):
                    self.name, output=False)
 
     def handle_close(self):
-        self.close()
-        output.error('Disconnected from IRC - Reason unknown!')
+        os._exit(1)
 
     def handle_error(self):
         '''Handle any uncaptured error in the core. Overrides asyncore's handle_error'''
@@ -173,7 +154,8 @@ class Bot(asynchat.async_chat):
             if not source or origin.nick == self.nick:
                 return
 
-            getattr(triggers, 'trigger_%s' % args[0])(self, origin, line, args, text,)
+            getattr(triggers, 'trigger_%s' %
+                    args[0])(self, origin, line, args, text,)
         except AttributeError:
             return
 
@@ -242,12 +224,12 @@ class Bot(asynchat.async_chat):
         if isinstance(text, unicode):
             try:
                 text = text.encode('utf-8')
-            except UnicodeEncodeError, e:
+            except UnicodeEncodeError as e:
                 text = e.__class__ + ': ' + str(e)
         if isinstance(recipient, unicode):
             try:
                 recipient = recipient.encode('utf-8')
-            except UnicodeEncodeError, e:
+            except UnicodeEncodeError as e:
                 return
 
         if not x:
@@ -301,7 +283,8 @@ class Bot(asynchat.async_chat):
             return self.clear_format(message)
         try:
             for special in self.special_chars:
-                message = message.replace('{%s}' % special, self.special_chars[special])
+                message = message.replace('{%s}' %
+                                          special, self.special_chars[special])
             return message
         except:
             return self.clear_format(message)
@@ -352,13 +335,13 @@ class Bot(asynchat.async_chat):
         text = self.format(text)
         self.write(('PRIVMSG', dest), '\x01ACTION {}\x01'.format(text))
 
-    def quit(self, message=None):
-        '''Disconnect from IRC and close the bot'''
-        if not message:
-            message = 'Terminating Code.'
-        self.write(['QUIT'], message)
-        self.hasquit = True
-        __import__('os')._exit(0)
+    def restart(self):
+        '''Reconnect to IRC and restart the bot process'''
+        os._exit(1)
+
+    def quit(self):
+        '''Disconnect from IRC and close the bot process'''
+        os._exit(0)
 
     def part(self, channel):
         '''Part a channel'''
