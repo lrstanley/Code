@@ -11,7 +11,6 @@ import re
 import threading
 import imp
 from core import irc
-from core import functions
 from util import output
 
 home = os.getcwd()
