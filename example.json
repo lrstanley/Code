@@ -1,62 +1,93 @@
-{
-    "nick": "Code",
-    "name": "",
-    "user": "",
-    "host": "irc.example.net",
-    "port": 6667,
-    "connect_delay": 20,
-    "server_password": "",
-    "nickserv_username": "",
-    "nickserv_password": "",
-    "channels": [
-        "#example",
-        "#anotherexample"
-    ],
-    // Prefix that Code uses for commands. Some special characters need \ in front of them
-    "prefix": ".",
-    // Shorten URL's using a URL shortening service
-    "shorten_urls": true,
-    "owner": "Yourusername",
-    "admins": [
-        // e.g. "SomeoneYouTrust"
-    ],
-    // Enable or disable /ALMOST/ all color responses from Code
-    "text_decorations": true,
-    // Some modules are disabled by default because they require further setup
-    "excluded_modules": [
-        "admin_channel",
-        "unicode_lookup"
-    ],
-    // Block modules from specific channels
-    // "!" being all
-    "excluded_per_channel": {
-        // "#blacklisted": ["!"]
+{"servers": [
+    {
+        "nick": "Code",
+        "name": "",
+        "user": "",
+        "host": "irc.example.net",
+        "port": 6667,
+        "connect_delay": 20,
+        "server_password": "",
+        "nickserv_username": "",
+        "nickserv_password": "",
+        "channels": [
+            "#example",
+            "#anotherexample"
+        ],
+        // Prefix that Code uses for commands. Some special characters need \ in front of them
+        "prefix": ".",
+        // Shorten URL's using a URL shortening service
+        "shorten_urls": true,
+        "owner": "Yourusername",
+        "admins": [
+            // e.g. "SomeoneYouTrust"
+        ],
+        // Enable or disable /ALMOST/ all color responses from Code
+        "text_decorations": true,
+        // Some modules are disabled by default because they require further setup
+        "excluded_modules": [
+            "admin_channel",
+            "unicode_lookup"
+        ],
+        // Block modules from specific channels
+        // "!" being all
+        "excluded_per_channel": {
+            // "#blacklisted": ["!"]
+        },
+        // Check each user that joins the channel to see if they are in the
+        //   Project Honeypot IP Abuser Database. IP's that are in that Database
+        //   Are involved in spam, DDoS, and more.
+        "honeypot_on_join": true,
+        // Send the location of a user to the channel when they join
+        "geoip_on_join": [
+            // "#example",
+            // "#anotherexample"
+        ],
+        // Would you like to run a webserver alongside Code? This is only for development purposes
+        //   And is accessable with the raw IRC command, and password below (required)
+        //   E.g: http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23MyChannel&data=I+love+trains
+        "webserver": true,
+        "webserver_password": "",
+        // Auto post twitter feeds to specific channels
+        //  - @username
+        //  - #hashtag
+        "twitter_autopost": {
+            // e.g. "#example": ["#YOLO"],
+            // or "#IRCcloud": ["@IRCcloud"]
+        },
+        // Enable this to output all data to console
+        "debug": false,
+        // Extra modules not in the modules directory
+        "extra": [
+            // e.g. "/path/to/my/modules"
+        ]
     },
-    // Check each user that joins the channel to see if they are in the
-    //   Project Honeypot IP Abuser Database. IP's that are in that Database
-    //   Are involved in spam, DDoS, and more.
-    "honeypot_on_join": true,
-    // Send the location of a user to the channel when they join
-    "geoip_on_join": [
-        // "#example",
-        // "#anotherexample"
-    ],
-    // Would you like to run a webserver alongside Code? This is only for development purposes
-    //   And is accessable with the raw IRC command, and password below (required)
-    //   E.g: http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23MyChannel&data=I+love+trains
-    "webserver": true,
-    "webserver_password": "",
-    // Auto post twitter feeds to specific channels
-    //  - @username
-    //  - #hashtag
-    "twitter_autopost": {
-        // e.g. "#example": ["#YOLO"],
-        // or "#IRCcloud": ["@IRCcloud"]
-    },
-    // Enable this to output all data to console
-    "debug": false,
-    // Extra modules not in the modules directory
-    "extra": [
-        // e.g. "/path/to/my/modules"
-    ]
-}
+    {
+        "nick": "AnotherBot",
+        "name": "",
+        "user": "",
+        "host": "irc.anotherexample.net",
+        "port": 6667,
+        "connect_delay": 20,
+        "server_password": "",
+        "nickserv_username": "",
+        "nickserv_password": "",
+        "channels": ["#AnotherExample"],
+        "prefix": "!",
+        "shorten_urls": true,
+        "owner": "Liam",
+        "admins": [],
+        "text_decorations": true,
+        "excluded_modules": ["admin_channel", "unicode_lookup"],
+        "excluded_per_channel": {
+            "#L": ["!"]
+        },
+        "honeypot_on_join": true,
+        "geoip_on_join": [],
+        "webserver": false,
+        "webserver_password": "",
+        "twitter_autopost": {},
+        "debug": false,
+        "extra": []
+    }
+]}
+]}

@@ -132,6 +132,8 @@ def main(argv=None):
 
     global threads
     for server in config['servers']:
+        if server['host'] == 'irc.anotherexample.net':
+            continue
         id = len(threads)
         process = Process(target=connect, args=(id, setupServer(server),))
         process.daemon = True
