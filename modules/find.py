@@ -43,7 +43,7 @@ def findandreplace(code, input):
             msg_index = i
             break
 
-    if not msg_index:
+    if msg_index is None:
         return code.say('{red}Nothing to replace!')
     if not new_msg or new_msg == umsg[msg_index]['message']:
         return
