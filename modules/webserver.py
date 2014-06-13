@@ -22,7 +22,7 @@ class WebServer(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
                                     format % args)
-        output.info(msg, 'WEBSERVER')
+        # output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
         def readfile(fn):
@@ -68,6 +68,7 @@ class WebServer(BaseHTTPRequestHandler):
                             config[key] = value
                     data = {
                         'chan_data': bot.chan,
+                        'logs': bot.logs,
                         'modules': bot.modules,
                         'docs': bot.doc,
                         'config': config

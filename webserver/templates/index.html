@@ -18,13 +18,13 @@
       <ul class="nav navbar-nav side-nav">
         <li class="active"><a href="index.html"><i class="fa fa-dashboard"></i> {{data.config.host}}</a></li>
       {{#each data.chan_data}}
-          <li><a href="#" class="channel">{{@key}}</a></li>
+          <li><a href="{{@key}}" class="channel">{{@key}}</a></li>
       {{/each}}
       </ul>
 
       <ul class="nav navbar-nav navbar-right navbar-user">
         <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
-        <li><a href="#"><i class="fa fa-power-off"></i> Log Out ({{data.config.owner}})</a></li>
+        <li><a href="/" onclick="logout();"><i class="fa fa-power-off"></i> Logout ({{data.config.owner}})</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </nav>
@@ -34,12 +34,29 @@
     <div class="row">
       <div class="col-lg-12">
         <h1>Dashboard ({{data.config.host}}) <small>Statistics Overview</small></h1>
-        <ol class="breadcrumb">
-          <li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
-        </ol>
-        <div class="alert alert-success alert-dismissable">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          Welcome text here blah blah blah omg wtf is ur prob nigga ok more stuff here.
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <span class="fa fa-comment"></span> Chat
+          </div>
+          <div class="panel-body">
+            <ul class="chat" id="chat-box">
+              {{#each data.logs.bot}}
+                <li>
+                  <div class="chat-body">
+                    <small class="pull-right text-muted"><span class="fa fa-time"></span>12 mins ago</small>
+                    <p>
+                      <strong class="primary-font">[{{this.channel}}] ({{this.nick}})</strong>
+                      {{this.message}}
+                    </p>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+          <div class="panel-footer" style="display:block;">
+            <button class="btn btn-primary" data-toggle="modal" data-target=".modal-chat">
+              Chat
+            </button>
+          </div>
         </div>
       </div>
     </div><!-- /.row -->
