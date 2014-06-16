@@ -62,6 +62,9 @@ class Code(irc.Bot):
         filenames, core_filenames = [], []
         for fn in os.listdir(os.path.join(home, 'modules')):
             if fn.endswith('.py') and not fn.startswith('_'):
+                if self.config('whitelisted_modules', False):
+                    if fn.split('.', 1)[0] not in self.config('whitelisted_modules', []):
+                        continue
                 filenames.append(os.path.join(home, 'modules', fn))
 
         if self.config('extra'):
