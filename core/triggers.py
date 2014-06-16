@@ -58,8 +58,6 @@ def trigger_437(code, origin, line, args, text):
 
 
 def trigger_NICK(code, origin, line, args, text):
-    print line
-    print args
     output.normal('{} is now known as {}'.format(origin.nick, args[1]), 'NICK')
 
     # Rename old users to new ones in the database...
