@@ -30,7 +30,7 @@
         ],
         // Rather than excluding almost all modules (manually, above), you can instead whitelist
         //   only a certain number of them, which ignores the above and uses these
-        "whitelisted_modules": []
+        "whitelisted_modules": [],
         // Block modules from specific channels
         // "!" being all
         "excluded_per_channel": {
@@ -92,5 +92,4 @@
         "debug": false,
         "extra": []
     }
-]}
 ]}
