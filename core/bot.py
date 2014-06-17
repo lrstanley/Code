@@ -230,11 +230,9 @@ class Code(irc.Bot):
             def __getattr__(self, attr):
                 sender = origin.sender or text
                 if attr == 'reply':
-                    return (
-                        lambda msg: self.bot.msg(
-                            sender, origin.nick + ': ' + msg
-                        )
-                    )
+                    return lambda msg: self.bot.msg(sender, '{}: {}'.format(origin.nick, msg))
+                elif attr == 'action':
+                    return lambda action: self.bot.action(sender, action)
                 elif attr == 'say':
                     return lambda msg: self.bot.msg(sender, msg)
                 elif attr == 'action':

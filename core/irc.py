@@ -330,7 +330,7 @@ class Bot(asynchat.async_chat):
         text = self.format(text)
         self.write(('NOTICE', dest), text)
 
-    def me(self, dest, text):
+    def action(self, dest, text):
         '''Send an action (/me) to a user or a channel'''
         text = self.format(text)
         self.write(('PRIVMSG', dest), '\x01ACTION {}\x01'.format(text))
