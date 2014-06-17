@@ -40,11 +40,6 @@ def get_url_data(url):
         return False
 
 
-def clean_url(url):
-    head, other = url.split('//', 1)
-    return head + '//' + other.split('/')[0]
-
-
 @hook(rule='(?i).*%s.*' % url_re, priority='high')
 def get_title_auto(code, input):
     if input.startswith(code.prefix) or input.startswith('?'):
@@ -71,7 +66,6 @@ def get_title_auto(code, input):
         # Lets get some data!
         data = get_url_data(url)
         if data:
-            url = clean_url(url)
             output.append('{blue}{b}%s{b}{c} - %s' %
                           (web.uncharset(data), url))
     if not output:
