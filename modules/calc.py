@@ -16,7 +16,7 @@ def calc(code, input):
                           urllib.quote(input.group(2).replace('^', '**'))).read())
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
-        answer = re.sub(r'\<.*?\>', '', data['Answer']).strip()
+        answer = re.sub(r'\<.*?\>', '', data['Answer']).strip().split('}')[1]
         return code.say(answer)
     except:
         return code.reply('Failed to calculate!')
