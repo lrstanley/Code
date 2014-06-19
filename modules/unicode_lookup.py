@@ -15,9 +15,10 @@ def u(code, input, search=False):
     arg = repr(input.group(2)).replace('\u', '').replace('u', '').replace('\'', '')
     if not arg:
         return code.reply('You gave me zero length input.')
-    found = difflib.get_close_matches(arg, uc_names)
+    found = difflib.get_close_matches(arg.upper(), uc_names)
     if not found:
-        found = difflib.get_close_matches(arg.upper(), uc_names)
+        if arg.upper() in uc_names:
+            found = arg.upper()
     if found:
         if search:
             return code.say('{b}Possible matches:{b} %s' % ', '.join(found))
@@ -27,7 +28,10 @@ def u(code, input, search=False):
         if arg.upper() in cp_names:
             char = uc[cp_names[arg.upper()]]
         else:
-            return code.reply('I can\'t seem to find that Unicode!')
+            if len(arg) < 7:
+                return code.reply('No results found for U+%s' % arg.upper())
+            else:
+                return code.reply('No results found for "%s"' % arg.upper())
     msg = u'{} (U+{}) '.format(char[1], char[0])
     msg += '"' + u_converter('\u' + char[0]) + '"'
     code.say(msg)
