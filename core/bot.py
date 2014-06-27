@@ -337,7 +337,9 @@ class Code(irc.Bot):
             self.error(origin)
 
         try:
-            func(code, input)
+            func_return = func(code, input)
+            if isinstance(func_return, str):
+                code.say(func_return)
         except:
             self.error(origin)
 
