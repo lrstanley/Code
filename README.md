@@ -45,15 +45,15 @@ Unix & Unix-like OS:
          e.i, `sudo apt-get install git`
     3) rename the `example.json` configuration file to `config.json` (`cp -rf example.json config.json`)
     4) Edit `config.json`
-    5) Run `./code` - this now runs code with your settings 
+    5) Run `./code.py` - this now runs code with your settings 
 
 Full command would be: 
 
-    python code
+    python code.py
 
 If you wish to run Code on a UNIX shell, the best thing to do would be to fork it to the background process using screen. You do this by execution python/Code with:
 
-    screen -S code ./code
+    screen -S code ./code.py
 
 This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit screen safely, hit `CTRL+A` then `CTRL+D`.
 To log back into, and view the playback of Code, type `screen -x code`.
@@ -68,7 +68,7 @@ Windows:
     3) Configure Code's configuration file, located in the bot directory.
        - Copy and rename `example.json` to `config.json`
        - Note, notepad is not prefered. If anything, use Notepad++ under Windows.
-    3) You can open up command prompt, `cd` to Codes directory, and execute Code with `python code`.
+    3) You can open up command prompt, `cd` to Codes directory, and execute Code with `python code.py`.
        - Note, if command prompt says that `python` is not a internal or external command/program,
          that means Python failed to be added to your system-wide %PATH% file.
          So, you need to add it to the %PATH% variable.
