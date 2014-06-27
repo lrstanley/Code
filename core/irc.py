@@ -174,7 +174,7 @@ class Bot(asynchat.async_chat):
                     report.append(line[0].lower() + line[1:])
                     break
             else:
-                report.append('{red}Source unknown.')
+                report.append('{red}Source unknown.{c}')
 
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
         except:
