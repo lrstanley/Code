@@ -5,6 +5,9 @@ bot.py - Code IRC Bot
 https://www.liamstanley.io/Code.git
 """
 
+
+import sys
+sys.path += ['lib']
 import time
 import os
 import re
@@ -338,7 +341,7 @@ class Code(irc.Bot):
 
         try:
             func_return = func(code, input)
-            if isinstance(func_return, str):
+            if isinstance(func_return, str) or isinstance(func_return, unicode):
                 code.say(func_return)
         except:
             self.error(origin)
