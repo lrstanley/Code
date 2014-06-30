@@ -42,9 +42,8 @@ def tell(code, input):
     if not input.sender.startswith('#'):
         return code.say('{b}You must use this in a channel')
 
-    if len(input.group(2)) < 2:
+    if len(input.group(2).split()) < 2:
         return code.say('{red}{b}Invalid usage. Use %shelp tell' % code.prefix)
-
     location, msg = input.group(2).split(' ', 1)
 
     if location.lower() in ['code', code.nick.lower()]:
