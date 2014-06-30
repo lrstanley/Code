@@ -193,6 +193,11 @@ def trigger_PART(code, origin, line, args, text):
         origin.nick, args[1], reason), args[1])
 
 
+def trigger_write_PART(code, args, text, raw):
+    del code.chan[args[1]]
+    del code.logs['channel'][args[1]]
+
+
 def trigger_QUIT(code, origin, line, args, text):
     for channel in code.chan:
         if origin.nick in channel:
