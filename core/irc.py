@@ -207,6 +207,11 @@ class Bot(asynchat.async_chat):
                 self.__write(args, text)
         except:
             pass
+        try:
+            getattr(triggers, 'trigger_write_%s' %
+                    args[0])(self, args, text, raw,)
+        except AttributeError:
+            return
 
     def safe(self, input, u=False):
         input = input.replace('\n', '').replace('\r', '')
@@ -337,10 +342,12 @@ class Bot(asynchat.async_chat):
 
     def restart(self):
         '''Reconnect to IRC and restart the bot process'''
+        self.close()
         os._exit(1)
 
     def quit(self):
         '''Disconnect from IRC and close the bot process'''
+        self.close()
         os._exit(0)
 
     def part(self, channel):
