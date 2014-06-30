@@ -23,9 +23,11 @@
     <div class="modal fade modal-password">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 id="password-text">Code - Python IRC Bot</h4>
+          </div>
           <div class="modal-body">
             <center>
-                <h2 id="password-text">Password:</h2>
                 <div class="input-group" id="password-box">
                   <input type="password" class="form-control" name="password" id="password" required>
                   <span class="input-group-btn">
@@ -33,6 +35,9 @@
                   </span>
                 </div><!-- /input-group -->
             </center>
+          </div>
+          <div class="modal-footer">
+            <a href="http://liamstanley.io">Code &copy; Liam Stanley 2014</a>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -44,15 +49,50 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-xs-3">
-                <input type="text" class="form-control" placeholder="Channel/User">
+                <input id="msg-sender" type="text" class="form-control" placeholder="Channel/User">
               </div>
               <div class="col-xs-7">
-                <input type="text" class="form-control" placeholder="Text to send to the server">
+                <input id="msg-text" type="text" class="form-control" placeholder="Text to send to the channel" value="">
               </div>
               <div class="col-xs-2">
-                <button onclick="doSend();" class="btn btn-primary">Send</button>
+                <button onclick="sendMessage();" class="btn btn-primary">Send</button>
               </div>
             </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade modal-join">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-10">
+                <input id="join-channel" type="text" class="form-control" placeholder="Channel name">
+              </div>
+              <div class="col-xs-2">
+                <button onclick="join();" class="btn btn-primary">Join</button>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade modal-shutdown">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4>Code - Python IRC Bot</h4>
+          </div>
+          <div class="modal-body">
+            <center>
+              It seems you have either shutdown the bot, or restarted the bot.<br>
+              If you have restarted the bot, please reload the page once the bot has joined IRC!
+            </center>
+          </div>
+          <div class="modal-footer">
+            <a href="http://liamstanley.io">Code &copy; Liam Stanley 2014</a>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

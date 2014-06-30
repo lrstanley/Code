@@ -18,7 +18,7 @@
       <ul class="nav navbar-nav side-nav">
         <li class="active"><a href="index.html"><i class="fa fa-dashboard"></i> {{data.config.host}}</a></li>
       {{#each data.chan_data}}
-          <li><a href="{{@key}}" class="channel">{{@key}}</a></li>
+          <li class="navbar-text"><span class="channel-name">{{@key}} [<a href="#" onclick="part('{{@key}}');">part</a>]</span></li>
       {{/each}}
       </ul>
 
@@ -39,23 +39,22 @@
             <span class="fa fa-comment"></span> Chat
           </div>
           <div class="panel-body">
-            <ul class="chat" id="chat-box">
-              {{#each data.logs.bot}}
-                <li>
-                  <div class="chat-body">
-                    <small class="pull-right text-muted"><span class="fa fa-time"></span>12 mins ago</small>
-                    <p>
-                      <strong class="primary-font">[{{this.channel}}] ({{this.nick}})</strong>
-                      {{this.message}}
-                    </p>
-                </li>
+            <ul class="chat list-group" id="chat-box">
+              {{#each data.logs}}
+                <li class="list-group-item">
+                  <small class="pull-right text-muted"><span class="fa fa-time"></span>{{this.hrt}} ago</small>
+                  <strong class="primary-font"><span class="label label-primary">{{this.channel}}</span> <span class="badge">{{this.nick}}</span></strong>
+                  <span class="message">{{this.message}}</span>
+              {{else}}
+                <div class="alert alert-info" role="alert">No messages have been sent recieved yet!</div>
               {{/each}}
             </ul>
           </div>
           <div class="panel-footer" style="display:block;">
-            <button class="btn btn-primary" data-toggle="modal" data-target=".modal-chat">
-              Chat
-            </button>
+            <button class="btn btn-primary" data-toggle="modal" data-target=".modal-chat">Chat</button>
+            <button class="btn btn-info" data-toggle="modal" data-target=".modal-join">Join channel</button>
+            <button class="btn btn-warning" href="#" onclick="exec('restart');">Restart bot</button>
+            <button class="btn btn-danger" href="#" onclick="exec('quit');">Shutdown bot</button>
           </div>
         </div>
       </div>

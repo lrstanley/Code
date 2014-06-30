@@ -8,7 +8,7 @@ function login() {
         })
         .fail(function(data) {
             $('#password-text').html(
-                'Password:<br><font color="red" size="3">Incorrect password</font><br>'
+                'Code - Python IRC Bot<br><font color="red" size="3">Incorrect password</font><br>'
             );
             $("#password-box").addClass("has-error");
             $("#password").val('');
@@ -26,7 +26,17 @@ $('.modal-password').modal({
     show: false
 });
 
+$('.modal-shutdown').modal({
+    keyboard: false,
+    backdrop: 'static',
+    show: false
+});
+
 $('.modal-chat').modal({
+    show: false
+});
+
+$('.modal-join').modal({
     show: false
 });
 
@@ -47,7 +57,7 @@ function populate() {
         .done(function(data) {
             code = data;
             // Few things, cleanup wise..
-            code['data']['logs']['bot'] = code['data']['logs']['bot'].splice(-10);
+            code['data']['logs'] = code['data']['logs'].splice(-12);
             if (!loginCheck) {
                 // Logged in successfully. Do once.
                 loginCheck = true;
@@ -64,6 +74,32 @@ function populate() {
         template = Handlebars.compile(source);
         $('#page').html(template(code));
     });
+}
+
+function part(channel) {
+    // &args=PRIVMSG+%23L&data=Testing+123
+    $.get("/", {pass: $.cookie('code_pass'), args: "PART " + channel, data: ""});
+
+}
+
+function sendMessage() {
+    // &args=PRIVMSG+%23L&data=Testing+123
+    $.get("/", {pass: $.cookie('code_pass'), args: "PRIVMSG " + $('#msg-sender').val(), data: $('#msg-text').val()});
+    $('.modal-chat').modal('hide');
+
+}
+
+function join() {
+    // &args=PRIVMSG+%23L&data=Testing+123
+    $.get("/", {pass: $.cookie('code_pass'), args: "JOIN " + $('#join-channel').val(), data: ""});
+    $('.modal-join').modal('hide');
+
+}
+
+function exec(method) {
+    doPopulate(false);
+    $('.modal-shutdown').modal('show');
+    $.get("/", {pass: $.cookie('code_pass'), execute: method, data: ""});
 }
 
 $("#password-box").keyup(function(event){

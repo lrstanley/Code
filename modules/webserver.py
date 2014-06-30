@@ -6,6 +6,7 @@ from random import randint as gen
 from util import output
 import json
 import os
+from util.tools import relative
 
 # Example command...
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
@@ -19,10 +20,10 @@ class WebServer(BaseHTTPRequestHandler):
 
     """The actual webserver that responds to things that received via GET queries."""
 
-    def log_message(self, format, *args):
-        msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
-                                    format % args)
-        # output.info(msg, 'WEBSERVER')
+    # def log_message(self, format, *args):
+    #     msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
+    #                                 format % args)
+    #     output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
         def readfile(fn):
@@ -59,7 +60,13 @@ class WebServer(BaseHTTPRequestHandler):
                 # 1. args (used for IRC commands)
                 # 2. data (The argument for the IRC command (the arguments
                 # argument!))
-                if 'args' not in args or 'data' not in args:
+                if 'execute' in args:
+                    cmd = args['execute'][0]
+                    if cmd == 'restart':
+                        bot.restart()
+                    if cmd == 'quit':
+                        bot.quit()
+                if 'args' not in args:
                     config = {}
                     for key, value in bot.config().iteritems():
                         # Add configuration to web-requests, but ensure
@@ -68,14 +75,22 @@ class WebServer(BaseHTTPRequestHandler):
                             config[key] = value
                     data = {
                         'chan_data': bot.chan,
-                        'logs': bot.logs,
+                        # 'logs': bot.logs,
                         'modules': bot.modules,
                         'docs': bot.doc,
                         'config': config
                     }
+                    data['logs'] = []
+                    for log in bot.logs['bot']:
+                        tmp = log
+                        tmp['hrt'] = relative(seconds=int(time.time()) - int(tmp['time']))[0]
+                        data['logs'].append(tmp)
                     return finish({'success': True, 'data': data})
 
-                bot.write(args['args'][0].split(), bot.format(args['data'][0]))
+                if 'data' in args:
+                    bot.write(args['args'][0].split(), bot.format(args['data'][0]))
+                else:
+                    bot.write(args['args'][0].split())
                 return finish({'success': True, 'message': 'Data sent to server'})
             except Exception as e:
                 return finish({'success': False, 'message': 'An exception has occured', 'error': str(e)}, code=500)
