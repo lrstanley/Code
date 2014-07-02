@@ -20,9 +20,9 @@ class WebServer(BaseHTTPRequestHandler):
 
     """The actual webserver that responds to things that received via GET queries."""
 
-    # def log_message(self, format, *args):
-    #     msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
-    #                                 format % args)
+    def log_message(self, format, *args):
+        msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
+                                     format % args)
     #     output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
@@ -78,7 +78,9 @@ class WebServer(BaseHTTPRequestHandler):
                         'chan_data': bot.chan,
                         'modules': bot.modules,
                         #'docs': bot.doc,
-                        'config': config
+                        'config': config,
+                        'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
+                        'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup))
                     }
                     data['logs'] = []
                     for log in bot.logs['bot']:

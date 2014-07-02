@@ -1,0 +1,7 @@
+{{#each data.chan_data}}
+  <li class="navbar-text channel-name">
+    <i class="fa fa-chevron-right"></i> {{@key}} [<a href="#" onclick="part('{{@key}}');">part</a>]
+  </li>
+{{else}}
+  <li class="navbar-text">Not in any channels!</li>
+{{/each}}
