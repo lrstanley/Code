@@ -53,6 +53,7 @@ class Bot(asynchat.async_chat):
         self.channels = channels or list()
         self.stack = list()
         self.debug = debug
+        self.irc_startup = None
         self.chan = {}
         self.logs = {
             'bot': [],
@@ -101,6 +102,7 @@ class Bot(asynchat.async_chat):
             sys.exit()
 
     def handle_connect(self):
+        self.irc_startup = int(time.time())
         output.success('Connected!', 'STATUS')
         if self.server_password:
             self.write(('PASS', self.server_password), output=False)
@@ -205,6 +207,10 @@ class Bot(asynchat.async_chat):
                 self.__write(args, text, raw)
             else:
                 self.__write(args, text)
+
+            if args[0] == 'PRIVMSG':
+                if args[1].startswith('#'):
+                    self.add_logs(text, args[1], self.nick)
         except:
             pass
         try:
@@ -264,10 +270,22 @@ class Bot(asynchat.async_chat):
         self.__write(('PRIVMSG', self.safe(recipient)), self.safe(text))
         output.normal('(%s) %s' %
                       (self.nick, self.stripcolors(self.clear_format(self.safe(text)))), self.safe(recipient))
+        if self.safe(recipient).startswith('#') and self.safe(recipient) in self.logs['channel']:
+            self.add_logs(text, recipient, self.nick)
         self.stack.append((time.time(), text))
         self.stack = self.stack[-10:]
 
         self.sending.release()
+
+    def add_logs(self, text, channel, nick):
+        tmp = {
+            'message': self.stripcolors(self.clear_format(self.safe(text))),
+            'nick': self.nick,
+            'time': int(time.time()),
+            'channel': self.safe(channel)
+        }
+        self.logs['channel'][self.safe(channel)].append(tmp)
+        self.logs['bot'].append(tmp)
 
     def format(self, message, shorten_urls=True):
         '''
