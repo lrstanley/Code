@@ -46,6 +46,7 @@ class Code(irc.Bot):
         self.modules = []
         self.cmds = {}
         self.data = {}
+        self.muted = False
         self.bot_startup = int(time.time())
         self.excludes = self.config('excluded_per_channel', [])
         self.setup()
@@ -303,6 +304,9 @@ class Code(irc.Bot):
         if func.owner and not input.owner:
             return code.say('{b}{red}You must be owner to use that command!')
 
+        if input.groups:
+            if code.get('muted') and input.group(1)[1::].lower() not in 'unmute':
+                return
         if func.args and not input.group(2):
             msg = '{red}No arguments supplied! Try: ' + \
                   '"{b}{purple}%shelp %s{b}{r}"'

@@ -58,6 +58,8 @@
               Dashboard (<span id="dashboard-host"></span>)
               <small>Bot Overview</small>
               <span class="pull-right">
+                <button style="display: none;" class="btn btn-primary" href="#" onclick="mute();" id="mute">Mute bot</button>
+                <button style="display: none;" class="btn btn-success" href="#" onclick="unmute();" id="unmute">Unmute bot</button>
                 <button class="btn btn-info" data-toggle="modal" data-target=".modal-join">Join channel</button>
                 <button class="btn btn-warning" href="#" onclick="exec('restart');">Restart bot</button>
                 <button class="btn btn-danger" href="#" onclick="exec('quit');">Shutdown bot</button>
@@ -92,12 +94,6 @@
                       </span>
                     </div><!-- /input-group -->
                   </div>
-<!--                   <div class="col-md-8">
-                    <input id="msg-text" type="text" class="form-control" placeholder="Text to send to the channel" value="">
-                  </div>
-                  <div class="col-md-2">
-                    <button onclick="sendMessage();" class="btn btn-primary">Send</button>
-                  </div> -->
                 </div>
               </div>
             </div>

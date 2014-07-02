@@ -62,6 +62,10 @@ class WebServer(BaseHTTPRequestHandler):
                 # argument!))
                 if 'execute' in args:
                     cmd = args['execute'][0]
+                    if cmd == 'mute':
+                        bot.set('muted', True)
+                    if cmd == 'unmute':
+                        bot.set('muted', False)
                     if cmd == 'restart':
                         bot.restart()
                     if cmd == 'quit':
@@ -80,7 +84,8 @@ class WebServer(BaseHTTPRequestHandler):
                         #'docs': bot.doc,
                         'config': config,
                         'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
-                        'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup))
+                        'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup)),
+                        'muted': bot.get('muted')
                     }
                     data['logs'] = []
                     for log in bot.logs['bot']:

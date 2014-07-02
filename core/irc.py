@@ -47,6 +47,7 @@ class Bot(asynchat.async_chat):
         self.buffer = ''
         self.id = 0
         self.nick = nick
+        self.default = nick
         self.name = name
         self.user = user
         self.server_password = server_password

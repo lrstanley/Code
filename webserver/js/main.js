@@ -68,7 +68,23 @@ function populate() {
 
             // Now, here instead of loading the index.html each time, we actually POPULATE the data on the page...
             //   will be fun!
-
+            if (first_load) {
+                first_load = false;
+                // Things here will be done on load, AFTER getting data from the API
+                // Good for things that won't change in the bot while the webpage is open...
+                if (code['data']['muted']) {
+                    $("#mute").hide();
+                    $("#unmute").show();
+                } else {
+                    $("#unmute").hide();
+                    $("#mute").show();
+                };
+                $("#server-info").text(code['data']['config']['host'] + ':' + code['data']['config']['port']);
+                $("#dashboard-host").text(code['data']['config']['host']);
+                $("#default-nick").text(code['data']['config']['nick']);
+                // Snap to the bottom of the console log by default
+                document.getElementById("chat-bottom").scrollIntoView();
+            }
             // Some navbar stuff
             $("#current-nick").text(code['data']['nick']);
             $("#module-count").text(code['data']['modules'].length);
@@ -94,19 +110,11 @@ function populate() {
             }
             $('#console-log').html(console_log_tmpl(code));
             logs = code['data']['logs'];
-            if (logs[logs.length-1]['time'] != last_msg_time) {
-                last_msg_time = logs[logs.length-1]['time'];
-                document.getElementById("chat-bottom").scrollIntoView();
-            }
-            if (first_load) {
-                first_load = false;
-                // Things here will be done on load, AFTER getting data from the API
-                // Good for things that won't change in the bot while the webpage is open...
-                $("#server-info").text(code['data']['config']['host'] + ':' + code['data']['config']['port']);
-                $("#dashboard-host").text(code['data']['config']['host']);
-                $("#default-nick").text(code['data']['config']['nick']);
-                // Snap to the bottom of the console log by default
-                document.getElementById("chat-bottom").scrollIntoView();
+            if (logs.length > 0) {
+                if (logs[logs.length-1]['time'] != last_msg_time) {
+                    last_msg_time = logs[logs.length-1]['time'];
+                    document.getElementById("chat-bottom").scrollIntoView();
+                }
             }
         })
         .fail(function(data) {
@@ -125,7 +133,20 @@ function populate() {
 function part(channel) {
     $.get("/", {pass: $.cookie('code_pass'), args: "PART " + channel, data: ""});
     popup("Left " + channel + '!');
+}
 
+function mute() {
+    $.get("/", {pass: $.cookie('code_pass'), execute: 'mute', data: ""});
+    $("#mute").hide();
+    $("#unmute").show();
+    popup("Muted bot!");
+}
+
+function unmute() {
+    $.get("/", {pass: $.cookie('code_pass'), execute: 'unmute', data: ""});
+    $("#unmute").hide();
+    $("#mute").show();
+    popup("Unmuted bot!");
 }
 
 function sendMessage() {
