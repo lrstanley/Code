@@ -91,10 +91,10 @@ def trigger_PRIVMSG(code, origin, line, args, text):
                'time': int(time.time()), 'channel': args[1]}
         code.logs['channel'][args[1]].append(tmp)
         code.logs['channel'][args[1]] = code.logs['channel'][args[1]][-20:]
-        # 3. All bot messages in/out, maxed out by n * 20 (n being number of
+        # 3. All bot messages in/out, maxed out by n * 100 (n being number of
         # channels)
         code.logs['bot'].append(tmp)
-        code.logs['bot'] = code.logs['bot'][-(20 * len(code.channels)):]
+        code.logs['bot'] = code.logs['bot'][-(100 * len(code.channels)):]
 
 
 def trigger_NOTICE(code, origin, line, args, text):

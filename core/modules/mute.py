@@ -9,5 +9,5 @@ def mute(code, input):
 
 @hook(cmds=['unmute'], admin=True)
 def unmute(code, input):
-    code.set('muted', True)
+    code.set('muted', False)
     return code.say('{b}%s is now unmuted.' % code.nick)
