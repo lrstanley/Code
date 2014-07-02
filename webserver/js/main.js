@@ -58,6 +58,7 @@ function populate() {
             code = data;
             // Few things, cleanup wise..
             code['data']['logs'] = code['data']['logs'].splice(-12);
+            code['data']['len_modules'] = code['data']['modules'].length
             if (!loginCheck) {
                 // Logged in successfully. Do once.
                 loginCheck = true;
@@ -70,7 +71,7 @@ function populate() {
                 window.location.href = '/';
             }
         });
-    $.get('/templates/' + name, function(source) {
+    $.get('/templates/index.html', function(source) {
         template = Handlebars.compile(source);
         $('#page').html(template(code));
     });

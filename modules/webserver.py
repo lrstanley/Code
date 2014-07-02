@@ -74,10 +74,10 @@ class WebServer(BaseHTTPRequestHandler):
                         if 'pass' not in key.lower():
                             config[key] = value
                     data = {
+                        'nick': bot.nick,
                         'chan_data': bot.chan,
-                        # 'logs': bot.logs,
                         'modules': bot.modules,
-                        'docs': bot.doc,
+                        #'docs': bot.doc,
                         'config': config
                     }
                     data['logs'] = []

@@ -1,3 +1,7 @@
+html, body {
+    height:70%;
+}
+
 body {
     margin-top: 50px;
 }
@@ -165,4 +169,13 @@ table.tablesorter thead tr th:hover {
 
 .channel-name {
     font-size: 20px;
+    padding-left: 28px;
 }
+
+.channel-name:before {
+        position: absolute;
+        font-family: FontAwesome;
+        top: 0;
+        left: 14px;
+        content: "\f101";
+    }
