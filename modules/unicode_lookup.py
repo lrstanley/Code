@@ -61,13 +61,13 @@ def gen_db(botname):
 def setup(code):
     global uc_names, cp_names, uc
     curr = int(time.time())
-    db = database.get(code.nick, 'unicodedata')
+    db = database.get(code.default, 'unicodedata')
     if not db:
-        gen_db(code.nick)
+        gen_db(code.defaultk)
     else:
         diff = int(curr - int(db['time']))
         if diff > 518400:
-            gen_db(code.nick)
+            gen_db(code.default)
             return
         uc = db['uc']
         uc_names = db['uc_names']

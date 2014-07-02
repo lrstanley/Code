@@ -27,7 +27,7 @@ def auto_honeypot(code, input):
         if ip in db:
             return
         db.append(ip)
-        database.set(code.nick, db, 'honeypot')
+        database.set(code.default, db, 'honeypot')
         code.say(abuser)
 
 
@@ -88,6 +88,6 @@ def get_ip(hostname):
 
 def setup(code):
     global db
-    db = database.get(code.nick, 'honeypot')
+    db = database.get(code.default, 'honeypot')
     if not db:
         db = []

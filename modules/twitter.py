@@ -112,19 +112,19 @@ def daemon(code, tc):
                     continue
                 data = data[0]
                 hash_str = hash(data['text'])
-                db = database.get(code.nick, 'twitter')
+                db = database.get(code.default, 'twitter')
                 if not db:  # New data on new database, don't output anywhere..
-                    database.set(code.nick, [hash_str], 'twitter')
+                    database.set(code.default, [hash_str], 'twitter')
                     continue
                 if hash_str in db:
                     continue  # Same
 
                 db.append(hash_str)
-                database.set(code.nick, db, 'twitter')
+                database.set(code.default, db, 'twitter')
                 msg = format(data)
                 code.msg(channel, msg.decode('ascii', 'ignore'))
-            db = database.get(code.nick, 'twitter')
+            db = database.get(code.default, 'twitter')
             if db:
                 if len(db) > 200:
                     db = db[-200:]
-                    database.set(code.nick, db, 'twitter')
+                    database.set(code.default, db, 'twitter')

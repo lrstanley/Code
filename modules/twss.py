@@ -15,11 +15,11 @@ def setup(code):
     global enabled
     global db
     # Try to read the db...
-    db = database.get(code.nick, 'twss')
+    db = database.get(code.default, 'twss')
     if not db:
         try:
             db = web.json('http://misc.liamstanley.io/twss.json')['lines']
-            database.set(code.nick, db, 'twss')
+            database.set(code.default, db, 'twss')
             output.info('Downloaded "That\'s What She Said" library and saved')
         except:
             output.error((

@@ -17,7 +17,7 @@ def setup(code):
         old tell.py module.
     """
     global bot
-    bot = code.nick
+    bot = code.default
     read_db()
 
 

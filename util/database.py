@@ -7,6 +7,7 @@ mod_name = '%s.module.%s.db'
 
 
 def get(bot, module=False):
+    """ get(code.default, modulename) """
     if module:
         fn = mod_name % (bot, str(module))
     else:
@@ -25,6 +26,7 @@ def get(bot, module=False):
 
 
 def set(bot, data, module=False):
+    """ set(code.default, {}, modulename) """
     if module:
         fn = mod_name % (bot, str(module))
     else:
