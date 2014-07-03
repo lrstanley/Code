@@ -48,7 +48,7 @@ def steam_app_auto(code, input):
     try:
         data = web.get('http://steamdb.info/app/%s/' % web.quote(input.group(1)), timeout=10).read()
         output = []
-        output.append(re.findall(r'metacritic_name</td><td>(.*?)</td>', data)[0])  # Name
+        output.append(re.findall(r'<td>Name</td><td itemprop="name">(.*?)</td>', data)[0])  # Name
         score = re.findall(r'metacritic_score</td><td>(.*?)</td>', data)  # Metacritic Score
         if len(score) < 1:
             score = '{b}N/A{b}'
@@ -57,7 +57,7 @@ def steam_app_auto(code, input):
         output.append('Rating: %s/100' % score)
 
         # Released yet?
-        if '<td class="span3">releasestate</td><td>prerelease</td>':
+        if '<td class="span3">releasestate</td><td>prerelease</td>' in data:
             output.append('{blue}Prerelease{c}')
 
         # OS List
