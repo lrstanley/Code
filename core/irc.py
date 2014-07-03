@@ -221,6 +221,9 @@ class Bot(asynchat.async_chat):
             return
 
     def safe(self, input, u=False):
+        """
+            Strips the line endings and ensures the correct encoding before sending data
+        """
         input = input.replace('\n', '').replace('\r', '')
         if u:
             try:
@@ -230,6 +233,11 @@ class Bot(asynchat.async_chat):
         return input
 
     def msg(self, recipient, text, x=False, shorten_urls=True):
+        """
+            Sends most messages to a direct location or recipient
+            auto shortens URLs by default unless specified in the
+            config
+        """
         self.sending.acquire()
         text = self.format(text, shorten_urls=shorten_urls)
 
@@ -279,6 +287,7 @@ class Bot(asynchat.async_chat):
         self.sending.release()
 
     def add_logs(self, text, channel, nick):
+        """ Adds bot chat messages to the bot-central log dictionary """
         tmp = {
             'message': self.stripcolors(self.clear_format(self.safe(text))),
             'nick': self.nick,
@@ -314,6 +323,7 @@ class Bot(asynchat.async_chat):
             return self.clear_format(message)
 
     def clear_format(self, message):
+        """ Cleans the custom made color parser (see above function) """
         find_char = re.compile(r'{.*?}')
         charlist = find_char.findall(message)
         for custom in charlist:
@@ -321,8 +331,10 @@ class Bot(asynchat.async_chat):
         return message
 
     def stripcolors(self, data):
-        '''Note: the replacement method is CRUCIAL to keep from
-           left over color digits. Order is very important.'''
+        """
+            Note: the replacement method is CRUCIAL to keep from
+            left over color digits. Order is very important.
+        """
         colors = [
             u"\x0300", u"\x0301", u"\x0302", u"\x0303", u"\x0304", u"\x0305",
             u"\x0306", u"\x0307", u"\x0308", u"\x0309", u"\x0310", u"\x0311",
@@ -339,6 +351,7 @@ class Bot(asynchat.async_chat):
         return str(data.encode('ascii', 'ignore'))
 
     def changenick(self, nick):
+        """ Change the nickname of the bot """
         chars = set('`+=;,<>?')
         if not any((c in chars) for c in nick) and nick[0] != '-' and \
            len(nick) > 1 and len(nick) <= 20:
@@ -349,32 +362,44 @@ class Bot(asynchat.async_chat):
             return None
 
     def notice(self, dest, text):
-        '''Send an IRC NOTICE to a user or a channel. See IRC protocol
-           documentation for more information'''
+        """
+            Send an IRC NOTICE to a user or a channel. See IRC protocol
+            documentation for more information
+        """
         text = self.format(text)
         self.write(('NOTICE', dest), text)
 
-    def action(self, dest, text):
-        '''Send an action (/me) to a user or a channel'''
+    def me(self, dest, text):
+        """
+            Send an action (/me) to a user or a channel.
+            Keep in mind has to be "me" as a lambda action already exists
+        """
         text = self.format(text)
         self.write(('PRIVMSG', dest), '\x01ACTION {}\x01'.format(text))
 
     def restart(self):
-        '''Reconnect to IRC and restart the bot process'''
+        """
+            Reconnect to IRC and restart the bot process while keeping all other
+            bot processes in tact and untouched
+        """
         self.close()
         os._exit(1)
 
     def quit(self):
-        '''Disconnect from IRC and close the bot process'''
+        """
+            Disconnect from IRC and close the bot process while keeping other bot
+            bot processes untouched. When using multi-network capability, you can
+            terminate a single process without terminating the others
+        """
         self.close()
         os._exit(0)
 
     def part(self, channel):
-        '''Part a channel'''
+        """ Part a channel """
         self.write(['PART'], channel)
 
     def join(self, channel, password=None):
-        '''Join a channel'''
+        """ Join a channel """
         output.info('Attempting to join channel %s' % channel, 'JOIN')
         try:
             channel = unicode(channel, 'utf-8')

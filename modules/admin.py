@@ -5,7 +5,7 @@ from util.hook import *
 defaultnick = None
 
 
-@hook(cmds=['modules'], rate=20, priority='high', op=True)
+@hook(cmds=['modules'], rate=20, priority='high', admin=True)
 def listmods(code, input):
     '''Send a list of the loaded modules to the user.'''
     return code.say('Modules: %s.' % ', '.join(code.modules))
@@ -26,9 +26,9 @@ def part(code, input):
     return code.write(['PART', input.group(2).strip()])
 
 
-@hook(cmds=['restart', 'reboot', 'reconnect'], owner=True)
+@hook(cmds=['restart', 'reboot', 'reconnect'], admin=True)
 def restart(code, input):
-    '''Reconnect to the server. (Fully restarts the server process) This is an owner-only command.'''
+    '''Reconnect to the server. (Fully restarts the server process) This is an admin-only command.'''
     code.restart()
 
 
@@ -54,16 +54,15 @@ def nick(code, input):
             pass
         else:
             code.say('Failed to set default, shutting down!')
-            __import__('os')._exit(1)
+            os._exit(1)
 
 
 @hook(cmds=['msg', 'say'], ex='msg #L I LOVE PENGUINS.', priority='low', admin=True, args=True)
 def msg(code, input):
     '''msg <channel|username> <msg> - Send a message to a channel, or a user. Admin-only.'''
-    msg = input.group(2)
-    if len(msg.split()) < 2:
+    if len(input.group(2).split()) < 2:
         return code.say('{red}{b}Incorrect usage!: %smsg <channel|username> <msg>' % code.prefix)
-    a, b = msg.split(' ', 1)
+    a, b = input.group(2).split(' ', 1)
     if not input.owner and a.lower() in ['chanserv', 'nickserv', 'hostserv', 'memoserv', 'saslserv', 'operserv']:
         return code.say('{red}{b}You\'re not authorized to message those services!')
     code.msg(a, b)
@@ -71,13 +70,21 @@ def msg(code, input):
 
 @hook(cmds=['me', 'action'], ex='me #L loves Liam', priority='low', admin=True, args=True)
 def me(code, input):
-    '''me <channel|username> <msg> - Send a raw action to a channel/user. Admin-only.'''
+    '''me <channel|username> <msg> - Send a raw ACTION to a channel/user. Admin-only.'''
     msg = input.group(2)
-    a, b = msg.split(' ', 1)
-    if not b:
-        return
-    msg = '\x01ACTION %s\x01' % b
-    code.msg(a, msg, x=True)
+    if len(msg.split()) < 2:
+        return code.say('{red}{b}Incorrect usage!: %saction <channel|username> <msg>' % code.prefix)
+    msg = msg.split(' ', 1)
+    code.me(msg[0], msg[1])
+
+@hook(cmds=['notice'], ex='notice #L Thie bot is awesome!', priority='low', admin=True, args=True)
+def notice(code, input):
+    '''notice <channel|username> <msg> - Send a raw NOTICE to a channel/user. Admin-only.'''
+    msg = input.group(2)
+    if len(msg.split()) < 2:
+        return code.say('{red}{b}Incorrect usage!: %snotice <channel|username> <msg>' % code.prefix)
+    msg = msg.split(' ', 1)
+    code.notice(msg[0], msg[1])
 
 
 @hook(cmds=['announce', 'broadcast'], ex='announce Some important message here', priority='low', admin=True, args=True)
