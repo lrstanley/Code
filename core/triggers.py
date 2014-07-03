@@ -67,10 +67,18 @@ def trigger_NICK(code, origin, line, args, text):
             del code.chan[channel][origin.nick]
             code.chan[channel][args[1]] = old
 
+    tmp = {
+        'message': 'is now known as {}'.format(args[1]),
+        'nick': origin.nick,
+        'time': int(time.time()),
+        'channel': 'NICK'
+    }
+    code.logs['bot'].append(tmp)
+
 
 def trigger_PRIVMSG(code, origin, line, args, text):
     text = code.stripcolors(text)
-    if text.startswith('\x01'):
+    if text.startswith('\x01ACTION'):
         text = '(me) ' + text.split(' ', 1)[1].strip('\x01')
     output.normal('({}) {}'.format(origin.nick, text), args[1])
 
@@ -102,6 +110,14 @@ def trigger_NOTICE(code, origin, line, args, text):
         output.error('Invalid NickServ password')
         os._exit(1)
     output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
+    # Add notices to the bot logs
+    tmp = {
+        'message': text,
+        'nick': origin.nick,
+        'time': int(time.time()),
+        'channel': 'NOTICE'
+    }
+    code.logs['bot'].append(tmp)
 
 
 def trigger_KICK(code, origin, line, args, text):
@@ -177,6 +193,13 @@ def trigger_JOIN(code, origin, line, args, text):
         code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
                                            False, 'op': False, 'count': 0, 'messages': []}
     output.normal('{} has joined {}'.format(origin.nick, args[1]), args[1])
+    tmp = {
+        'message': 'joined {}'.format(args[1]),
+        'nick': origin.nick,
+        'time': int(time.time()),
+        'channel': 'JOIN'
+    }
+    code.logs['bot'].append(tmp)
 
 
 def trigger_PART(code, origin, line, args, text):
@@ -191,6 +214,13 @@ def trigger_PART(code, origin, line, args, text):
         reason = 'Unknown'
     output.normal('{} has part {}. Reason: {}'.format(
         origin.nick, args[1], reason), args[1])
+    tmp = {
+        'message': 'left {}'.format(args[1]),
+        'nick': origin.nick,
+        'time': int(time.time()),
+        'channel': 'PART'
+    }
+    code.logs['bot'].append(tmp)
 
 
 def trigger_write_PART(code, args, text, raw):
@@ -202,3 +232,10 @@ def trigger_QUIT(code, origin, line, args, text):
     for channel in code.chan:
         if origin.nick in channel:
             del code.chan[channel][origin.nick]
+    tmp = {
+        'message': '',
+        'nick': origin.nick,
+        'time': int(time.time()),
+        'channel': 'QUIT'
+    }
+    code.logs['bot'].append(tmp)

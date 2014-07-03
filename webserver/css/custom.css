@@ -1,9 +1,10 @@
 html, body {
-    height:100%;
+    height: 100%;
 }
 
 body {
     padding-top: 50px;
+    background-color: lightgrey;
 }
 
 #wrapper {
@@ -64,8 +65,8 @@ body {
     }
 
     .side-nav>li.dropdown>ul.dropdown-menu>li>a:hover,
-  .side-nav>li.dropdown>ul.dropdown-menu>li>a.active,
-  .side-nav>li.dropdown>ul.dropdown-menu>li>a:focus {
+    .side-nav>li.dropdown>ul.dropdown-menu>li>a.active,
+    .side-nav>li.dropdown>ul.dropdown-menu>li>a:focus {
         color: #fff;
         background-color: #080808;
     }
@@ -75,7 +76,7 @@ body {
     }
 
     .navbar-inverse .navbar-nav>li>a:hover,
-  .navbar-inverse .navbar-nav>li>a:focus {
+    .navbar-inverse .navbar-nav>li>a:focus {
         background-color: #080808;
     }
 
@@ -92,8 +93,9 @@ body {
     .navbar-collapse {
         padding-left: 15px !important;
         padding-right: 15px !important;
-    }
+    };
 }
+
 .message {
     padding-left: 5px;
     padding-right: 5px;
@@ -133,8 +135,7 @@ body {
     padding: 0;
 }
 
-.panel-body
-{
+.panel-body {
     overflow-y: scroll;
     height: 100%;
 }
@@ -147,21 +148,62 @@ body {
 }
 
 .alert-growl {
-  border-radius: 10px;
-  background-color: rgb(25, 25, 25);
-  background-color: rgba(25, 25, 25, 0.9);
-  border-width: 2px;
-  border-color: rgb(255, 255, 255);
-  border-color: rgba(255, 255, 255, 0.9);
-  color: rgb(255, 255, 255);
-  box-shadow: 0px 0px 10px rgb(25, 25, 25);
-  box-shadow: 0px 0px 10px rgba(25, 25, 25, 0.8);
+    border-radius: 10px;
+    background-color: rgb(25, 25, 25);
+    background-color: rgba(25, 25, 25, 0.9);
+    border-width: 2px;
+    border-color: rgb(255, 255, 255);
+    border-color: rgba(255, 255, 255, 0.9);
+    color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 10px rgb(25, 25, 25);
+    box-shadow: 0px 0px 10px rgba(25, 25, 25, 0.8);
 }
+
 .alert-growl button.close {
-  color: rgb(255, 255, 255);
-  opacity: 1;
+    color: rgb(255, 255, 255);
+    opacity: 1;
 }
+
 .alert-growl img {
-  float: left;
-  padding: 0px 5px 0px 0px;
+    float: left;
+    padding: 0px 5px 0px 0px;
+}
+
+#dashboard-message {
+    border-radius: 10px 25px 25px 10px;
+    -moz-border-radius: 10px 25px 25px 10px;
+    -webkit-border-radius: 10px 25px 25px 10px;
+    border: 6px solid #383838;
+    background-color: #222222;
+    padding: 10px;
+    color: lightgrey;
+}
+
+#manage-buttons {
+    border-radius: 25px 10px 10px 25px;
+    -moz-border-radius: 25px 10px 10px 25px;
+    -webkit-border-radius: 25px 10px 10px 25px;
+    border: 6px solid #383838;
+    background-color: #222222;
+    padding: 5px 10px;
+    padding-left: 15px;
+    margin-top: -10px;
+    color: lightgrey;
+}
+
+#manage-buttons .btn {
+    margin-top: -5px;
+}
+
+#join-box {
+    margin: 20px 20px 5px 20px;
+    height: 7%;
+}
+
+#join-box .btn {
+    margin-top: 5px;
+}
+
+#channel-list {
+    height: 83%;
 }

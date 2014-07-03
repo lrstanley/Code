@@ -1,3 +1,12 @@
+
+// Use this to trim the text size of channel names for the channel list
+Handlebars.registerHelper('trimString', function(passedString, passedLength) {
+    if (passedString.length > passedLength) {
+        var passedString = passedString.substring(0,passedLength) + '<font color="teal"><b>...</b></font>';
+    }
+    return new Handlebars.SafeString(passedString);
+});
+
 function login() {
     $.get('/', {pass: $('#password').val()})
         .done(function(data) {

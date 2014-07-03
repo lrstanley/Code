@@ -1,7 +1,10 @@
 {{#each data.logs}}
   <li class="list-group-item">
     <small class="pull-right text-muted"><span class="fa fa-time"></span>{{this.hrt}} ago</small>
-    <strong class="primary-font"><span class="label label-primary">{{this.channel}}</span> <span class="badge">{{this.nick}}</span></strong>
+    <strong class="primary-font">
+        <span class="label label-primary">{{this.channel}}</span>
+        <span class="badge">{{this.nick}}</span>
+    </strong>
     <span class="message">{{this.message}}</span>
   </li>
 {{else}}

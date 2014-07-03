@@ -42,6 +42,10 @@
           <ul class="nav navbar-nav side-nav">
             <li class="active"><a href="index.html"><i class="fa fa-slack"></i> CHANNEL LIST</a></li>
             <div id="channel-list"></div>
+            <div id="join-box">
+              <input id="join-channel" type="text" class="form-control" placeholder="Channel name">
+              <button onclick="join();" class="btn btn-block btn-primary">Join</button>
+            </div>
           </ul>
 
           <ul class="nav navbar-nav navbar-right navbar-user">
@@ -55,12 +59,14 @@
         <div class="row" style="height: 100%">
           <div class="col-lg-12" style="height: 10%">
             <h1>
-              Dashboard (<span id="dashboard-host"></span>)
-              <small>Bot Overview</small>
-              <span class="pull-right">
+              <span id="dashboard-message">
+                Dashboard (<span id="dashboard-host"></span>)
+                <small>Bot Overview</small>
+              </span>
+              <span class="pull-right" id="manage-buttons">
+                <i class="fa fa-cog"></i>
                 <button style="display: none;" class="btn btn-primary" href="#" onclick="mute();" id="mute">Mute bot</button>
                 <button style="display: none;" class="btn btn-success" href="#" onclick="unmute();" id="unmute">Unmute bot</button>
-                <button class="btn btn-info" data-toggle="modal" data-target=".modal-join">Join channel</button>
                 <button class="btn btn-warning" href="#" onclick="exec('restart');">Restart bot</button>
                 <button class="btn btn-danger" href="#" onclick="exec('quit');">Shutdown bot</button>
               </span>
@@ -125,23 +131,6 @@
           </div>
           <div class="modal-footer">
             <a href="http://liamstanley.io">Code &copy; Liam Stanley 2012-2014</a>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div class="modal fade modal-join">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-xs-10">
-                <input id="join-channel" type="text" class="form-control" placeholder="Channel name">
-              </div>
-              <div class="col-xs-2">
-                <button onclick="join();" class="btn btn-primary">Join</button>
-              </div>
-            </div>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
