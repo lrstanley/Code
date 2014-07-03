@@ -294,6 +294,9 @@ class Bot(asynchat.async_chat):
             'time': int(time.time()),
             'channel': self.safe(channel)
         }
+        # Remove ACTION's
+        if '\x01ACTION' in tmp['message']:
+            tmp['message'] = '(me) ' + tmp['message'].replace('\x01', '').strip('ACTION')
         self.logs['channel'][self.safe(channel)].append(tmp)
         self.logs['bot'].append(tmp)
 
