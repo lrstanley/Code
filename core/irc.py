@@ -144,7 +144,6 @@ class Bot(asynchat.async_chat):
             text = args[-1]
 
         origin = Origin(self, source, args)
-        self.dispatch(origin, tuple([text] + args))
 
         if args[0] == 'PING':
             self.write(('PONG', text))
@@ -154,13 +153,17 @@ class Bot(asynchat.async_chat):
             output.warning(repr(self.raw), 'DEBUG')
 
         try:
-            if not source or origin.nick == self.nick:
-                return
-
-            getattr(triggers, 'trigger_%s' %
-                    args[0])(self, origin, line, args, text,)
+            if source and origin.nick != self.nick:
+                getattr(triggers, 'trigger_%s' %
+                        args[0])(self, origin, line, args, text,)
         except AttributeError:
-            return
+            pass
+
+        # Execute this last so we know that out data is parsed first.
+        # Slightly slower but we know we can get up-to-date information
+        # Fixing the bug in tell.py when you tried getting the users
+        # messages to replace too fast
+        self.dispatch(origin, tuple([text] + args))
 
     def dispatch(self, origin, args):
         pass
