@@ -103,19 +103,19 @@ function populate() {
                 first_load = false;
                 // Things here will be done on load, AFTER getting data from the API
                 // Good for things that won't change in the bot while the webpage is open...
-                if (code['data']['muted']) {
-                    $("#mute").hide();
-                    $("#unmute").show();
-                } else {
-                    $("#unmute").hide();
-                    $("#mute").show();
-                };
                 $("#server-info").text(code['data']['config']['host'] + ':' + code['data']['config']['port']);
                 $("#dashboard-host").text(code['data']['config']['host']);
                 $("#default-nick").text(code['data']['config']['nick']);
                 // Snap to the bottom of the console log by default
                 document.getElementById("chat-bottom").scrollIntoView();
             }
+            if (code['data']['muted']) {
+                $("#mute").hide();
+                $("#unmute").show();
+            } else {
+                $("#unmute").hide();
+                $("#mute").show();
+            };
             // Some navbar stuff
             $("#current-nick").text(code['data']['nick']);
             $("#module-count").text(code['data']['modules'].length);
