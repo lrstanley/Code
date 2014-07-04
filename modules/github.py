@@ -22,7 +22,7 @@ def github(code, input):
         # Assume a single username
         try:
             tmp = json.loads(urllib2.urlopen(user_api %
-                             input.group(2).strip()).read())
+                                             input.group(2).strip()).read())
             response = {}
             # Remove dem ugly nulled values. It's a dictionary so we have to
             # loop differently.

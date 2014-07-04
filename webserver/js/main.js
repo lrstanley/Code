@@ -13,7 +13,7 @@ function login() {
             // Set cookie here
             $.cookie('code_pass', $('#password').val(), { expires: 7, path: '/' });
             // Now authed, so hide the password stuff
-            $('.modal-password').modal('hide');
+            $('#modal-password').modal('hide');
             // And show the page
             $('#wrapper').show();
             doPopulate(true);
@@ -32,23 +32,21 @@ function logout() {
     $.removeCookie('code_pass');
 }
 
-$('.modal-password').modal({
+$('#modal-password').modal({
     keyboard: false,
     backdrop: 'static',
     show: false
 });
 
-$('.modal-shutdown').modal({
+$('#modal-timeout').modal({
     keyboard: false,
     backdrop: 'static',
     show: false
 });
 
-$('.modal-chat').modal({
-    show: false
-});
-
-$('.modal-join').modal({
+$('#modal-shutdown').modal({
+    keyboard: false,
+    backdrop: 'static',
     show: false
 });
 
@@ -58,16 +56,40 @@ function doPopulate(isgo) {
         populate();
         // Populate page every 1.5 seconds. Should be safe..
         updater = setInterval(function(){populate()},1000);
+        timeout = setInterval(function(){checkTimeout()},500);
     } else {
         clearInterval(updater)
+        clearInterval(timeout)
     };
 }
+
+function checkTimeout () {
+    var current = new Date().valueOf();
+    var diff = current - last_connect;
+    if (diff > 15000) {
+        $('#modal-timeout').modal('show');
+        seconds = Math.round(diff/1000);
+        minutes = Math.round(seconds/60);
+        if (minutes == 1) {
+            $("#timeout").text('1 minute ago');
+        } else if (minutes > 1) {
+            $("#timeout").text(minutes + ' minutes ago');
+        } else {
+            $("#timeout").text(seconds + ' seconds ago');
+        }
+    } else {
+        $('#modal-timeout').modal('hide');
+    }
+}
+
 
 last_msg_time = 100000;
 function populate() {
     $.get('/', $.param({pass: $.cookie('code_pass'), callback: '?'}))
         .done(function(data) {
             code = data;
+            // Use this for timeout checking...
+            last_connect = new Date().valueOf();
             // Few things, cleanup wise..
             //code['data']['logs'] = code['data']['logs'].splice(-12);
             if (!loginCheck) {
@@ -224,7 +246,7 @@ $(function() {
         // Hide the entire page
         $('#wrapper').hide();
         // Show the password box
-        $('.modal-password').modal('show');
+        $('#modal-password').modal('show');
     } else {
         // Load content into page here
         $('#wrapper').show();

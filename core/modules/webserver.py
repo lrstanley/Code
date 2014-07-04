@@ -7,6 +7,16 @@ from util import output
 import json
 import os
 from util.tools import relative
+from core.modules import reload
+
+# Some todo lists...
+# [ ] - As suggested by Allen, might add a public API that allows basic non-security-issue data to be given
+# [ ] - Input checking, in channel join menu
+# [ ] - About dialog and information
+# [ ] - Module modal for reloading selective or all modules
+# [ ] - Some form of graphing system, so that the logs aren't on the main page
+# [ ] -
+
 
 # Example command...
 #  - http://your-host.net:8888/?pass=herpderptrains&args=PRIVMSG+%23L&data=Testing+123
@@ -22,7 +32,7 @@ class WebServer(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
         msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
-                                     format % args)
+                                    format % args)
     #     output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
@@ -70,6 +80,10 @@ class WebServer(BaseHTTPRequestHandler):
                         bot.restart()
                     if cmd == 'quit':
                         bot.quit()
+                    if cmd == 'reload':
+                        reload_all_modules(bot)
+                        finish(
+                            {'success': True, 'message': 'Reloaded all modules!'})
                 if 'args' not in args:
                     config = {}
                     for key, value in bot.config().iteritems():
@@ -81,7 +95,7 @@ class WebServer(BaseHTTPRequestHandler):
                         'nick': bot.nick,
                         'chan_data': bot.chan,
                         'modules': bot.modules,
-                        #'docs': bot.doc,
+                        'docs': bot.doc,
                         'config': config,
                         'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
                         'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup)),
@@ -90,12 +104,14 @@ class WebServer(BaseHTTPRequestHandler):
                     data['logs'] = []
                     for log in bot.logs['bot']:
                         tmp = log
-                        tmp['hrt'] = relative(seconds=int(time.time()) - int(tmp['time']))[0]
+                        tmp['hrt'] = relative(
+                            seconds=int(time.time()) - int(tmp['time']))[0]
                         data['logs'].append(tmp)
                     return finish({'success': True, 'data': data})
 
                 if 'data' in args:
-                    bot.write(args['args'][0].split(), bot.format(args['data'][0]))
+                    bot.write(
+                        args['args'][0].split(), bot.format(args['data'][0]))
                 else:
                     bot.write(args['args'][0].split())
                 return finish({'success': True, 'message': 'Data sent to server'})

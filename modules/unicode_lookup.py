@@ -55,7 +55,7 @@ def gen_db(botname):
         uc_names.append(name)
         cp_names[tmp[0]] = name
     database.set(botname, {'uc': uc, 'uc_names': uc_names,
-                 'cp_names': cp_names, 'time': int(time.time())}, 'unicodedata')
+                           'cp_names': cp_names, 'time': int(time.time())}, 'unicodedata')
 
 
 def setup(code):

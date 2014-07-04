@@ -18,7 +18,6 @@ def newegg(code, input):
     if not data:
         return  # We had issues.. ignore
 
-
     if len(data['Title']) > 50:
         title = ' '.join(data['Title'][:50].split()[0:-1]) + '...'
     else:
@@ -26,7 +25,8 @@ def newegg(code, input):
     title = '{b}%s{b}' % title
 
     if not data['FinalPrice'] == data['OriginalPrice']:
-        price = '{b}%s{b} (was {b}%s{b})' % (data['FinalPrice'], data['OriginalPrice'])
+        price = '{b}%s{b} (was {b}%s{b})' % (
+            data['FinalPrice'], data['OriginalPrice'])
     else:
         price = '{b}' + data['FinalPrice'] + '{b}'
 
@@ -37,12 +37,13 @@ def newegg(code, input):
             rating_fmt = 'rating'
         else:
             rating_fmt = 'ratings'
-        rating = 'Rated {b}%s/5{b} ({b}%s %s{b})' % (review, review_count[1:-1], rating_fmt)
+        rating = 'Rated {b}%s/5{b} ({b}%s %s{b})' % (review,
+                                                     review_count[1:-1], rating_fmt)
     else:
         rating = '{b}No Ratings{b}'
 
     tags = []
-    
+
     if data['IsFeaturedItem']:
         tags.append('{b}{blue}Featured{c}{b}')
 

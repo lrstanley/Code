@@ -19,14 +19,14 @@ def fml(code, input):
         try:
             r = fml_random()
             code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
-                     web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+                                                              web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('{red}Failed to retrieve random FML.')
     elif input.group(2).startswith('#') and input.group(2).lstrip('#').isdigit():
         try:
             r = fml_id_search(input.group(2).lstrip('#'))
             code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
-                     web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+                                                              web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('Failed to retrieve FML via ID.')
     # Input/Assume search query, with (possible) number at end indicating FML

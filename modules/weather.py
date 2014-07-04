@@ -33,7 +33,7 @@ def weather(code, input):
         return code.reply('{red}{b}Incorrect location. Please try again!')
     try:
         data = json.loads(urllib2.urlopen(api_uri %
-                          (api_key, lat, lng)).read())['currently']
+                                          (api_key, lat, lng)).read())['currently']
     except:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     output = []

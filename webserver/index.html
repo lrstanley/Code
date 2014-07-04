@@ -113,7 +113,7 @@
     </div><!-- /#wrapper -->
 
     <!-- Non page specific stuff -->
-    <div class="modal fade modal-password">
+    <div class="modal fade" id="modal-password">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header text-center">
@@ -135,7 +135,19 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <div class="modal fade modal-shutdown">
+    <div class="modal fade" id="modal-timeout">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-body">
+            <center>
+              It seems I have disconnected from the bot... Please wait.<br>
+              (<span id="timeout"></span>)
+            </center>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="modal-shutdown">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header text-center">

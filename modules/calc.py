@@ -13,7 +13,7 @@ uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 def calc(code, input):
     try:
         data = json.loads(urllib2.urlopen(uri %
-                          urllib.quote(input.group(2).replace('^', '**'))).read())
+                                          urllib.quote(input.group(2).replace('^', '**'))).read())
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip().split('}')[1]

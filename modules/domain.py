@@ -9,7 +9,8 @@ uri = 'http://domai.nr/api/json/search?q=%s'
 @hook(cmds=['domain'], ex='domain google.com', priority='low')
 def domain(code, input):
     """domain <domain> -- Use domain.nr's domain API to find used and unused domains."""
-    err, domains = '{red}{b}Unable to find information on that domain name.', []
+    err, domains = '{red}{b}Unable to find information on that domain name.', [
+    ]
     url = input.group(2)
     re_m = re.match(re.compile(r'http[s]?://([a-zA-Z0-9_.]{0,40}.*?)/?'), url)
     if re_m:

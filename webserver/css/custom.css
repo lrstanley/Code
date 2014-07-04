@@ -140,33 +140,18 @@ body {
     height: 100%;
 }
 
-.modal-password {
+#modal-timeout {
+    color: red;
+    font-weight: 700;
+    font-size: 15px;
+    margin: 20% 0 20% 0;
+}
+
+#modal-password {
     position: relative;
     top: 25%;
     /* Hacked way of removing the scrollbar.. nobody will notice the 1% */
     left: 1%;
-}
-
-.alert-growl {
-    border-radius: 10px;
-    background-color: rgb(25, 25, 25);
-    background-color: rgba(25, 25, 25, 0.9);
-    border-width: 2px;
-    border-color: rgb(255, 255, 255);
-    border-color: rgba(255, 255, 255, 0.9);
-    color: rgb(255, 255, 255);
-    box-shadow: 0px 0px 10px rgb(25, 25, 25);
-    box-shadow: 0px 0px 10px rgba(25, 25, 25, 0.8);
-}
-
-.alert-growl button.close {
-    color: rgb(255, 255, 255);
-    opacity: 1;
-}
-
-.alert-growl img {
-    float: left;
-    padding: 0px 5px 0px 0px;
 }
 
 #dashboard-message {

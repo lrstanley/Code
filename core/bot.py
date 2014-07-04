@@ -305,8 +305,9 @@ class Code(irc.Bot):
             return code.say('{b}{red}You must be owner to use that command!')
 
         if input.groups:
-            if code.get('muted') and input.group(1)[1::].lower() not in 'unmute':
-                return
+            if input.group(1):
+                if code.get('muted') and input.group(1)[1::].lower() not in 'unmute':
+                    return
         if func.args and not input.group(2):
             msg = '{red}No arguments supplied! Try: ' + \
                   '"{b}{purple}%shelp %s{b}{r}"'

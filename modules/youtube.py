@@ -40,7 +40,7 @@ def get_search(code, input):
     try:
         query = input.group(2).replace(' ', '+')
         data = json.loads(urllib2.urlopen(search_url %
-                          (str(numerical), query)).read())['data']
+                                          (str(numerical), query)).read())['data']
         reply = create_response(data['items'][0], url=True)
         return code.say(' - '.join(reply))
     except:

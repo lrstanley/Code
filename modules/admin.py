@@ -77,6 +77,7 @@ def me(code, input):
     msg = msg.split(' ', 1)
     code.me(msg[0], msg[1])
 
+
 @hook(cmds=['notice'], ex='notice #L Thie bot is awesome!', priority='low', admin=True, args=True)
 def notice(code, input):
     '''notice <channel|username> <msg> - Send a raw NOTICE to a channel/user. Admin-only.'''

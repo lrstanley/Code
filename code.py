@@ -148,10 +148,12 @@ def main(argv=None):
 def connect(id, config):
     while True:
         try:
-            # Todo, pass thread number, if more than one thread, pass in console
+            # Todo, pass thread number, if more than one thread, pass in
+            # console
             bot.Code(config).run(id, config['host'], config['port'])
         except:
-            output.error('Error in process (Server: %s, port: %s)' % (config['host'], config['port']))
+            output.error('Error in process (Server: %s, port: %s)' %
+                         (config['host'], config['port']))
             output.error('Terminating and restarting in 20 seconds...')
             time.sleep(5)
             output.error('Restarting...')
@@ -164,22 +166,26 @@ if __name__ == '__main__':
         while True:
             time.sleep(1)
             if len(threads) == 0:
-                output.error('No more processes to manage. Exiting...', 'ERROR')
+                output.error(
+                    'No more processes to manage. Exiting...', 'ERROR')
                 sys.exit()
             for id in range(len(threads)):
                 p = threads[id]['process']
                 if p.exitcode == 0:
                     # Assume it exited safely. Ignore the termination.
                     p.terminate()
-                    output.success('Terminating process ID %s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+                    output.success('Terminating process ID %s (%s:%s)' % (
+                        id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
                     del threads[id]
                     break
                 if p.exitcode == 1:
                     # Exited erronously. We'll just assume it wants a reboot.
                     p.terminate()
-                    p = Process(target=connect, args=(id, setupServer(threads[id]['config']),))
+                    p = Process(
+                        target=connect, args=(id, setupServer(threads[id]['config']),))
                     p.daemon = True
-                    output.success('Regenerating process ID %s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+                    output.success('Regenerating process ID %s (%s:%s)' % (
+                        id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
                     p.start()
                     threads[id]['process'] = p
     except KeyboardInterrupt:
