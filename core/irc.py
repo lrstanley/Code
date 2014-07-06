@@ -53,6 +53,7 @@ class Bot(asynchat.async_chat):
         self.server_password = server_password
         self.channels = channels or list()
         self.stack = list()
+        self.muted = False
         self.debug = debug
         self.irc_startup = None
         self.chan = {}
@@ -163,7 +164,16 @@ class Bot(asynchat.async_chat):
         # Slightly slower but we know we can get up-to-date information
         # Fixing the bug in tell.py when you tried getting the users
         # messages to replace too fast
+        if args[0] == 'PRIVMSG':
+            if self.muted and text[1::].split()[0].lower() not in ['unmute', 'help', 'mute']:
+                return
         self.dispatch(origin, tuple([text] + args))
+
+    def mute(self):
+        self.muted = True
+
+    def unmute(self):
+        self.muted = False
 
     def dispatch(self, origin, args):
         pass
