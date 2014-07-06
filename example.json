@@ -81,6 +81,7 @@
         "admins": [],
         "text_decorations": true,
         "excluded_modules": ["admin_channel", "unicode_lookup"],
+        "whitelisted_modules": [],
         "excluded_per_channel": {
             "#L": ["!"]
         },

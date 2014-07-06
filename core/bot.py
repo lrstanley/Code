@@ -14,6 +14,8 @@ import re
 import threading
 import imp
 from core import irc
+from core.call import call
+from core.bind import bind_commands
 from util import output
 
 home = os.getcwd()
@@ -124,106 +126,13 @@ class Code(irc.Bot):
         else:
             output.warning('Couldn\'t find any modules')
 
-        self.bind_commands()
+        bind_commands(self)
 
     def register(self, variables):
         # This is used by reload.py, hence it being methodised
         for name, obj in variables.iteritems():
             if hasattr(obj, 'commands') or hasattr(obj, 'rule'):
                 self.variables[name] = obj
-
-    def bind_commands(self):
-        self.commands = {'high': {}, 'medium': {}, 'low': {}}
-
-        def bind(self, priority, regexp, func):
-            if not hasattr(func, 'name'):
-                func.name = func.__name__
-            self.commands[priority].setdefault(regexp, []).append(func)
-
-        def sub(pattern, self=self):
-            # These replacements have significant order
-            pattern = pattern.replace('$nickname', re.escape(self.nick))
-            return pattern.replace('$nick', r'%s[,:] +' % re.escape(self.nick))
-
-        for name, func in self.variables.iteritems():
-            # print name, func
-            self.doc[name] = {'commands': [], 'info': None, 'example': None}
-            if func.__doc__:
-                doc = func.__doc__.replace('\n', '')
-                while '  ' in doc:
-                    doc = doc.replace('  ', ' ')
-            else:
-                doc = None
-            if hasattr(func, 'example'):
-                example = func.example
-                example = example.replace('$nickname', self.nick)
-            else:
-                example = None
-            self.doc[name]['info'] = doc
-            self.doc[name]['example'] = example
-            if not hasattr(func, 'priority'):
-                func.priority = 'medium'
-
-            if not hasattr(func, 'thread'):
-                func.thread = True
-
-            if not hasattr(func, 'event'):
-                func.event = 'PRIVMSG'
-            else:
-                func.event = func.event.upper()
-
-            if not hasattr(func, 'rate'):
-                if hasattr(func, 'commands'):
-                    func.rate = 5
-                else:
-                    func.rate = 0
-
-            if hasattr(func, 'rule'):
-                if isinstance(func.rule, str):
-                    pattern = sub(func.rule)
-                    regexp = re.compile(pattern)
-                    bind(self, func.priority, regexp, func)
-
-                if isinstance(func.rule, tuple):
-                    # 1) e.g. ('$nick', '(.*)')
-                    if len(func.rule) == 2 and isinstance(func.rule[0], str):
-                        prefix, pattern = func.rule
-                        prefix = sub(prefix)
-                        regexp = re.compile(prefix + pattern)
-                        bind(self, func.priority, regexp, func)
-
-                    # 2) e.g. (['p', 'q'], '(.*)')
-                    elif len(func.rule) == 2 and isinstance(func.rule[0], list):
-                        prefix = self.prefix
-                        commands, pattern = func.rule
-                        for command in commands:
-                            command = r'(?i)(\%s)\b(?: +(?:%s))?' % (
-                                command, pattern
-                            )
-                            regexp = re.compile(prefix + command)
-                            bind(self, func.priority, regexp, func)
-
-                    # 3) e.g. ('$nick', ['p', 'q'], '(.*)')
-                    elif len(func.rule) == 3:
-                        prefix, commands, pattern = func.rule
-                        prefix = sub(prefix)
-                        for command in commands:
-                            command = r'(?i)(\%s) +' % command
-                            regexp = re.compile(prefix + command + pattern)
-                            bind(self, func.priority, regexp, func)
-
-            if hasattr(func, 'commands'):
-                self.doc[name]['commands'] = list(func.commands)
-                for command in list(func.commands):
-                    template = r'(?i)^\%s(%s)(?: +(.*))?$'
-                    pattern = template % (self.prefix, command)
-                    regexp = re.compile(pattern)
-                    bind(self, func.priority, regexp, func)
-
-            custom = ['admin', 'args', 'owner', 'op', 'voiced']
-            for atrb in custom:
-                if not hasattr(func, atrb):
-                    setattr(func, atrb, False)
 
     def wrapped(self, origin, text, match):
         class CodeWrapper(object):
@@ -282,71 +191,6 @@ class Code(irc.Bot):
 
         return CommandInput(text, origin, bytes, match, event, args)
 
-    def call(self, func, origin, code, input):
-        # custom decorators
-        try:
-            if func.op and not code.chan[input.sender][input.nick]['op']:
-                return code.say('{b}{red}You must be op to use that command!')
-
-            if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
-                return code.say('{b}{red}You must be voiced to use that command!')
-
-            input.op = code.chan[input.sender][input.nick]['op']
-            input.voiced = code.chan[input.sender][input.nick]['voiced']
-            input.chan = code.chan[input.sender]
-        except KeyError:
-            pass
-
-        if func.admin and not input.admin:
-            return code.say('{b}{red}You are not authorized to use that command!')
-
-        if func.owner and not input.owner:
-            return code.say('{b}{red}You must be owner to use that command!')
-
-        if func.args and not input.group(2):
-            msg = '{red}No arguments supplied! Try: ' + \
-                  '"{b}{purple}%shelp %s{b}{r}"'
-            return code.say(msg % (
-                code.prefix,
-                code.doc[func.name]['commands'][0])
-            )
-
-        nick = input.nick.lower()
-        if nick in self.times:
-            if func in self.times[nick]:
-                if not input.admin:
-                    if time.time() - self.times[nick][func] < func.rate:
-                        self.times[nick][func] = time.time()
-                        return
-        else:
-            self.times[nick] = dict()
-        self.times[nick][func] = time.time()
-        try:
-            if hasattr(self, 'excludes'):
-                if input.sender in self.excludes:
-                    if '!' in self.excludes[input.sender]:
-                        # block all function calls for this channel
-                        return
-                    fname = func.func_code.co_filename.split(
-                        '/')[-1].split('.')[0]
-                    if fname in self.excludes[input.sender]:
-                        # block function call if channel is blacklisted
-                        print(
-                            'Blocked:', input.sender, func.name,
-                            func.func_code.co_filename
-                        )
-                        return
-        except:
-            output.error("Error attempting to block: ", str(func.name))
-            self.error(origin)
-
-        try:
-            func_return = func(code, input)
-            if isinstance(func_return, str) or isinstance(func_return, unicode):
-                code.say(func_return)
-        except:
-            self.error(origin)
-
     def dispatch(self, origin, args):
         bytes, event, args = args[0], args[1], args[2:]
         text = decode(bytes)
@@ -359,67 +203,67 @@ class Code(irc.Bot):
                         continue
 
                     match = regexp.match(text)
-                    if match:
+                    if not match:
+                        continue
 
-                        code = self.wrapped(origin, text, match)
-                        input = self.input(
-                            origin, text, bytes, match, event, args
-                        )
+                    code = self.wrapped(origin, text, match)
+                    input = self.input(
+                        origin, text, bytes, match, event, args
+                    )
 
-                        nick = (input.nick).lower()
+                    nick = input.nick.lower()
+                    # blocking ability
+                    if os.path.isfile("blocks"):
+                        g = open("blocks", "r")
+                        contents = g.readlines()
+                        g.close()
 
-                        # blocking ability
-                        if os.path.isfile("blocks"):
-                            g = open("blocks", "r")
-                            contents = g.readlines()
-                            g.close()
+                        try:
+                            bad_masks = contents[0].split(',')
+                        except:
+                            bad_masks = ['']
 
-                            try:
-                                bad_masks = contents[0].split(',')
-                            except:
-                                bad_masks = ['']
+                        try:
+                            bad_nicks = contents[1].split(',')
+                        except:
+                            bad_nicks = ['']
 
-                            try:
-                                bad_nicks = contents[1].split(',')
-                            except:
-                                bad_nicks = ['']
+                        # check for blocked hostmasks
+                        if len(bad_masks) > 0:
+                            host = origin.host
+                            host = host.lower()
+                            for hostmask in bad_masks:
+                                hostmask = hostmask.replace(
+                                    "\n", "").strip()
+                                if len(hostmask) < 1:
+                                    continue
+                                try:
+                                    re_temp = re.compile(hostmask)
+                                    if re_temp.findall(host):
+                                        return
+                                except:
+                                    if hostmask in host:
+                                        return
+                        # check for blocked nicks
+                        if len(bad_nicks) > 0:
+                            for nick in bad_nicks:
+                                nick = nick.replace("\n", "").strip()
+                                if len(nick) < 1:
+                                    continue
+                                try:
+                                    re_temp = re.compile(nick)
+                                    if re_temp.findall(input.nick):
+                                        return
+                                except:
+                                    if nick in input.nick:
+                                        return
 
-                            # check for blocked hostmasks
-                            if len(bad_masks) > 0:
-                                host = origin.host
-                                host = host.lower()
-                                for hostmask in bad_masks:
-                                    hostmask = hostmask.replace(
-                                        "\n", "").strip()
-                                    if len(hostmask) < 1:
-                                        continue
-                                    try:
-                                        re_temp = re.compile(hostmask)
-                                        if re_temp.findall(host):
-                                            return
-                                    except:
-                                        if hostmask in host:
-                                            return
-                            # check for blocked nicks
-                            if len(bad_nicks) > 0:
-                                for nick in bad_nicks:
-                                    nick = nick.replace("\n", "").strip()
-                                    if len(nick) < 1:
-                                        continue
-                                    try:
-                                        re_temp = re.compile(nick)
-                                        if re_temp.findall(input.nick):
-                                            return
-                                    except:
-                                        if nick in input.nick:
-                                            return
-
-                        if func.thread:
-                            targs = (func, origin, code, input)
-                            t = threading.Thread(target=self.call, args=targs)
-                            t.start()
-                        else:
-                            self.call(func, origin, code, input)
+                    if func.thread:
+                        targs = (self, func, origin, code, input)
+                        t = threading.Thread(target=call, args=targs)
+                        t.start()
+                    else:
+                        call(self, func, origin, code, input)
 
     def get(self, key):
         if key in self.data:
