@@ -1,6 +1,7 @@
 import sys
 import platform
 from tools import split_len
+from textwrap import wrap
 
 colors = True
 parse = True
@@ -60,7 +61,7 @@ def template(message, prefix, color, error=False):
     clean_prefix = ' ' * pad
     data = ' | {}$reset'
     for line in message.split('\n'):
-        lines = split_len(line, split_at)
+        lines = wrap(line, split_at)
         count = 1
         for current in lines:
             if count == 1:
