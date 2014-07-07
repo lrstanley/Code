@@ -5,6 +5,7 @@ import imp
 import subprocess
 from util.hook import *
 from util import output
+from core.bind import bind_commands
 
 
 def reload_all_modules(code):
@@ -29,7 +30,7 @@ def reload_module(code, name):
     if hasattr(module, 'setup'):
         module.setup(code)
     code.register(vars(module))
-    code.bind_commands()
+    bind_commands(code)
     mtime = os.path.getmtime(module.__file__)
     modified = time.strftime('%H:%M:%S', time.gmtime(mtime))
     module = str(module)
@@ -76,3 +77,4 @@ def update(code, input):
         data = data.replace('  ', ' ')
     code.say('Github: {b}' + data)
     reload_all_modules(code)
+    code.say('Reloaded all modules')
