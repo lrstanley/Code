@@ -133,6 +133,10 @@ function populate() {
             // then how is it being used...)
             $('#channel-list').html(channel_list_tmpl(code));
 
+            // Stuff
+            $('#module-list').html(module_list_tmpl(code));
+            $("#modules-count").text(code['data']['modules'].length);
+
             // channel list for sending messages
             // Store the old one, so we don't reset the set channel they are about to message..
             old = $('#msg-sender').val();
@@ -251,6 +255,22 @@ function exec(method) {
     $.get("/", {pass: $.cookie('code_pass'), execute: method, data: ""});
 }
 
+function reloadModule(name) {
+    $.get('/', {pass: $.cookie('code_pass'), execute: 'reload', data: name})
+        .done(function(data) {
+            $.bootstrapGrowl(data['message']);
+        })
+        .fail(function(data) {
+            $.bootstrapGrowl(data['message'] + ' ' + data['error'][1]);
+        });
+}
+
+function reloadAll() {
+    $.get("/", {pass: $.cookie('code_pass'), execute: 'reloadall', data: ""});
+    $.bootstrapGrowl('Reloaded all modules!');
+    $('#modal-modules').modal('hide');
+}
+
 $("#password-box").keyup(function(event) {
     if (event.keyCode == 13) {
         login();
@@ -291,6 +311,9 @@ $(function() {
     });
     $.get('/templates/console_log.html', function(source) {
         console_log_tmpl = Handlebars.compile(source);
+    });
+    $.get('/templates/module_list.html', function(source) {
+        module_list_tmpl = Handlebars.compile(source);
     });
 });
 

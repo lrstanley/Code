@@ -67,6 +67,7 @@
                 <i class="fa fa-cog"></i>
                 <button style="display: none;" class="btn btn-primary" href="#" onclick="mute();" id="mute">Mute bot</button>
                 <button style="display: none;" class="btn btn-success" href="#" onclick="unmute();" id="unmute">Unmute bot</button>
+                <button class="btn btn-info" data-toggle="modal" data-target="#modal-modules">Modules</button>
                 <button class="btn btn-warning" href="#" onclick="exec('restart');">Restart bot</button>
                 <button class="btn btn-danger" href="#" onclick="exec('quit');">Shutdown bot</button>
               </span>
@@ -107,6 +108,7 @@
           <footer class="footer">
             <a href="https://www.liamstanley.io"><span class="label label-info pull-right" style="margin: 10px;">Copyright &copy; Liam Stanley 2012-2014</span></a>
             <a href="https://github.com/Liamraystanley/Code"><span class="label label-primary pull-right" style="margin: 10px;">Contribute to the project</span></a>
+            <a href="/?pass="><span class="label label-warning pull-right" style="margin: 10px;">API</span></a>
           </footer>
         </div><!-- /.row -->
       </div><!-- /#page-wrapper -->
@@ -161,6 +163,23 @@
           </div>
           <div class="modal-footer">
             <a href="http://liamstanley.io">Code &copy; Liam Stanley 2014</a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="modal-modules">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4>Currently loaded modules</h4>
+          </div>
+          <div class="modal-body modal-scrollable">
+            <span id="module-list"></span>
+          </div>
+          <div class="modal-footer">
+          <span class="label label-success pull-left" style="margin: 7px;"><span id="modules-count"></span> modules loaded</span>
+            <a href="#" onclick="reloadAll();" class="btn btn-warning">Reload all modules</a>
+            <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

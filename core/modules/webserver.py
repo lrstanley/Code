@@ -6,16 +6,14 @@ from random import randint as gen
 from util import output
 import json
 import os
+import traceback
 from util.tools import relative
 from core.modules import reload
 
 # Some todo lists...
-# [ ] - As suggested by Allen, might add a public API that allows basic non-security-issue data to be given
-# [ ] - Input checking, in channel join menu
-# [ ] - About dialog and information
-# [ ] - Module modal for reloading selective or all modules
-# [ ] - Some form of graphing system, so that the logs aren't on the main page
-# [ ] -
+# - As suggested by Allen, might add a public API that allows basic non-security-issue data to be given
+# - About dialog and information
+# - Some form of graphing system, so that the logs aren't on the main page
 
 
 # Example command...
@@ -62,7 +60,7 @@ class WebServer(BaseHTTPRequestHandler):
             # Manage here
             try:
                 if 'pass' not in args:
-                    return finish({'success': False, 'message': 'Password required'}, code=403)
+                    return finish({'success': False, 'message': 'Password required. Example: http://localhost:8888/?pass=mypassword'}, code=403)
                 if args['pass'][0] != password:
                     return finish({'success': False, 'message': 'Password incorrect'}, code=403)
 
@@ -80,10 +78,12 @@ class WebServer(BaseHTTPRequestHandler):
                         bot.restart()
                     if cmd == 'quit':
                         bot.quit()
+                    if cmd == 'reloadall':
+                        reload.reload_all_modules(bot)
+                        return finish({'success': True, 'message': 'Reloaded all modules!'})
                     if cmd == 'reload':
-                        reload_all_modules(bot)
-                        finish(
-                            {'success': True, 'message': 'Reloaded all modules!'})
+                        tmp = reload.reload_module(bot, args['data'][0])
+                        return finish({'success': True, 'message': 'Reloaded %s!' % tmp['name']})
                 if 'args' not in args:
                     config = {}
                     for key, value in bot.config().iteritems():
@@ -94,7 +94,7 @@ class WebServer(BaseHTTPRequestHandler):
                     data = {
                         'nick': bot.nick,
                         'chan_data': bot.chan,
-                        'modules': bot.modules,
+                        'modules': sorted(bot.modules),
                         'docs': bot.doc,
                         'config': config,
                         'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
@@ -116,7 +116,7 @@ class WebServer(BaseHTTPRequestHandler):
                     bot.write(args['args'][0].split())
                 return finish({'success': True, 'message': 'Data sent to server'})
             except Exception as e:
-                return finish({'success': False, 'message': 'An exception has occured', 'error': str(e)}, code=500)
+                return finish({'success': False, 'message': 'An exception has occured', 'error': list(e)}, code=500)
         elif path.endswith('/'):
             target = path + 'index.html'
             filetype = 'text/html'

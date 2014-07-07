@@ -192,3 +192,17 @@ body {
 #channel-list {
     height: 83%;
 }
+
+.modal-scrollable {
+    overflow-y: scroll;
+    height: 400px;
+}
+
+.module-icon {
+    padding-right: 10px;
+    padding-top: 2px;
+}
+
+.module-button {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,9 @@
+<div class="row">
+  {{#each data.modules}}
+    <div class="col-md-4">
+      <button class="btn btn-info btn-block module-button">{{this}} <a href="#" onclick="reloadModule('{{this}}');"><i class="fa fa-repeat pull-right module-icon"></i></a></button>
+    </div>
+  {{else}}
+    <div class="alert alert-info" role="alert">No modules are loaded!</div>
+  {{/each}}
+</div>
