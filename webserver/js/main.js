@@ -50,6 +50,12 @@ $('#modal-shutdown').modal({
     show: false
 });
 
+$('#join-channel').popover({
+    placement: 'top',
+    content: 'Channel must start with a #',
+    trigger: 'manual'
+});
+
 function doPopulate(isgo) {
     if (isgo) {
         // Initially populate page...
@@ -181,6 +187,25 @@ function unmute() {
     popup("Unmuted bot!");
 }
 
+// Creative checking to see if the inputs are empty, and disable the button to send if so
+$("#msg-btn").attr('disabled', 'disabled');
+$("#msg-text").keyup(function() {
+    checkFull("#msg-text", "#msg-btn");
+});
+
+$("#join-btn").attr('disabled', 'disabled');
+$("#join-channel").keyup(function() {
+    checkFull("#join-channel", "#join-btn");
+});
+
+function checkFull(element, toggled_element) {
+    if ($(element).val().length < 1) {
+        $(toggled_element).attr('disabled', 'disabled');
+    } else {
+        $(toggled_element).removeAttr('disabled');
+    }
+}
+
 function sendMessage() {
     if (!$('#msg-sender').val()) {
         $("#msg-input").addClass("has-error");
@@ -193,7 +218,6 @@ function sendMessage() {
     $.get("/", {pass: $.cookie('code_pass'), args: "PRIVMSG " + $('#msg-sender').val(), data: $('#msg-text').val()});
     // Remove the error assuming it sent
     $("#msg-input").removeClass("has-error");
-    console.log($('#msg-sender').val() + ' ... ' + $('#msg-text').val());
     // Snap to bottom when a message is sent
     document.getElementById("chat-bottom").scrollIntoView();
     $('#msg-text').val('');
@@ -201,10 +225,17 @@ function sendMessage() {
 }
 
 function join() {
-    $.get("/", {pass: $.cookie('code_pass'), args: "JOIN " + $('#join-channel').val(), data: ""});
-    $('.modal-join').modal('hide');
-    popup("Joined " + $('#join-channel').val() + '!');
-    $('#join-channel').val('');
+    if ($("#join-channel").val().indexOf("#") > -1) {
+        $.get("/", {pass: $.cookie('code_pass'), args: "JOIN " + $('#join-channel').val(), data: ""});
+        $('.modal-join').modal('hide');
+        popup("Joined " + $('#join-channel').val() + '!');
+        $('#join-channel').val('');
+        $("#join-channel").parent().removeClass("has-error");
+        $('#join-channel').popover('hide');
+    } else {
+        $("#join-channel").parent().addClass("has-error");
+        $('#join-channel').popover('show');
+    }
 
 }
 

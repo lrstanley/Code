@@ -44,7 +44,7 @@
             <div id="channel-list"></div>
             <div id="join-box">
               <input id="join-channel" type="text" class="form-control" placeholder="Channel name">
-              <button onclick="join();" class="btn btn-block btn-primary">Join</button>
+              <button onclick="join();" class="btn btn-block btn-primary" id="join-btn">Join</button>
             </div>
           </ul>
 
@@ -96,7 +96,7 @@
                     <div class="input-group" id="msg-input">
                       <input id="msg-text" type="text" class="form-control" placeholder="Text to send to the channel" required>
                       <span class="input-group-btn">
-                        <button onclick="sendMessage();" class="btn btn-primary">Send</button>
+                        <button onclick="sendMessage();" class="btn btn-primary" id="msg-btn">Send</button>
                       </span>
                     </div><!-- /input-group -->
                   </div>
