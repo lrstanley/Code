@@ -17,7 +17,7 @@ def bind_commands(self):
         # print name, func
         self.doc[name] = {'commands': [], 'info': None, 'example': None}
         if func.__doc__:
-            doc = func.__doc__.replace('\n', '')
+            doc = func.__doc__.replace('\n', '').strip()
             while '  ' in doc:
                 doc = doc.replace('  ', ' ')
         else:
@@ -87,8 +87,3 @@ def bind_commands(self):
                 pattern = template % (self.prefix, command)
                 regexp = re.compile(pattern)
                 bind(self, func.priority, regexp, func)
-
-        custom = ['admin', 'args', 'owner', 'op', 'voiced']
-        for atrb in custom:
-            if not hasattr(func, atrb):
-                setattr(func, atrb, False)
