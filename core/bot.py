@@ -145,7 +145,7 @@ class Code(irc.Bot):
                 if attr == 'reply':
                     return lambda msg: self.bot.msg(sender, '{}: {}'.format(origin.nick, msg))
                 elif attr == 'action':
-                    return lambda action: self.bot.action(sender, action)
+                    return lambda action: self.bot.me(sender, action)
                 elif attr == 'say':
                     return lambda msg: self.bot.msg(sender, msg)
                 elif attr == 'action':
