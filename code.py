@@ -147,17 +147,17 @@ def main(argv=None):
 
 def connect(id, config):
     while True:
-        # try:
-        #     # Todo, pass thread number, if more than one thread, pass in
-        #     # console
-        bot.Code(config).run(id, config['host'], config['port'])
-        # except:
-        #     output.error('Error in process (Server: %s, port: %s)' %
-        #                  (config['host'], config['port']))
-        #     output.error('Terminating and restarting in 20 seconds...')
-        #     time.sleep(5)
-        #     output.error('Restarting...')
-        #     pass
+        try:
+            # Todo, pass thread number, if more than one thread, pass in
+            # console
+            bot.Code(config).run(id, config['host'], config['port'])
+        except:
+            output.error('Error in process (Server: %s, port: %s)' %
+                         (config['host'], config['port']))
+            output.error('Terminating and restarting in 20 seconds...')
+            time.sleep(5)
+            output.error('Restarting...')
+            pass
 
 
 if __name__ == '__main__':
