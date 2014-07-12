@@ -1,6 +1,4 @@
-import urllib
-import urllib2
-import json
+from util import web
 from util.hook import *
 
 user = 'code'
@@ -10,9 +8,8 @@ api_uri = 'https://api.forecast.io/forecast/%s/%s,%s'
 
 
 def location(name):
-    name = urllib.quote(name)
-    data = json.loads(urllib2.urlopen(
-        'http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user)).read())
+    name = web.quote(name)
+    data = web.json('http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user))
     try:
         name = data['geonames'][0]['name']
     except IndexError:
@@ -32,8 +29,7 @@ def weather(code, input):
     if not name or not country or not lat or not lng:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     try:
-        data = json.loads(urllib2.urlopen(api_uri %
-                                          (api_key, lat, lng)).read())['currently']
+        data = web.json(api_uri % (api_key, lat, lng))['currently']
     except:
         return code.reply('{red}{b}Incorrect location. Please try again!')
     output = []

@@ -1,6 +1,5 @@
 import re
-import json
-import urllib2
+from util import web
 import time
 from util.hook import *
 
@@ -18,7 +17,7 @@ def youtube(code, input):
         if not id:
             return
         id = id[0][2].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
-        data = json.loads(urllib2.urlopen(api_url % id).read())['data']
+        data = web.json(api_url % id)['data']
 
         # Set some variables, because we'll have to modify a vew before we spit
         # them back out!
@@ -39,8 +38,7 @@ def get_search(code, input):
         numerical = 1
     try:
         query = input.group(2).replace(' ', '+')
-        data = json.loads(urllib2.urlopen(search_url %
-                                          (str(numerical), query)).read())['data']
+        data = web.json(search_url % (str(numerical), query))['data']
         reply = create_response(data['items'][0], url=True)
         return code.say(' - '.join(reply))
     except:

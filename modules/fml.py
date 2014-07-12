@@ -1,9 +1,6 @@
 import re
-import urllib2
-import HTMLParser
 from util.hook import *
 from util import web
-h = HTMLParser.HTMLParser()
 
 key = '51befff611067'
 language = 'en'

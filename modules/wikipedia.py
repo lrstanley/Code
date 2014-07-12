@@ -1,6 +1,4 @@
-from urllib import quote as urlify
-from urllib2 import urlopen as get
-from json import loads as jsonify
+from util import web
 from util.hook import *
 
 lang = 'en'
@@ -16,8 +14,8 @@ full_search = 'https://%s.%s/w/api.php?action=opensearch&search=%s&format=json'
 def wikiSearch(query, url, results=5):
     """Use MediaWikis API to search for values from wiktionary and wikipedia"""
     # First, we need to grab the data, and serialize it in JSON
-    url_query = urlify(query)
-    data = jsonify(get(full_search % (lang, url, url_query)).read())
+    url_query = web.quote(query)
+    data = web.json(full_search % (lang, url, url_query))
 
     # Check to see if we have #(results as arg form) results, then make a list
     if not data[1]:
@@ -32,9 +30,8 @@ def wikiSearch(query, url, results=5):
 def wikiDefine(term, url):
     """Use MediaWikis API to define a value from wiktionary and wikipedia"""
     # First, we need to grab the data, and serialize it in JSON
-    url_query = urlify(term)
-    data = jsonify(get(full_define % (lang, url, maxlen, url_query))
-                   .read())['query']['pages']
+    url_query = web.quote(term)
+    data = web.json(full_define % (lang, url, maxlen, url_query))['query']['pages']
 
     # We need to see if it was found. If it wasn't it'll be a -1 page
     for pageNumber, pageData in data.iteritems():

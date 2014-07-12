@@ -1,7 +1,6 @@
 import re
-from urllib2 import urlopen as get
 from util.hook import *
-from util.web import htmlescape
+from util import web
 
 uri = 'http://www.whatthefuckshouldimakefordinner.com'
 re_mark = re.compile(r'<dt><a href="(.*?)" target="_blank">(.*?)</a></dt>')
@@ -12,11 +11,11 @@ def dinner(code, input):
     """fd -- WHAT DO YOU WANT FOR FUCKING DINNER?"""
     err = '{red}EAT LEFT OVER PIZZA FOR ALL I CARE.'
     try:
-        data = get(uri).read()
+        data = web.get(uri).read()
         results = re_mark.findall(data)
         if not results:
             return code.say(err)
-        url, food = results[0][0], htmlescape(results[0][1])
+        url, food = results[0][0], web.htmlescape(results[0][1])
         code.say('WHY DON\'T YOU EAT SOME FUCKING {b}%s{b}. HERE IS THE RECIPE: %s' % (
             food.upper(), url))
     except:

@@ -1,6 +1,4 @@
-import urllib
-import urllib2
-import json
+from util import web
 from util.hook import *
 
 search_uri = 'http://www.omdbapi.com/?t=%s'
@@ -14,10 +12,10 @@ def movie_search(code, input):
     """imdb movie/show title -- displays information about a production"""
     try:
         # Url-ify
-        search = urllib.quote(input.group(2).strip())
+        search = web.quote(input.group(2).strip())
 
         # Pull response from API, and load into a JSON based dict()
-        data = json.loads(urllib2.urlopen(search_uri % (search)).read())
+        data = web.json(search_uri % search)
 
         # If we get an error from the API. (Other errors are caught from the
         # try:;except:)
@@ -42,7 +40,7 @@ def movie(code, input):
         id = input.group().split('imdb.com/title/', 1)[1]
         if '/' in id:
             id = id.split('/', 1)[0]
-        data = json.loads(urllib2.urlopen(id_uri % id).read())
+        data = web.json(id_uri % id)
 
         # If we get an error from the API. (Other errors are caught from the
         # try:;except:)

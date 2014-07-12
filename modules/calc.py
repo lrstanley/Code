@@ -1,7 +1,5 @@
 import re
 import json
-import urllib
-import urllib2
 import hashlib
 from util.hook import *
 from util import web
@@ -12,8 +10,7 @@ uri = 'http://api.duckduckgo.com/?q=%s&format=json'
 @hook(cmds=['c', 'calc', 'calculate'], ex='calc 5 + 3', args=True)
 def calc(code, input):
     try:
-        data = json.loads(urllib2.urlopen(uri %
-                                          urllib.quote(input.group(2).replace('^', '**'))).read())
+        data = web.json(uri % web.quote(input.group(2).replace('^', '**')))
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
         answer = re.sub(r'\<.*?\>', '', data['Answer']).strip().split('}')[1]
@@ -28,7 +25,7 @@ def py(code, input):
     query = input.group(2).encode('utf-8')
     uri = 'http://tumbolia.appspot.com/py/'
     try:
-        answer = urllib2.urlopen(uri + urllib.quote(query)).read()
+        answer = web.get(uri + web.quote(query)).read()
         if answer:
             answer = answer.replace('\n', ' ').replace(
                 '\t', ' ').replace('\r', '')
@@ -44,7 +41,7 @@ def wa(code, input):
     """Wolphram Alpha search"""
     query = input.group(2)
     uri = 'http://tumbolia.appspot.com/wa/'
-    answer = urllib2.urlopen(uri + urllib.quote(query)).read()
+    answer = web.get(uri + web.quote(query)).read()
     if answer and 'json stringified precioussss' not in answer:
         answer = answer.split(';')
         if len(answer) > 3:

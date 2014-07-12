@@ -1,4 +1,4 @@
-import urllib2
+from util import web
 from util.hook import *
 
 uri = 'http://www.timeapi.org/%s/now'
@@ -19,7 +19,7 @@ def get_time(code, input):
 
     # Here, try and get the timezone, using the 'uri'
     try:
-        r = urllib2.urlopen(uri % timezone).read()
+        r = web.get(uri % timezone).read()
 
         # Try to parse the string data... this will be fun!
         # Example output from the server... "2014-01-07T09:44:58-05:00"

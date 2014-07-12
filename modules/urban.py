@@ -1,6 +1,4 @@
-from urllib2 import urlopen as get
-from urllib import quote
-from json import loads as jsonify
+from util import web
 from util.hook import *
 
 uri = 'http://api.urbandictionary.com/v0/define?term=%s'
@@ -24,7 +22,7 @@ def urban(code, input):
                 msg = ' '.join(tmp)
             else:
                 id = 0
-            data = jsonify(get(uri % quote(msg)).read())['list']
+            data = web.json(uri % web.quote(msg))['list']
             if not data:
                 return code.reply(error)
             max = len(data)
@@ -44,7 +42,7 @@ def urban(code, input):
             # Begin trying to get the definition
         else:
             # Get a random definition...
-            data = jsonify(get(random_uri).read())['list'][0]
+            data = web.json(random_uri)['list'][0]
             if not data:
                 return code.reply(error)
             msg = '(Definition for "{purple}{word}{c}"): {definition} +{red}{up}{c}/-{red}{down}{c}'

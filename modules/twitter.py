@@ -1,6 +1,4 @@
 import re
-import urllib2
-import urllib
 import thread
 import time
 from util import web
@@ -29,7 +27,7 @@ uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
 
 def get_tweets(url, sender_uid=False):
     try:
-        data = urllib2.urlopen(url).read().replace('\r', '').replace('\n', ' ')
+        data = web.get(url).read().replace('\r', '').replace('\n', ' ')
         data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
     except:
         return
@@ -77,12 +75,12 @@ def twitter(code, input):
     err = '{red}{b}Unabled to find any tweets with that search!'
     args = input.group(2).strip()
     if args.startswith('#'):
-        data = get_tweets(uri_hash % urllib.quote(args))
+        data = get_tweets(uri_hash % web.quote(args))
         if not data:
             return code.say(err)
         return code.say(format(data[0]))
     else:
-        data = get_tweets(uri_user % urllib.quote(args.strip('@')))
+        data = get_tweets(uri_user % web.quote(args.strip('@')))
         if not data:
             return code.say(err)
         return code.say(format(data[0]))
@@ -104,10 +102,10 @@ def daemon(code, tc):
         for channel in tc:
             for tweet_item in tc[channel]:
                 if tweet_item.startswith('#'):  # ID
-                    data = get_tweets(uri_hash % urllib.quote(tweet_item))
+                    data = get_tweets(uri_hash % web.quote(tweet_item))
                 else:
                     data = get_tweets(uri_user %
-                                      urllib.quote(tweet_item), tweet_item)
+                                      web.quote(tweet_item), tweet_item)
                 if not data:
                     continue
                 data = data[0]

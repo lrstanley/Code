@@ -1,6 +1,5 @@
 import re
-from urllib import quote
-import util.web
+from util import web
 from util.hook import *
 
 uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
@@ -9,7 +8,7 @@ uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
 def google_search(query):
     """Search using Googles AjaxSearch functionality."""
     try:
-        data = util.web.json(uri % quote(query))
+        data = web.json(uri % quote(query))
         return data
     except:
         return False
@@ -47,7 +46,7 @@ def search(code, input):
         color = colors[color_count]
         color_count += 1
         # Remove html formatting
-        title = util.web.striptags(util.web.htmlescape(url['title']))
+        title = web.striptags(web.htmlescape(url['title']))
         # Restrict sizing of titles to no longer than 50 chars
         if len(title) > 50:
             title = title[0:44] + '[...]'

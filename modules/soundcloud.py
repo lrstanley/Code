@@ -1,5 +1,4 @@
-import json
-import urllib2
+from util import web
 from util.hook import *
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
@@ -14,7 +13,7 @@ def soundcloud(code, input):
     try:
         id = input.group().split('soundcloud.com/', 1)[1].split()[0].strip()
         # Should look like 'artist/song'
-        data = json.loads(urllib2.urlopen(uri % (id, client)).read())
+        data = web.json(uri % (id, client))
         output = []
         # Get date first so we can add to the title
         year, month, day = data['created_at'].split()[0].split('/')

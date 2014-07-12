@@ -1,7 +1,5 @@
 import json
-import urllib
-import urllib2
-import util.web
+from util import web
 from util.hook import *
 
 
@@ -11,25 +9,15 @@ def translate(text, input='auto', output='en'):
         output = output[:-4]
         raw = True
 
-    opener = urllib2.build_opener()
-    opener.addheaders = [(
-        'User-Agent', 'Mozilla/5.0' +
-        '(X11; U; Linux i686)' +
-        'Gecko/20071127 Firefox/2.0.0.11'
-    )]
-
-    input, output = urllib.quote(input), urllib.quote(output)
-    text = urllib.quote(text)
-
-    uri = 'https://translate.google.com/translate_a/t?'
+    uri = 'https://translate.google.com/translate_a/t?%s'
     params = {
-        'sl': input,
-        'tl': output,
+        'sl': web.quote(input),
+        'tl': web.quote(output),
         'js': 'n',
         'prev': '_t',
         'hl': 'en',
         'ie': 'UTF-8',
-        'text': text,
+        'text': web.quote(text),
         'client': 't',
         'multires': '1',
         'sc': '1',
@@ -39,10 +27,7 @@ def translate(text, input='auto', output='en'):
         'otf': '1',
     }
 
-    for x in params:
-        uri += '&%s=%s' % (x, params[x])
-
-    result = opener.open(uri).read()
+    result = web.get(uri % web.urlencode(params)).read()
 
     # this is hackish
     # this makes the returned data parsable by the json module
@@ -94,7 +79,7 @@ def tr(code, input):
         if isinstance(msg, str):
             msg = msg.decode('utf-8')
         if msg:
-            msg = util.web.decode(msg)
+            msg = web.decode(msg)
             msg = '"%s" ({b}{purple}%s{c}{b} to {b}{purple}%s{c}{b})' % (
                 msg, src, dest)
         else:

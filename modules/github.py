@@ -1,8 +1,7 @@
 from datetime import datetime
 from util.hook import *
 from subprocess import *
-import json
-import urllib2
+from util import web
 
 repo_api = 'https://api.github.com/repos/%s'  # Username/Repo
 user_api = 'https://api.github.com/users/%s'  # Username
@@ -21,8 +20,7 @@ def github(code, input):
     if '/' not in input.group(2):
         # Assume a single username
         try:
-            tmp = json.loads(urllib2.urlopen(user_api %
-                                             input.group(2).strip()).read())
+            tmp = web.json(user_api % input.group(2).strip())
             response = {}
             # Remove dem ugly nulled values. It's a dictionary so we have to
             # loop differently.
@@ -62,8 +60,7 @@ def github(code, input):
     else:
         # Assume Username/Repo
         try:
-            response = json.loads(
-                urllib2.urlopen(repo_api % input.group(2).strip()).read())
+            response = jweb.json(repo_api % input.group(2).strip())
         except:
             return code.say(failed)
         if 'message' in response:

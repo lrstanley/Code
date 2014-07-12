@@ -1,6 +1,5 @@
-from urllib2 import urlopen as get
-from json import loads
 from util.hook import *
+from util import web
 import re
 
 uri = 'http://domai.nr/api/json/search?q=%s'
@@ -16,7 +15,7 @@ def domain(code, input):
     if re_m:
         url = re_m.group(1)
     try:
-        data = loads(get(uri % url).read())
+        data = web.json(uri % url)
     except:
         return code.say(err)
     if not data['query']:

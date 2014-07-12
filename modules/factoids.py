@@ -1,4 +1,4 @@
-from urllib2 import urlopen
+from util import web
 from util.hook import *
 from util import database, web
 
@@ -46,7 +46,7 @@ def factoid(code, input):
     elif f.startswith('<url>'):
         url = f[5:].strip()
         try:
-            return code.say(urlopen(url).read())
+            return code.say(web.get(url).read())
         except:
             return code.say('Failed to fetch the URL.')
     else:

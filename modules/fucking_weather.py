@@ -1,6 +1,4 @@
 import re
-from urllib2 import urlopen as get
-from urllib import quote
 from util.hook import *
 from util import web
 
@@ -14,8 +12,8 @@ def fucking_weather(code, input):
     if not input.group(2):
         return code.say('{red}{b}INVALID FUCKING INPUT. PLEASE ENTER A FUCKING ZIP CODE, OR A FUCKING CITY-STATE PAIR.')
     try:
-        text = quote(input.group(2))
-        data = get('http://thefuckingweather.com/?where=%s' % text).read()
+        text = web.quote(input.group(2))
+        data = web.get('http://thefuckingweather.com/?where=%s' % text).read()
         temp = re.compile(
             r'<p class="large"><span class="temperature" tempf=".*?">.*?</p>').findall(data)[0]
         temp = re.sub(r'\<.*?\>', '', temp).strip().replace(' ',
