@@ -1,5 +1,6 @@
 import re
 
+
 def bind_commands(self):
     self.commands = {'high': {}, 'medium': {}, 'low': {}}
 

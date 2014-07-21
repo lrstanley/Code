@@ -8,7 +8,8 @@ defaultuser = 'liamraystanley'
 
 def getdata(user):
     try:
-        data = web.get('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (user)).read()
+        data = web.get(
+            'http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (user)).read()
     except:
         return False
     if 'No user exists with this name.' in data:

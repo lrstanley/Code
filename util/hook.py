@@ -60,6 +60,7 @@ hooks = {
     'event': {'origin': 'event'}
 }
 
+
 def hook(**kwargs):
     def add_attribute(func):
         for key, value in kwargs.items():

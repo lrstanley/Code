@@ -9,7 +9,8 @@ api_uri = 'https://api.forecast.io/forecast/%s/%s,%s'
 
 def location(name):
     name = web.quote(name)
-    data = web.json('http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user))
+    data = web.json(
+        'http://ws.geonames.org/searchJSON?q=%s&maxRows=1&username=%s' % (name, user))
     try:
         name = data['geonames'][0]['name']
     except IndexError:

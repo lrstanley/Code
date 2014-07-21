@@ -21,12 +21,14 @@ def countdown(code, input):
         return code.say(error)
     month, day, year = text
     try:
-        diff = datetime.datetime(int(year), int(month), int(day)) - datetime.datetime.today()
+        diff = datetime.datetime(
+            int(year), int(month), int(day)) - datetime.datetime.today()
     except ValueError:
         return code.say('{red}Incorrect input!')
     output = []
-    output.append(str(diff.days) + " day(s)") 
+    output.append(str(diff.days) + " day(s)")
     output.append(str(diff.seconds / 60 / 60) + " hour(s)")
-    output.append(str(diff.seconds / 60 - diff.seconds / 60 / 60 * 60) + " minute(s)")
+    output.append(
+        str(diff.seconds / 60 - diff.seconds / 60 / 60 * 60) + " minute(s)")
     output.append(month + "/" + day + "/" + year)
     code.say(' - '.join(output))

@@ -1,6 +1,7 @@
 import time
 from util import output
 
+
 def call(self, func, origin, code, input):
     # custom decorators
     try:

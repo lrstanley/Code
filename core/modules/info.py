@@ -2,6 +2,7 @@ from datetime import datetime
 from util.hook import *
 from subprocess import Popen, PIPE
 
+
 def git_info():
     p = Popen(["git", "log", "-n 1"], stdout=PIPE)
     tmp = p.stdout.read().split('\n', 3)

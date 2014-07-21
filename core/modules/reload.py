@@ -91,7 +91,7 @@ def load_module(code, input):
         return code.say('{b}That module seems to be already loaded!')
     if name in code.load:
         return code.say('{b}It seems that module has already been set to load!')
-    if name in code.unload: # <------------ TEST!
+    if name in code.unload:
         # Remove from unload, and add to load
         del code.unload[code.unload.index(name)]
     # Try and load here. If it doesn't work, make sure it's not in code.load, and output error
@@ -148,28 +148,39 @@ def update(code, input):
     # mode changes, as those are unimportant
     data = re.sub(r'create mode [0-9]+ [a-zA-Z0-9\/\\]+\.py', '', data)
     # commit hashes, different color
-    data = re.sub(r'(?P<first>[a-z0-9]{7})\.\.(?P<second>[a-z0-9]{7})', '{purple}\g<first>..\g<second>{c}', data)
+    data = re.sub(
+        r'(?P<first>[a-z0-9]{7})\.\.(?P<second>[a-z0-9]{7})', '{purple}\g<first>..\g<second>{c}', data)
     # make different files depending on the importance
-    data = re.sub(r'core/modules/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({red}core{c})', data)
-    data = re.sub(r'core/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({red}core{c})', data)
+    data = re.sub(
+        r'core/modules/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({red}core{c})', data)
+    data = re.sub(
+        r'core/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({red}core{c})', data)
     data = re.sub(r'code\.py', 'code.py ({red}base{c})', data)
-    data = re.sub(r'modules/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({blue}module{c})', data)
-    data = re.sub(r'util/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({pink}util{c})', data)
-    data = re.sub(r'lib/(?P<dir>[a-zA-Z0-9]+)/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({pink}\g<dir> - util{c})', data)
+    data = re.sub(
+        r'modules/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({blue}module{c})', data)
+    data = re.sub(
+        r'util/(?P<name>[a-zA-Z0-9]+)\.py', '\g<name>.py ({pink}util{c})', data)
+    data = re.sub(r'lib/(?P<dir>[a-zA-Z0-9]+)/(?P<name>[a-zA-Z0-9]+)\.py',
+                  '\g<name>.py ({pink}\g<dir> - util{c})', data)
 
     data = data.replace('Fast-forward', '')
     # Do a little with file changes
-    data = re.sub(r'(?P<files>[0-9]{1,3}) files? changed', '{green}\g<files>{c} files changed', data)
-    data = re.sub(r'(?P<ins>[0-9]{1,6}) insertions\(\+\)\, (?P<dels>[0-9]{1,6}) deletions\(\-\)', '+{green}\g<ins>{c}/-{red}\g<dels>{c} chars changed', data)
-    data = re.sub(r'(?P<chars>[0-9]{1,6}) insertions\(\+\)', '{green}\g<chars>{c} additions', data)
-    data = re.sub(r'(?P<chars>[0-9]{1,6}) deletions\(\+\)', '{green}\g<chars>{c} deletions', data)
+    data = re.sub(
+        r'(?P<files>[0-9]{1,3}) files? changed', '{green}\g<files>{c} files changed', data)
+    data = re.sub(r'(?P<ins>[0-9]{1,6}) insertions\(\+\)\, (?P<dels>[0-9]{1,6}) deletions\(\-\)',
+                  '+{green}\g<ins>{c}/-{red}\g<dels>{c} chars changed', data)
+    data = re.sub(
+        r'(?P<chars>[0-9]{1,6}) insertions\(\+\)', '{green}\g<chars>{c} additions', data)
+    data = re.sub(
+        r'(?P<chars>[0-9]{1,6}) deletions\(\+\)', '{green}\g<chars>{c} deletions', data)
     while '  ' in data:
         data = data.replace('  ', ' ')
     code.say('Github: {b}' + data.strip())
     core_stuff = ['code.py', 'core/', 'util/', 'lib/']
     for item in core_stuff:
         if item.lower() in git_data.lower().strip('\n'):
-            code.say('{b}{red}Core files have been edited, restarting the bot!{c}')
+            code.say(
+                '{b}{red}Core files have been edited, restarting the bot!{c}')
             return code.restart()
     reload_all_modules(code)
     code.say('{b}Reloaded all modules')
