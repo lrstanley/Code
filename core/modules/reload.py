@@ -134,6 +134,8 @@ def update(code, input):
     proc = subprocess.Popen(
         'git pull', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     git_data = proc.communicate()[0]
+    if git_data.strip('\n') == 'Already up-to-date.':
+        return code.say('{b}No updates found.')
     data = git_data
     if re.match(r'^Updating [a-z0-9]{7}\.\.[a-z0-9]{7}$', data.strip('\n')):
         # Pretty sure files are conflicting...
