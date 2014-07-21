@@ -38,7 +38,9 @@ def factoid(code, input):
         variables = 'input="""{}"""; nick="{}"; sender="{}"; bot="{}";'.format(
             arguments.replace('"', '\\"'), input.nick, input.sender, code.nick
         )
-        result = web.pyexec(variables + data, multiline=False)
+        result = web.exec_py(variables + data)
+        if 'Traceback (most recent call last)' in result:
+            result = 'Python error: ' + web.haste(result)
         return code.say(result)
     elif f.startswith('<act>'):
         result = f[5:].strip()

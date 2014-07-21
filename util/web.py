@@ -133,3 +133,19 @@ def shorten(url):
         return data['url']
     except:
         return url
+
+
+def exec_py(data):
+    attempts = 0
+    while True:
+        if attempts == 4:
+            return "Failed to execute code."
+        attempts += 1
+        try:
+            output = get(exec_uri % quote(data)).read().strip('\n')
+            if len(output) == 0:
+                continue
+            break
+        except:
+            continue
+    return output
