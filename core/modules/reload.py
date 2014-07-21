@@ -166,6 +166,7 @@ def update(code, input):
     core_stuff = ['code.py', 'core/', 'util/', 'lib/']
     for item in core_stuff:
         if item.lower() in git_data.lower().strip('\n'):
-            return code.say('{b}{red}Core files have been edited.{c} Please restart the bot with "%srestart"' % code.prefix)
+            code.say('{b}{red}Core files have been edited, restarting the bot!{c}')
+            return code.restart()
     reload_all_modules(code)
     code.say('{b}Reloaded all modules')
