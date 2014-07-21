@@ -130,10 +130,13 @@ def f_reload(code, input):
 def update(code, input):
     """Pulls the latest versions of all modules from Git"""
     if not sys.platform.startswith('linux'):
-        code.say('Warning: {b}Using a non-unix OS, might fail to work!')
-    proc = subprocess.Popen(
-        'git pull', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    git_data = proc.communicate()[0]
+        output.warning('Warning: {b}Using a non-unix OS, might fail to work!')
+    try:
+        proc = subprocess.Popen(
+            'git pull', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        git_data = proc.communicate()[0]
+    except:
+        return code.say('Either Git isn\'t installed or there was an error! (Using Windows?)')
     if git_data.strip('\n') == 'Already up-to-date.':
         return code.say('{b}No updates found.')
     data = git_data
