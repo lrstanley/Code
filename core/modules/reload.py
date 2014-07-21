@@ -1,5 +1,5 @@
 import sys
-import os.path
+import os
 import time
 import imp
 import subprocess
@@ -44,6 +44,66 @@ def reload_module(code, name):
     }
 
 
+@hook(cmds=['unload', 'unloadmodule', 'unloadmod'], args=True, priority='high', admin=True)
+def unload_module(code, input):
+    name = input.group(2)
+    home = os.getcwd()
+    name = name.strip('.py')
+    # Get all files in modules directory
+    tmp = os.listdir(os.path.join(home, 'modules'))
+    modules = []
+    for module in tmp:
+        if module.endswith('.pyc'):
+            continue
+        module = module.strip('.py')
+        modules.append(module)
+    if name not in modules:
+        return code.say('That module doesn\'t exist!')
+    if name in code.unload:
+        return code.say('It seems that module has already been set to say unloaded!')
+    if name in code.load:
+        # Remove from unload, and add to load
+        del code.load[code.load.index(name)]
+    filename = os.path.join(home, 'modules', name + '.py')
+    code.unload.append(name)
+    code.say('{b}Unloaded %s!' % name)
+    reload_all_modules(code)
+    code.say('{b}Reloaded all modules')
+
+
+@hook(cmds=['load', 'loadmodule', 'loadmod'], args=True, priority='high', admin=True)
+def load_module(code, input):
+    name = input.group(2)
+    home = os.getcwd()
+    name = name.strip('.py')
+    # Get all files in modules directory
+    tmp = os.listdir(os.path.join(home, 'modules'))
+    modules = []
+    for module in tmp:
+        if module.endswith('.pyc'):
+            continue
+        module = module.strip('.py')
+        modules.append(module)
+    if name not in modules:
+        return code.say('{b}That module doesn\'t exist!')
+    if name in code.modules:
+        return code.say('{b}That module seems to be already loaded!')
+    if name in code.load:
+        return code.say('{b}It seems that module has already been set to load!')
+    if name in code.unload: # <------------ TEST!
+        # Remove from unload, and add to load
+        del code.unload[code.unload.index(name)]
+    # Try and load here. If it doesn't work, make sure it's not in code.load, and output error
+    # If it works, add to code.load
+    filename = os.path.join(home, 'modules', name + '.py')
+    try:
+        code.setup_module(name, filename, is_startup=False)
+    except Exception as e:
+        return code.say('{red}Error{c}: %s' % str(e))
+    code.load.append(name)
+    return code.say('{b}Loaded %s!' % name)
+
+
 @hook(cmds=['reload', 'rld'], priority='high', thread=False, admin=True)
 def f_reload(code, input):
     """Reloads a module, for use by admins only."""
@@ -69,7 +129,7 @@ def f_reload(code, input):
 def update(code, input):
     """Pulls the latest versions of all modules from Git"""
     if not sys.platform.startswith('linux'):
-        code.say('Warning: {b}Using a non-linux OS, might fail to work!')
+        code.say('Warning: {b}Using a non-unix OS, might fail to work!')
     proc = subprocess.Popen(
         'git pull', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     data = proc.communicate()[0]
@@ -77,4 +137,4 @@ def update(code, input):
         data = data.replace('  ', ' ')
     code.say('Github: {b}' + data)
     reload_all_modules(code)
-    code.say('Reloaded all modules')
+    code.say('{b}Reloaded all modules')

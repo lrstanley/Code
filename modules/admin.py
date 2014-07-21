@@ -8,7 +8,7 @@ defaultnick = None
 @hook(cmds=['modules'], rate=20, priority='high', admin=True)
 def listmods(code, input):
     '''Send a list of the loaded modules to the user.'''
-    return code.say('Modules: %s.' % ', '.join(code.modules))
+    return code.say('{b}Modules: {r}%s.' % ', '.join(code.modules))
 
 
 @hook(cmds=['join'], ex='join #example key', admin=True, args=True)

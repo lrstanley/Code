@@ -35,6 +35,8 @@ def decode(bytes):
 class Code(irc.Bot):
 
     def __init__(self, raw_config):
+        self.load = []
+        self.unload = []
         self.raw_config = raw_config
         debug = self.config('debug', False)
         args = (
@@ -90,8 +92,17 @@ class Code(irc.Bot):
                 filenames.append(os.path.join(home, 'core/modules', fn))
                 core_filenames.append(fn.split('.', 1)[0])
 
-        # Should fix
         excluded_modules = self.config('excluded_modules', [])
+        if self.load:
+            for filename in self.load:
+                # Add user specified modules on reload
+                if filename in filenames:
+                    continue
+                try:
+                    fn = os.path.join(home, 'modules', filename + '.py')
+                    filenames.append(fn)
+                except:
+                    continue
         filenames = sorted(list(set(filenames)))
         # Reset some variables that way we don't get dups
         self.modules = []
@@ -100,18 +111,16 @@ class Code(irc.Bot):
         # Load modules
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
-            if name in excluded_modules:
+            if name in excluded_modules and name not in self.load:
+                # If the file was excluded via the config file
+                # Don't exclude if purposely loaded
+                continue
+            if name in self.unload:
+                # If the module was excluded via the reload module
                 continue
             # if name in sys.modules:
             #     del sys.modules[name]
-            try:
-                module = imp.load_source(name, filename)
-                if hasattr(module, 'setup'):
-                    module.setup(self)
-                self.register(vars(module))
-                self.modules.append(name)
-            except Exception as e:
-                output.error("Failed to load %s: %s" % (name, e))
+            self.setup_module(name, filename)
 
         tmp_modules = []
         for module in self.modules:
@@ -127,6 +136,20 @@ class Code(irc.Bot):
             output.warning('Couldn\'t find any modules')
 
         bind_commands(self)
+
+    def setup_module(self, name, filename, is_startup=True):
+        try:
+            module = imp.load_source(name, filename)
+            if hasattr(module, 'setup'):
+                module.setup(self)
+            self.register(vars(module))
+            self.modules.append(name)
+            self.modules = sorted(list(set(self.modules)))
+        except Exception as e:
+            output.error("Failed to load %s: %s" % (name, e))
+            if not is_startup:
+                # Only raise exception again if it's user-triggered
+                raise Exception("Failed to load %s: %s" % (name, e))
 
     def register(self, variables):
         # This is used by reload.py, hence it being methodised
