@@ -184,6 +184,8 @@ class Code(irc.Bot):
                 s = unicode.__new__(cls, text)
                 s.sender = origin.sender
                 s.nick = origin.nick
+                s.user = origin.user
+                s.host = origin.host
                 s.event = event
                 s.bytes = bytes
                 s.match = match
@@ -192,24 +194,58 @@ class Code(irc.Bot):
                 s.args = args
                 if not hasattr(s, 'data'):
                     s.data = {}
-                s.admin = origin.nick in self.config('admins', [])
-                if not s.admin:
-                    for each_admin in self.config('admins', []):
-                        re_admin = re.compile(each_admin)
-                        if re_admin.findall(origin.host):
-                            s.admin = True
-                        elif '@' in each_admin:
-                            temp = each_admin.split('@')
-                            re_host = re.compile(temp[1])
-                            if re_host.findall(origin.host):
-                                s.admin = True
-                s.owner = origin.nick + '@' + \
-                    origin.host == self.config('owner')
-                if not s.owner:
-                    s.owner = origin.nick == self.config('owner')
+
+                if origin.sender.startswith('#'):
+                    try:
+                        s.op = self.chan[origin.sender][origin.nick]['op']
+                        s.voiced = self.chan[origin.sender][origin.nick]['voiced']
+                    except KeyError:
+                        s.op, s.voiced = False, False
+                else:
+                    s.op, s.voiced = False, False
+
+                def check_perm(origin, trigger):
+                    """
+                        Match and figure out if the user that's triggering it matches
+                        the configured admin/owner/whatever
+                    """
+                    for matching in trigger:
+                        if '!' in matching and '@' in matching:
+                            # nick!user@host
+                            trigger_nick, other = matching.split('!', 1)
+                            trigger_user, trigger_host = other.split('@', 1)
+                            if trigger_nick.lower() == origin.nick.lower() and \
+                               trigger_user.lower() == origin.user.lower() and \
+                               trigger_host.lower() == origin.host.lower():
+                                return True
+                            continue
+                        elif '@' in matching and not matching.startswith('@'):
+                            # user@host
+                            trigger_user, trigger_host = matching.split('@', 1)
+                            if trigger_user.lower() == origin.user.lower() and \
+                               trigger_host.lower() == origin.host.lower():
+                                return True
+                            continue
+                        elif '@' in matching:
+                            # @host
+                            trigger_host = matching[1::]
+                            if trigger_host.lower() == origin.host.lower():
+                                return True
+                            continue
+                        else:
+                            # host OR nick
+                            if matching.lower() == origin.nick.lower() or \
+                               matching.lower() == origin.host.lower():
+                                return True
+                            continue
+                    return False
+                
+                s.owner = check_perm(origin, [self.config('owner')])
                 if s.owner:
                     s.admin = True
-                s.host = origin.host
+                else:
+                    s.admin = check_perm(origin, self.config('admins', []))
+
                 return s
 
         return CommandInput(text, origin, bytes, match, event, args)
