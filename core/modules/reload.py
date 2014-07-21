@@ -168,7 +168,7 @@ def update(code, input):
     data = re.sub(
         r'(?P<files>[0-9]{1,3}) files? changed', '{green}\g<files>{c} files changed', data)
     data = re.sub(r'(?P<ins>[0-9]{1,6}) insertions\(\+\)\, (?P<dels>[0-9]{1,6}) deletions\(\-\)',
-                  '+{green}\g<ins>{c}/-{red}\g<dels>{c} chars changed', data)
+                  '+{green}\g<ins>{c}/-{red}\g<dels>{c}', data)
     data = re.sub(
         r'(?P<chars>[0-9]{1,6}) insertions\(\+\)', '{green}\g<chars>{c} additions', data)
     data = re.sub(
