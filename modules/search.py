@@ -8,7 +8,7 @@ uri = 'https://ajax.googleapis.com/ajax/services/search/web?v=1.0&safe=off&q=%s'
 def google_search(query):
     """Search using Googles AjaxSearch functionality."""
     try:
-        data = web.json(uri % quote(query))
+        data = web.json(uri % web.quote(query))
         return data
     except:
         return False
@@ -18,7 +18,7 @@ def google_search(query):
 def search(code, input):
     """Queries Google for the specified input."""
     r = google_search(input.group(2))
-    if not uri:
+    if not r:
         return code.reply("Problem getting data from Google.")
     if not r['responseData']['results']:
         return code.reply("No results found for '{purple}%s{c}'." % input.group(2))

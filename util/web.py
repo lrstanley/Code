@@ -138,7 +138,7 @@ def shorten(url):
 def exec_py(data):
     attempts = 0
     while True:
-        if attempts == 4:
+        if attempts == 2:
             return "Failed to execute code."
         attempts += 1
         try:
