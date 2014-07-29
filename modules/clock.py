@@ -1,4 +1,6 @@
 from util import web
+import time
+import math
 from util.hook import *
 
 uri = 'http://www.timeapi.org/%s/now'
