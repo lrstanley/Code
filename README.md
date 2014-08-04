@@ -16,7 +16,7 @@ Load & unload modules
 - Code has the ability to load user defined IRC modules, that are pre-made or ones that you create. Code also can live-reload modules for active and fast development.
 
 Very user friendly
-- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. help commands also help you with specific documentation for almost every command.
+- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. Help commands also help you with specific documentation for almost every command.
 
 Easy to use API
 - When creating your own modules, it is always very easy to have a fully documented API and easy to understand functions. See the [Wiki](https://github.com/Liamraystanley/Code/wiki)
@@ -25,7 +25,7 @@ Open-Source
 - Found a bug, feature, or technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
 
 Configuration
-- Almost ever single aspect of the bot is configurable to your likings. Don't like a module? remove it. Like only ONE module? Whitelist it!
+- Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!
 
 Installation - How do I install? 
 ================================
@@ -47,7 +47,7 @@ If you wish to not run your bot in the forground, you may use the `screen` daemo
 
     screen -S code python code.py
 
-This creates a terminal window that can be logged into and out without disturbing the process in that window. to exit screen safely, hit `CTRL+A` then `CTRL+D`.
+This creates a terminal window that can be logged into and out without disturbing the process in that window. To exit screen safely, hit `CTRL+A` then `CTRL+D`.
 To log back into, and view the playback of Code, type `screen -x code`.
 
 
