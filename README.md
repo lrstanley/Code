@@ -33,7 +33,6 @@ ________________________________
 
 **If you have any issues during the install, feel free to head to http://chat.liamstanley.io/ to get help**
 
-
 Unix & Unix-like OS: 
 --------------------
 
@@ -50,20 +49,15 @@ If you wish to not run your bot in the forground, you may use the `screen` daemo
 This creates a terminal window that can be logged into and out without disturbing the process in that window. To exit screen safely, hit `CTRL+A` then `CTRL+D`.
 To log back into, and view the playback of Code, type `screen -x code`.
 
-
 Windows: 
 --------------------
 
 
-    1) Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
-    2) Download Code here: `https://github.com/Liamraystanley/Code/zipball/master` and unzip it.
-    3) Configure Code's configuration file, located in the bot directory.
-       - Copy and rename `example.json` to `config.json`
-       - Note, it's best NOT to use the Windows notepad, rather, use Notepad++.
-    3) You can open up command prompt, `cd` to Codes directory, and execute Code with `python code.py`.
-       - Note, if command prompt says that `python` is not a internal or external command/program,
-         that means Python failed to be added to your system-wide %PATH% file.
-         So, you need to add it to the %PATH% variable.
+- Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
+- Download Code here: `https://github.com/Liamraystanley/Code/zipball/master` and unzip it.
+- Copy and rename `example.json` to `config.json` (Note, it's best NOT to use the Windows notepad, rather, use Notepad++)
+- You can open up command prompt, `cd` to Codes directory, and execute Code with `python code.py`.
+- Note, if command prompt says that `python` is not a internal or external command/program, that means Python failed to be added to your system-wide %PATH% file. So, you need to add it to the %PATH% variable.
 
 Licensing
 ---------
