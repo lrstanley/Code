@@ -19,13 +19,10 @@ def reload_all_modules(code):
 def reload_module(code, name):
     name = name.strip('.py')
     if name not in sys.modules:
-        raise Exception('NoSuchModule', 'Module doesnt exist!')
+        return 1
     path = sys.modules[name].__file__
     if path.endswith('.pyc') or path.endswith('.pyo'):
         path = path[:-1]
-    if not os.path.isfile(path):
-        raise Exception(
-            'NoSuchFile', 'Found the compiled code, but not the module!')
     module = imp.load_source(name, path)
     sys.modules[name] = module
     if hasattr(module, 'setup'):
@@ -111,16 +108,16 @@ def f_reload(code, input):
 
     name = input.group(2)
 
-    if (not name) or (name == '*'):
+    if not name or name == '*':
         reload_all_modules(code)
         return code.reply('{b}Reloaded all modules.')
 
     try:
         module = reload_module(code, name)
-    except NoSuchModule:
-        return code.reply('{b}%s{b}: No such module!' % name)
-    except NoSuchFile:
-        return code.reply('{b}Found the compiled code, but not the module!')
+    except Exception as e:
+        code.say('Error reloading %s: %s' % (name, str(e)))
+    if module == 1:
+        return code.reply('The module {b}%s{b} isn\'t loaded! use %sload <module>' % (name, code.prefix))
     code.say(
         '{b}Reloaded {blue}%s{c} (from {blue}%s{c}) (version: {blue}%s{c}){b}' %
         (module['name'], module['location'], module['time']))
