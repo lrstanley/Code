@@ -1,22 +1,22 @@
 import re
 
 
-def bind_commands(self):
-    self.commands = {'high': {}, 'medium': {}, 'low': {}}
+def bind_commands(code):
+    code.commands = {'high': {}, 'medium': {}, 'low': {}}
 
-    def bind(self, priority, regexp, func):
+    def bind(code, priority, regexp, func):
         if not hasattr(func, 'name'):
             func.name = func.__name__
-        self.commands[priority].setdefault(regexp, []).append(func)
+        code.commands[priority].setdefault(regexp, []).append(func)
 
-    def sub(pattern, self=self):
+    def sub(pattern, code=code):
         # These replacements have significant order
-        pattern = pattern.replace('$nickname', re.escape(self.nick))
-        return pattern.replace('$nick', r'%s[,:] +' % re.escape(self.nick))
+        pattern = pattern.replace('$nickname', re.escape(code.nick))
+        return pattern.replace('$nick', r'%s[,:] +' % re.escape(code.nick))
 
-    for name, func in self.variables.iteritems():
+    for name, func in code.variables.iteritems():
         # print name, func
-        self.doc[name] = {'commands': [], 'info': None, 'example': None}
+        code.doc[name] = {'commands': [], 'info': None, 'example': None}
         if func.__doc__:
             doc = func.__doc__.replace('\n', '').strip()
             while '  ' in doc:
@@ -25,11 +25,11 @@ def bind_commands(self):
             doc = None
         if hasattr(func, 'example'):
             example = func.example
-            example = example.replace('$nickname', self.nick)
+            example = example.replace('$nickname', code.nick)
         else:
             example = None
-        self.doc[name]['info'] = doc
-        self.doc[name]['example'] = example
+        code.doc[name]['info'] = doc
+        code.doc[name]['example'] = example
         if not hasattr(func, 'priority'):
             func.priority = 'medium'
 
@@ -51,7 +51,7 @@ def bind_commands(self):
             if isinstance(func.rule, str):
                 pattern = sub(func.rule)
                 regexp = re.compile(pattern)
-                bind(self, func.priority, regexp, func)
+                bind(code, func.priority, regexp, func)
 
             if isinstance(func.rule, tuple):
                 # 1) e.g. ('$nick', '(.*)')
@@ -59,18 +59,18 @@ def bind_commands(self):
                     prefix, pattern = func.rule
                     prefix = sub(prefix)
                     regexp = re.compile(prefix + pattern)
-                    bind(self, func.priority, regexp, func)
+                    bind(code, func.priority, regexp, func)
 
                 # 2) e.g. (['p', 'q'], '(.*)')
                 elif len(func.rule) == 2 and isinstance(func.rule[0], list):
-                    prefix = self.prefix
+                    prefix = code.prefix
                     commands, pattern = func.rule
                     for command in commands:
                         command = r'(?i)(\%s)\b(?: +(?:%s))?' % (
                             command, pattern
                         )
                         regexp = re.compile(prefix + command)
-                        bind(self, func.priority, regexp, func)
+                        bind(code, func.priority, regexp, func)
 
                 # 3) e.g. ('$nick', ['p', 'q'], '(.*)')
                 elif len(func.rule) == 3:
@@ -79,12 +79,12 @@ def bind_commands(self):
                     for command in commands:
                         command = r'(?i)(\%s) +' % command
                         regexp = re.compile(prefix + command + pattern)
-                        bind(self, func.priority, regexp, func)
+                        bind(code, func.priority, regexp, func)
 
         if hasattr(func, 'commands'):
-            self.doc[name]['commands'] = list(func.commands)
+            code.doc[name]['commands'] = list(func.commands)
             for command in list(func.commands):
                 template = r'(?i)^\%s(%s)(?: +(.*))?$'
-                pattern = template % (self.prefix, command)
+                pattern = template % (code.prefix, command)
                 regexp = re.compile(pattern)
-                bind(self, func.priority, regexp, func)
+                bind(code, func.priority, regexp, func)

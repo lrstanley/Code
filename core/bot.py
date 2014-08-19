@@ -135,7 +135,7 @@ class Code(irc.Bot):
         else:
             output.warning('Couldn\'t find any modules')
 
-        bind_commands(self)
+        self.bind()
 
     def setup_module(self, name, filename, is_startup=True):
         try:
@@ -150,6 +150,9 @@ class Code(irc.Bot):
             if not is_startup:
                 # Only raise exception again if it's user-triggered
                 raise Exception("Failed to load %s: %s" % (name, e))
+
+    def bind(self):
+        bind_commands(self)
 
     def register(self, variables):
         # This is used by reload.py, hence it being methodised
