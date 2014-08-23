@@ -92,7 +92,7 @@ def notice(code, input):
 def announce(code, input):
     '''Send an announcement to all channels the bot is in'''
     for channel in code.channels:
-        code.msg(channel, '{b}{purple}[ANNOUNCMENT] %s' % input.group(2))
+        code.msg(channel, '{b}{purple}[ANNOUNCMENT] %s' % input.group(2), bypass_loop=True)
 
 
 @hook(cmds=['blocks'], ex='blocks add nick MyNameIsSpammer', thread=False, admin=True, args=True)

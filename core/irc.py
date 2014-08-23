@@ -245,7 +245,7 @@ class Bot(asynchat.async_chat):
                 pass
         return input
 
-    def msg(self, recipient, text, x=False, shorten_urls=True):
+    def msg(self, recipient, text, x=False, shorten_urls=True, bypass_loop=False):
         """
             Sends most messages to a direct location or recipient
             auto shortens URLs by default unless specified in the
@@ -270,24 +270,25 @@ class Bot(asynchat.async_chat):
 
         # No messages within the last 3 seconds? Go ahead!
         # Otherwise, wait so it's been at least 0.8 seconds + penalty
-        def wait(sk, txt):
-            if sk:
-                elapsed = time.time() - sk[-1][0]
-                if elapsed < 3:
-                    penalty = float(max(0, len(txt) - 50)) / 70
-                    wait = 0.8 + penalty
-                    if elapsed < wait:
-                        time.sleep(wait - elapsed)
+        if not bypass_loop: # Used if you want to bypass the global rate limiter
+            def wait(sk, txt):
+                if sk:
+                    elapsed = time.time() - sk[-1][0]
+                    if elapsed < 3:
+                        penalty = float(max(0, len(txt) - 50)) / 70
+                        wait = 0.8 + penalty
+                        if elapsed < wait:
+                            time.sleep(wait - elapsed)
 
-        wait(self.stack, text)
+            wait(self.stack, text)
 
-        # Loop detection
-        messages = [m[1] for m in self.stack[-8:]]
-        if messages.count(text) >= 5:
-            text = '...'
-            if messages.count('...') > 2:
-                self.sending.release()
-                return
+            # Loop detection
+            messages = [m[1] for m in self.stack[-8:]]
+            if messages.count(text) >= 5:
+                text = '...'
+                if messages.count('...') > 2:
+                    self.sending.release()
+                    return
 
         self.__write(('PRIVMSG', self.safe(recipient)), self.safe(text))
         output.normal('(%s) %s' %
