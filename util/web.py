@@ -126,7 +126,7 @@ def shorten(url):
         for bad in short_ignored:
             if bad in url.lower():
                 return url
-        postdata = urllib.urlencode({url: ''})
+        postdata = urllib.urlencode({'url': url})
         data = loads(urllib2.urlopen('http://links.ml/add', postdata).read())
         if not data['success']:
             return url
