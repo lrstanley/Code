@@ -5,7 +5,7 @@ import re
 uri = 'http://domai.nr/api/json/search?q=%s'
 
 
-@hook(cmds=['domain'], ex='domain google.com', priority='low')
+@hook(cmds=['domain'], ex='domain google.com', priority='low', args=True)
 def domain(code, input):
     """domain <domain> -- Use domain.nr's domain API to find used and unused domains."""
     err, domains = '{red}{b}Unable to find information on that domain name.', [
