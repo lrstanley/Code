@@ -38,13 +38,12 @@ def version(code, input):
 
 @hook(rule='\x01VERSION\x01', rate=20)
 def ctcp_version(code, input):
-    commit, author, date = git_info()
-    date = date.replace('  ', ' ')
-
-    code.write(
-        ('NOTICE', input.nick), '\x01VERSION {0} : {1}\x01'.format(
-            commit, date)
-    )
+    try:
+        commit, author, date = git_info()
+        date = date.replace('  ', ' ')
+        code.write(('NOTICE', input.nick), '\x01VERSION {0} : {1}\x01'.format(commit, date))
+    except:
+        code.write(('NOTICE', input.nick), '\x01VERSION Code - Python IRC Bot: https://github.com/Liamraystanley/Code/\x01')
 
 
 @hook(rule='\x01SOURCE\x01', rate=20)
