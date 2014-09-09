@@ -8,7 +8,7 @@ url_min_length = 5
 ignored = [
     'git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com',
     'ci.liamstanley.io', 'zerobin.net', 'newegg.com', 'steamcommunity.com',
-    'steampowered.com', 'steamdb.info', 'links.ml'
+    'steampowered.com', 'steamdb.info', 'links.ml', 'twitter.com'
 ]
 
 

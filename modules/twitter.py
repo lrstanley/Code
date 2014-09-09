@@ -7,7 +7,7 @@ from util import database
 from util.tools import hash
 
 
-auto_check = 15  # Time in seconds to check for new tweets
+auto_check = 5  # Time in seconds to check for new tweets
 
 # Input checking...
 r_uid = re.compile(r'\s(@[a-zA-Z0-9_]{1,15})')
@@ -18,6 +18,7 @@ r_time = re.compile(r'<td class="timestamp">.*?</td>')
 r_tweet = re.compile(r'<tr class="tweet-container">.*?</tr>')
 r_url = re.compile(
     r'<a href=".*?" class="twitter_external_link.*?" data-url="(.*?)" dir=".*?" rel=".*?" target=".*?">(.*?)</a>')
+r_tweeturl = re.compile(r'href="/(.*?)/status/(.*?)\?p=v')
 r_basicurl = re.compile(
     'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 
@@ -35,6 +36,8 @@ def get_tweets(url, sender_uid=False):
     for tweet in data:
         try:
             tmp = {}
+            tmp['url'] = list(r_tweeturl.findall(tweet)[0])
+            tmp['url'] = 'https://twitter.com/%s/status/%s' % (tmp['url'][0], tmp['url'][1])
             tmp['full'] = web.htmlescape(r_fullname.findall(tweet)[0].strip())
             tmp['user'] = r_username.findall(tweet)[0].strip()
             tmp['time'] = web.striptags(r_time.findall(tweet)[0]).strip()
@@ -66,7 +69,7 @@ def get_tweets(url, sender_uid=False):
 
 
 def format(tweet):
-    return '{teal}(Twitter){c} %s ({purple}{b}@{b}%s{c})' % (tweet['text'], tweet['user'])
+    return '{teal}(Twitter){c} %s ({purple}{b}@{b}%s{c}) - %s' % (tweet['text'], tweet['user'], tweet['url'])
 
 
 @hook(cmds=['tw', 'twitter'], ex='twitter liamraystanley', args=True, rate=0)
