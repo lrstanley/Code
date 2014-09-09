@@ -23,6 +23,10 @@ def trigger_255(code, origin, line, args, text):
     return trigger_250(code, origin, line, args, text)
 
 
+def trigger_352(code, origin, line, args, text):
+    return trigger_354(code, origin, line, args, text, is_352=True)
+
+
 def trigger_353(code, origin, line, args, text):
     # NAMES event
     channel, user_list = args[3], args[4]
@@ -42,6 +46,19 @@ def trigger_353(code, origin, line, args, text):
             name, normal, voiced, op = user, True, False, False
         code.chan[channel][name] = {'normal': normal, 'voiced':
                                     voiced, 'op': op, 'count': 0, 'messages': []}
+
+
+def trigger_354(code, origin, line, args, text, is_352=False):
+    if not is_352:
+        if len(args) != 7:
+            return # Probably error
+        if args[2] != '1': # We sent it on channel join, get it
+            return
+        channel, ident, host, nick = args[3], args[4], args[5], args[6]
+    else:
+        channel, ident, host, nick = args[2], args[3], args[4], args[6]
+    code.chan[channel][nick]['ident'] = ident
+    code.chan[channel][nick]['host'] = host
 
 
 def trigger_433(code, origin, line, args, text):
@@ -200,6 +217,7 @@ def trigger_JOIN(code, origin, line, args, text):
         'channel': 'JOIN'
     }
     code.logs['bot'].append(tmp)
+    code.write(('WHO', origin.nick, '%tcuhn,1'))
 
 
 def trigger_PART(code, origin, line, args, text):

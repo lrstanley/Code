@@ -17,4 +17,5 @@ def startup(code, input):
 
     for channel in code.channels:
         code.join(channel)
+        code.write(('WHO', channel, '%tcuhn,1'))
         time.sleep(0.5)
