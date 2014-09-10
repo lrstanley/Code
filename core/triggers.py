@@ -39,7 +39,7 @@ def trigger_353(code, origin, line, args, text):
     for user in user_list:
         # Support servers with %, &, and ~, as well as standard @, and +
         if user.startswith('@') or user.startswith('%') or user.startswith('&') or user.startswith('~'):
-            name, normal, voiced, op = user[1::], True, True, True
+            name, normal, voiced, op = user[1::], True, False, True
         elif user.startswith('+'):
             name, normal, voiced, op = user[1::], True, True, False
         else:
@@ -59,6 +59,7 @@ def trigger_354(code, origin, line, args, text, is_352=False):
         channel, ident, host, nick = args[2], args[3], args[4], args[6]
     code.chan[channel][nick]['ident'] = ident
     code.chan[channel][nick]['host'] = host
+    code.chan[channel][nick]['first_seen'] = int(time.time())
 
 
 def trigger_433(code, origin, line, args, text):

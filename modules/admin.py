@@ -1,8 +1,59 @@
 import os
 import sys
+import time
+from util import output
 from util.hook import *
+from thread import start_new_thread as daemonize
 
 defaultnick = None
+auto_voice_timer = 3600 # in seconds
+
+
+def setup(code):
+    if not code.config('voice_active_users'):
+        return
+    daemonize(auto_voice, (code,))
+
+
+def auto_voice(code):
+    while True:
+        time.sleep(5)
+        try:
+            for channel in code.config('voice_active_users'):
+                if channel not in code.chan:
+                    continue
+                if not code.chan[channel][code.nick]['op']:
+                    continue
+                for user in code.chan[channel]:
+                    if user == code.nick: # It's the bot lel
+                        continue
+                    # Ignore if they're op. They pretty much have voice.. lol
+                    if code.chan[channel][user]['op'] == True:
+                        continue
+                    current_time = int(time.time())
+                    # Ignore if they haven't said anything...
+                    if code.chan[channel][user]['count'] == 0:
+                        last_msg_time = 0
+                    else:
+                        last_msg_time = int(code.chan[channel][user]['messages'][-1]['time'])
+                    difference = current_time - last_msg_time # How long ago did they say something
+                    first_joined_difference = current_time - code.chan[channel][user]['first_seen'] # How long
+                                                # has it been since we first saw them...
+                    if difference > auto_voice_timer:
+                        # It's been longer than the timer..
+                        # If they're voiced, devoice
+                        # However, to prevent from a load of users being devoiced when the bot joins
+                        # Check for the first-seen-time
+                        if code.chan[channel][user]['voiced'] and auto_voice_timer < first_joined_difference:
+                            code.chan[channel][user]['voiced'] = False
+                            code.write(('MODE', channel, '-v', user))
+                    else:
+                        # It's shorter... voice if not voiced..
+                        if not code.chan[channel][user]['voiced']:
+                            code.chan[channel][user]['voiced'] = True
+                            code.write(('MODE', channel, '+v', user))
+        except:
+            continue
 
 
 @hook(cmds=['modules'], rate=20, priority='high', admin=True)

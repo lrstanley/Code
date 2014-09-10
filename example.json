@@ -57,6 +57,13 @@
             // e.g. "#example": ["#YOLO"],
             // or "#IRCcloud": ["@IRCcloud"]
         },
+        // Autovoice active users in a channel if they talk within 30m, and devoice if they become inactive
+        // Note, the bot needs the ability to set and remove voice (+v) using MODE. Requires the bot to have op.
+        // So, correct channel permissions need to be set
+        "voice_active_users": [
+            // "#example",
+            // "#anotherexample"
+        ],
         // Enable this to output all data to console
         "debug": false,
         // Extra modules not in the modules directory
