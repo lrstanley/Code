@@ -6,7 +6,7 @@ from util.hook import *
 from thread import start_new_thread as daemonize
 
 defaultnick = None
-auto_voice_timer = 3600 # in seconds
+auto_voice_timer = 1800 # in seconds
 
 
 def setup(code):
