@@ -2,18 +2,18 @@ from util import web
 from util.hook import *
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
-uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s&client_id=%s'
-sc_regex = r'https?://soundcloud.com\/'
+uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=%s'
 
 
-@hook(rule=sc_regex)
+@hook(rule=r'.*http[s]?://(?:www.soundcloud.com|soundcloud.com)/([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)(?:/)?.*')
 def soundcloud(code, input):
     """Automatically find the information from a soundcloud url and display it
        to users in a channel"""
     try:
-        id = input.group().split('soundcloud.com/', 1)[1].split()[0].strip()
+        artist = input.group(1)
+        title = input.group(2)
         # Should look like 'artist/song'
-        data = web.json(uri % (id, client))
+        data = web.json(uri % (artist, title, client))
         output = []
         # Get date first so we can add to the title
         year, month, day = data['created_at'].split()[0].split('/')
@@ -24,7 +24,8 @@ def soundcloud(code, input):
         output.append('uploaded by \x0313\x02%s\x02\x03' %
                       data['user']['username'])
         # Genre!
-        output.append('\x0313\x02' + data['genre'] + '\x02\x03')
+        if data['genre']:
+            output.append('\x0313\x02' + data['genre'] + '\x02\x03')
         # Playback count, if none, obviously don't add it
         if int(data['playback_count']) > 0:
             output.append('\x0313\x02%s\x02\x03 plays' %
