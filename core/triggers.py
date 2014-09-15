@@ -60,6 +60,7 @@ def trigger_354(code, origin, line, args, text, is_352=False):
     code.chan[channel][nick]['ident'] = ident
     code.chan[channel][nick]['host'] = host
     code.chan[channel][nick]['first_seen'] = int(time.time())
+    code.chan[channel][nick]['last_seen'] = int(time.time())
 
 
 def trigger_433(code, origin, line, args, text):
@@ -84,6 +85,7 @@ def trigger_NICK(code, origin, line, args, text):
             old = code.chan[channel][origin.nick]
             del code.chan[channel][origin.nick]
             code.chan[channel][args[1]] = old
+            code.chan[channel][args[1]]['last_seen'] = int(time.time())
 
     tmp = {
         'message': 'is now known as {}'.format(args[1]),
@@ -121,6 +123,10 @@ def trigger_PRIVMSG(code, origin, line, args, text):
         # channels)
         code.logs['bot'].append(tmp)
         code.logs['bot'] = code.logs['bot'][-(100 * len(code.channels)):]
+
+    for channel in code.chan:
+        if origin.nick in code.chan[channel]:
+            code.chan[channel][origin.nick]['last_seen'] = int(time.time())
 
 
 def trigger_NOTICE(code, origin, line, args, text):
