@@ -64,6 +64,9 @@
             // "#example",
             // "#anotherexample"
         ],
+        // Bind to a specific IP address. Current only IPv4 is supported for the bot.
+        // Bind to 0.0.0.0 to allow the first usable system-default address.
+        "bind_ip": "0.0.0.0",
         // Enable this to output all data to console
         "debug": false,
         // Extra modules not in the modules directory
@@ -97,6 +100,8 @@
         "webserver": false,
         "webserver_password": "",
         "twitter_autopost": {},
+        "voice_active_users": [],
+        "bind_ip": "0.0.0.0",
         "debug": false,
         "extra": []
     }
