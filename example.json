@@ -23,6 +23,12 @@
         "prefix": ".",
         // Shorten URL's using a URL shortening service
         "shorten_urls": true,
+        // For both owner, and admins, you can use different methods of ensuring the admin, is
+        //   actually an admin. The forms you can use are (sorting from most secure, to least secure):
+        //    - nick!user@host
+        //    - user@host
+        //    - @host
+        //    - nick <-- Note, this method can be very insecure on networks without Nickserv
         "owner": "Yourusername",
         "admins": [
             // e.g. "SomeoneYouTrust"
@@ -70,8 +76,8 @@
             // "#example",
             // "#anotherexample"
         ],
-        // Bind to a specific IP address. Current only IPv4 is supported for the bot.
-        // Bind to 0.0.0.0 to allow the first usable system-default address.
+        // Bind to a specific IP address. IPv4 by default, IPv6 if your OS/network supports it.
+        // Bind to 0.0.0.0 to allow the first usable system-default IPv4 address.
         "bind_ip": "0.0.0.0",
         // Enable this to output all data to console
         "debug": false,
