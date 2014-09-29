@@ -35,24 +35,6 @@ def py(code, input):
         return code.reply('{red}The server did not return an answer.')
 
 
-@hook(cmds=['wa'], ex='wa 1 mile in feet', args=True)
-def wa(code, input):
-    """Wolphram Alpha search"""
-    query = input.group(2)
-    uri = 'http://tumbolia.appspot.com/wa/'
-    answer = web.get(uri + web.quote(query)).read()
-    if answer and 'json stringified precioussss' not in answer:
-        answer = answer.split(';')
-        if len(answer) > 3:
-            answer = answer[1]
-        answer = '{purple}{b}WolphramAlpha: {c}{b}' + answer
-        while '  ' in answer:
-            answer = answer.replace('  ', ' ')
-        return code.say(web.htmlescape(answer))
-    else:
-        return code.reply('{red}Sorry, no result.')
-
-
 @hook(cmds=['md5', 'hash'], priority='low', args=True)
 def md5(code, input):
     """md5 <string> -- Create a md5 hash of the input string"""

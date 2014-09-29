@@ -6,7 +6,6 @@ https://www.liamstanley.io/Code.git
 """
 
 from util import output
-import re
 import time
 import os
 
