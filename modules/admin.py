@@ -6,7 +6,7 @@ from util.hook import *
 from thread import start_new_thread as daemonize
 
 defaultnick = None
-auto_voice_timer = 3600 # in seconds
+auto_voice_timer = 3600  # in seconds
 
 
 def setup(code):
@@ -25,10 +25,10 @@ def auto_voice(code):
                 if not code.chan[channel][code.nick]['op']:
                     continue
                 for user in code.chan[channel]:
-                    if user == code.nick: # It's the bot lel
+                    if user == code.nick:  # It's the bot lel
                         continue
                     # Ignore if they're op. They pretty much have voice.. lol
-                    if code.chan[channel][user]['op'] == True:
+                    if code.chan[channel][user]['op'] is True:
                         continue
                     current_time = int(time.time())
                     # Ignore if they haven't said anything...
@@ -36,9 +36,9 @@ def auto_voice(code):
                         last_msg_time = 0
                     else:
                         last_msg_time = int(code.chan[channel][user]['messages'][-1]['time'])
-                    difference = current_time - last_msg_time # How long ago did they say something
-                    first_joined_difference = current_time - code.chan[channel][user]['first_seen'] # How long
-                                                # has it been since we first saw them...
+                    difference = current_time - last_msg_time  # How long ago did they say something
+                    first_joined_difference = current_time - code.chan[channel][user]['first_seen']  # How long
+                    # has it been since we first saw them...
                     if difference > auto_voice_timer:
                         # It's been longer than the timer..
                         # If they're voiced, devoice

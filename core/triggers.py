@@ -51,8 +51,8 @@ def trigger_353(code, origin, line, args, text):
 def trigger_354(code, origin, line, args, text, is_352=False):
     if not is_352:
         if len(args) != 7:
-            return # Probably error
-        if args[2] != '1': # We sent it on channel join, get it
+            return  # Probably error
+        if args[2] != '1':  # We sent it on channel join, get it
             return
         channel, ident, host, nick = args[3], args[4], args[5], args[6]
     else:

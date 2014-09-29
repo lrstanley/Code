@@ -242,7 +242,7 @@ class Code(irc.Bot):
                                 return True
                             continue
                     return False
-                
+
                 s.owner = check_perm(origin, [self.config('owner')])
                 if s.owner:
                     s.admin = True

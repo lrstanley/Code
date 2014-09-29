@@ -131,7 +131,7 @@ def main(argv=None):
         sys.exit(1)
 
     global threads
-    if not 'servers' in config:
+    if 'servers' not in config:
         # Backwards compatible with old config.json files
         config = {'servers': [config]}
     for server in config['servers']:

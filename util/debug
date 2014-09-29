@@ -9,13 +9,17 @@ echo "------------------------------------------------------"
 
 cd ..
 echo "Running pep8 on Python files in $PWD"
-pep8 --ignore=E501,E265.F403 code || { echo 'Failed to pep8' ; exit 1; }
+pep8 --ignore=E501,E265.F403 code.py || { echo 'Failed to pep8' ; exit 1; }
 
 cd ./core
 echo "Running pep8 on Python files in $PWD"
 pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
 
-cd ../util
+cd ./modules
+echo "Running pep8 on Python files in $PWD"
+pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
+
+cd ../../util
 echo "Running pep8 on Python files in $PWD"
 pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
 
