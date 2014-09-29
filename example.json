@@ -9,6 +9,12 @@
         "server_password": "",
         "nickserv_username": "",
         "nickserv_password": "",
+        // Is the above nickserv password for X (CServices) on Undernet?
+        "nickserv_is_x": false,
+        // Set the Undernet usermask on Code. Requires "nickserv_is_x" to be true, and
+        //  the nickserv (CServices) information to be filled in. Will set the bots
+        //  hostname to "your_username.users.undernet.org"
+        "undernet_hostmask": false,
         "channels": [
             "#example",
             "#anotherexample"
@@ -84,6 +90,8 @@
         "server_password": "",
         "nickserv_username": "",
         "nickserv_password": "",
+        "nickserv_is_x": false,
+        "undernet_hostmask": false,
         "channels": ["#AnotherExample"],
         "prefix": "!",
         "shorten_urls": true,

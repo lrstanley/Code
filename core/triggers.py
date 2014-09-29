@@ -133,6 +133,9 @@ def trigger_NOTICE(code, origin, line, args, text):
     if 'Invalid password for ' in text:
         output.error('Invalid NickServ password')
         os._exit(1)
+    if args[2] == ('AUTHENTICATION SUCCESSFUL as ' + code.config('nickserv_username')):
+        if code.config('undernet_hostmask'):
+            code.write(('MODE', code.nick, '+x'))
     output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
     # Add notices to the bot logs
     tmp = {

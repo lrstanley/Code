@@ -12,7 +12,10 @@ def startup(code, input):
                 code.config('nickserv_password')
         else:
             args = code.config('nickserv_password')
-        code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % args, output=False)
+        if code.config('nickserv_is_x'):
+            code.write(['PRIVMSG', 'x@channels.undernet.org'], 'login %s' % args, output=False)
+        else:
+            code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % args, output=False)
         time.sleep(5)
 
     for channel in code.channels:
