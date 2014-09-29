@@ -29,7 +29,8 @@ def factoid(code, input):
         id, arguments = input.group(1).split(' ', 1)
 
     if id not in db:
-        return code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}` add <name> <data>{red}")')
+        # code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}` add <name> <data>{red}")')
+        return  # It doesn't know the command. Instead of spamming, just act silent.
 
     f = db[id]
 
