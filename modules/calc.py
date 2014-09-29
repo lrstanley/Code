@@ -1,5 +1,4 @@
 import re
-import json
 import hashlib
 from util.hook import *
 from util import web

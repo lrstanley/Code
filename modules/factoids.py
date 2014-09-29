@@ -1,6 +1,6 @@
 from util import web
 from util.hook import *
-from util import database, web
+from util import database
 
 
 @hook(rule='^\`(.*)$')

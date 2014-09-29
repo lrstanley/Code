@@ -1,7 +1,5 @@
 import os
-import sys
 import time
-from util import output
 from util.hook import *
 from thread import start_new_thread as daemonize
 

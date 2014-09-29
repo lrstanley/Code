@@ -29,9 +29,9 @@ class WebServer(BaseHTTPRequestHandler):
     """The actual webserver that responds to things that received via GET queries."""
 
     def log_message(self, format, *args):
-        msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(),
-                                    format % args)
-    #     output.info(msg, 'WEBSERVER')
+        pass
+        # msg = '(%s) | [%s] | %s' % (self.address_string(), self.log_date_time_string(), format % args)
+        # output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
         def readfile(fn):

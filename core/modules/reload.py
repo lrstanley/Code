@@ -61,7 +61,7 @@ def unload_module(code, input):
     if name in code.load:
         # Remove from unload, and add to load
         del code.load[code.load.index(name)]
-    filename = os.path.join(home, 'modules', name + '.py')
+    # filename = os.path.join(home, 'modules', name + '.py')
     code.unload.append(name)
     code.say('{b}Unloaded %s!' % name)
     reload_all_modules(code)

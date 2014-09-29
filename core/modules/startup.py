@@ -1,6 +1,4 @@
-import threading
 import time
-from util import output
 from util.hook import *
 
 
