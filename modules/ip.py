@@ -46,8 +46,8 @@ def ip(code, input):
 
     # Make list of things to respond with
     for option in show:
-        if len(str(data[option[0]])) < 1 or data[option[0]] == host:
-            output.append('{blue}%s{c}: %s' % (option[1], doc['na']))
+        if len(unicode(data[option[0]])) < 1 or data[option[0]] == host:
+            output.append(code.format('{blue}{}{c}: {}').format(option[1], doc['na']))
             continue
         output.append('{blue}%s{c}: %s' % (option[1], data[option[0]]))
     return code.say(' \x02|\x02 '.join(output))
