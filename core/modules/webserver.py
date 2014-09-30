@@ -6,7 +6,6 @@ from random import randint as gen
 from util import output
 import json
 import os
-import traceback
 from util.tools import relative
 from core.modules import reload
 
@@ -26,7 +25,12 @@ bot, password = None, None
 
 class WebServer(BaseHTTPRequestHandler):
 
-    """The actual webserver that responds to things that received via GET queries."""
+    """
+        The actual webserver that responds to things that received via GET queries.
+        Other modules can add data to the JSON API, via:
+         - code.webserver_data['your_data_variable'] = ['this', 'is', 'a', 'list']
+        It can be accessed via the ['other']['your_data_variable'] data attribute via the API.
+    """
 
     def log_message(self, format, *args):
         pass
@@ -99,7 +103,8 @@ class WebServer(BaseHTTPRequestHandler):
                         'config': config,
                         'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
                         'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup)),
-                        'muted': bot.muted
+                        'muted': bot.muted,
+                        'other': bot.webserver_data
                     }
                     data['logs'] = []
                     for log in bot.logs['bot']:
