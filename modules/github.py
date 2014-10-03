@@ -5,32 +5,54 @@ repo_api = 'https://api.github.com/repos/%s'  # Username/Repo
 user_api = 'https://api.github.com/users/%s'  # Username
 
 
+github_regex = r'.*https?://.*?github\.com\/(.*)'
+
+
+@hook(rule=github_regex, thread=False)
+def github_automatic(code, input):
+    """Automatically find the information from a github url and display it
+       to users in a channel"""
+    try:
+        github(code, input, input.group(0).split('.com/', 1)[1].strip('/'), auto=True)
+    except:
+        return
+
+
 @hook(cmds=['github', 'git'], ex='github Liamraystanley/Code', rate=15, args=True)
-def github(code, input):
+def github_cmd(code, input):
+    return github(code, input, input.group(2))
+
+
+def github(code, input, message, auto=False):
     """github <user}user/repo> - Get username data, or user/repo data from Github"""
     syntax = 'Syntax: \'.github <user|user/repo>\''
     failed = 'Failed to get data from Githubs API :('
-    if len(input.group(2).strip().split()) != 1:
-        return code.say(syntax)
+    if len(message.strip().split()) != 1:
+        if not auto:
+            code.say(syntax)
+        return
 
     spacer = ' {blue}|{c} '
 
-    if '/' not in input.group(2):
+    if '/' not in message:
         # Assume a single username
         try:
-            tmp = web.json(user_api % input.group(2).strip())
+            tmp = web.json(user_api % message.strip())
             response = {}
             # Remove dem ugly nulled values. It's a dictionary so we have to
             # loop differently.
             for key, value in tmp.iteritems():
                 if value != '' or len(value) != 0 or value != 'null':
                     response[key] = value
-            print response
         except:
-            return code.say(failed)
+            if not auto:
+                code.say(failed)
+            return
         if 'message' in response:
             # Assume failed
-            return code.say(failed)
+            if not auto:
+                code.say(failed)
+            return
 
         # Here is where we build the response
         output = []
@@ -58,22 +80,30 @@ def github(code, input):
     else:
         # Assume Username/Repo
         try:
-            response = jweb.json(repo_api % input.group(2).strip())
+            response = web.json(repo_api % message.strip())
         except:
-            return code.say(failed)
+            if not auto:
+                code.say(failed)
+            return
         if 'message' in response:
             # Assume failed
-            return code.say(failed)
+            if not auto:
+                code.say(failed)
+            return
         # Here is where we build the response
         output = []
-        output.append('%s (%s)' %
-                      (response['name'], response['owner']['login']))
+        output.append('%s (%s)' % (response['name'], response['owner']['login']))
         output.append(response['description'])
-        output.append('%s %s' % (response['stargazers_count'], u'\u2605'))
-        output.append('%s %s' % (response['watchers_count'], u'\u231A'))
-        output.append('%s %s' % (response['forks_count'], u'\u2442'))
-        output.append('%s %s' % (response['open_issues_count'], u'\u2602'))
-        output.append('%s %s' % (response['network_count'], u'\U0001F46C'))
-        output.append('%s %s' % (response['subscribers_count'], u'\u2764'))
+        def is_multiple(number, word):
+            if str(number) != '1':
+                word += 's'
+            return '%s %s' % (str(number), word)
+
+        output.append(is_multiple(response['stargazers_count'], 'star'))
+        output.append(is_multiple(response['watchers_count'], 'watcher'))
+        output.append(is_multiple(response['forks_count'], 'fork'))
+        output.append(is_multiple(response['open_issues_count'], 'issue'))
+        output.append(is_multiple(response['network_count'], 'collaborator'))
+        output.append(is_multiple(response['subscribers_count'], 'subscriber'))
         output.append(response['html_url'])
         return code.say(spacer.join(output))
