@@ -1,6 +1,7 @@
 import re
 from util import web
 import time
+from util.tools import add_commas
 from util.hook import *
 
 yt_regex = r'.*https?://(www\.)?(youtube\.com|youtu\.be)\/watch.+?v=(.*\w?).*?'
@@ -62,12 +63,12 @@ def create_response(data, url=False):
         reply.append('{b}length{b} %s' % lenout)
     # Shitty video? FIND OUT!
     if 'rating' in data and 'ratingCount' in data:
-        reply.append('{b}rated{b} %.2f/5.00 (%d)' % (
-            data['rating'], data['ratingCount']
+        reply.append('{b}rated{b} %.2f/5.00 (%s)' % (
+            data['rating'], add_commas(data['ratingCount'])
         ))
     # Number of views. Yuck.
     if 'viewCount' in data:
-        reply.append('%s {b}views{b}' % data['viewCount'])
+        reply.append('%s {b}views{b}' % add_commas(data['viewCount']))
     upload_time = parse_date(data['uploaded'])
     reply.append('by {fuchsia}{b}%s{b}{c} on {b}%s{b}' %
                  (data['uploader'], upload_time))
