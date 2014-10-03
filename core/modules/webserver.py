@@ -104,7 +104,8 @@ class WebServer(BaseHTTPRequestHandler):
                         'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
                         'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup)),
                         'muted': bot.muted,
-                        'other': bot.webserver_data
+                        'other': bot.webserver_data,
+                        'server': bot.server_options
                     }
                     data['logs'] = []
                     for log in bot.logs['bot']:

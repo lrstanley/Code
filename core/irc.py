@@ -50,6 +50,7 @@ class Bot(asynchat.async_chat):
         self.default = nick
         self.name = name
         self.user = user
+        self.server_options = {}
         self.server_password = server_password
         self.channels = channels or list()
         self.stack = list()

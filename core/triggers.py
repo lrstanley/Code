@@ -10,6 +10,29 @@ import time
 import os
 
 
+def trigger_001(code, origin, line, args, text):
+    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+
+
+def trigger_002(code, origin, line, args, text):
+    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+
+
+
+def trigger_003(code, origin, line, args, text):
+    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+
+
+def trigger_005(code, origin, line, args, text):
+    tmp = args[2:-1]
+    for item in tmp:
+        if not '=' in item:
+            code.server_options[item] = True
+        else:
+            name, data = item.split('=', 1)
+            code.server_options[name] = data
+
+
 def trigger_250(code, origin, line, args, text):
     output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 

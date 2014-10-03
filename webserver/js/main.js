@@ -90,7 +90,13 @@ function checkTimeout () {
 
 
 last_msg_time = 100000;
+is_finished = true;
 function populate() {
+    if (!is_finished) {
+        console.log('Waiting for the last one!');
+        return
+    }
+    is_finished = false;
     $.get('/', $.param({pass: $.cookie('code_pass'), callback: '?'}))
         .done(function(data) {
             code = data;
@@ -110,7 +116,7 @@ function populate() {
                 // Things here will be done on load, AFTER getting data from the API
                 // Good for things that won't change in the bot while the webpage is open...
                 $("#server-info").text(code['data']['config']['host'] + ':' + code['data']['config']['port']);
-                $("#dashboard-host").text(code['data']['config']['host']);
+                $("#dashboard-host").text(code['data']['server']['NETWORK']);
                 $("#default-nick").text(code['data']['config']['nick']);
                 // Snap to the bottom of the console log by default
                 document.getElementById("chat-bottom").scrollIntoView();
@@ -166,6 +172,7 @@ function populate() {
                 window.location.href = '/';
             }
         });
+    is_finished = true;
     // $.get('/templates/index.html', function(source) {
     //     template = Handlebars.compile(source);
     //     $('#page').html(template(code));
