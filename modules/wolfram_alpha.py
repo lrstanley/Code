@@ -8,16 +8,16 @@ def wa(code, input):
     uri = 'http://tumbolia.appspot.com/wa/'
     try:
         answer = web.get(uri + web.quote(query), timeout=10).read()
-    except timeout:
+    except:
         return code.say('It seems WolframAlpha took too long to respond!')
 
     if answer and 'json stringified precioussss' not in answer:
-        answer = answer.split(';')
-        if len(answer) > 3:
-            answer = answer[1]
-        answer = '{purple}{b}WolframAlpha: {c}{b}' + answer
+        answer = answer.strip('\n').split(';')
+        for i in range(len(answer)):
+            answer[i] = answer[i].replace('|', '').strip()
+        answer = '{purple}{b}WolframAlpha: {c}{b}' + ' - '.join(answer)
         while '  ' in answer:
             answer = answer.replace('  ', ' ')
-        return code.say(web.htmlescape(answer))
+        return code.say(web.htmlescape(answer).replace('\\', '').replace('->', ': '))
     else:
         return code.reply('{red}Sorry, no result.')
