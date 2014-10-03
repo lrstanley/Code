@@ -15,9 +15,9 @@ def wa(code, input):
         answer = answer.strip('\n').split(';')
         for i in range(len(answer)):
             answer[i] = answer[i].replace('|', '').strip()
-        answer = '{purple}{b}WolframAlpha: {c}{b}' + ' - '.join(answer)
+        answer = '{purple}{b}WolframAlpha: {c}{b}' + ' - '.join(answer).replace('\\', '').replace('->', ': ')
         while '  ' in answer:
             answer = answer.replace('  ', ' ')
-        return code.say(web.htmlescape(answer).replace('\\', '').replace('->', ': '))
+        return code.say(web.htmlescape(answer))
     else:
         return code.reply('{red}Sorry, no result.')

@@ -162,7 +162,7 @@ def update(code, input):
     data = data.replace('Fast-forward', '')
     # Do a little with file changes
     data = re.sub(
-        r'(?P<files>[0-9]{1,3}) files? changed', '{green}\g<files>{c} files changed', data)
+        r'(?P<files>[0-9]{1,3}) files? changed', '{green}\g<files>{c} file(s) changed', data)
     data = re.sub(r'(?P<ins>[0-9]{1,6}) insertions\(\+\)\, (?P<dels>[0-9]{1,6}) deletions\(\-\)',
                   '+{green}\g<ins>{c}/-{red}\g<dels>{c}', data)
     data = re.sub(
