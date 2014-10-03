@@ -16,19 +16,23 @@ def bind_commands(code):
 
     for name, func in code.variables.iteritems():
         # print name, func
-        code.doc[name] = {'commands': [], 'info': None, 'example': None}
+        code.doc[name] = {'commands': [], 'info': None, 'example': None, 'syntax': None}
         if func.__doc__:
             doc = func.__doc__.replace('\n', '').strip()
             while '  ' in doc:
                 doc = doc.replace('  ', ' ')
+            if ' -- ' in doc:
+                code.doc[name]['syntax'] = code.prefix + doc.split(' -- ', 1)[0]
+                code.doc[name]['info'] = doc.split(' -- ', 1)[1]
+            else:
+                code.doc[name]['info'] = doc
         else:
             doc = None
         if hasattr(func, 'example'):
             example = func.example
-            example = example.replace('$nickname', code.nick)
+            example = code.prefix + example.replace('$nickname', code.nick)
         else:
             example = None
-        code.doc[name]['info'] = doc
         code.doc[name]['example'] = example
         if not hasattr(func, 'priority'):
             func.priority = 'medium'
