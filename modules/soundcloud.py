@@ -1,5 +1,6 @@
 from util import web
 from util.hook import *
+from util.tools import add_commas
 
 client = '97c32b1cc8e9875be21f502bde81aaeb'
 uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=%s'
@@ -18,36 +19,52 @@ def soundcloud(code, input):
         # Get date first so we can add to the title
         year, month, day = data['created_at'].split()[0].split('/')
         # Should always have a title
-        output.append('\x0313\x02%s\x02\x03 (\x0313\x02%s/%s/%s\x02\x03)' %
-                      (data['title'], month, day, year))
+        output.append('{pink}{b}%s{b}{c} ({pink}{b}%s/%s/%s{b}{c})' % (data['title'], month, day, year))
         # Should always have an artist
-        output.append('uploaded by \x0313\x02%s\x02\x03' %
-                      data['user']['username'])
+        output.append('uploaded by {pink}{b}%s{b}{c}' % data['user']['username'])
         # Genre!
         if data['genre']:
-            output.append('\x0313\x02' + data['genre'] + '\x02\x03')
+            output.append('{pink}{b}' + data['genre'] + '{b}{c}')
         # Playback count, if none, obviously don't add it
         if int(data['playback_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 plays' %
-                          data['playback_count'])
+            output.append('{pink}{b}%s{b}{c} plays' % add_commas(data['playback_count']))
         # Download count, if none, obviously don't add it
         if int(data['download_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 downloads' %
-                          data['download_count'])
+            output.append('{pink}{b}%s{b}{c} downloads' % add_commas(data['download_count']))
         # And the same thing with the favorites count
         if int(data['favoritings_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 favs' %
-                          data['favoritings_count'])
+            output.append('{pink}{b}%s{b}{c} favs' % add_commas(data['favoritings_count']))
         # Comments too!
         if int(data['comment_count']) > 0:
-            output.append('\x0313\x02%s\x02\x03 comments' %
-                          data['comment_count'])
+            output.append('{pink}{b}%s{b}{c} comments' % add_commas(data['comment_count']))
         # Tags!
         if len(data['tag_list'].split()) > 0:
-            tmp = data['tag_list'].split()
+            # Rap "taylor gang" "Hip Hop" "20 joints" traxxfdr
+            quote = '"'
             tags = []
-            for tag in tmp:
-                tags.append('(#\x0313\x02%s\x02\x03)' % tag)
+            tag_list = data['tag_list'].split()
+            multi_word_tag = ''
+            for tmp in tag_list:
+                if tmp.startswith(quote):
+                    # Start of a multi-word tag
+                    multi_word_tag = tmp.strip(quote)
+                elif tmp.endswith(quote):
+                    # End of multi-word tag
+                    multi_word_tag += ' ' + tmp.strip(quote)
+                    tags.append(multi_word_tag)
+                    multi_word_tag = ''
+                elif len(multi_word_tag) > 0:
+                    # It's a middle-word
+                    multi_word_tag += ' ' + tmp
+                else:
+                    # It's just it's own tag. \o/
+                    tags.append(tmp)
+
+            for i in range(len(tags)):
+                if len(tags[i].split()) > 1:
+                    tags[i] = '(#{pink}{b}"%s"{b}{c})' % tags[i]
+                else:
+                    tags[i] = '(#{pink}{b}%s{b}{c})' % tags[i]
             output.append(' '.join(tags))
         return code.say(' - '.join(output))
     except:
