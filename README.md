@@ -9,20 +9,32 @@ ________
 
 Code is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
 
-Fast & light weight
-- Code is very small, so it won't take up resources.
+Webpanel
+- Code has a builtin webpanel that you can enable, that also serves as a webserver and a JSON API (Almost like a REST API) that allows you to remotely execute functions or retrieve information from the bot, all via GET requests. Everything authenticated too!
 
-Load & unload modules
-- Code has the ability to load user defined IRC modules, that are pre-made or ones that you create. Code also can live-reload modules for active and fast development.
+The Webserver itself:
+![Webserver](http://misc.liamstanley.io/code/code_webpanel.png "The Webserver itself")
+
+Webserver authentication:
+![Webserver authentication](http://misc.liamstanley.io/code/code_webpanel_login.png "The Webserver authentication")
+
+Webserver module feature:
+![Webserver modules](http://misc.liamstanley.io/code/code_webpanel_modules.png "Webserver modules")
+
+Fast & lightweight
+- Code is very small, so even with the extensive amount of features it has, it should run as little as possible.
+
+Modules
+- Code uses modules for all of its commands and features. These modules can be loaded, unload, completely removed, and dynamically updated to fit the channels needs. Modules can be made easily, and because of the nature of the modules, you can make whatever you want/control the bot easily.
 
 Very user friendly
-- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. Help commands also help you with specific documentation for almost every command.
+- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <commang>`
 
 Easy to use API
-- When creating your own modules, it is always very easy to have a fully documented API and easy to understand functions. See the [Wiki](https://github.com/Liamraystanley/Code/wiki)
+- When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/Liamraystanley/Code/wiki) for more information.
 
 Open-Source
-- Found a bug, feature, or technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
+- Found a bug, feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
 
 Configuration
 - Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!
@@ -42,7 +54,7 @@ Unix & Unix-like OS:
     nano config.json
     python code.py
 
-If you wish to not run your bot in the forground, you may use the `screen` daemon as so:
+If you wish to not run your bot in the foreground, you may use the `screen` daemon as so:
 
     screen -S code python code.py
 
