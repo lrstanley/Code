@@ -166,9 +166,9 @@ def update(code, input):
     data = re.sub(r'(?P<ins>[0-9]{1,6}) insertions\(\+\)\, (?P<dels>[0-9]{1,6}) deletions\(\-\)',
                   '+{green}\g<ins>{c}/-{red}\g<dels>{c}', data)
     data = re.sub(
-        r'(?P<chars>[0-9]{1,6}) insertions\(\+\)', '{green}\g<chars>{c} additions', data)
+        r'(?P<chars>[0-9]{1,6}) insertions?\(\+\)', '{green}\g<chars>{c} addition(s)', data)
     data = re.sub(
-        r'(?P<chars>[0-9]{1,6}) deletions\(\+\)', '{green}\g<chars>{c} deletions', data)
+        r'(?P<chars>[0-9]{1,6}) deletions?\(\+\)', '{green}\g<chars>{c} deletion(s)', data)
     while '  ' in data:
         data = data.replace('  ', ' ')
     code.say('Github: {b}' + data.strip())
