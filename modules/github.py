@@ -42,7 +42,7 @@ def github(code, input, message, auto=False):
             # Remove dem ugly nulled values. It's a dictionary so we have to
             # loop differently.
             for key, value in tmp.iteritems():
-                if value != '' or len(value) != 0 or value != 'null':
+                if value != '' or len(value) != 0 or value.lower() != 'null':
                     response[key] = value
         except:
             if not auto:
@@ -57,6 +57,9 @@ def github(code, input, message, auto=False):
         # Here is where we build the response
         output = []
         if 'name' in response:
+            if response['name'].lower() == 'null' and auto:
+                # Assume subdomain.. or something. I dunno.
+                return
             output.append('%s (%s)' % (response['name'], response['login']))
         else:
             output.append(response['login'])
