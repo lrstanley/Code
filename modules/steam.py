@@ -41,7 +41,7 @@ def user_lookup(code, id, showerror=True):
         details = re.sub(r'\[.*?\]', '', details)
         details = details.replace(': ', ': {b}')
         url = 'http://steamcommunity.com/id/' + id
-        return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (realname, status, details, url))
+        return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (web.htmlescape(realname), status, details, url))
     except:
         if showerror:
             code.say('{b}Unable to find user information on %s!' % id)
