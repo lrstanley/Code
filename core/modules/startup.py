@@ -16,6 +16,9 @@ def startup(code, input):
             code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % args, output=False)
         time.sleep(5)
 
+    # Assume it's for bots, y'know
+    code.write(('MODE', code.nick, '+B'))
+
     for channel in code.channels:
         code.join(channel)
         code.write(('WHO', channel, '%tcuhn,1'))
