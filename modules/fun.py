@@ -2,25 +2,45 @@ import random
 from util.hook import *
 
 
+#def setup(code):
+#    code.set('rr', {})
+
+
+
 @hook(cmds=['rr', 'roulette'], ex='roulette Timothy', rate=20)
 def roulette(code, input):
     """Play a little gruesome russian roulette."""
-    chance = str(random.randint(1, 6))
-    if chance == '1':
-        response = '{b}{red}dies! :O'
-    else:
-        response = '{b}{green}is OK{c}{b}, the chamber was empty!'
+    gun = [False, False, False, False, False, True]
+    restart = False
     if input.group(2):
+
         nick = input.group(2)
         if nick.lower() == 'myself' or nick.lower() == code.nick.lower() or \
            nick.lower() == 'me' or nick.lower() == 'himself':
             nick = input.nick
+        elif nick.lower() == 'reload' or nick.lower() == 'restart':
+            nick = input.nick
+            restart = True
         else:
             nick = input.nick
     else:
         nick = input.nick
-    code.say('*Points gun at %s, and pulls the trigger* %s %s' %
-             (nick, nick, response))
+
+    data = code.get('rr')
+    if not data or restart:
+        random.shuffle(gun)
+        data = gun
+
+    reloaded = '*reloads and ' if len(data) == 6 else '*'
+
+    shot = '%s {b}{red}dies{c}! :O' % nick
+    alive = 'The gun clicks.'
+    response = shot if data[0] == True else alive
+    del data[0]
+
+    code.set('rr', data)
+
+    code.action(reloaded + 'points gun at %s* -- *pulls the trigger* -- %s' % (nick, response))
 
 
 @hook(cmds=['slap'], rate=5, args=True)
