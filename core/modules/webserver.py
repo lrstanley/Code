@@ -6,7 +6,7 @@ from random import randint as gen
 from util import output
 import json
 import os
-from util.tools import relative
+from util.tools import hrt
 from core.modules import reload
 
 # Some todo lists...
@@ -101,17 +101,17 @@ class WebServer(BaseHTTPRequestHandler):
                         'modules': sorted(bot.modules),
                         'docs': bot.doc,
                         'config': config,
-                        'bot_startup': relative(seconds=int(time.time()) - int(bot.bot_startup)),
-                        'irc_startup': relative(seconds=int(time.time()) - int(bot.irc_startup)),
+                        'bot_startup': hrt(bot.bot_startup)[0],
+                        'irc_startup': hrt(bot.irc_startup)[0],
                         'muted': bot.muted,
                         'other': bot.webserver_data,
-                        'server': bot.server_options
+                        'server': bot.server_options,
+                        'logs1': bot.logs
                     }
                     data['logs'] = []
                     for log in bot.logs['bot']:
                         tmp = log
-                        tmp['hrt'] = relative(
-                            seconds=int(time.time()) - int(tmp['time']))[0]
+                        tmp['hrt'] = hrt(tmp['time'])[0]
                         data['logs'].append(tmp)
                     return finish({'success': True, 'data': data})
 

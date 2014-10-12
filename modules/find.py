@@ -1,13 +1,17 @@
 import re
 from util.hook import *
+from util.tools import hrt
+import time
 
 
-@hook(rule=r'(?iu)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w])(.*)', priority='high')
+@hook(rule=r'(?iu)(?:([^\s:,]+)[\s:,])?\s*s\s*([^\s\w])(.*)$', priority='high')
 def findandreplace(code, input):
     if not input.sender.startswith('#'):
         return
 
     separator = input.group(2)
+    #if not separator.lower().startswith('s/'):
+    #    return
     line = input.group(3).split(separator)
     flags = ''
 
@@ -28,28 +32,25 @@ def findandreplace(code, input):
     else:
         repl = lambda s: s.replace(line[0], '{b}' + line[1] + '{b}', count)
 
-    if code.chan[input.sender][input.nick]['count'] < 2:
-        return
-
-    umsg = list(reversed(code.chan[input.sender][input.nick]['messages']))
+    channel_messages = list(reversed(code.logs['channel'][input.sender]))
     msg_index = None
-    for i in range(len(umsg)):
-        if umsg[i]['message'].startswith('(me)') or ' s/' in umsg[i]['message'] or umsg[i]['message'].startswith('s/'):
+    for i in range(len(channel_messages)):
+        if channel_messages[i]['message'].startswith('(me)') or ' s/' in channel_messages[i]['message'] or channel_messages[i]['message'].startswith('s/'):
             continue
 
-        new_msg = repl(umsg[i]['message'])
-        if new_msg != umsg[i]['message']:  # we are done
+        new_msg = repl(channel_messages[i]['message'])
+        if new_msg != channel_messages[i]['message']:  # we are done
             msg_index = i
             break
 
     if msg_index is None:
         return code.say('{red}Nothing to replace!')
-    if not new_msg or new_msg == umsg[msg_index]['message']:
+    if not new_msg or new_msg == channel_messages[msg_index]['message']:
         return
 
     # Save the new "edited" message.
     # Remember, the above index is reversed so unreverse it.
-    new_id = (len(umsg) - 1) - msg_index
-    code.chan[input.sender][input.nick][
-        'messages'][new_id]['message'] = new_msg
-    code.say('%s {b}meant{b} to say: %s' % (input.nick, new_msg))
+    new_id = (len(channel_messages) - 1) - msg_index
+    code.logs['channel'][input.sender][new_id]['message'] = new_msg
+    info = code.logs['channel'][input.sender][new_id]
+    code.say('({b}%s{b} ago) <{b}%s{b}> %s' % (hrt(info['time'])[0], info['nick'], info['message']))

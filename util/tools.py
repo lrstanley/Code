@@ -1,5 +1,6 @@
 from lib.dateutil.relativedelta import relativedelta
 import hashlib
+import time
 
 
 # Time convert usage
@@ -14,6 +15,9 @@ date = lambda delta: [
 
 def relative(**kwargs):
     return date(relativedelta(**kwargs))
+
+def hrt(tmp_time):
+    return relative(seconds=int(time.time()) - int(tmp_time))
 
 
 def hash(string):
