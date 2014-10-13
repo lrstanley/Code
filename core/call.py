@@ -33,6 +33,7 @@ def call(self, func, origin, code, input):
 
     nick = input.nick.lower()
     if nick in self.times:
+        # per-command rate limiting
         if func in self.times[nick]:
             if not input.admin:
                 if time.time() - self.times[nick][func] < func.rate:
@@ -47,8 +48,7 @@ def call(self, func, origin, code, input):
                 if '!' in self.excludes[input.sender]:
                     # block all function calls for this channel
                     return
-                fname = func.func_code.co_filename.split(
-                    '/')[-1].split('.')[0]
+                fname = func.func_code.co_filename.split('/')[-1].split('.')[0]
                 if fname in self.excludes[input.sender]:
                     # block function call if channel is blacklisted
                     print(

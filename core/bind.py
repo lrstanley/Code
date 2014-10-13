@@ -47,7 +47,7 @@ def bind_commands(code):
 
         if not hasattr(func, 'rate'):
             if hasattr(func, 'commands'):
-                func.rate = 5
+                func.rate = 3
             else:
                 func.rate = 0
 

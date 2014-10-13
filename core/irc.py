@@ -272,14 +272,14 @@ class Bot(asynchat.async_chat):
             text = text.replace('\x01', '')
 
         # No messages within the last 3 seconds? Go ahead!
-        # Otherwise, wait so it's been at least 0.8 seconds + penalty
+        # Otherwise, wait so it's been at least 0.5 seconds <nope>+ penalty</nope>
         if not bypass_loop:  # Used if you want to bypass the global rate limiter
             def wait(sk, txt):
                 if sk:
                     elapsed = time.time() - sk[-1][0]
                     if elapsed < 3:
-                        penalty = float(max(0, len(txt) - 50)) / 70
-                        wait = 0.8 + penalty
+                        # penalty = float(max(0, len(txt) - 50)) / 70
+                        wait = 0.5  # + penalty
                         if elapsed < wait:
                             time.sleep(wait - elapsed)
 
