@@ -35,7 +35,10 @@ def findandreplace(code, input):
     channel_messages = list(reversed(code.logs['channel'][input.sender]))
     msg_index = None
     for i in range(len(channel_messages)):
-        if channel_messages[i]['message'].startswith('(me)') or ' s/' in channel_messages[i]['message'] or channel_messages[i]['message'].startswith('s/'):
+        if channel_messages[i]['message'].startswith('(me)') or \
+        ' s/' in channel_messages[i]['message'] or \
+        channel_messages[i]['message'].startswith('s/') or \
+        channel_messages[i]['nick'] == code.nick:
             continue
 
         new_msg = repl(channel_messages[i]['message'])
