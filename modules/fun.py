@@ -2,11 +2,6 @@ import random
 from util.hook import *
 
 
-#def setup(code):
-#    code.set('rr', {})
-
-
-
 @hook(cmds=['rr', 'roulette'], ex='roulette Timothy', rate=20)
 def roulette(code, input):
     """Play a little gruesome russian roulette."""

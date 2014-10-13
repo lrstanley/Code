@@ -38,6 +38,7 @@ class WebServer(BaseHTTPRequestHandler):
         # output.info(msg, 'WEBSERVER')
 
     def do_GET(self):
+        init_time = float(time.time())
         def readfile(fn):
             if not os.path.isfile('webserver/%s' % fn):
                 return False
@@ -51,11 +52,16 @@ class WebServer(BaseHTTPRequestHandler):
             self.send_response(code)
             self.send_header("Content-type", content)
             self.end_headers()
+            done = float(time.time()) - init_time
+            if bot.debug:
+                output.info('Finished request for %s (took %f seconds)' % (self.path, done), 'WEBSERVER')
             if isinstance(data, dict):
                 data = json.dumps(data, indent=2)
             self.wfile.write(data)
 
         args = {}
+        if bot.debug:
+            output.warning('Request for "%s" (%s)' % (self.path, ', '.join([self.command, self.request_version, list(self.client_address)[0]])), 'WEBSERVER')
         path = self.path.replace('?callback=?', '')
         if path.startswith('/?'):
             tmp = path.split('?', 1)[1]
@@ -145,6 +151,8 @@ def checkstate(bot, input, id):
     password = bot.config('webserver_password')
 
     while True:
+        if bot.debug:
+            output.info('Running check to see if the webserver needs to be restarted', 'WEBSERVER')
         if bot.get('webserver.object') != id:
             return False
         time.sleep(1)
@@ -175,5 +183,7 @@ def setup(code):
     if not bot.config('webserver_password'):
         return output.warning('To use the builtin webserver, you must set a password in the config', 'WEBSERVER')
     port = bot.config('webserver_port', 8888)
+    if bot.debug:
+        output.info('Running daemon', 'WEBSERVER')
     thread.start_new_thread(checkstate, (bot, input, id,))
     thread.start_new_thread(init, (str(host), int(port),))

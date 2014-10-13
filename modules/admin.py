@@ -1,6 +1,7 @@
 import os
 import time
 from util.hook import *
+from util import output
 from thread import start_new_thread as daemonize
 
 defaultnick = None
@@ -10,6 +11,7 @@ auto_voice_timer = 3600  # in seconds
 def setup(code):
     if not code.config('voice_active_users'):
         return
+    output.info('Starting daemon', 'AUTOVOICE')
     daemonize(auto_voice, (code,))
 
 
@@ -17,6 +19,8 @@ def auto_voice(code):
     while True:
         time.sleep(5)
         try:
+            if code.debug:
+                output.info('Running check', 'AUTOVOICE')
             for channel in code.config('voice_active_users'):
                 if channel not in code.chan:
                     continue

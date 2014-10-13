@@ -11,11 +11,13 @@ import os
 
 
 def trigger_001(code, origin, line, args, text):
-    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+    if not code.debug:
+        output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 
 
 def trigger_002(code, origin, line, args, text):
-    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+    if not code.debug:
+        output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 
 
 
@@ -34,7 +36,8 @@ def trigger_005(code, origin, line, args, text):
 
 
 def trigger_250(code, origin, line, args, text):
-    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+    if not code.debug:
+        output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 
 
 def trigger_251(code, origin, line, args, text):
@@ -86,20 +89,22 @@ def trigger_354(code, origin, line, args, text, is_352=False):
 
 
 def trigger_433(code, origin, line, args, text):
-    output.warning('Nickname {} is already in use. Trying another..'.format(
-                   code.nick))
+    if not code.debug:
+        output.warning('Nickname {} is already in use. Trying another..'.format(code.nick))
     nick = code.nick + '_'
     code.write(('NICK', nick))
     code.nick = nick.encode('ascii', 'ignore')
 
 
 def trigger_437(code, origin, line, args, text):
-    output.error(text)
+    if not code.debug:
+        output.error(text)
     os._exit(1)
 
 
 def trigger_NICK(code, origin, line, args, text):
-    output.normal('{} is now known as {}'.format(origin.nick, args[1]), 'NICK')
+    if not code.debug:
+        output.normal('{} is now known as {}'.format(origin.nick, args[1]), 'NICK')
 
     # Rename old users to new ones in the database...
     for channel in code.chan:
@@ -122,7 +127,8 @@ def trigger_PRIVMSG(code, origin, line, args, text):
     text = code.stripcolors(text)
     if text.startswith('\x01ACTION'):
         text = '(me) ' + text.split(' ', 1)[1].strip('\x01')
-    output.normal('({}) {}'.format(origin.nick, text), args[1])
+    if not code.debug:
+        output.normal('({}) {}'.format(origin.nick, text), args[1])
 
     # Stuff for user_list
     if args[1].startswith('#'):
@@ -153,12 +159,14 @@ def trigger_PRIVMSG(code, origin, line, args, text):
 
 def trigger_NOTICE(code, origin, line, args, text):
     if 'Invalid password for ' in text:
-        output.error('Invalid NickServ password')
+        if not code.debug:
+            output.error('Invalid NickServ password')
         os._exit(1)
     if 'AUTHENTICATION SUCCESSFUL as ' in args[2]:
         if code.config('undernet_hostmask'):
             code.write(('MODE', code.nick, '+x'))
-    output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
+    if not code.debug:
+        output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
     # Add notices to the bot logs
     tmp = {
         'message': text,
@@ -177,10 +185,12 @@ def trigger_KICK(code, origin, line, args, text):
 
 def trigger_MODE(code, origin, line, args, text):
     if len(args) == 3:
-        output.normal('{} sets MODE {}'.format(origin.nick, text), 'MODE')
+        if not code.debug:
+            output.normal('{} sets MODE {}'.format(origin.nick, text), 'MODE')
         return
     else:
-        output.normal('{} sets MODE {}'.format(origin.nick, args[2]), args[1])
+        if not code.debug:
+            output.normal('{} sets MODE {}'.format(origin.nick, args[2]), args[1])
 
     # Stuff for user_list
     data = ' '.join(args[1:])
@@ -241,7 +251,8 @@ def trigger_JOIN(code, origin, line, args, text):
     if origin.nick != code.nick:
         code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
                                            False, 'op': False, 'count': 0, 'messages': []}
-    output.normal('{} has joined {}'.format(origin.nick, args[1]), args[1])
+    if not code.debug:
+        output.normal('{} has joined {}'.format(origin.nick, args[1]), args[1])
     tmp = {
         'message': 'joined {}'.format(args[1]),
         'nick': origin.nick,
@@ -262,8 +273,8 @@ def trigger_PART(code, origin, line, args, text):
         reason = args[2]
     else:
         reason = 'Unknown'
-    output.normal('{} has part {}. Reason: {}'.format(
-        origin.nick, args[1], reason), args[1])
+    if not code.debug:
+        output.normal('{} has part {}. Reason: {}'.format(origin.nick, args[1], reason), args[1])
     tmp = {
         'message': 'left {}'.format(args[1]),
         'nick': origin.nick,

@@ -4,6 +4,7 @@ import time
 from util import web
 from util.hook import *
 from util import database
+from util import output
 from util.tools import hash
 
 
@@ -93,14 +94,15 @@ def twitter(code, input):
 def setup(code):
     if not code.config('twitter_autopost'):
         return
-    thread.start_new_thread(
-        daemon, (code, code.config('twitter_autopost', {}),))
+    output.info('Starting daemon', 'TWITTER')
+    thread.start_new_thread(daemon, (code, code.config('twitter_autopost', {}),))
 
 
 def daemon(code, tc):
     while True:
         time.sleep(auto_check)
 
+        output.info('Running check for new tweets', 'TWITTER')
         # Here we do the work...
         for channel in tc:
             for tweet_item in tc[channel]:
