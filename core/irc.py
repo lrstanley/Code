@@ -248,14 +248,15 @@ class Bot(asynchat.async_chat):
                 pass
         return input
 
-    def msg(self, recipient, text, x=False, shorten_urls=True, bypass_loop=False):
+    def msg(self, recipient, text, x=False, shorten_urls=True, bypass_loop=False, colors=True):
         """
             Sends most messages to a direct location or recipient
             auto shortens URLs by default unless specified in the
             config
         """
         self.sending.acquire()
-        text = self.format(text, shorten_urls=shorten_urls)
+        if colors:
+            text = self.format(text, shorten_urls=shorten_urls)
 
         if isinstance(text, unicode):
             try:

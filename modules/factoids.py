@@ -90,7 +90,7 @@ def factoid_manage(data, code, input):
     elif cmd.lower() in ['info', 'raw', 'show', 'view']:
         if args:
             if name in db:
-                return code.say('Raw: ' + db[name])
+                return code.msg(input.sender, 'Raw: ' + repr(db[name])[2:-1], colors=False)
             else:
                 return code.say('{red}That factoid does not exist!')
         return code.reply('{red}Use "{purple}` info <name>{red}" to view the factoid in raw form.')
