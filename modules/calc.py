@@ -12,7 +12,7 @@ def calc(code, input):
         data = web.json(uri % web.quote(input.group(2).replace('^', '**')))
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
-        answer = re.sub(r'\<.*?\>', '', data['Answer']).strip().split('}')[1]
+        answer = web.striptags(data['Answer'])
         return code.say(answer)
     except:
         return code.reply('Failed to calculate!')
