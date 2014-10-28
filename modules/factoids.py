@@ -3,7 +3,7 @@ from util.hook import *
 from util import database
 
 
-@hook(rule='^\`(.*)$')
+@hook(rule='(?i)^\`(.*)$')
 def factoid(code, input):
     """
         `<word> -- Shows what data is associated with <word>.
@@ -28,6 +28,7 @@ def factoid(code, input):
     else:
         id, arguments = input.group(1).split(' ', 1)
 
+    id = id.lower()
     if id not in db:
         # code.say('{red}That command doesn\'t exist. (If Admin, add it with "{purple}` add <name> <data>{red}")')
         return  # It doesn't know the command. Instead of spamming, just act silent.
@@ -70,27 +71,27 @@ def factoid_manage(data, code, input):
         db = {}
     if cmd.lower() in ['add', 'create', 'new']:
         if args:
-            if name in db:
+            if name.lower() in db:
                 return code.reply('{red}That factoid already exists!')
             elif len(args.strip().split()) > 1:
-                db[name] = args.split(' ', 1)[1]
+                db[name.lower()] = args.split(' ', 1)[1]
                 database.set(code.nick, db, 'factoids')
                 return code.reply('{green}Successfully created the factoid "{purple}%s{green}"!' % name)
         return code.reply(('{red}Use "{purple}` add <name> <args>{red}" to create a new factoid. Use <py>, '
                            '<act>, <url> in front of args for different responses.'))
     elif cmd.lower() in ['del', 'rem', 'delete', 'remove']:
         if args:
-            if name not in db:
+            if name.lower() not in db:
                 return code.reply('{red}That factoid does not exist!')
             else:
-                del db[name]
+                del db[name.lower()]
                 database.set(code.nick, db, 'factoids')
                 return code.reply('{green}Successfully deleted the factoid "{purple}%s{green}"!' % name)
         return code.reply('{red}Use "{purple}` del <name>{red}" to delete a factoid.')
     elif cmd.lower() in ['info', 'raw', 'show', 'view']:
         if args:
-            if name in db:
-                return code.msg(input.sender, 'Raw: ' + repr(db[name])[2:-1], colors=False)
+            if name.lower() in db:
+                return code.msg(input.sender, 'Raw: ' + repr(db[name.lower()])[2:-1], colors=False)
             else:
                 return code.say('{red}That factoid does not exist!')
         return code.reply('{red}Use "{purple}` info <name>{red}" to view the factoid in raw form.')
