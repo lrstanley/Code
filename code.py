@@ -71,10 +71,7 @@ def setupServer(server):
             server[key] = value
 
     if server['host'] == 'irc.example.net':
-        error = (
-            'You must edit the config file first!\n'
-            'You\'re currently using %s' % server.filename
-        )
+        error = 'You must edit the config file first!'
         output.error(error)
         sys.exit(1)
     return server
