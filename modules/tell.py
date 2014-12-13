@@ -94,8 +94,10 @@ def tell_trigger(code, input):
     note_nick = '{blue}{b}%s{b}, you have notes!:{c}' % input.nick
     note_more = '{blue}{b}And more notes..{c}{b}'
     tmp_entries = db[input.nick.lower()]
-    for i in range(len(tmp_entries)):
-        entry = db[input.nick.lower()][i]
+
+    for i in range(0, len(tmp_entries)-1):
+        entry = tmp_entries[i]
+
         if 'channel' in entry:
             if entry['channel']:
                 if entry['channel'].lower() != input.sender.lower() and input.sender.startswith('#'):
