@@ -13,7 +13,6 @@ exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 
 def http(method, rdata='all', uri=None, timeout=7, params=None, data=None, headers=None, **kwargs):
-    print repr(kwargs)
     if not method:
         raise 'No method specified'
     if not uri:

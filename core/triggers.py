@@ -20,7 +20,6 @@ def trigger_002(code, origin, line, args, text):
         output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 
 
-
 def trigger_003(code, origin, line, args, text):
     output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
 

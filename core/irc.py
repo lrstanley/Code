@@ -158,9 +158,10 @@ class Bot(asynchat.async_chat):
 
         try:
             if source and origin.nick != self.nick:
-                getattr(triggers, 'trigger_%s' %
-                        args[0])(self, origin, line, args, text,)
+                getattr(triggers, 'trigger_%s' % args[0])(self, origin, line, args, text,)
         except AttributeError:
+            pass
+        except KeyError:
             pass
 
         # Execute this last so we know that out data is parsed first.
