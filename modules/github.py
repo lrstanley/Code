@@ -97,6 +97,7 @@ def github(code, input, message, auto=False):
         output = []
         output.append('%s (%s)' % (response['name'], response['owner']['login']))
         output.append(response['description'])
+
         def is_multiple(number, word):
             if str(number) != '1':
                 word += 's'

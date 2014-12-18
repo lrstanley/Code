@@ -38,10 +38,8 @@ def commands(code, input):
 
 @hook(cmds=['help'], ex='help fml', rate=30)
 def help(code, input):
-    # pretty(code.doc)
     if input.group(2):
         mod = None
-        print repr(input.group(2))
         for module in code.doc:
             # Assume dictionary...
             if input.group(2).lower() in code.doc[module]['commands'] or \
