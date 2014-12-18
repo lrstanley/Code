@@ -25,7 +25,7 @@ def hash(string):
 
 
 def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
+    """ Yield successive n-sized chunks from l. """
     for i in xrange(0, len(l), n):
         yield l[i:i + n]
 
@@ -36,3 +36,10 @@ def split_len(seq, length):
 
 def add_commas(number):
     return "{:,d}".format(number)
+
+
+def remove_spaces(string):
+    """ Remove triple/double and leading/ending spaces """
+    while '  ' in string:
+        string = string.replace('  ', ' ')
+    return string.strip()
