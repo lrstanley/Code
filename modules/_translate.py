@@ -9,7 +9,7 @@ def translate(text, input='auto', output='en'):
         output = output[:-4]
         raw = True
 
-    uri = 'https://translate.google.com/translate_a/t?%s'
+    uri = 'https://translate.google.com/translate_a/t'
     params = {
         'sl': web.quote(input),
         'tl': web.quote(output),
@@ -27,7 +27,7 @@ def translate(text, input='auto', output='en'):
         'otf': '1',
     }
 
-    result = web.get(uri % web.urlencode(params)).read()
+    result = web.text(uri, params=params)
 
     # this is hackish
     # this makes the returned data parsable by the json module
