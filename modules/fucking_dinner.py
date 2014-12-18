@@ -11,11 +11,11 @@ def dinner(code, input):
     """fd -- WHAT DO YOU WANT FOR FUCKING DINNER?"""
     err = '{red}EAT LEFT OVER PIZZA FOR ALL I CARE.'
     try:
-        data = web.get(uri).read()
+        data = web.text(uri)
         results = re_mark.findall(data)
         if not results:
             return code.say(err)
-        url, food = results[0][0], web.htmlescape(results[0][1])
+        url, food = results[0][0], web.escape(results[0][1])
         code.say('WHY DON\'T YOU EAT SOME FUCKING {b}%s{b}. HERE IS THE RECIPE: %s' % (
             food.upper(), url))
     except:

@@ -29,7 +29,7 @@ uri_hash = 'https://mobile.twitter.com/search?q=%s&s=typd'
 
 def get_tweets(url, sender_uid=False):
     try:
-        data = web.get(url).read().replace('\r', '').replace('\n', ' ')
+        data = web.text(url).replace('\r', '').replace('\n', ' ')
         data = re.compile(r'<table class="tweet.*?>.*?</table>').findall(data)
     except:
         return
@@ -39,15 +39,15 @@ def get_tweets(url, sender_uid=False):
             tmp = {}
             tmp['url'] = list(r_tweeturl.findall(tweet)[0])
             tmp['url'] = 'https://twitter.com/%s/status/%s' % (tmp['url'][0], tmp['url'][1])
-            tmp['full'] = web.htmlescape(r_fullname.findall(tweet)[0].strip())
+            tmp['full'] = web.escape(r_fullname.findall(tweet)[0].strip())
             tmp['user'] = r_username.findall(tweet)[0].strip()
-            tmp['time'] = web.striptags(r_time.findall(tweet)[0]).strip()
+            tmp['time'] = web.striptags(r_time.findall(tweet)[0])
             tweet_data = r_tweet.findall(tweet)[0].strip()
             urls = r_url.findall(tweet_data)
             for url in urls:
                 url = list(url)
                 tweet_data = tweet_data.replace(url[1], url[0])
-            tmp['text'] = web.htmlescape(web.striptags(tweet_data).strip())
+            tmp['text'] = web.escape(web.striptags(tweet_data))
             uids = r_uid.findall(' ' + tmp['text'])
             for uid in uids:
                 tmp['text'] = tmp['text'].replace(

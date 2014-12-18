@@ -17,13 +17,12 @@ def get_url_data(url):
     if len(url) < url_min_length:
         return False  # URL is really short. Don't need shortening.
     try:
-        uri = web.get(url)
-        if not uri.info().maintype == 'text':
+        uri = web.get(url, verify=False)
+        if not uri.text:
             return False
-        data = uri.read(1024)  # Only read soo much of a large site.
         title = re.compile('<title>(.*?)</title>',
-                           re.IGNORECASE | re.DOTALL).search(data).group(1)
-        title = web.htmlescape(title)
+                           re.IGNORECASE | re.DOTALL).search(uri.text).group(1)
+        title = web.escape(title)
         title = title.replace('\n', '').replace('\r', '')
 
         # Remove spaces...
@@ -68,8 +67,7 @@ def get_title_auto(code, input):
         # Lets get some data!
         data = get_url_data(url)
         if data:
-            output.append('{blue}{b}%s{b}{c} - %s' %
-                          (web.uncharset(data), url))
+            output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     if not output:
         return
     return code.say(' | '.join(output))

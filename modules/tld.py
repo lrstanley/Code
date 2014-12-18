@@ -10,7 +10,7 @@ r_tag = re.compile(r'<(?!!)[^>]+>')
 @hook(cmds=['tld'], ex='tld net')
 def gettld(code, input):
     """tld <shorthand> -- Show information about the given Top Level Domain."""
-    page = web.get(uri).read()
+    page = web.text(uri)
     search = r'(?i)<td><a href="\S+" title="\S+">\.{0}</a></td>\n(<td><a href=".*</a></td>\n)?<td>([A-Za-z0-9].*?)</td>\n<td>(.*)</td>\n<td[^>]*>(.*?)</td>\n<td[^>]*>(.*?)</td>\n'
     search = search.format(input.group(2))
     re_country = re.compile(search)

@@ -10,4 +10,4 @@ def chuck(code, input):
     except:
         return code.say('Chuck seems to be in the way. I\'m not fucking with him.')
     code.say('#{blue}%s{c} - %s' %
-             (data['value']['id'], web.htmlescape(data['value']['joke'])))
+             (data['value']['id'], web.escape(data['value']['joke'])))

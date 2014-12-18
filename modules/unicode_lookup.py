@@ -1,7 +1,7 @@
 import time
 import difflib
 from util.hook import *
-from util.web import get
+from util import web
 from util import database
 from util import output
 
@@ -41,8 +41,7 @@ def gen_db(botname):
     global uc_names, cp_names, uc
     # http://www.unicode.org/reports/tr44/#UnicodeData.txt
     output.info('Downloading Unicode data')
-    data = get(
-        'http://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt').read()
+    data = web.text('http://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt')
     data = data.split('\n')
     del data[-1]
     # http://www.unicode.org/reports/tr44/#UnicodeData.txt

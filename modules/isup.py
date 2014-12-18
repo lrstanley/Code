@@ -6,7 +6,7 @@ from util.hook import *
 def isup(code, input):
     """isup <url> - Is it down for everyone, or just you?"""
     try:
-        data = web.get('http://isup.me/%s' % input.group(2)).read()
+        data = web.text('http://isup.me/%s' % input.group(2))
         if 'not just you' in data:
             return code.say('{red}%s is down! It\'s not just you!' % input.group(2))
         elif 'It\'s just you.' in data:

@@ -16,14 +16,14 @@ def fml(code, input):
         try:
             r = fml_random()
             code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
-                                                              web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+                                                              web.escape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('{red}Failed to retrieve random FML.')
     elif input.group(2).startswith('#') and input.group(2).lstrip('#').isdigit():
         try:
             r = fml_id_search(input.group(2).lstrip('#'))
             code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
-                                                              web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+                                                              web.escape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('Failed to retrieve FML via ID.')
     # Input/Assume search query, with (possible) number at end indicating FML
@@ -45,7 +45,7 @@ def fml(code, input):
             r = fml_search(query, id)
             code.say(
                 '(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (r['id'], r['max'], str(r['fml-id']),
-                                                                 web.htmlescape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+                                                                 web.escape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
         except:
             return code.say('Failed to search for FML.')
 
@@ -53,9 +53,11 @@ def fml(code, input):
 def fml_random():
     """fml - Retrieve random FML's, via FMyLife.com's dev API."""
     try:
-        r = web.get('http://api.fmylife.com/view/random/1?language=%s&key=%s' % (
-            language, key
-        )).read()
+        args = {
+            "language": language,
+            "key": key
+        }
+        r = web.text('http://api.fmylife.com/view/random/1', params=args)
     except:
         return
     fml = re.compile(r'<text>.*?</text>').findall(r)
@@ -63,10 +65,10 @@ def fml_random():
     agree = re.compile(r'<agree>.*?</agree>').findall(r)
     deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
     return {
-        'fml': web.htmlescape(web.striptags(fml[0]).strip()),
+        'fml': web.escape(web.striptags(fml[0])),
         'fml-id': fmlid[0].replace('<item id="', '', 1).replace('">', '', 1).strip(),
-        '+': web.striptags(agree[0]).strip(),
-        '-': web.striptags(deserved[0]).strip()
+        '+': web.striptags(agree[0]),
+        '-': web.striptags(deserved[0])
     }
 
 
@@ -78,9 +80,12 @@ def fml_search(query, id):  # ID is index of search query
         query = query.replace('.', '+')
         while query.find('++') > -1:
             query = query.replace('++', '+').strip('+')
-        r = web.get(
-            'http://api.fmylife.com/view/search?search=%s&language=%s&key=%s' %
-            (query, language, key)).read()
+        data = {
+            "search": query,
+            "language": language,
+            "key": key
+        }
+        r = web.text('http://api.fmylife.com/view/search', params=data)
     except:
         return
     # find god awful FML
@@ -96,10 +101,10 @@ def fml_search(query, id):  # ID is index of search query
     # It's their fault!
     deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
     return {
-        'fml': web.striptags(fml[id - 1]).strip(),
+        'fml': web.striptags(fml[id - 1]),
         'fml-id': fmlid[id - 1].replace('<item id="', '', 1).replace('">', '', 1).strip(),
-        '+': web.striptags(agree[id - 1]).strip(),
-        '-': web.striptags(deserved[id - 1]).strip(),
+        '+': web.striptags(agree[id - 1]),
+        '-': web.striptags(deserved[id - 1]),
         'id': id,
         'max': count
     }
@@ -108,10 +113,11 @@ def fml_search(query, id):  # ID is index of search query
 def fml_id_search(query_id):
     """fml - Retrieve the FML in accordance with the assigned ID, via FMyLife.com's dev API."""
     try:
-        r = web.get('http://api.fmylife.com/view/%s/nocomment?language=%s&key=%s' % (
-            str(query_id),
-            language, key
-        )).read()
+        args = {
+            "language": language,
+            "key": key
+        }
+        r = web.text('http://api.fmylife.com/view/{}/nocomment'.format(str(query_id)), params=args)
     except:
         return
     fml = re.compile(r'<text>.*?</text>').findall(r)
@@ -119,8 +125,8 @@ def fml_id_search(query_id):
     agree = re.compile(r'<agree>.*?</agree>').findall(r)
     deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
     return {
-        'fml': web.htmlescape(web.striptags(fml[0]).strip()),
-        'fml-id': fmlid[0].replace('<item id="', '', 1).replace('">', '', 1).strip(),
-        '+': web.striptags(agree[0]).strip(),
-        '-': web.striptags(deserved[0]).strip()
+        'fml': web.escape(web.striptags(fml[0])),
+        'fml-id': fmlid[0].replace('<item id="', '', 1).replace('">', '', 1),
+        '+': web.striptags(agree[0]),
+        '-': web.striptags(deserved[0])
     }

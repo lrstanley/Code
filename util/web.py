@@ -2,18 +2,18 @@ import re
 import urllib
 import urllib2
 from lib import requests
-from json import loads
 from htmlentitydefs import name2codepoint
 import HTMLParser
 h = HTMLParser.HTMLParser()
 
 
-paste_url = 'https://paste.ml'
+paste_url = 'http://paste.ml'
 short_ignored = ['bit.ly', 'is.gd', 'goo.gl', 'links.ml']
 exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 
-def http(method, rdata='all', uri=None, timeout=5, params=None, data=None, headers=None):
+def http(method, rdata='all', uri=None, timeout=7, params=None, data=None, headers=None, **kwargs):
+    print repr(kwargs)
     if not method:
         raise 'No method specified'
     if not uri:
@@ -26,9 +26,9 @@ def http(method, rdata='all', uri=None, timeout=5, params=None, data=None, heade
             'Accept-Encoding': 'gzip,deflate,sdch'
         }
     if method == 'get':
-        response = requests.get(uri, timeout=timeout, params=params, headers=headers)
+        response = requests.get(uri, timeout=timeout, params=params, headers=headers, **kwargs)
     elif method == 'post':
-        response = requests.post(uri, timeout=timeout, data=data, headers=headers)
+        response = requests.post(uri, timeout=timeout, data=data, headers=headers, **kwargs)
     else:
         raise 'Method not supported'
 
@@ -43,16 +43,25 @@ def http(method, rdata='all', uri=None, timeout=5, params=None, data=None, heade
     else:
         raise 'Return data not supported'
 
-def post(**kwargs):
-    return http(method='post', rdata='all', **kwargs)
+
+def post(uri, **args):
+    return http(method='post', rdata='all', uri=uri, **args)
 
 
-def get(**kwargs):
-    return http(method='get', rdata='all', **kwargs)
+def get(uri, **args):
+    return http(method='get', rdata='all', uri=uri, **args)
 
 
-def json(**kwargs):
-    return http(method='get', rdata='json', **kwargs)
+def json(uri, **args):
+    return http(method='get', rdata='json', uri=uri, **args)
+
+
+def text(uri, **args):
+    return http(method='get', rdata='text', uri=uri, **args)
+
+
+def headers(uri, **args):
+    return http(method='get', rdata='headers', uri=uri, **args)
 
 
 def quote(string):
@@ -62,14 +71,6 @@ def quote(string):
 def urlencode(data):
     return urllib.urlencode(data)
 
-
-def head(uri):
-    if not uri.startswith('http'):
-        return
-    u = urllib.urlopen(uri)
-    info = u.info()
-    u.close()
-    return info
 
 r_entity = re.compile(r'&([^;\s]+);')
 
@@ -85,12 +86,12 @@ def entity(match):
     return '[' + value + ']'
 
 
-def htmlescape(message):
+def escape(message):
     return h.unescape(message)
 
 
 def striptags(message):
-    return re.compile(r'(?ims)<[^>]+>').sub('', message)
+    return re.compile(r'(?ims)<[^>]+>').sub('', message).strip()
 
 
 def decode(html):
@@ -119,10 +120,8 @@ env = {'__builtins__': None, 'null': None, 'true': True, 'false': False}
 
 
 def haste(text, extension='txt'):
-    uri = urllib2.Request(paste_url + '/documents', text)
-    page = urllib2.urlopen(uri).read()
-    data = loads(page)
-    return '%s/%s.%s' % (paste_url, data['key'], extension)
+    data = post(paste_url + '/documents', data=text).json()
+    return '{uri}/{key}.{ext}'.format(uri=paste_url, key=data['key'], ext=extension)
 
 
 def shorten(url):
@@ -130,8 +129,7 @@ def shorten(url):
         for bad in short_ignored:
             if bad in url.lower():
                 return url
-        postdata = urllib.urlencode({'url': url})
-        data = loads(urllib2.urlopen('http://links.ml/add', postdata).read())
+        data = post('http://links.ml/add', data={'url': url}).json()
         if not data['success']:
             return url
         return data['url']
@@ -146,10 +144,10 @@ def exec_py(data):
             return "Failed to execute code."
         attempts += 1
         try:
-            output = get(exec_uri % quote(data)).read().strip('\n')
-            if len(output) == 0:
+            data = text(exec_uri, params=data).strip('\n')
+            if len(data) == 0:
                 continue
             break
         except:
             continue
-    return output
+    return data

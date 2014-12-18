@@ -1,15 +1,15 @@
-import re
 import hashlib
 from util.hook import *
 from util import web
 
-uri = 'http://api.duckduckgo.com/?q=%s&format=json'
+calc_uri = 'http://api.duckduckgo.com'
+py_uri = 'http://tumbolia.appspot.com/py/'
 
 
 @hook(cmds=['c', 'calc', 'calculate'], ex='calc 5 + 3', args=True)
 def calc(code, input):
     try:
-        data = web.json(uri % web.quote(input.group(2).replace('^', '**')))
+        data = web.json(calc_uri, params={"q": input.group(2).replace('^', '**'), "format": "json"})
         if data['AnswerType'] != 'calc':
             return code.reply('Failed to calculate')
         answer = web.striptags(data['Answer'])
@@ -22,9 +22,8 @@ def calc(code, input):
 def py(code, input):
     """python <commands> -- Execute Python inside of a sandbox"""
     query = input.group(2).encode('utf-8')
-    uri = 'http://tumbolia.appspot.com/py/'
     try:
-        answer = web.get(uri + web.quote(query)).read()
+        answer = web.text(py_uri + web.quote(query))
         if answer:
             answer = answer.replace('\n', ' ').replace(
                 '\t', ' ').replace('\r', '')

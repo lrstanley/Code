@@ -22,8 +22,7 @@ def steam_user_auto(code, input):
 
 def user_lookup(code, id, showerror=True):
     try:
-        data = web.get(
-            'http://steamdb.info/calculator/?player=%s&currency=us' % id, timeout=10).read()
+        data = web.text('http://steamdb.info/calculator/?player=%s&currency=us' % id, timeout=10)
         if 'This profile is private, unable to retrieve owned games.' in data:
             if showerror:
                 code.say(
@@ -41,7 +40,7 @@ def user_lookup(code, id, showerror=True):
         details = re.sub(r'\[.*?\]', '', details)
         details = details.replace(': ', ': {b}')
         url = 'http://steamcommunity.com/id/' + id
-        return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (web.htmlescape(realname), status, details, url))
+        return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (web.escape(realname), status, details, url))
     except:
         if showerror:
             code.say('{b}Unable to find user information on %s!' % id)
@@ -51,8 +50,7 @@ def user_lookup(code, id, showerror=True):
 @hook(rule=appid_re)
 def steam_app_auto(code, input):
     try:
-        data = web.get('http://steamdb.info/app/%s/' %
-                       web.quote(input.group(1)), timeout=10).read()
+        data = web.text('http://steamdb.info/app/%s/' % web.quote(input.group(1)), timeout=10)
         output = []
         output.append(
             re.findall(r'<td>Name</td><td itemprop="name">(.*?)</td>', data)[0])  # Name

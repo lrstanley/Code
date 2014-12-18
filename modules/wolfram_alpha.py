@@ -1,13 +1,14 @@
 from util.hook import *
 from util import web
 
+
 @hook(cmds=['wa'], ex='wa 1 mile in feet', args=True)
 def wa(code, input):
     """Wolfram Alpha search"""
     query = input.group(2)
     uri = 'http://tumbolia.appspot.com/wa/'
     try:
-        answer = web.get(uri + web.quote(query), timeout=10).read()
+        answer = web.text(uri + web.quote(query), timeout=10)
     except:
         return code.say('It seems WolframAlpha took too long to respond!')
 

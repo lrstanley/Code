@@ -46,8 +46,7 @@ def honeypot(code, input):
 
 def check(ip):
     ip = str(ip)
-    data = web.get(base %
-                   web.quote(ip)).read().replace('\n', '').replace('\r', '')
+    data = web.text(base % web.quote(ip)).replace('\n', '').replace('\r', '')
     items = re.compile(r'<div class="contain">.*?<p>(.*?)</p>').findall(data)
     if not items:
         return
