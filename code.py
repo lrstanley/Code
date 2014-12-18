@@ -151,8 +151,9 @@ def connect(id, config):
         except:
             output.error('Error in process (Server: %s, port: %s)' %
                          (config['host'], config['port']))
-            output.error('Terminating and restarting in 20 seconds...')
-            time.sleep(5)
+            delay = config['connect_delay'] if 'connect_delay' in config else 20
+            output.error('Terminating and restarting in {} seconds...'.format(delay))
+            time.sleep(int(delay))
             output.error('Restarting...')
             pass
 
