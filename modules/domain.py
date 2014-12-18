@@ -2,7 +2,7 @@ from util.hook import *
 from util import web
 import re
 
-uri = 'http://domai.nr/api/json/search?q=%s'
+uri = 'http://domai.nr/api/json/search'
 
 
 @hook(cmds=['domain'], ex='domain google.com', priority='low', args=True)
@@ -15,7 +15,7 @@ def domain(code, input):
     if re_m:
         url = re_m.group(1)
     try:
-        data = web.json(uri % url)
+        data = web.json(uri, params={"q": url})
     except:
         return code.say(err)
     if not data['query']:
@@ -38,4 +38,6 @@ def domain(code, input):
         # Add colors to the above twice because some clients auto parse URLs.
         # and... hopefully by adding colorcodes in the middle we can prevent
         # that
+    if not domains:
+        return code.say('No results found.')
     code.say('Domains: %s' % ' | '.join(domains))
