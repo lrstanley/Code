@@ -1,44 +1,58 @@
 import re
 import urllib
 import urllib2
+from lib import requests
 from json import loads
 from htmlentitydefs import name2codepoint
 import HTMLParser
 h = HTMLParser.HTMLParser()
 
 
-paste_url = 'http://paste.ml'
+paste_url = 'https://paste.ml'
 short_ignored = ['bit.ly', 'is.gd', 'goo.gl', 'links.ml']
 exec_uri = 'http://eval.appspot.com/eval?statement=%s'
 
 
-def get(uri, timeout=5):
-    uri = uri.encode("utf-8")
-    req = urllib2.Request(uri, headers={
-        'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.4 (KHTML, '
-        'like Gecko) Chrome/22.0.1229.79 Safari/537.4'})
-    try:
-        u = urllib2.urlopen(req, None, timeout)
-    except urllib2.HTTPError, e:
-        return e.fp
-    except:
-        raise
-    return u
+def http(method, rdata='all', uri=None, timeout=5, params=None, data=None, headers=None):
+    if not method:
+        raise 'No method specified'
+    if not uri:
+        raise 'Invalid URI supplied'
+    if not headers:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.4 (KHTML, '
+                          'like Gecko) Chrome/22.0.1229.79 Safari/537.4',
+            'Cache-Control': 'max-age=0',
+            'Accept-Encoding': 'gzip,deflate,sdch'
+        }
+    if method == 'get':
+        response = requests.get(uri, timeout=timeout, params=params, headers=headers)
+    elif method == 'post':
+        response = requests.post(uri, timeout=timeout, data=data, headers=headers)
+    else:
+        raise 'Method not supported'
+
+    if rdata == 'all':
+        return response
+    elif rdata == 'json':
+        return response.json()
+    elif rdata == 'text':
+        return response.text
+    elif rdata == 'headers':
+        return response.headers
+    else:
+        raise 'Return data not supported'
+
+def post(**kwargs):
+    return http(method='post', rdata='all', **kwargs)
 
 
-def json(uri, timeout=5):
-    try:
-        data = get(uri, timeout).read()
-        if data[0] == '[' and data[-1] == ']':
-            data = '{"json": %s}' % data
-            data = loads(data)['json']
-        else:
-            data = loads(data)
-    except urllib2.HTTPError, e:
-        return e.fp
-    except:
-        raise
-    return data
+def get(**kwargs):
+    return http(method='get', rdata='all', **kwargs)
+
+
+def json(**kwargs):
+    return http(method='get', rdata='json', **kwargs)
 
 
 def quote(string):
@@ -56,16 +70,6 @@ def head(uri):
     info = u.info()
     u.close()
     return info
-
-
-def post(uri, query):
-    if not uri.startswith('http'):
-        return
-    data = urllib.urlencode(query)
-    u = urllib.urlopen(uri, data)
-    bytes = u.read()
-    u.close()
-    return bytes
 
 r_entity = re.compile(r'&([^;\s]+);')
 
