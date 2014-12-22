@@ -28,7 +28,7 @@ Modules
 - Code uses modules for all of its commands and features. These modules can be loaded, unload, completely removed, and dynamically updated to fit the channels needs. Modules can be made easily, and because of the nature of the modules, you can make whatever you want/control the bot easily.
 
 Very user friendly
-- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <commang>`
+- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <command>`
 
 Easy to use API
 - When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/Liamraystanley/Code/wiki) for more information.
