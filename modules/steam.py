@@ -22,17 +22,14 @@ def steam_user_auto(code, input):
 
 def user_lookup(code, id, showerror=True):
     try:
-        data = web.text('http://steamdb.info/calculator/?player=%s&currency=us' % id, timeout=10)
+        data = web.text('http://steamdb.info/calculator/?player={id}&currency=us'.format(id=id), timeout=10)
         if 'This profile is private, unable to retrieve owned games.' in data:
             if showerror:
-                code.say(
-                    '{b}Unabled to retrieve info, that account is {red}private{c}!')
+                code.say('{b}Unabled to retrieve info, that account is {red}private{c}!')
             return
-        realname = re.search(
-            r'<title>.*?</title>', data).group().split('>')[1].split(' \xc2\xb7')[0]
+        realname = re.search(r'<title>(?P<name>.*?) \xb7 .*?</title>', data).group('name')
         status = re.search(
-            r'<td class="span2">Status</td>.*?<td>.*?</td>', data).group()
-        status = web.striptags(status).strip('Status')
+            r'<td class="span2">Status</td>.*?<td>(?P<status>.*?)</td>', data).group('status')
         # Basic user information
         details = data.split('[list]')[1].split('[/list]')[0]
         details = re.sub(r'\<\/.*?\>', '', details)
