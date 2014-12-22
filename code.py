@@ -6,6 +6,7 @@ Docs: https://www.liamstanley.io/Code.git
 """
 
 import sys
+sys.dont_write_bytecode = True
 import os
 import re
 import json
