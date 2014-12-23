@@ -4,7 +4,7 @@ import time
 from util.tools import add_commas
 from util.hook import *
 
-yt_regex = r'.*https?://(www\.)?(youtube\.com|youtu\.be)\/watch.+?v=(.*\w?).*?'
+yt_regex = r'.*https?://(www\.)?(youtube\.com|youtu\.be)\/(watch.+?v=(.*\w?)|([a-zA-Z0-9]{5,13})).*?'
 api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=jsonc&start-index=%s&q=%s'
 
