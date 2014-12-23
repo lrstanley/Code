@@ -37,7 +37,7 @@ def user_lookup(code, id, showerror=True):
         details = re.sub(r'\[.*?\]', '', details)
         details = details.replace(': ', ': {b}')
         url = 'http://steamcommunity.com/id/' + id
-        return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (web.escape(realname), status, details, url))
+        return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (web.escape(realname), web.striptags(status), details, url))
     except:
         if showerror:
             code.say('{b}Unable to find user information on %s!' % id)
@@ -51,16 +51,16 @@ def steam_app_auto(code, input):
         output = []
         output.append(
             re.findall(r'<td>Name</td><td itemprop="name">(.*?)</td>', data)[0])  # Name
+
         # Metacritic Score
         score = re.findall(r'metacritic_score</td><td>(.*?)</td>', data)
         if len(score) < 1:
-            score = '{b}N/A{b}'
+            output.append('Rating: N/A')
         else:
-            score = score[0]
-        output.append('Rating: %s/100' % score)
+            output.append('Rating: %s/100' % score[0])
 
         # Released yet?
-        if '<td class="span3">releasestate</td><td>prerelease</td>' in data:
+        if re.search(r'(?im)<td .*?>releasestate</td><td>prerelease</td>', data):
             output.append('{blue}Prerelease{c}')
 
         # OS List
@@ -76,31 +76,21 @@ def steam_app_auto(code, input):
         # 1. Free, 2. Cost, 3. Cost with discount
         # As well, 1. Not released (May cause issues with rendering the price
         # table) or 2. released
-
-        if 'isfreeapp</td><td>Yes</td>' in data:
-            # We know it's free!
+        if re.search(r'(?im)<td .*?>isfreeapp</td>.*?<td>Yes</td>', data):
             output.append('{green}Free{c}')
-        elif '<table class="table table-prices">' in data:
-            tmp = re.findall(
-                r'<table class="table table-prices">.*?<tbody><tr>(.*?)</tr></tbody>', data)[0]
-            tmp = tmp.replace('<td>', '').split('</td>', 1)[0]
-            # We know it's paid... now check if discounted..
-            if 'price-discount' in tmp:
-                # We know it's discounted
-                initial = tmp.split(
-                    'class="price-initial">', 1)[1].split('</span>', 1)[0]
-                new = tmp.split('</span>', 1)[1].split('<', 1)[0]
-                discount = tmp.split(
-                    '"price-discount">', 1)[1].split('<', 1)[0]
-                output.append('{green}%s{c} (%s, was %s)' %
-                              (new, discount, initial))
-            else:
-                output.append('{green}' + tmp)
+        else:
+            tmp = re.findall(  # e.g. $19.99 at -20%
+                r'<img .*? alt="us".*?> U.S. Dollar</td><td .*?>(?P<price>.*?)</td>' +
+                '<td .*?>Base Price</td><td .*?>(?P<lowest>.*?)</td></tr>', data)[0][0]
+            tmp = re.sub(r'^(?P<price>\$[0-9,.-]{2,6})$', r'{green}\g<price>{c}', tmp)
+            tmp = re.sub(
+                r'(?P<price>\$[0-9,.-]{2,6}) at (?P<discount>\-[0-9.]{1,3}\%)',
+                r'{green}\g<price>{c} ({red}\g<discount>{c})', web.striptags(tmp))
+            output.append(tmp)
 
         output.append('http://store.steampowered.com/app/%s/' %
                       re.findall(r'<td class="span3">App ID</td><td>(.*?)</td>', data)[0])
-        # if else, it's unknown, so ignore it. Likely an issues with release
-        # pricing.
+
         return str(' - {b}'.join(output).replace(': ', ': {b}'))
     except:
         return
