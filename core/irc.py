@@ -339,8 +339,7 @@ class Bot(asynchat.async_chat):
             return self.clear_format(message)
         try:
             for special in self.special_chars:
-                message = message.replace('{%s}' %
-                                          special, self.special_chars[special])
+                message = message.replace('{%s}' % special, self.special_chars[special])
             return message
         except:
             return self.clear_format(message)

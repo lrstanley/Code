@@ -53,21 +53,22 @@ def get_title_auto(code, input):
     for url in urls:
         # check to see if we should ignore this URL...
         if '.' not in url:
-            break
+            continue
         if url.startswith('.') or url.endswith('.'):
-            break
+            continue
         for bad in ignored:
             if bad.lower() in url.lower():
                 skip = True
-                break
+                continue
             else:
                 skip = False
         if skip:
-            break
+            continue
         # Lets get some data!
         data = get_url_data(url)
         if data:
-            output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
+            if not re.search(r'(?i)page not found', data):
+                output.append('{blue}{b}%s{b}{c} - %s' % (data, url))
     if not output:
         return
     return code.say(' | '.join(output))
