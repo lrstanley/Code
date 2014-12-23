@@ -16,7 +16,7 @@ def reload_all_modules(code):
 
 
 def reload_module(code, name):
-    name = name.strip('.py')
+    name = name.replace('.py', '')
     if name not in sys.modules:
         return 1
     path = sys.modules[name].__file__
