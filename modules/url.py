@@ -7,7 +7,7 @@ title_min_length = 3
 url_min_length = 5
 ignored = [
     'git.io', 'youtube.', 'youtu.be', 'soundcloud.com', 'imdb.com',
-    'ci.liamstanley.io', 'zerobin.net', 'newegg.com', 'steamcommunity.com',
+    'zerobin.net', 'newegg.com', 'steamcommunity.com', 'speedtest.net',
     'steampowered.com', 'steamdb.info', 'links.ml', 'twitter.com',
     'github.com'
 ]
@@ -41,7 +41,7 @@ def get_url_data(url):
         return False
 
 
-@hook(rule='(?i).*%s.*' % url_re, priority='high')
+@hook(rule=r'(?i).*%s.*' % url_re, priority='high')
 def get_title_auto(code, input):
     if input.startswith(code.prefix) or input.startswith('?'):
         return  # Prevent triggering of other plugins

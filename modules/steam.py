@@ -44,53 +44,50 @@ def user_lookup(code, id, showerror=True):
         return
 
 
-@hook(rule=appid_re)
+@hook(rule=appid_re, supress=True)
 def steam_app_auto(code, input):
-    try:
-        data = web.text('http://steamdb.info/app/%s/' % web.quote(input.group(1)), timeout=10)
-        output = []
-        output.append(
-            re.findall(r'<td>Name</td><td itemprop="name">(.*?)</td>', data)[0])  # Name
+    data = web.text('http://steamdb.info/app/%s/' % web.quote(input.group(1)), timeout=10)
+    output = []
+    output.append(
+        re.findall(r'<td>Name</td><td itemprop="name">(.*?)</td>', data)[0])  # Name
 
-        # Metacritic Score
-        score = re.findall(r'metacritic_score</td><td>(.*?)</td>', data)
-        if len(score) < 1:
-            output.append('Rating: N/A')
-        else:
-            output.append('Rating: %s/100' % score[0])
+    # Metacritic Score
+    score = re.findall(r'metacritic_score</td><td>(.*?)</td>', data)
+    if len(score) < 1:
+        output.append('Rating: N/A')
+    else:
+        output.append('Rating: %s/100' % score[0])
 
-        # Released yet?
-        if re.search(r'(?im)<td .*?>releasestate</td><td>prerelease</td>', data):
-            output.append('{blue}Prerelease{c}')
+    # Released yet?
+    if re.search(r'(?im)<td .*?>releasestate</td><td>prerelease</td>', data):
+        output.append('{blue}Prerelease{c}')
 
-        # OS List
-        if '<td class="span3">oslist</td>' in data:
-            tmp = re.findall(
-                r'<tr><td class="span3">oslist</td><td>(.*?)</td></tr>', data)[0]
-            tmp = re.findall(r'title="(.*?)"', tmp)
-            output.append('OS: ' + ', '.join(tmp))
-        else:
-            output.append('OS: N/A')
+    # OS List
+    if '<td class="span3">oslist</td>' in data:
+        tmp = re.findall(
+            r'<tr><td class="span3">oslist</td><td>(.*?)</td></tr>', data)[0]
+        tmp = re.findall(r'title="(.*?)"', tmp)
+        output.append('OS: ' + ', '.join(tmp))
+    else:
+        output.append('OS: N/A')
 
-        # With pricing, there are a few options...
-        # 1. Free, 2. Cost, 3. Cost with discount
-        # As well, 1. Not released (May cause issues with rendering the price
-        # table) or 2. released
-        if re.search(r'(?im)<td .*?>isfreeapp</td>.*?<td>Yes</td>', data):
-            output.append('{green}Free{c}')
-        else:
-            tmp = re.findall(  # e.g. $19.99 at -20%
-                r'<img .*? alt="us".*?> U.S. Dollar</td><td .*?>(?P<price>.*?)</td>' +
-                '<td .*?>Base Price</td><td .*?>(?P<lowest>.*?)</td></tr>', data)[0][0]
-            tmp = re.sub(r'^(?P<price>\$[0-9,.-]{2,6})$', r'{green}\g<price>{c}', tmp)
-            tmp = re.sub(
-                r'(?P<price>\$[0-9,.-]{2,6}) at (?P<discount>\-[0-9.]{1,3}\%)',
-                r'{green}\g<price>{c} ({red}\g<discount>{c})', web.striptags(tmp))
-            output.append(tmp)
+    # With pricing, there are a few options...
+    # 1. Free, 2. Cost, 3. Cost with discount
+    # As well, 1. Not released (May cause issues with rendering the price
+    # table) or 2. released
+    if re.search(r'(?im)<td .*?>isfreeapp</td>.*?<td>Yes</td>', data):
+        output.append('{green}Free{c}')
+    else:
+        tmp = re.findall(  # e.g. $19.99 at -20%
+            r'<img .*? alt="us".*?> U.S. Dollar</td><td .*?>(?P<price>.*?)</td>' +
+            '<td .*?>Base Price</td><td .*?>(?P<lowest>.*?)</td></tr>', data)[0][0]
+        tmp = re.sub(r'^(?P<price>\$[0-9,.-]{2,6})$', r'{green}\g<price>{c}', tmp)
+        tmp = re.sub(
+            r'(?P<price>\$[0-9,.-]{2,6}) at (?P<discount>\-[0-9.]{1,3}\%)',
+            r'{green}\g<price>{c} ({red}\g<discount>{c})', web.striptags(tmp))
+        output.append(tmp)
 
-        output.append('http://store.steampowered.com/app/%s/' %
-                      re.findall(r'<td class="span3">App ID</td><td>(.*?)</td>', data)[0])
+    output.append('http://store.steampowered.com/app/%s/' %
+                  re.findall(r'<td class="span3">App ID</td><td>(.*?)</td>', data)[0])
 
-        return str(' - {b}'.join(output).replace(': ', ': {b}'))
-    except:
-        return
+    return str(' - {b}'.join(output).replace(': ', ': {b}'))

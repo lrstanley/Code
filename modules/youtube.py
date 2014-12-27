@@ -9,23 +9,20 @@ api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=jsonc&start-index=%s&q=%s'
 
 
-@hook(rule=yt_regex, thread=False)
+@hook(rule=yt_regex, thread=False, supress=True)
 def youtube(code, input):
     """Automatically find the information from a youtube url and display it
        to users in a channel"""
-    try:
-        id = list(re.findall(yt_regex, str(input.group())))
-        if not id:
-            return
-        id = id[0][2].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
-        data = web.json(api_url % id)['data']
-
-        # Set some variables, because we'll have to modify a vew before we spit
-        # them back out!
-        reply = create_response(data, url=False)
-        return code.say(' - '.join(reply))
-    except:
+    id = list(re.findall(yt_regex, str(input.group())))
+    if not id:
         return
+    id = id[0][2].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
+    data = web.json(api_url % id)['data']
+
+    # Set some variables, because we'll have to modify a vew before we spit
+    # them back out!
+    reply = create_response(data, url=False)
+    return code.say(' - '.join(reply))
 
 
 @hook(cmds=['youtube', 'yt', 'video'], ex='yt PewDiePie 7', rate=10, args=True)
