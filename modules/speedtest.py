@@ -15,8 +15,8 @@ def speedtest(code, input):
     raw = web.clean(web.text(uri % id))
     raw = raw.split('<div class="share-main">', 1)[1]
     raw = raw.split('</div><!--/share-main-->', 1)[0]
-    results = web.findin(r'<p>.*?</p>', raw)[:-1]
-    keys = ['Download', 'Upload', 'Ping', 'Carrier', 'Server']
+    results = web.findin(r'<p>.*?</p>', raw)
+    keys = ['Download', 'Upload', 'Ping', 'Device', 'ISP', 'Server']
     tmp = []
 
     for i in range(0, len(results)-1):
