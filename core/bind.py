@@ -1,4 +1,5 @@
 import re
+from util import output
 
 
 def bind_commands(code):
@@ -57,7 +58,11 @@ def bind_commands(code):
         if hasattr(func, 'rule'):
             if isinstance(func.rule, str):
                 pattern = sub(func.rule)
-                regexp = re.compile(pattern)
+                try:
+                    regexp = re.compile(pattern)
+                except Exception as e:
+                    # assume its defunct regex, throw error.. but continue
+                    output.error('Error in %s: %s' % (name, str(e)))
                 bind(code, func.priority, regexp, func)
 
             if isinstance(func.rule, tuple):
