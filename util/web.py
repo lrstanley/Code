@@ -9,7 +9,7 @@ h = HTMLParser.HTMLParser()
 
 paste_url = 'http://paste.ml'
 short_ignored = ['bit.ly', 'is.gd', 'goo.gl', 'links.ml']
-exec_uri = 'http://eval.appspot.com/eval?statement=%s'
+exec_uri = 'http://eval.appspot.com/eval'
 
 
 def http(method, rdata='all', uri=None, timeout=7, params=None, data=None, headers=None, **kwargs):
@@ -143,7 +143,7 @@ def exec_py(data):
             return "Failed to execute code."
         attempts += 1
         try:
-            data = text(exec_uri, params=data).strip('\n')
+            data = text(exec_uri, params={"statement": data}).strip('\n')
             if len(data) == 0:
                 continue
             break
