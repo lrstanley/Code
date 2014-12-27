@@ -182,10 +182,12 @@ class Bot(asynchat.async_chat):
     def dispatch(self, origin, args):
         pass
 
-    def error(self, origin):
+    def error(self, origin, supress=False):
         try:
             trace = traceback.format_exc()
             output.error(trace)
+            if supress:
+                return
             lines = list(reversed(trace.splitlines()))
             report = [lines[0].strip()]
             for line in lines:
@@ -196,7 +198,7 @@ class Bot(asynchat.async_chat):
             else:
                 report.append('{red}Source unknown.{c}')
 
-            self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
+            self.msg(origin.sender, '{red}%s{c} ({b}%s{b})' % (report[0], report[1]))
         except:
             self.msg(origin.sender, '{red}Got an error.')
 

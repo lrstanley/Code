@@ -3,6 +3,7 @@ import urllib
 import urllib2
 from lib import requests
 from htmlentitydefs import name2codepoint
+from util.tools import remove_spaces
 import HTMLParser
 h = HTMLParser.HTMLParser()
 
@@ -74,6 +75,13 @@ def urlencode(data):
 r_entity = re.compile(r'&([^;\s]+);')
 
 
+def findin(regex, string, least=1):
+    tmp = list(re.findall('(?m)' + regex, string))
+    if len(tmp) < 1:
+        raise Exception('No results found')
+    return tmp
+
+
 def entity(match):
     value = match.group(1).lower()
     if value.startswith('#x'):
@@ -85,12 +93,17 @@ def entity(match):
     return '[' + value + ']'
 
 
-def escape(message):
-    return h.unescape(message)
+def escape(string):
+    return h.unescape(string)
 
 
-def striptags(message):
-    return re.compile(r'(?ims)<[^>]+>').sub('', message).strip()
+def striptags(string):
+    return re.compile(r'(?ims)<[^>]+>').sub('', string).strip()
+
+
+def clean(string):
+    string = string.replace('\r', '').replace('\n', '')
+    return remove_spaces(escape(string)).strip()
 
 
 def decode(html):
@@ -118,8 +131,8 @@ r_json = re.compile(r'^[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]+$')
 env = {'__builtins__': None, 'null': None, 'true': True, 'false': False}
 
 
-def haste(text, extension='txt'):
-    data = post(paste_url + '/documents', data=text).json()
+def haste(string, extension='txt'):
+    data = post(paste_url + '/documents', data=string).json()
     return '{uri}/{key}.{ext}'.format(uri=paste_url, key=data['key'], ext=extension)
 
 

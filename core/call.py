@@ -65,4 +65,7 @@ def call(self, func, origin, code, input):
         if isinstance(func_return, str) or isinstance(func_return, unicode):
             code.say(func_return)
     except:
-        self.error(origin)
+        if not func.supress:
+            self.error(origin)
+        else:
+            self.error(origin, supress=True)

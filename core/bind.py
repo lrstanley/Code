@@ -37,6 +37,9 @@ def bind_commands(code):
         if not hasattr(func, 'priority'):
             func.priority = 'medium'
 
+        if not hasattr(func, 'supress'):
+            func.supress = False
+
         if not hasattr(func, 'thread'):
             func.thread = True
 
