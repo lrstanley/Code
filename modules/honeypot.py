@@ -12,7 +12,7 @@ db = []
 @hook(rule=r'.*', event='JOIN', rate=10)
 def auto_honeypot(code, input):
     """Check joining users against the Project Honeypot Database"""
-    if not code.config('honeypot_on_join'):
+    if not code.config('honeypot_on_join') or input.nick == code.nick:
         return
     global db
 
@@ -73,6 +73,8 @@ def check(ip):
     if 'the IP address' in item:
         item = item.replace('the IP address', '{red}%s{c}' % ip)
 
+    if 'Double check your URL to make sure this error' in item:
+        return
     return '{b}%s{b}' % item.strip()
 
 
