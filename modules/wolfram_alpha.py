@@ -4,11 +4,11 @@ from util import web
 
 @hook(cmds=['wa'], ex='wa 1 mile in feet', args=True)
 def wa(code, input):
-    """Wolfram Alpha search"""
+    """Wolfram Alpha search - It's slow. """
     query = input.group(2)
     uri = 'http://tumbolia.appspot.com/wa/'
     try:
-        answer = web.text(uri + web.quote(query), timeout=10)
+        answer = web.text(uri + web.quote(query), timeout=14)
     except:
         return code.say('It seems WolframAlpha took too long to respond!')
 
@@ -19,6 +19,6 @@ def wa(code, input):
         answer = '{purple}{b}WolframAlpha: {c}{b}' + ' - '.join(answer).replace('\\', '').replace('->', ': ')
         while '  ' in answer:
             answer = answer.replace('  ', ' ')
-        return code.say(web.htmlescape(answer))
+        return code.say(web.escape(answer))
     else:
         return code.reply('{red}Sorry, no result.')
