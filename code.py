@@ -12,6 +12,7 @@ import re
 import json
 import optparse
 import time
+import traceback
 from multiprocessing import Process
 from core import bot
 from util import output
@@ -150,8 +151,8 @@ def connect(id, config):
             # console
             bot.Code(config).run(id, config['host'], config['port'])
         except:
-            output.error('Error in process (Server: %s, port: %s)' %
-                         (config['host'], config['port']))
+            output.error('Error in process (Server: %s, port: %s)' % (config['host'], config['port']))
+            output.error(traceback.format_exc())
             delay = config['connect_delay'] if 'connect_delay' in config else 20
             output.error('Terminating and restarting in {} seconds...'.format(delay))
             time.sleep(int(delay))
