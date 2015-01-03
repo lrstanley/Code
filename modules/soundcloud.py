@@ -6,7 +6,7 @@ client = '97c32b1cc8e9875be21f502bde81aaeb'
 uri = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s/%s&client_id=%s'
 
 
-@hook(rule=r'.*http[s]?://(?:www.soundcloud.com|soundcloud.com)/([-_a-zA-Z0-9]+)/([-_a-zA-Z0-9]+)(?:/)?.*')
+@hook(rule=r'.*://(?:www.soundcloud.com|soundcloud.com)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)(?:/)?.*')
 def soundcloud(code, input):
     """Automatically find the information from a soundcloud url and display it
        to users in a channel"""

@@ -75,7 +75,7 @@ def tell(code, input):
     code.reply('{b}I\'ll let them know when I see them.')
 
 
-@hook(rule=r'(.*)', priority='low')
+@hook(rule=r'.*', priority='low')
 def tell_trigger(code, input):
     """Dispatch notes to users if their name was found in the database"""
     #if not input.sender.startswith('#'):

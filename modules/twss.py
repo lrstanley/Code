@@ -30,10 +30,10 @@ def setup(code):
         enabled = True
 
 
-@hook(rule=r'(.*)', priority='low')
+@hook(rule=r'.*', priority='low')
 def twss(code, input):
     if not enabled:
         return
     # Check if what they said is in the database
-    if re.sub('[^\w\s]', '', input.group(1).lower()) in db:
+    if re.sub('[^\w\s]', '', input.group().lower()) in db:
         return code.say('That\'s what she said.')

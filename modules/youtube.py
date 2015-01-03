@@ -1,10 +1,9 @@
-import re
 from util import web
 import time
 from util.tools import add_commas
 from util.hook import *
 
-yt_regex = r'.*https?://(www\.)?(youtube\.com|youtu\.be)\/(watch.+?v=(.*\w?)|([a-zA-Z0-9]{5,13})).*?'
+yt_regex = r'.*://(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch.+?v=)?([a-zA-Z0-9_-]{5,15}).*'
 api_url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=jsonc'
 search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=jsonc&start-index=%s&q=%s'
 
@@ -13,10 +12,10 @@ search_url = 'http://gdata.youtube.com/feeds/api/videos?max-results=1&v=2&alt=js
 def youtube(code, input):
     """Automatically find the information from a youtube url and display it
        to users in a channel"""
-    id = list(re.findall(yt_regex, str(input.group())))
+    id = input.group(1)
     if not id:
         return
-    id = id[0][2].split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
+    id = id.split('&', 1)[0].split(' ', 1)[0].split('#', 1)[0]
     data = web.json(api_url % id)['data']
 
     # Set some variables, because we'll have to modify a vew before we spit

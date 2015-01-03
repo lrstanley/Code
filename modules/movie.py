@@ -4,7 +4,6 @@ from util.hook import *
 search_uri = 'http://www.omdbapi.com/?t=%s'
 id_uri = 'http://www.omdbapi.com/?i=%s'
 error = 'Unable to search for that movie!'
-movie_regex = r'https?://.*?imdb\.com\/title\/'
 
 
 @hook(cmds=['movie', 'imdb'], ex='movie Transformers', args=True)
@@ -32,7 +31,7 @@ def movie_search(code, input):
         return code.reply(error)
 
 
-@hook(rule=movie_regex)
+@hook(rule=r'.*://.*?imdb\.com/title/.*')
 def movie(code, input):
     """Automatically find the information from a imdb url and display it
        to users in a channel"""
