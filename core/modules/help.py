@@ -89,3 +89,8 @@ def issue(code, input):
     code.reply('Having an issue with {b}' +
                code.nick + '{b}? Post a bug report here:')
     code.say('https://github.com/Liamraystanley/Code/issues/new')
+
+
+@hook(rule=r'$nickname!', priority='high', thread=False)
+def interjection(code, input):
+    code.say(input.nick + '!')
