@@ -36,7 +36,8 @@ def user_lookup(code, id, showerror=True):
         details = re.sub(r'\<.*?\>', ' {b}- ', details)
         details = re.sub(r'\[.*?\]', '', details)
         details = details.replace(': ', ': {b}')
-        url = 'http://steamcommunity.com/id/' + id
+        form = 'profiles' if str(id).isdigit() else 'id'
+        url = 'http://steamcommunity.com/{}/'.format(form) + id
         return code.say('{b}%s{b} - {green}%s{c} - %s - %s' % (web.escape(realname), web.striptags(status), details, url))
     except:
         if showerror:
