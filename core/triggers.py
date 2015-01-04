@@ -1,30 +1,60 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-triggers.py - Code IRC Raw Trigger Module
-https://www.liamstanley.io/Code.git
-"""
-
 from util import output
 import time
 import os
 
 
 def trigger_001(code, origin, line, args, text):
+    """
+        ID:         RPL_WELCOME
+        Decription: The first message sent after client registration. The text used varies widely.
+        Format:     Welcome to the Internet Relay Network <nick>!<user>@<host>
+    """
+
     if not code.debug:
-        output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+        output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
 
 
 def trigger_002(code, origin, line, args, text):
+    """
+        ID:         RPL_YOURHOST
+        Decription: Part of the post-registration greeting. Text varies.
+                    widely
+        Format:     Your host is <servername>, running version <version>
+    """
+
     if not code.debug:
-        output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+        output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
 
 
 def trigger_003(code, origin, line, args, text):
-    output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+    """
+        ID:         RPL_CREATED
+        Decription: Part of the post-registration greeting. Text varies widely.
+        Format:     This server was created <date>
+    """
+
+    output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
+
+
+def trigger_004(code, origin, line, args, text):
+    """
+        ID:         RPL_MYINFO
+        Decription: Part of the post-registration greeting. Text varies widely.
+        Format:     <server_name> <version> <user_modes> <chan_modes>
+    """
+
+    code.server_options['SERVERNAME'] = args[2]
+    code.server_options['VERSION'] = args[3]
+    code.server_options['UMODES'] = args[4]
+    code.server_options['CMODES'] = args[5]
 
 
 def trigger_005(code, origin, line, args, text):
+    """
+        ID:         RPL_ISUPPORT
+        Decription: Also known as RPL_PROTOCTL (Bahamut, Unreal, Ultimate).
+    """
+
     tmp = args[2:-1]
     for item in tmp:
         if not '=' in item:
@@ -35,24 +65,52 @@ def trigger_005(code, origin, line, args, text):
 
 
 def trigger_250(code, origin, line, args, text):
+    """
+        ID: RPL_STATSCONN
+    """
+
     if not code.debug:
-        output.normal('({}) {}'.format(origin.nick, origin.text), 'NOTICE')
+        output.normal('({}) {}'.format(origin.nick, text), 'NOTICE')
 
 
 def trigger_251(code, origin, line, args, text):
+    """
+        ID:         RPL_LUSERCLIENT
+        Decription: Reply to LUSERS command, other versions exist (eg. RFC2812); Text may vary.
+        Format:     There are <int> users and <int> invisible on <int> servers
+    """
+
     return trigger_250(code, origin, line, args, text)
 
 
 def trigger_255(code, origin, line, args, text):
+    """
+        ID:         RPL_LUSERME
+        Decription: Reply to LUSERS command - Information about local connections; Text may vary.
+        Format:     I have <int> clients and <int> servers
+    """
+
     return trigger_250(code, origin, line, args, text)
 
 
 def trigger_352(code, origin, line, args, text):
+    """
+        ID:         RPL_WHOREPLY
+        Decription: Reply to vanilla WHO (See RFC). This format can be very different if the 'WHOX'
+                    version of the command is used (see ircu).
+        Format:     <channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real_name>
+    """
+
     return trigger_354(code, origin, line, args, text, is_352=True)
 
 
 def trigger_353(code, origin, line, args, text):
-    # NAMES event
+    """
+        ID:         RPL_NAMREPLY
+        Decription: Reply to NAMES (See RFC)
+        Format:     ( '=' / '*' / '@' ) <channel> ' ' : [ '@' / '+' ] <nick> *( ' ' [ '@' / '+' ] <nick> )
+    """
+
     channel, user_list = args[3], args[4]
     channel, user_list = '#' + \
         channel.split('#', 1)[1].strip(), user_list.strip().split()
@@ -68,11 +126,18 @@ def trigger_353(code, origin, line, args, text):
             name, normal, voiced, op = user[1::], True, True, False
         else:
             name, normal, voiced, op = user, True, False, False
-        code.chan[channel][name] = {'normal': normal, 'voiced':
-                                    voiced, 'op': op, 'count': 0, 'messages': []}
+        code.chan[channel][name] = {'normal': normal, 'voiced': voiced, 'op': op, 'count': 0, 'messages': []}
 
 
 def trigger_354(code, origin, line, args, text, is_352=False):
+    """
+        ID:         RPL_WHOSPCRPL
+        Decription: Reply to WHO, however it is a 'special' reply because it is returned using a
+                    non-standard (non-RFC1459) format. The format is dictated by the command given
+                    by the user, and can vary widely. When this is used, the WHO command was invoked
+                    in its 'extended' form, as announced by the 'WHOX' ISUPPORT tag.
+    """
+
     if not is_352:
         if len(args) != 7:
             return  # Probably error
@@ -88,6 +153,12 @@ def trigger_354(code, origin, line, args, text, is_352=False):
 
 
 def trigger_433(code, origin, line, args, text):
+    """
+        ID:         ERR_NICKNAMEINUSE
+        Decription: Returned by the NICK command when the given nickname is already in use
+        Format:     <nick> :<reason>
+    """
+
     if not code.debug:
         output.warning('Nickname {} is already in use. Trying another..'.format(code.nick))
     nick = code.nick + '_'
@@ -96,12 +167,34 @@ def trigger_433(code, origin, line, args, text):
 
 
 def trigger_437(code, origin, line, args, text):
+    """
+        ID:         ERR_UNAVAILRESOURCE
+        Decription: Return when the target is unable to be reached temporarily, eg. a delay
+                    mechanism in play, or a service being offline
+        Format:     <nick/channel/service> :<reason>
+    """
+
     if not code.debug:
         output.error(text)
     os._exit(1)
 
 
 def trigger_NICK(code, origin, line, args, text):
+    """
+        ID:         NICK
+        Decription: NICK message is used to give user a nickname or change the previous
+                    one. The <hopcount> parameter is only used by servers to indicate
+                    how far away a nick is from its home server. A local connection has
+                    a hopcount of 0. If supplied by a client, it must be ignored.
+
+        Format:     <nickname> [ <hopcount> ]
+        Numeric Replies:
+           - ERR_NONICKNAMEGIVEN
+           - ERR_ERRONEUSNICKNAME
+           - ERR_NICKNAMEINUSE
+           - ERR_NICKCOLLISION
+    """
+
     if not code.debug:
         output.normal('{} is now known as {}'.format(origin.nick, args[1]), 'NICK')
 
@@ -123,6 +216,23 @@ def trigger_NICK(code, origin, line, args, text):
 
 
 def trigger_PRIVMSG(code, origin, line, args, text):
+    """
+        ID:         PRIVMSG
+        Decription: PRIVMSG is used to send private messages between users. <receiver>
+                    is the nickname of the receiver of the message. <receiver> can also
+                    be a list of names or channels separated with commas.
+        Format:     <receiver>{,<receiver>} :<text to be sent>
+        Numeric Replies:
+           - ERR_NORECIPIENT
+           - ERR_NOTEXTTOSEND
+           - ERR_CANNOTSENDTOCHAN
+           - ERR_NOTOPLEVEL
+           - ERR_WILDTOPLEVEL
+           - ERR_TOOMANYTARGETS
+           - ERR_NOSUCHNICK
+           - RPL_AWAY
+    """
+
     text = code.stripcolors(text)
     if text.startswith('\x01ACTION'):
         text = '(me) ' + text.split(' ', 1)[1].strip('\x01')
@@ -157,6 +267,16 @@ def trigger_PRIVMSG(code, origin, line, args, text):
 
 
 def trigger_NOTICE(code, origin, line, args, text):
+    """
+        ID:         NOTICE
+        Decription: The NOTICE message is used similarly to PRIVMSG. The difference
+                    between NOTICE and PRIVMSG is that automatic replies must never be
+                    sent in response to a NOTICE message. This rule applies to servers
+                    too - they must not send any error reply back to the client on
+                    receipt of a notice.
+        Format:     <nickname> <text>
+    """
+
     if 'Invalid password for ' in text:
         if not code.debug:
             output.error('Invalid NickServ password')
@@ -177,12 +297,32 @@ def trigger_NOTICE(code, origin, line, args, text):
 
 
 def trigger_KICK(code, origin, line, args, text):
+    """
+        ID:         KICK
+        Decription: The KICK command can be used to forcibly remove a user from a
+                    channel. It 'kicks them out' of the channel (forced PART).
+        Format:     <channel> <user> [<comment>]
+    """
+
     output.normal('{} has kicked {} from {}. Reason: {}'.format(
         origin.nick, args[2], args[1], args[3]), 'KICK', 'red')
     del code.chan[args[1]][args[2]]
 
 
 def trigger_MODE(code, origin, line, args, text):
+    """
+        ID:         MODE
+        Decription: The MODE command is a dual-purpose command in IRC. It allows both
+                    usernames and channels to have their mode changed. The rationale for
+                    this choice is that one day nicknames will be obsolete and the
+                    equivalent property will be the channel.
+
+                    When parsing MODE messages, it is recommended that the entire message
+                    be parsed first and then the changes which resulted then passed on.
+        Format:     <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
+                    <nickname> {[+|-]|i|w|s|o}
+    """
+
     if len(args) == 3:
         if not code.debug:
             output.normal('{} sets MODE {}'.format(origin.nick, text), 'MODE')
@@ -247,6 +387,17 @@ def trigger_MODE(code, origin, line, args, text):
 
 
 def trigger_JOIN(code, origin, line, args, text):
+    """
+        ID:         JOIN
+        Decription: The JOIN command is used by client to start listening a specific
+                    channel. Whether or not a client is allowed to join a channel is
+                    checked only by the server the client is connected to; all other
+                    servers automatically add the user to the channel when it is received
+                    from other servers.  The conditions which affect this are as follows:
+                        1.  the user must be invited if the channel is invite-only;
+        Format:     <channel>{,<channel>} [<key>{,<key>}]
+    """
+
     if origin.nick != code.nick:
         code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
                                            False, 'op': False, 'count': 0, 'messages': []}
@@ -263,6 +414,18 @@ def trigger_JOIN(code, origin, line, args, text):
 
 
 def trigger_PART(code, origin, line, args, text):
+    """
+        ID:         PART
+        Decription: The PART message causes the client sending the message to be removed
+                    from the list of active users for all given channels listed in the
+                    parameter string.
+        Format:     <channel>{,<channel>}
+        Numeric Replies:
+           - ERR_NEEDMOREPARAMS
+           - ERR_NOSUCHCHANNEL
+           - ERR_NOTONCHANNEL
+    """
+
     if origin.nick == code.nick:
         del code.chan[args[1]]
         del code.logs['channel'][args[1]]
@@ -284,11 +447,30 @@ def trigger_PART(code, origin, line, args, text):
 
 
 def trigger_write_PART(code, args, text, raw):
+    """
+        ID:         PART
+        Decription: Triggered when the bot write a PART, so that we can unhook
+                    database from that channel.
+    """
+
     del code.chan[args[1]]
     del code.logs['channel'][args[1]]
 
 
 def trigger_QUIT(code, origin, line, args, text):
+    """
+        ID:         QUIT
+        Decription: A client session is ended with a quit message. The server must close
+                    the connection to a client which sends a QUIT message. If a "Quit
+                    Message" is given, this will be sent instead of the default message,
+                    the nickname. When netsplits (disconnecting of two servers) occur, the quit message
+                    is composed of the names of two servers involved, separated by a
+                    space. The first name is that of the server which is still connected
+                    and the second name is that of the server that has become
+                    disconnected.
+        Format:     [<Quit message>]
+    """
+
     for channel in code.chan:
         if origin.nick in channel:
             del code.chan[channel][origin.nick]

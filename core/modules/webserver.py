@@ -39,6 +39,7 @@ class WebServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         init_time = float(time.time())
+
         def readfile(fn):
             if not os.path.isfile('webserver/%s' % fn):
                 return False

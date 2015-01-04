@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-irc.py - Code A Utility IRC Bot
-https://www.liamstanley.io/Code.git
-"""
-
 import re
 import time
 import traceback

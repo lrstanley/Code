@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-"""
-Code Copyright (C) 2012-2014 Liam Stanley
-bot.py - Code IRC Bot
-https://www.liamstanley.io/Code.git
-"""
-
-
 import sys
 sys.path += ['lib']
 import time
