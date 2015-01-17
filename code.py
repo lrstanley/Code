@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 """
-Code Copyright (C) 2012-2014 Liam Stanley
+Code Copyright (C) 2012-2015 Liam Stanley
 Source: https://github.com/Liamraystanley/Code
 Docs: https://www.liamstanley.io/Code.git
 """
