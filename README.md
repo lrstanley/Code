@@ -75,7 +75,7 @@ Licensing
 ---------
 _________
 
-Code Copyright (C) 2012-2014 Liam Stanley
+Code Copyright (C) 2012-2015 Liam Stanley
     `Eiffel Forum License, version 2`
     
     1. Permission is hereby granted to use, copy, modify and/or
