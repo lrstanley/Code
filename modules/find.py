@@ -14,6 +14,9 @@ def findandreplace(code, input):
         flags = flags.strip()
     else:
         flags = ""
+    
+    if len(target) == 0:
+        return code.say('{red}Nothing to replace!')
 
     # Replace unlimited times if /g flag, else once
     count = 'g' in flags and -1 or 1
