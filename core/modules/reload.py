@@ -52,7 +52,7 @@ def unload_module(code, input):
     for module in tmp:
         if module.endswith('.pyc'):
             continue
-        module = module.strip('.py')
+        module = module.replace('.py', '')
         modules.append(module)
     if name not in modules:
         return code.say('That module doesn\'t exist!')
@@ -72,14 +72,14 @@ def unload_module(code, input):
 def load_module(code, input):
     name = input.group(2)
     home = os.getcwd()
-    name = name.strip('.py')
+    name = name.replace('.py', '')
     # Get all files in modules directory
     tmp = os.listdir(os.path.join(home, 'modules'))
     modules = []
     for module in tmp:
         if module.endswith('.pyc'):
             continue
-        module = module.strip('.py')
+        module = module.replace('.py', '')
         modules.append(module)
     if name not in modules:
         return code.say('{b}That module doesn\'t exist!')
