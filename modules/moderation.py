@@ -38,37 +38,29 @@ def hostmask(mask):
 @hook(cmds=['op'], trusted=True, ischannel=True, selfopped=True)
 def op(code, input):
     """ op <user> - Op users in a room. If no nick is given, input user is selected. """
-    if input.group(2):
-        code.write(['MODE', input.sender, "+o", input.group(2)])
-    else:
-        code.write(['MODE', input.sender, "+o", code.nick])
+    nick = input.group(2) if input.group(2) else input.nick
+    code.write(['MODE', input.sender, "+o", nick])
 
 
 @hook(cmds=['deop'], trusted=True, ischannel=True, selfopped=True)
 def deop(code, input):
     """ deop <user> - Deop users in a room. If no nick is given, input user is selected. """
-    if input.group(2):
-        code.write(['MODE', input.sender, "-o", input.group(2)])
-    else:
-        code.write(['MODE', input.sender, "-o", code.nick])
+    nick = input.group(2) if input.group(2) else input.nick
+    code.write(['MODE', input.sender, "-o", nick])
 
 
 @hook(cmds=['voice'], trusted=True, ischannel=True, selfopped=True)
 def voice(code, input):
     """ voice <user> - Voice users in a room. If no nick is given, input user is selected. """
-    if input.group(2):
-        code.write(['MODE', input.sender, "+v", input.group(2)])
-    else:
-        code.write(['MODE', input.sender, "+v", code.nick])
+    nick = input.group(2) if input.group(2) else input.nick
+    code.write(['MODE', input.sender, "+v", nick])
 
 
 @hook(cmds=['devoice'], trusted=True, ischannel=True, selfopped=True)
 def devoice(code, input):
     """ devoice <user> - Devoice users in a room. If no nick is given, input user is selected. """
-    if input.group(2):
-        code.write(['MODE', input.sender, "-v", input.group(2)])
-    else:
-        code.write(['MODE', input.sender, "-v", code.nick])
+    nick = input.group(2) if input.group(2) else input.nick
+    code.write(['MODE', input.sender, "-v", nick])
 
 
 @hook(cmds=['kick'], trusted=True, ischannel=True, selfopped=True, ex='kick Liam Abuse!', args=True)

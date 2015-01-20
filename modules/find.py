@@ -1,7 +1,6 @@
 import re
 from util.hook import *
 from util.tools import hrt
-import time
 
 
 @hook(rule=r'(?iu)^s(?:\/)(.*?)(?:\/)(.*?)(?:(?:\/)(.*?)|(?:\/))?$', priority='high')
@@ -10,11 +9,11 @@ def findandreplace(code, input):
         return
 
     target, replacement, flags = input.groups()
-    if flags != None:
+    if flags is not None:
         flags = flags.strip()
     else:
         flags = ""
-    
+
     if len(target) == 0:
         return code.say('{red}Nothing to replace!')
 
@@ -31,9 +30,9 @@ def findandreplace(code, input):
     msg_index = None
     for i in range(len(channel_messages)):
         if channel_messages[i]['message'].startswith('(me)') or \
-        ' s/' in channel_messages[i]['message'].lower() or \
-        channel_messages[i]['message'].lower().startswith('s/') or \
-        channel_messages[i]['nick'] == code.nick:
+           ' s/' in channel_messages[i]['message'].lower() or \
+           channel_messages[i]['message'].lower().startswith('s/') or \
+           channel_messages[i]['nick'] == code.nick:
             continue
 
         new_msg = repl(channel_messages[i]['message'])
