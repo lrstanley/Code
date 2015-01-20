@@ -45,7 +45,10 @@ def owner(code, input):
         return True
     code.say('{b}{red}You are not authorized to use that command!')
 
-custom = ['admin', 'args', 'owner', 'op', 'voiced', 'supress']
+custom = [
+    'admin', 'args', 'owner', 'op', 'trusted', 'voiced', 'supress',
+    'ischannel', 'selfopped'
+]
 
 hooks = {
     'commands': {'origin': 'commands'},

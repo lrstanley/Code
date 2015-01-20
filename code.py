@@ -42,10 +42,7 @@ def docstring():
 
 def parse_json(filename):
     """ remove //-- and /* -- */ style comments from JSON """
-    comment_re = re.compile(
-        '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
-        re.DOTALL | re.MULTILINE
-    )
+    comment_re = re.compile('(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?', re.DOTALL | re.MULTILINE)
     with open(filename) as f:
         content = f.read()
         match = comment_re.search(content)
@@ -123,10 +120,7 @@ def main(argv=None):
     try:
         config = parse_json(bot_config)
     except Exception as e:
-        output.error(
-            'The config file has syntax errors. Please fix them and run Code again!'
-            '\n' + str(e)
-        )
+        output.error('The config file has syntax errors. Please fix them and run Code again!\n' + str(e))
         sys.exit(1)
 
     global threads
@@ -190,4 +184,10 @@ if __name__ == '__main__':
                     threads[id]['process'] = p
     except KeyboardInterrupt:
         output.success('Shutting down bot...', 'REQUEST')
+        for id in range(len(threads)):
+            p = threads[id]['process']
+            output.success('Terminating process ID %s (%s:%s)' % (
+                        id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+            p.terminate()
+        time.sleep(1)
         sys.exit()

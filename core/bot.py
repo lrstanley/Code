@@ -188,6 +188,8 @@ class Code(irc.Bot):
                 s.group = match.group
                 s.groups = match.groups
                 s.args = args
+                s.trusted = False
+
                 if not hasattr(s, 'data'):
                     s.data = {}
 
@@ -242,6 +244,8 @@ class Code(irc.Bot):
                 else:
                     s.admin = check_perm(origin, self.config('admins', []))
 
+                if s.owner or s.admin or s.op:
+                    s.trusted = True
                 return s
 
         return CommandInput(text, origin, bytes, match, event, args)

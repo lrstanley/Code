@@ -4,6 +4,9 @@ from util import output
 
 def call(self, func, origin, code, input):
     # custom decorators
+    if func.ischannel and not input.sender.startswith('#'):
+        return code.say('{b}That can only be used in a channel!')
+
     try:
         if func.op and not code.chan[input.sender][input.nick]['op']:
             return code.say('{b}{red}You must be op to use that command!')
@@ -17,7 +20,7 @@ def call(self, func, origin, code, input):
     except KeyError:
         pass
 
-    if func.admin and not input.admin:
+    if func.admin and not input.admin or func.trusted and not input.trusted:
         return code.say('{b}{red}You are not authorized to use that command!')
 
     if func.owner and not input.owner:
@@ -31,6 +34,9 @@ def call(self, func, origin, code, input):
             code.doc[func.name]['commands'][0])
         )
 
+    if func.selfopped and not code.chan[input.sender][code.nick]['op']:
+        return code.say('{b}{red}I do not have op. I cannot execute this command.')
+
     nick = input.nick.lower()
     if nick in self.times:
         # per-command rate limiting
@@ -43,7 +49,7 @@ def call(self, func, origin, code, input):
         self.times[nick] = dict()
     self.times[nick][func] = time.time()
     try:
-        if hasattr(self, 'excludes'):
+        if self.excludes:
             if input.sender in self.excludes:
                 if '!' in self.excludes[input.sender]:
                     # block all function calls for this channel
@@ -51,11 +57,7 @@ def call(self, func, origin, code, input):
                 fname = func.func_code.co_filename.split('/')[-1].split('.')[0]
                 if fname in self.excludes[input.sender]:
                     # block function call if channel is blacklisted
-                    print(
-                        'Blocked:', input.sender, func.name,
-                        func.func_code.co_filename
-                    )
-                    return
+                    return output.error('Blocks', 'Blocked: %s from %s' % (input.sender, func.name))
     except:
         output.error("Error attempting to block: ", str(func.name))
         self.error(origin)

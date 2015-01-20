@@ -57,7 +57,7 @@ def trigger_005(code, origin, line, args, text):
 
     tmp = args[2:-1]
     for item in tmp:
-        if not '=' in item:
+        if '=' not in item:
             code.server_options[item] = True
         else:
             name, data = item.split('=', 1)
@@ -379,8 +379,7 @@ def trigger_MODE(code, origin, line, args, text):
     names = {'v': 'voiced', 'o': 'op', '+': True, '-': False}
     for user in tmp:
         if user['mode'] in names and user['sign'] in names:
-            mode, name, sign = names[user['mode']
-                                     ], user['name'], names[user['sign']]
+            mode, name, sign = names[user['mode']], user['name'], names[user['sign']]
             code.chan[channel][name][mode] = sign
             if mode == 'op' and sign:
                 code.chan[channel][name]['voiced'] = True
@@ -399,8 +398,7 @@ def trigger_JOIN(code, origin, line, args, text):
     """
 
     if origin.nick != code.nick:
-        code.chan[args[1]][origin.nick] = {'normal': True, 'voiced':
-                                           False, 'op': False, 'count': 0, 'messages': []}
+        code.chan[args[1]][origin.nick] = {'normal': True, 'voiced': False, 'op': False, 'count': 0, 'messages': []}
     if not code.debug:
         output.normal('{} has joined {}'.format(origin.nick, args[1]), args[1])
     tmp = {

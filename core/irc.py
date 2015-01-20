@@ -198,7 +198,8 @@ class Bot(asynchat.async_chat):
     def __write(self, args, text=None, raw=False):
         try:
             if raw:
-                temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
+                # temp = ' '.join(args)[:510] + ' :' + text + '\r\n'
+                temp = args[:510] + '\r\n'
             elif not raw:
                 if text:
                     # 510 because CR and LF count too
