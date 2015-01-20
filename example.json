@@ -36,10 +36,7 @@
         // Enable or disable /ALMOST/ all color responses from Code
         "text_decorations": true,
         // Some modules are disabled by default because they require further setup
-        "excluded_modules": [
-            "admin_channel",
-            "unicode_lookup"
-        ],
+        "excluded_modules": ["unicode_lookup"],
         // Rather than excluding almost all modules (manually, above), you can instead whitelist
         //   only a certain number of them, which ignores the above and uses these
         "whitelisted_modules": [],
