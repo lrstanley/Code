@@ -1,5 +1,3 @@
-import sys
-sys.path += ['lib']
 import time
 import os
 import re
@@ -9,6 +7,8 @@ from core import irc
 from core.call import call
 from core.bind import bind_commands
 from util import output
+import sys
+sys.path += ['lib']
 
 home = os.getcwd()
 
