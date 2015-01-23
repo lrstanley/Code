@@ -66,7 +66,7 @@ class Bot(asynchat.async_chat):
             'fuchsia': '\x0313', 'grey': '\x0314', 'gray': '\x0314',
             'lightgrey': '\x0315', 'silver': '\x0315',
             # Even more special...
-            'bold': '\x02', 'b': '\x02', 'italic': '\x16', 'underline': '\x1f',
+            'bold': '\x02', 'b': '\x02', 'italic': '\x1d', 'i': '\x1d' 'underline': '\x1f', 'u': '\x1f'
             'reset': '\x0f', 'r': '\x0f', 'clear': '\x03', 'c': '\x03'
         }
 
