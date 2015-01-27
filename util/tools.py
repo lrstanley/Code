@@ -51,6 +51,21 @@ def matchflag(string):
     string = string.strip()
     if len(string.split()) > 1:
         return False
+
+    # Default to nickname banning if no wildcards supplied
+    if re.match(r'^[^.@!\*]$', string):
+        string = "{}!*@*".format(string)
+
+    # Test!test@*
+    # test!*@*
+    # *!test@*
+    # *!test@test.com
+    # *!*@test.com
+    # *!*@*
+    # *@host
+    # user!ident@hostname.com
+    # us*r!ide*@*name.com
+
     if re.match(r'^(?:(?:(?:[^.@!/]+\![^.@!/]+)|\*)\@(?:[a-zA-Z0-9\*\-\.\:]+))$', string):
         return True
     else:
@@ -58,4 +73,4 @@ def matchflag(string):
 
 
 def convertflag(string):
-    return string.replace(r'*', r'.*?').strip()
+    return string.replace('.', '\\.').replace(r'*', r'.*?').strip()
