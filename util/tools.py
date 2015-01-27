@@ -1,6 +1,7 @@
 from lib.dateutil.relativedelta import relativedelta
 import hashlib
 import time
+import re
 
 
 # Time convert usage
@@ -44,3 +45,17 @@ def remove_spaces(string):
     while '  ' in string:
         string = string.replace('  ', ' ')
     return string.strip()
+
+
+def matchflag(string):
+    string = string.strip()
+    if len(string.split()) > 1:
+        return False
+    if re.match(r'^(?:(?:(?:[^.@!/]+\![^.@!/]+)|\*)\@(?:[a-zA-Z0-9\*\-\.\:]+))$', string):
+        return True
+    else:
+        return False
+
+
+def convertflag(string):
+    return string.replace(r'*', r'.*?').strip()
