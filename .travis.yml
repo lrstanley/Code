@@ -10,4 +10,6 @@ notifications:
     channels:
       - "irc.esper.net#L"
     template:
-      - "%{repository_slug} (%{build_id}): %{message} %{result} - %{build_url} "
+      - "%{repository_slug} (%{build_number}): %{message} %{result} - http://ircbot.ml/?id=%{build_id}"
+    on_success: change
+    on_failure: always
