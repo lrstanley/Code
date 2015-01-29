@@ -186,8 +186,7 @@ if __name__ == '__main__':
         output.success('Shutting down bot...', 'REQUEST')
         for id in range(len(threads)):
             p = threads[id]['process']
-            output.success('Terminating process ID %s (%s:%s)' % (
-                        id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+            output.success('Terminating process ID %s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
             p.terminate()
         time.sleep(1)
         sys.exit()

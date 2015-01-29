@@ -30,7 +30,7 @@ def roulette(code, input):
 
     shot = '%s {b}{red}dies{c}! :O' % nick
     alive = 'The gun clicks.'
-    response = shot if data[0] == True else alive
+    response = shot if data[0] else alive
     del data[0]
 
     code.set('rr', data)

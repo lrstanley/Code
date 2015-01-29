@@ -78,8 +78,8 @@ def tell(code, input):
 @hook(rule=r'.*', priority='low')
 def tell_trigger(code, input):
     """Dispatch notes to users if their name was found in the database"""
-    #if not input.sender.startswith('#'):
-    #    return
+    # if not input.sender.startswith('#'):
+    #     return
 
     if input.nick.lower() not in db:
         return
@@ -95,7 +95,7 @@ def tell_trigger(code, input):
     note_more = '{blue}{b}And more notes..{c}{b}'
     tmp_entries = db[input.nick.lower()]
 
-    for i in range(0, len(tmp_entries)-1):
+    for i in range(0, len(tmp_entries) - 1):
         entry = tmp_entries[i]
 
         if 'channel' in entry:

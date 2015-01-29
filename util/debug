@@ -1,30 +1,21 @@
-#/bin/bash
-echo "------------------------------------------------------"
-echo "         Code Copyright Liam Stanley 2012-2014        "
-echo "This way of debugging Code is still under development."
-echo "         -----------------------------------          "
-echo "If you get pep8 not found errors, add pep8 to Your    "
-echo " PATH variable, or edit this file to point to it.     "
-echo "------------------------------------------------------"
+#/bin/sh
 
-cd ..
-echo "Running pep8 on Python files in $PWD"
-pep8 --ignore=E501,E265.F403 code.py || { echo 'Failed to pep8' ; exit 1; }
+set -e
+orig=$PWD
 
-cd ./core
-echo "Running pep8 on Python files in $PWD"
-pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
+function debug() {
+    while read i; do
+        find "$i" -maxdepth 1 -type f -name "*.py" | while read fn; do
+            pep8 --verbose --ignore=E501,E265.F403 $fn
+        done
+    done << EOF
+..
+../util
+../core
+../core/modules
+../modules
+EOF
+}
 
-cd ./modules
-echo "Running pep8 on Python files in $PWD"
-pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
+debug
 
-cd ../../util
-echo "Running pep8 on Python files in $PWD"
-pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
-
-cd ../modules
-echo "Running pep8 on Python files in $PWD"
-pep8 --ignore=E501,E265.F403 *.py || { echo 'Failed to pep8' ; exit 1; }
-
-echo "No errors? Success!"

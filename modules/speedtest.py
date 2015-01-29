@@ -19,7 +19,7 @@ def speedtest(code, input):
     keys = ['Download', 'Upload', 'Ping', 'Device', 'ISP', 'Server']
     tmp = []
 
-    for i in range(0, len(results)-1):
+    for i in range(0, len(results) - 1):
         if len(web.striptags(results[i])) < 1:
             continue
         tmp.append('{b}%s{b}: %s' % (keys[i], web.striptags(results[i])))
