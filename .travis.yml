@@ -9,3 +9,5 @@ notifications:
   irc:
     channels:
       - "irc.esper.net#L"
+    template:
+      - "%{repository_slug} (%{build_id}): %{message} %{result} - %{build_url} "
