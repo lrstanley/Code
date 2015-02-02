@@ -439,21 +439,21 @@ class Bot(asynchat.async_chat):
 
         time.sleep(2)
         bans = []
-        for ban in self.bans[channel]:
-            ban = re.sub(r'(?i)^\${1,2}\:', '', ban)
-            ban = re.sub(r'(?i)\#[A-Za-z]{1,2}$', '', ban)
-            if ban != '*!*@*':
-                bans.append(ban)
+        for mask in self.bans[channel]:
+            mask = re.sub(r'(?i)^\${1,2}\:', '', mask)
+            mask = re.sub(r'(?i)\#[A-Za-z]{1,2}$', '', mask)
+            if mask != '*!*@*':
+                bans.append(mask)
 
         re_bans = [convertmask(x) for x in bans]
-        kicklist = []
+        matchlist = []
         for nick in self.chan[channel]:
             ident, host = self.chan[channel][nick]['ident'], self.chan[channel][nick]['host']
             user = '{}!{}@{}'.format(nick, ident, host)
             match = [True if re.match(mask, user) else False for mask in re_bans]
             if True in match:
-                kicklist.append([channel, nick])
+                matchlist.append([channel, nick])
 
-        for channel, nick in kicklist:
+        for channel, nick in matchlist:
             self.write(['KICK', channel, nick], 'Matching ban mask in %s' % channel)
             time.sleep(0.5)

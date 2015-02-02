@@ -187,7 +187,7 @@ def unignore(code, input):
 def ignorelist(code, input):
     """ ignorelist - Lists ignorelist. """
     blocks = database.get(code.nick, 'ignore', [])
-    return code.say('"%s"' % '" "'.join(blocks))
+    return code.say('"{b}%s{b}"' % '{b}", "{b}'.join(blocks))
 
 
 @hook(cmds=['write', 'raw'], priority='high', thread=False, owner=True, args=True)
