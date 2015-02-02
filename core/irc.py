@@ -11,6 +11,7 @@ from util import output
 from util.web import uncharset
 from util.web import shorten
 from core import triggers
+from core.dispatch import dispatch
 
 
 cwd = os.getcwd()
@@ -165,7 +166,7 @@ class Bot(asynchat.async_chat):
         if args[0] == 'PRIVMSG':
             if self.muted and text[1::].split()[0].lower() not in ['unmute', 'help', 'mute']:
                 return
-        self.dispatch(origin, tuple([text] + args))
+        dispatch(self, origin, tuple([text] + args))
 
     def mute(self):
         self.muted = True
@@ -173,8 +174,8 @@ class Bot(asynchat.async_chat):
     def unmute(self):
         self.muted = False
 
-    def dispatch(self, origin, args):
-        pass
+    # def dispatch(self, origin, args):
+    #     pass
 
     def error(self, origin, supress=False):
         try:

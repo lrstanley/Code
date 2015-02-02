@@ -1,27 +1,13 @@
 import time
 import os
-import re
-import threading
 import imp
 from core import irc
-from core.call import call
 from core.bind import bind_commands
 from util import output
 import sys
 sys.path += ['lib']
 
 home = os.getcwd()
-
-
-def decode(bytes):
-    try:
-        text = bytes.decode('utf-8')
-    except UnicodeDecodeError:
-        try:
-            text = bytes.decode('iso-8859-1')
-        except UnicodeDecodeError:
-            text = bytes.decode('cp1252')
-    return text
 
 
 class Code(irc.Bot):
@@ -152,177 +138,6 @@ class Code(irc.Bot):
         for name, obj in variables.iteritems():
             if hasattr(obj, 'commands') or hasattr(obj, 'rule'):
                 self.variables[name] = obj
-
-    def wrapped(self, origin, text, match):
-        class CodeWrapper(object):
-
-            def __init__(self, code):
-                self.bot = code
-
-            def __getattr__(self, attr):
-                sender = origin.sender or text
-                if attr == 'reply':
-                    return lambda msg: self.bot.msg(sender, '{}: {}'.format(origin.nick, msg))
-                elif attr == 'action':
-                    return lambda action: self.bot.me(sender, action)
-                elif attr == 'say':
-                    return lambda msg: self.bot.msg(sender, msg)
-                elif attr == 'action':
-                    return lambda msg: self.bot.action(sender, msg)
-                return getattr(self.bot, attr)
-
-        return CodeWrapper(self)
-
-    def input(self, origin, text, bytes, match, event, args):
-        class CommandInput(unicode):
-
-            def __new__(cls, text, origin, bytes, match, event, args):
-                s = unicode.__new__(cls, text)
-                s.sender = origin.sender
-                s.nick = origin.nick
-                s.user = origin.user
-                s.host = origin.host
-                s.event = event
-                s.bytes = bytes
-                s.match = match
-                s.group = match.group
-                s.groups = match.groups
-                s.args = args
-                s.trusted = False
-
-                if not hasattr(s, 'data'):
-                    s.data = {}
-
-                if origin.sender.startswith('#'):
-                    try:
-                        s.op = self.chan[origin.sender][origin.nick]['op']
-                        s.voiced = self.chan[origin.sender][origin.nick]['voiced']
-                    except KeyError:
-                        s.op, s.voiced = False, False
-                else:
-                    s.op, s.voiced = False, False
-
-                def check_perm(origin, trigger):
-                    """
-                        Match and figure out if the user that's triggering it matches
-                        the configured admin/owner/whatever
-                    """
-                    for matching in trigger:
-                        if '!' in matching and '@' in matching:
-                            # nick!user@host
-                            trigger_nick, other = matching.split('!', 1)
-                            trigger_user, trigger_host = other.split('@', 1)
-                            if trigger_nick.lower() == origin.nick.lower() and \
-                               trigger_user.lower() == origin.user.lower() and \
-                               trigger_host.lower() == origin.host.lower():
-                                return True
-                            continue
-                        elif '@' in matching and not matching.startswith('@'):
-                            # user@host
-                            trigger_user, trigger_host = matching.split('@', 1)
-                            if trigger_user.lower() == origin.user.lower() and \
-                               trigger_host.lower() == origin.host.lower():
-                                return True
-                            continue
-                        elif '@' in matching:
-                            # @host
-                            trigger_host = matching[1::]
-                            if trigger_host.lower() == origin.host.lower():
-                                return True
-                            continue
-                        else:
-                            # host OR nick
-                            if matching.lower() == origin.nick.lower() or \
-                               matching.lower() == origin.host.lower():
-                                return True
-                            continue
-                    return False
-
-                s.owner = check_perm(origin, [self.config('owner')])
-                if s.owner:
-                    s.admin = True
-                else:
-                    s.admin = check_perm(origin, self.config('admins', []))
-
-                if s.owner or s.admin or s.op:
-                    s.trusted = True
-                return s
-
-        return CommandInput(text, origin, bytes, match, event, args)
-
-    def dispatch(self, origin, args):
-        bytes, event, args = args[0], args[1], args[2:]
-        text = decode(bytes)
-
-        for priority in ('high', 'medium', 'low'):
-            items = self.commands[priority].items()
-            for regexp, funcs in items:
-                for func in funcs:
-                    if event != func.event:
-                        continue
-
-                    match = regexp.match(text)
-                    if not match:
-                        continue
-
-                    code = self.wrapped(origin, text, match)
-                    input = self.input(
-                        origin, text, bytes, match, event, args
-                    )
-
-                    nick = input.nick.lower()
-                    # blocking ability
-                    if os.path.isfile("blocks"):
-                        g = open("blocks", "r")
-                        contents = g.readlines()
-                        g.close()
-
-                        try:
-                            bad_masks = contents[0].split(',')
-                        except:
-                            bad_masks = ['']
-
-                        try:
-                            bad_nicks = contents[1].split(',')
-                        except:
-                            bad_nicks = ['']
-
-                        # check for blocked hostmasks
-                        if len(bad_masks) > 0:
-                            host = origin.host
-                            host = host.lower()
-                            for hostmask in bad_masks:
-                                hostmask = hostmask.replace(
-                                    "\n", "").strip()
-                                if len(hostmask) < 1:
-                                    continue
-                                try:
-                                    re_temp = re.compile(hostmask)
-                                    if re_temp.findall(host):
-                                        return
-                                except:
-                                    if hostmask in host:
-                                        return
-                        # check for blocked nicks
-                        if len(bad_nicks) > 0:
-                            for nick in bad_nicks:
-                                nick = nick.replace("\n", "").strip()
-                                if len(nick) < 1:
-                                    continue
-                                try:
-                                    re_temp = re.compile(nick)
-                                    if re_temp.findall(input.nick):
-                                        return
-                                except:
-                                    if nick in input.nick:
-                                        return
-
-                    if func.thread:
-                        targs = (self, func, origin, code, input)
-                        t = threading.Thread(target=call, args=targs)
-                        t.start()
-                    else:
-                        call(self, func, origin, code, input)
 
     def get(self, key):
         if key in self.data:
