@@ -17,6 +17,7 @@ class Code(irc.Bot):
         self.unload = []
         self.raw_config = raw_config
         debug = self.config('debug', False)
+        # Init the IRC thread
         args = (
             raw_config['nick'], raw_config['name'], raw_config['user'],
             raw_config['channels'], raw_config['server_password'], debug
@@ -31,6 +32,7 @@ class Code(irc.Bot):
         self.webserver_data = {}
         self.bot_startup = int(time.time())
         self.excludes = self.config('excluded_per_channel', [])
+        # Setup modules
         self.setup()
 
     def config(self, key=None, default=None):

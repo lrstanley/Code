@@ -135,6 +135,8 @@ def trigger_353(code, origin, line, args, text):
         channel.split('#', 1)[1].strip(), user_list.strip().split()
     if channel not in code.chan:
         code.chan[channel] = {}
+    if channel not in code.bans:
+        code.bans[channel] = []
     if channel not in code.logs['channel']:
         code.logs['channel'][channel] = []
     for user in user_list:
@@ -171,6 +173,26 @@ def trigger_354(code, origin, line, args, text, is_352=False):
     code.chan[channel][nick]['last_seen'] = int(time.time())
 
 
+def trigger_367(code, origin, line, args, text):
+    """
+        ID:         RPL_BANLIST
+        Decription: A ban-list item (See RFC); <time left> and <reason> are additions used by
+                    KineIRCd
+        Format:     <channel> <banid> [<time_left> :<reason>]
+    """
+
+    code.bans[args[2]].append(args[3])
+
+
+def trigger_368(code, origin, line, args, text):
+    """
+        ID:         RPL_ENDOFBANLIST
+        Decription: Termination of an RPL_BANLIST list
+        Format:     <channel> :<info>
+    """
+    return code.checkbans(args[2])
+
+
 def trigger_433(code, origin, line, args, text):
     """
         ID:         ERR_NICKNAMEINUSE
@@ -196,6 +218,49 @@ def trigger_437(code, origin, line, args, text):
     if not code.debug:
         output.error(text)
     os._exit(1)
+
+
+def trigger_471(code, origin, line, args, text):
+    """
+        ID:         ERR_CHANNELISFULL
+        Decription: Returned when attempting to join a channel which is set +l and is already
+                    full
+        Format:     <channel> :<reason>
+    """
+
+    return output.error(args[3], args[2])
+
+
+def trigger_473(code, origin, line, args, text):
+    """
+        ID:         ERR_INVITEONLYCHAN
+        Decription: Returned when attempting to join a channel which is invite only without an
+                    invitation
+        Format:     <channel> :<reason>
+    """
+
+    return output.error(args[3], args[2])
+
+
+def trigger_474(code, origin, line, args, text):
+    """
+        ID:         ERR_BANNEDFROMCHAN
+        Decription: Returned when attempting to join a channel a user is banned from
+        Format:     <channel> :<reason>
+    """
+
+    return output.error(args[3], args[2])
+
+
+def trigger_475(code, origin, line, args, text):
+    """
+        ID:         ERR_BADCHANNELKEY
+        Decription: Returned when attempting to join a key-locked channel either without a
+                    key or with the wrong key
+        Format:     <channel> :<reason>
+    """
+
+    return output.error(args[3], args[2])
 
 
 def trigger_NICK(code, origin, line, args, text):
@@ -328,6 +393,11 @@ def trigger_KICK(code, origin, line, args, text):
     del code.chan[args[1]][args[2]]
 
 
+def trigger_write_KICK(code, args, text, raw):
+    output.normal('I have kicked {} from {}'.format(args[2], args[1]), 'KICK', 'red')
+    del code.chan[args[1]][args[2]]
+
+
 def trigger_MODE(code, origin, line, args, text):
     """
         ID:         MODE
@@ -341,6 +411,10 @@ def trigger_MODE(code, origin, line, args, text):
         Format:     <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
                     <nickname> {[+|-]|i|w|s|o}
     """
+    if len(args) == 4:
+        if args[1].startswith('#') and '+b' in args:
+            code.bans[args[1]] = []
+            code.write(['MODE', args[1], '+b'])
 
     if len(args) == 3:
         if not code.debug:
@@ -402,6 +476,20 @@ def trigger_MODE(code, origin, line, args, text):
             code.chan[channel][name][mode] = sign
             if mode == 'op' and sign:
                 code.chan[channel][name]['voiced'] = True
+
+
+def trigger_write_MODE(code, args, text, raw):
+    """
+        ID:         MODE
+        Decription: Triggered when the bot write a MODE +b, so that we can list all
+                    bans, and kick users evading
+    """
+    if len(args) < 4:
+        return
+    if not args[1].startswith('#') and '+b' not in args:
+        return
+    code.bans[args[1]] = []
+    code.write(['MODE', args[1], '+b'])
 
 
 def trigger_JOIN(code, origin, line, args, text):
@@ -468,10 +556,12 @@ def trigger_write_PART(code, args, text, raw):
         ID:         PART
         Decription: Triggered when the bot write a PART, so that we can unhook
                     database from that channel.
+        Format: part <channel>
     """
 
     del code.chan[args[1]]
     del code.logs['channel'][args[1]]
+    del code.chan[args[1]]
 
 
 def trigger_QUIT(code, origin, line, args, text):

@@ -8,8 +8,6 @@ def wrapped(self, origin, text, match):
             sender = origin.sender or text
             if attr == 'reply':
                 return lambda msg: self.bot.msg(sender, '{}: {}'.format(origin.nick, msg))
-            elif attr == 'action':
-                return lambda action: self.bot.me(sender, action)
             elif attr == 'say':
                 return lambda msg: self.bot.msg(sender, msg)
             elif attr == 'action':
@@ -19,9 +17,45 @@ def wrapped(self, origin, text, match):
     return CodeWrapper(self)
 
 
+def check_perm(origin, trigger):
+    """
+        Match and figure out if the user that's triggering it matches
+        the configured admin/owner/whatever
+    """
+    for matching in trigger:
+        if '!' in matching and '@' in matching:
+            # nick!user@host
+            trigger_nick, other = matching.split('!', 1)
+            trigger_user, trigger_host = other.split('@', 1)
+            if trigger_nick.lower() == origin.nick.lower() and \
+               trigger_user.lower() == origin.user.lower() and \
+               trigger_host.lower() == origin.host.lower():
+                return True
+            continue
+        elif '@' in matching and not matching.startswith('@'):
+            # user@host
+            trigger_user, trigger_host = matching.split('@', 1)
+            if trigger_user.lower() == origin.user.lower() and \
+               trigger_host.lower() == origin.host.lower():
+                return True
+            continue
+        elif '@' in matching:
+            # @host
+            trigger_host = matching[1::]
+            if trigger_host.lower() == origin.host.lower():
+                return True
+            continue
+        else:
+            # host OR nick
+            if matching.lower() == origin.nick.lower() or \
+               matching.lower() == origin.host.lower():
+                return True
+            continue
+    return False
+
+
 def input_wrapper(self, origin, text, bytes, match, event, args):
     class CommandInput(unicode):
-
         def __new__(cls, text, origin, bytes, match, event, args):
             s = unicode.__new__(cls, text)
             s.sender = origin.sender
@@ -47,42 +81,6 @@ def input_wrapper(self, origin, text, bytes, match, event, args):
                     s.op, s.voiced = False, False
             else:
                 s.op, s.voiced = False, False
-
-            def check_perm(origin, trigger):
-                """
-                    Match and figure out if the user that's triggering it matches
-                    the configured admin/owner/whatever
-                """
-                for matching in trigger:
-                    if '!' in matching and '@' in matching:
-                        # nick!user@host
-                        trigger_nick, other = matching.split('!', 1)
-                        trigger_user, trigger_host = other.split('@', 1)
-                        if trigger_nick.lower() == origin.nick.lower() and \
-                           trigger_user.lower() == origin.user.lower() and \
-                           trigger_host.lower() == origin.host.lower():
-                            return True
-                        continue
-                    elif '@' in matching and not matching.startswith('@'):
-                        # user@host
-                        trigger_user, trigger_host = matching.split('@', 1)
-                        if trigger_user.lower() == origin.user.lower() and \
-                           trigger_host.lower() == origin.host.lower():
-                            return True
-                        continue
-                    elif '@' in matching:
-                        # @host
-                        trigger_host = matching[1::]
-                        if trigger_host.lower() == origin.host.lower():
-                            return True
-                        continue
-                    else:
-                        # host OR nick
-                        if matching.lower() == origin.nick.lower() or \
-                           matching.lower() == origin.host.lower():
-                            return True
-                        continue
-                return False
 
             s.owner = check_perm(origin, [self.config('owner')])
             if s.owner:

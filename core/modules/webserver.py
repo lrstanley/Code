@@ -113,7 +113,8 @@ class WebServer(BaseHTTPRequestHandler):
                         'muted': bot.muted,
                         'other': bot.webserver_data,
                         'server': bot.server_options,
-                        'logs1': bot.logs
+                        'logs1': bot.logs,
+                        'bans': bot.bans
                     }
                     data['logs'] = []
                     for log in bot.logs['bot']:

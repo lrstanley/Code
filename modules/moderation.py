@@ -1,6 +1,14 @@
-# import re
 from random import choice as random
 from util.hook import *
+from util.tools import matchmask
+
+# Todo:
+#   - daemon/function to loop through all users, and kick and/or ban those that match
+#     any bans.
+#   - use the above, in conjunction with kick(), op(), voice(), etc to give the ability
+#     to loop through all users and set permissions based on wildcard searching.
+#     - MAKE SURE TO PUT DELAYS ON THIS.
+#   - - Will be used for kickban
 
 
 def kick_reason():
@@ -44,8 +52,6 @@ def devoice(code, input):
 @hook(cmds=['kick'], trusted=True, ischannel=True, selfopped=True, ex='kick Liam Abuse!', args=True)
 def kick(code, input):
     """ kick <user> [reason] - Kicks a user from the current channel, with a reason if supplied. """
-    # .kick <user>
-    # .kick <user> <reason>
     text = input.group(2).split()
     if len(text) == 1:
         target = input.group(2)
@@ -63,163 +69,25 @@ def kick(code, input):
         return code.say('...')
 
 
-# Still need to get stuff done below this line, but it's a start.
+@hook(cmds=['ban', 'b', 'kickban'], istrusted=True, ischannel=True, selfopped=True, args=True)
+def ban(code, input):
+    """ ban <user> - Bans a user from the current channel. Auto-kicks any users matching mask. """
+    banmask = matchmask(input.group(2))
+    if not banmask:
+        return code.say('Invalid banmask! For more info, see: https://github.com/Liamraystanley/Code/wiki/Masks')
+    return code.write(['MODE', input.sender, '+b', banmask])
 
 
-# def ban(code, input):
-#     """
-#     This give admins the ability to ban a user.
-#     The bot must be a Channel Operator for this command to work.
-#     """
-#     if not input.admin:
-#         return
-#     text = input.group().split()
-#     argc = len(text)
-#     if argc < 2:
-#         return
-#     opt = text[1]
-#     banmask = opt
-#     channel = input.sender
-#     if opt.startswith('#'):
-#         if argc < 3:
-#             return
-#         channel = opt
-#         banmask = text[2]
-#     banmask = configureHostMask(banmask)
-#     if banmask == '':
-#         return
-#     code.write(['MODE', channel, '+b', banmask])
-# ban.commands = ['ban']
-# ban.priority = 'high'
+@hook(cmds=['unban', 'ub'], istrusted=True, ischannel=True, selfopped=True, args=True)
+def unban(code, input):
+    """ unban <user> - Unbans a user from the current channel. """
+    banmask = matchmask(input.group(2))
+    if not banmask:
+        return code.say('Invalid banmask! For more info, see: https://github.com/Liamraystanley/Code/wiki/Masks')
+    return code.write(['MODE', input.sender, '-b', banmask])
 
 
-# def unban(code, input):
-#     """
-#     This give admins the ability to unban a user.
-#     The bot must be a Channel Operator for this command to work.
-#     """
-#     if not input.admin:
-#         return
-#     text = input.group().split()
-#     argc = len(text)
-#     if argc < 2:
-#         return
-#     opt = text[1]
-#     banmask = opt
-#     channel = input.sender
-#     if opt.startswith('#'):
-#         if argc < 3:
-#             return
-#         channel = opt
-#         banmask = text[2]
-#     banmask = configureHostMask(banmask)
-#     if banmask == '':
-#         return
-#     code.write(['MODE', channel, '-b', banmask])
-# unban.commands = ['unban']
-# unban.priority = 'high'
-
-
-# def quiet(code, input):
-#     """
-#     This gives admins the ability to quiet a user.
-#     The bot must be a Channel Operator for this command to work
-#     """
-#     if not input.admin:
-#         return
-#     text = input.group().split()
-#     argc = len(text)
-#     if argc < 2:
-#         return
-#     opt = text[1]
-#     quietmask = opt
-#     channel = input.sender
-#     if opt.startswith('#'):
-#         if argc < 3:
-#             return
-#         quietmask = text[2]
-#         channel = opt
-#     quietmask = configureHostMask(quietmask)
-#     if quietmask == '':
-#         return
-#     code.write(['MODE', channel, '+q', quietmask])
-# quiet.commands = ['quiet', 'mute']
-# quiet.priority = 'high'
-
-
-# def unquiet(code, input):
-#     """
-#     This gives admins the ability to unquiet a user.
-#     The bot must be a Channel Operator for this command to work
-#     """
-#     if not input.admin:
-#         return
-#     text = input.group().split()
-#     argc = len(text)
-#     if argc < 2:
-#         return
-#     opt = text[1]
-#     quietmask = opt
-#     channel = input.sender
-#     if opt.startswith('#'):
-#         if argc < 3:
-#             return
-#         quietmask = text[2]
-#         channel = opt
-#     quietmask = configureHostMask(quietmask)
-#     if quietmask == '':
-#         return
-#     code.write(['MODE', channel, '-q', quietmask])
-# unquiet.commands = ['unquiet', 'unmute']
-# unquiet.priority = 'high'
-
-
-# def kickban(code, input):
-#     """
-#     This gives admins the ability to kickban a user.
-#     The bot must be a Channel Operator for this command to work
-#     .kickban [#chan] user1 user!*@* get out of here
-#     """
-#     if not input.admin:
-#         return
-#     text = input.group().split()
-#     argc = len(text)
-#     if argc < 4:
-#         return
-#     opt = text[1]
-#     nick = opt
-#     mask = text[2]
-#     reasonidx = 3
-#     if opt.startswith('#'):
-#         if argc < 5:
-#             eturn
-#         channel = opt
-#         nick = text[2]
-#         mask = text[3]
-#         reasonidx = 4
-#     reason = ' '.join(text[reasonidx:])
-#     mask = configureHostMask(mask)
-#     if mask == '':
-#         return
-#     code.write(['MODE', channel, '+b', mask])
-#     code.write(['KICK', channel, nick, ' :', reason])
-# kickban.commands = ['kickban', 'kb']
-# kickban.priority = 'high'
-
-
-# def topic(code, input):
-#     """
-#     This gives admins the ability to change the topic.
-#     Note: One does *NOT* have to be an OP, one just has to be on the list of
-#     admins.
-#     """
-#     if not input.admin:
-#         return
-#     text = input.group().split()
-#     topic = ' '.join(text[1:])
-#     if topic == '':
-#         return
-#     code.write(['PRIVMSG', 'ChanServ'], 'TOPIC %s %s' % (input.sender, topic))
-#     return
-# topic.commands = ['topic']
-# topic.priority = 'low'
+@hook(cmds=['topic'], istrusted=True, ischannel=True, selfopped=True, args=True)
+def topic(code, input):
+    """ topic <text> - Sets the topic of the current channel to the given text. """
+    code.write(['PRIVMSG', 'ChanServ'], 'TOPIC %s %s' % (input.sender, input.group(2)))

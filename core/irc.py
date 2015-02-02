@@ -7,9 +7,9 @@ import asyncore
 import asynchat
 import os
 import sys
-from util import output
-from util.web import uncharset
-from util.web import shorten
+from util import output, database
+from util.tools import convertmask
+from util.web import uncharset, shorten
 from core import triggers
 from core.dispatch import dispatch
 
@@ -52,6 +52,7 @@ class Bot(asynchat.async_chat):
         self.debug = debug
         self.irc_startup = None
         self.chan = {}
+        self.bans = {}
         self.logs = {
             'bot': [],
             'channel': {}
@@ -71,6 +72,10 @@ class Bot(asynchat.async_chat):
             'reset': '\x0f', 'r': '\x0f', 'clear': '\x03', 'c': '\x03',
             'reverse': '\x16', 'underline': '\x1f', 'u': '\x1f'
         }
+
+        # Load ignorelist
+        self.blocks = database.get(self.nick, 'ignore', [])
+        self.re_blocks = [convertmask(x) for x in self.blocks]
 
         self.sending = threading.RLock()
 
@@ -161,8 +166,6 @@ class Bot(asynchat.async_chat):
 
         # Execute this last so we know that out data is parsed first.
         # Slightly slower but we know we can get up-to-date information
-        # Fixing the bug in tell.py when you tried getting the users
-        # messages to replace too fast
         if args[0] == 'PRIVMSG':
             if self.muted and text[1::].split()[0].lower() not in ['unmute', 'help', 'mute']:
                 return
@@ -429,3 +432,28 @@ class Bot(asynchat.async_chat):
             self.write(['JOIN', channel])
         else:
             self.write(['JOIN', channel, password])
+
+    def checkbans(self, channel):
+        if not self.chan[channel][self.nick]['op']:
+            return
+
+        time.sleep(2)
+        bans = []
+        for ban in self.bans[channel]:
+            ban = re.sub(r'(?i)^\${1,2}\:', '', ban)
+            ban = re.sub(r'(?i)\#[A-Za-z]{1,2}$', '', ban)
+            if ban != '*!*@*':
+                bans.append(ban)
+
+        re_bans = [convertmask(x) for x in bans]
+        kicklist = []
+        for nick in self.chan[channel]:
+            ident, host = self.chan[channel][nick]['ident'], self.chan[channel][nick]['host']
+            user = '{}!{}@{}'.format(nick, ident, host)
+            match = [True if re.match(mask, user) else False for mask in re_bans]
+            if True in match:
+                kicklist.append([channel, nick])
+
+        for channel, nick in kicklist:
+            self.write(['KICK', channel, nick], 'Matching ban mask in %s' % channel)
+            time.sleep(0.5)

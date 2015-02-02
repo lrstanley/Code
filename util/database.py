@@ -6,7 +6,7 @@ db_name = '%s.data.db'
 mod_name = '%s.module.%s.db'
 
 
-def get(bot, module=False):
+def get(bot, module=False, default=False):
     """ get(code.default, modulename) """
     if module:
         fn = mod_name % (bot, str(module))
@@ -14,7 +14,7 @@ def get(bot, module=False):
         fn = db_name % bot
     module_filename = os.path.join(os.path.expanduser('~/.code'), fn)
     if not os.path.exists(module_filename):
-        return False
+        return default
     with open(module_filename, 'r') as f:
         try:
             data = json.loads(f.read())

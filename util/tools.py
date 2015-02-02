@@ -47,13 +47,19 @@ def remove_spaces(string):
     return string.strip()
 
 
-def matchflag(string):
+def isnotmask(string):
+    if re.match(r'^[^.@!\*]+$', string):
+        return True
+    return False
+
+
+def matchmask(string, wildcards=True):
     string = string.strip()
     if len(string.split()) > 1:
         return False
 
     # Default to nickname banning if no wildcards supplied
-    if re.match(r'^[^.@!\*]$', string):
+    if isnotmask(string):
         string = "{}!*@*".format(string)
 
     # Test!test@*
@@ -67,10 +73,13 @@ def matchflag(string):
     # us*r!ide*@*name.com
 
     if re.match(r'^(?:(?:(?:[^.@!/]+\![^.@!/]+)|\*)\@(?:[a-zA-Z0-9\*\-\.\:]+))$', string):
-        return True
+        return string
     else:
         return False
 
 
-def convertflag(string):
-    return string.replace('.', '\\.').replace(r'*', r'.*?').strip()
+def convertmask(string):
+    special = ['^', '$', '.', '|', '+', '(', ')', '[', ']', '{', '}']
+    for char in special:
+        string = string.replace(char, "\\" + char)
+    return '(?i)^%s$' % string.replace(r'*', r'.*').strip()
