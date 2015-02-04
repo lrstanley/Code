@@ -11,7 +11,7 @@ def wrapped(self, origin, text, match):
             elif attr == 'say':
                 return lambda msg: self.bot.msg(sender, msg)
             elif attr == 'action':
-                return lambda msg: self.bot.action(sender, msg)
+                return lambda action: self.bot.me(sender, action)
             return getattr(self.bot, attr)
 
     return CodeWrapper(self)
