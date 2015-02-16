@@ -5,14 +5,21 @@ item_info = 'http://www.ows.newegg.com/Products.egg/%s/ProductDetails'
 item_re = r'.*(?:www.newegg.com|newegg.com)/Product/Product\.aspx\?.*?Item=([-_a-zA-Z0-9]+).*'
 
 
+headers = {
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46'
+                  '(KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3',
+    'Referer': 'http://www.newegg.com/'
+}
+
+
 @hook(rule=item_re)
 def newegg(code, input):
     """ Automatically find the information from a newegg url and display it
-       to users in a channe """
+       to users in a channel """
     id = str(input.group(1))
 
     try:
-        data = web.json(item_info % id)
+        data = web.json(item_info % id, headers=headers)
     except:
         return  # Same as below
     if not data:
