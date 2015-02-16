@@ -6,7 +6,7 @@ orig=$PWD
 function debug() {
     while read i; do
         find "$i" -maxdepth 1 -type f -name "*.py" | while read fn; do
-            pep8 --verbose --ignore=E402,E501,E265.F403 $fn
+            pep8 --verbose --ignore=E402,E501,E731,E265.F403 $fn
         done
     done << EOF
 ..
