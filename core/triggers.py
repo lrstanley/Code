@@ -91,6 +91,9 @@ def trigger_251(code, origin, line, args, text):
             code.write(['PRIVMSG', 'NickServ'], 'IDENTIFY %s' % args, output=False)
         time.sleep(5)
 
+    # Wait 5 seconds to ensure that the bot is authenticated before attempting to join any channels or set any modes.
+    time.sleep(5)
+
     # Assume it's for bots, y'know
     code.write(('MODE', code.nick, '+B'))
 
