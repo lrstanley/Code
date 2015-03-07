@@ -29,6 +29,8 @@ def http(method, rdata='all', uri=None, timeout=7, params=None, data=None, heade
         response = requests.get(uri, timeout=timeout, params=params, headers=headers, **kwargs)
     elif method == 'post':
         response = requests.post(uri, timeout=timeout, data=data, headers=headers, **kwargs)
+    elif method == 'head':
+        response = requests.head(uri, timeout=timeout, data=data, headers=headers, **kwargs)
     else:
         raise 'Method not supported'
 
@@ -62,6 +64,10 @@ def text(uri, **args):
 
 def headers(uri, **args):
     return http(method='get', rdata='headers', uri=uri, **args)
+
+
+def head(uri, **args):
+    return http(method='head', rdata='all', uri=uri, **args)
 
 
 def quote(string):
