@@ -5,7 +5,7 @@ from util.hook import *
 # http://www.speedtest.net/my-result/<id>
 # http://www.speedtest.net/result/<id>.png
 
-uri_regex = r'.*https?://www.speedtest.net/(?:result|my-result)/([0-9]{5,15})(?:\.png)?.*'
+uri_regex = r'.*https?://www.speedtest.net/(?:result|my-result|android)/([0-9]{5,15})(?:\.png)?.*'
 uri = 'http://www.speedtest.net/my-result/%s'
 
 
