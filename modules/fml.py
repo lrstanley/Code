@@ -15,15 +15,25 @@ def fml(code, input):
     if not input.group(2):
         try:
             r = fml_random()
-            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
-                                                              web.escape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b} - http://fmylife.com/%s' % (
+                str(r['fml-id']),
+                web.escape(r['fml']).replace('FML', '{red}FML{c}'),
+                r['+'],
+                r['-'],
+                str(r['fml-id'])
+            ))
         except:
             return code.say('{red}Failed to retrieve random FML.')
     elif input.group(2).startswith('#') and input.group(2).lstrip('#').isdigit():
         try:
             r = fml_id_search(input.group(2).lstrip('#'))
-            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (str(r['fml-id']),
-                                                              web.escape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b} - http://fmylife.com/%s' % (
+                str(r['fml-id']),
+                web.escape(r['fml']).replace('FML', '{red}FML{c}'),
+                r['+'],
+                r['-'],
+                str(r['fml-id'])
+            ))
         except:
             return code.say('Failed to retrieve FML via ID.')
     # Input/Assume search query, with (possible) number at end indicating FML
@@ -44,8 +54,14 @@ def fml(code, input):
         try:
             r = fml_search(query, id)
             code.say(
-                '(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b}' % (r['id'], r['max'], str(r['fml-id']),
-                                                                 web.escape(r['fml']).replace('FML', '{red}FML{c}'), r['+'], r['-']))
+                '(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b} - http://fmylife.com/%s' % (
+                    r['id'], r['max'],
+                    str(r['fml-id']),
+                    web.escape(r['fml']).replace('FML', '{red}FML{c}'),
+                    r['+'],
+                    r['-'],
+                    str(r['fml-id'])
+                ))
         except:
             return code.say('Failed to search for FML.')
 
