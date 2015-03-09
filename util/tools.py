@@ -1,7 +1,10 @@
+import sys
+sys.path += ['lib']
 from lib.dateutil.relativedelta import relativedelta
 import hashlib
 import time
 import re
+from fuzzywuzzy import fuzz as fuzzy
 
 
 # Time convert usage
@@ -83,3 +86,9 @@ def convertmask(string):
     for char in special:
         string = string.replace(char, "\\" + char)
     return '(?i)^%s$' % string.replace(r'*', r'.*').strip()
+
+
+def compare(first, second, advanced=True):
+    if advanced:
+        return int(fuzzy.token_set_ratio(first.lower(), second.lower()) * float(len(second)) / float(len(first)))
+    return fuzzy.token_set_ratio(first, second)
