@@ -44,9 +44,11 @@ def trigger_004(code, origin, line, args, text):
     """
 
     code.server_options['SERVERNAME'] = args[2]
-    code.server_options['VERSION'] = args[3]
-    code.server_options['UMODES'] = args[4]
-    code.server_options['CMODES'] = args[5]
+    # As this varies widely, I should check to see if it exists first...
+    # Will implement a different fix using VERSION at a later time.
+    code.server_options['VERSION'] = args[3] if len(args) == 4 else ''
+    code.server_options['UMODES'] = args[4] if len(args) == 5 else ''
+    code.server_options['CMODES'] = args[5] if len(args) == 6 else ''
 
 
 def trigger_005(code, origin, line, args, text):
