@@ -28,6 +28,10 @@ def auto_honeypot(code, input):
             return
         db.append(ip)
         database.set(code.default, db, 'honeypot')
+        if code.config('kickban_on_honeypot') and code.chan[input.sender][code.nick]['op']:
+            # Wants to kickban, and we've got op. BANHAMMER TIME!
+            code.write(['MODE', input.sender, '+b', '*!*@' + input.host])
+            code.write(['KICK', input.sender, input.nick], abuser)
         code.say(abuser)
 
 

@@ -49,6 +49,8 @@
         //   Project Honeypot IP Abuser Database. IP's that are in that Database
         //   Are involved in spam, DDoS, and more.
         "honeypot_on_join": true,
+        // Kickban on honeypot trigger? The bot will need to have op in the channel
+        "kickban_on_honeypot": false,
         // Send the location of a user to the channel when they join
         "geoip_on_join": [
             // "#example",
