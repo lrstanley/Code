@@ -13,12 +13,10 @@ auto_check = 5  # Time in seconds to check for new tweets
 # Input checking...
 r_uid = re.compile(r'\s(@[a-zA-Z0-9_]{1,15})')
 r_fullname = re.compile(r'<strong class="fullname">(.*?)</strong>')
-r_username = re.compile(
-    r'<span class="username">.*?<span>@</span>(.*?)</span>')
+r_username = re.compile(r'<div class="username">.*?<span>@</span>(.*?)</div>')
 r_time = re.compile(r'<td class="timestamp">.*?</td>')
 r_tweet = re.compile(r'<tr class="tweet-container">.*?</tr>')
-r_url = re.compile(
-    r'<a href=".*?" class="twitter_external_link.*?" data-url="(.*?)" dir=".*?" rel=".*?" target=".*?">(.*?)</a>')
+r_url = re.compile(r'<a href="(?P<url>http.*?)".*?>(?P<nice>.*?)</a>')
 r_tweeturl = re.compile(r'href="/(.*?)/status/(.*?)\?p=v')
 r_basicurl = re.compile(
     'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
@@ -43,23 +41,17 @@ def get_tweets(url, sender_uid=False):
             tmp['user'] = r_username.findall(tweet)[0].strip()
             tmp['time'] = web.striptags(r_time.findall(tweet)[0])
             tweet_data = r_tweet.findall(tweet)[0].strip()
-            urls = r_url.findall(tweet_data)
-            for url in urls:
-                url = list(url)
-                tweet_data = tweet_data.replace(url[1], url[0])
+            tweet_data = re.sub(r_url, '\g<url>', tweet_data)
             tmp['text'] = web.escape(web.striptags(tweet_data))
             uids = r_uid.findall(' ' + tmp['text'])
             for uid in uids:
-                tmp['text'] = tmp['text'].replace(
-                    uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
+                tmp['text'] = tmp['text'].replace(uid, '{purple}{b}@{b}%s{c}' % uid.strip('@')).lstrip()
 
             # Check if it's a retweet
             if sender_uid:
                 if sender_uid.lower().strip('@') != tmp['user'].lower().strip('@'):
-                    tmp['text'] = tmp['text'] + \
-                        ' ({purple}{b}@{b}%s{c})' % tmp['user']
-                    tmp['user'] = sender_uid.strip(
-                        '@') + ' {blue}{b}retweeted{c}{b}'
+                    tmp['text'] = tmp['text'] + ' ({purple}{b}@{b}%s{c})' % tmp['user']
+                    tmp['user'] = sender_uid.strip('@') + ' {blue}{b}retweeted{c}{b}'
             tweets.append(tmp)
         except:
             continue
@@ -70,7 +62,7 @@ def get_tweets(url, sender_uid=False):
 
 
 def format(tweet):
-    return '{teal}(Twitter){c} %s ({purple}{b}@{b}%s{c}) - %s' % (tweet['text'], tweet['user'], tweet['url'])
+    return '{teal}(Twitter){c} %s ({purple}{b}@{b}%s{c}) - %s' % (tweet['text'], tweet['user'], web.shorten(tweet['url']))
 
 
 @hook(cmds=['tw', 'twitter'], ex='twitter liamraystanley', args=True, rate=0)
@@ -82,12 +74,12 @@ def twitter(code, input):
         data = get_tweets(uri_hash % web.quote(args))
         if not data:
             return code.say(err)
-        return code.say(format(data[0]))
+        return code.msg(input.sender, format(data[0]), shorten_urls=False)
     else:
         data = get_tweets(uri_user % web.quote(args.strip('@')))
         if not data:
             return code.say(err)
-        return code.say(format(data[0]))
+        return code.msg(input.sender, format(data[0]), shorten_urls=False)
     return code.say(err)
 
 
@@ -111,8 +103,7 @@ def daemon(code, tc):
                 if tweet_item.startswith('#'):  # ID
                     data = get_tweets(uri_hash % web.quote(tweet_item))
                 else:
-                    data = get_tweets(uri_user %
-                                      web.quote(tweet_item), tweet_item)
+                    data = get_tweets(uri_user % web.quote(tweet_item), tweet_item)
                 if not data:
                     continue
                 data = data[0]
@@ -127,7 +118,7 @@ def daemon(code, tc):
                 db.append(hash_str)
                 database.set(code.default, db, 'twitter')
                 msg = format(data)
-                code.msg(channel, msg.decode('ascii', 'ignore'))
+                code.msg(channel, msg.decode('ascii', 'ignore'), shorten_urls=False)
             db = database.get(code.default, 'twitter')
             if db:
                 if len(db) > 200:
