@@ -3,6 +3,7 @@ from util import web
 from util.hook import *
 from util.tools import compare
 
+
 url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 title_min_length = 3
 url_min_length = 5
@@ -13,7 +14,7 @@ ignored = [
     'github.com'
 ]
 
-unsafe_mime = ['image', 'audio', 'video', 'application']
+safe_mime = ['text']
 safe_status_codes = [200, 201, 202, 203, 204, 206, 301, 302, 304, 307, 308]
 
 
@@ -24,7 +25,7 @@ def get_url_data(url):
         # Pull the headers and content, before we actually pull the data. Test HTTP status codes,
         # as well as force redirection (not enabled by default for HEAD requests)
         test = web.head(url, allow_redirects=True, verify=False)
-        if test.headers['content-type'].split('/', 1)[0].lower() in unsafe_mime:
+        if test.headers['content-type'].split('/', 1)[0].lower() not in safe_mime:
             return False
         if test.status_code not in safe_status_codes:
             return False
