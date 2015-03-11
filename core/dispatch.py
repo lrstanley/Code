@@ -55,8 +55,9 @@ def dispatch(self, origin, args):
 
 
 def call(self, func, origin, code, input):
+    input.channel = input.sender if input.sender.startswith('#') else False
     # custom decorators
-    if func.ischannel and not input.sender.startswith('#'):
+    if func.ischannel and input.channel:
         return code.say('{b}That can only be used in a channel!')
 
     try:
@@ -81,10 +82,7 @@ def call(self, func, origin, code, input):
     if func.args and not input.group(2):
         msg = '{red}No arguments supplied! Try: ' + \
               '"{b}{purple}%shelp %s{b}{r}"'
-        return code.say(msg % (
-            code.prefix,
-            code.doc[func.name]['commands'][0])
-        )
+        return code.say(msg % (code.prefix, code.doc[func.name]['commands'][0]))
 
     if func.selfopped and not code.chan[input.sender][code.nick]['op']:
         return code.say('{b}{red}I do not have op. I cannot execute this command.')
