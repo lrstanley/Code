@@ -1,92 +1,77 @@
-from socket import getfqdn as rdns
 from util.hook import *
 from util import web
 
-base = 'http://geoip.cf/json/%s'
+doc = {
+    "invalid": "{red}Invalid input: '.whois [ip|hostname]'{c}",
+    "error": "{red}Couldn't receive information for %s{c}",
+    "na": "{red}N/A{c}"
+}
+
+ignore = ['proxy', 'clone', 'bnc', 'bouncer', 'cloud', 'server']
 
 
 @hook(cmds=['ip', 'host', 'whois', 'geo', 'geoip'], ex='whois 8.8.8.8')
 def ip(code, input):
-    """whois <ip|hostname> - Reverse domain/ip lookup (WHOIS)"""
+    """ whois [ip|hostname] - Reverse domain/ip lookup (WHOIS) """
     show = [
         ['hostname', 'Hostname'],
         ['ip', 'IP'],
-        ['city', 'City'],
-        ['region_name', 'Region'],
-        ['country_name', 'Country'],
-        ['zipcode', 'Zip'],
+        ['subdivision', 'Divisions'],
+        ['country', 'Country'],
+        ['continent', 'Continent'],
+        ['accuracy', 'Accuracy'],
         ['latitude', 'Lat'],
         ['longitude', 'Long']
     ]
-    doc = {
-        'invalid': '{red}Invalid input: \'.whois [ip|hostname]\'{c}',
-        'error': '{red}Couldn\'t receive information for %s{c}',
-        'na': '{red}N/A{c}'
-    }
     if not input.group(2):
         host = input.host.strip()
     else:
         host = input.group(2).strip()
-    if '.' not in host and ':' not in host and len(host.split()) != 1:
+    if '.' not in host or ':' in host or len(host.split()) != 1:
         return code.reply(doc['invalid'])
     host = code.stripcolors(host).encode('ascii', 'ignore')
 
     # Try to get data from GeoIP server...
     try:
-        data = web.json(base % host, timeout=4)
+        data = web.json("http://geoip.cf/api/%s" % host, timeout=4)
     except:
         return code.reply(doc['error'] % host)
 
     # Check if errored or localhost
-    if data['country_name'] == 'Reserved':
+    if data['country'] == 'Reserved':
         return code.reply(doc['error'] % host)
 
-    # Try to get reverse dns based hostname
-    data['hostname'], output = rdns(host), []
+    output = []
 
     # Make list of things to respond with
     for option in show:
-        if len(unicode(data[option[0]])) < 1 or data[option[0]] == host:
-            output.append(code.format('{blue}{}{c}: {}').format(option[1], doc['na']))
-            continue
-        output.append('{blue}%s{c}: %s' % (option[1], data[option[0]]))
-    return code.say(' \x02|\x02 '.join(output))
+        item = data[option[0]]
+        if isinstance(item, list):
+            item = ', '.join(item)
+        else:
+            item = str(item)
+        if len(item) < 1 or item == host:
+            output.append('{blue}%s{c}: %s' % (option[1], doc['na']))
+        else:
+            output.append('{blue}%s{c}: %s' % (option[1], item))
+    return code.say(' {b}|{b} '.join(output))
 
 
-@hook(rule=r'.*', event='JOIN', rate=10)
+@hook(rule=r'.*', event='JOIN', rate=10, supress=True)
 def geoip(code, input):
-    """GeoIP user on join."""
+    """ GeoIP user on join. """
     if not code.config('geoip_on_join'):
         return
 
-    allowed = []
-    for channel_name in code.config('geoip_on_join', []):
-        allowed.append(channel_name.lower())
+    allowed = [channel.lower() for channel in code.config('geoip_on_join', [])]
 
-    # Split the line and get all the data
-    try:
-        host, command, channel = code.raw.split('@')[1].split()
-    except:
+    if True in [True if item.lower() in input.host else False for item in ignore] or \
+       input.nick == code.nick or not input.channel or input.channel not in allowed:
         return
 
-    for domain in ['proxy', 'clone', 'bnc', 'bouncer', 'cloud', 'server']:
-        if domain in host.lower():
-            return
-
-    if input.nick == code.nick or not channel.lower() in allowed:
-        return
     try:
-        r = web.json(base % host, timeout=4)
-        output, location = [], ['region_name', 'country_name']
-        for val in location:
-            if val not in r:
-                continue
-            if len(r[val]) > 1:
-                output.append(r[val])
-        if not r['city']:
-            rough = ' (estimated)'
-        else:
-            rough = ''
-        return code.msg(channel, '{green}User is connecting from %s%s' % (', '.join(output), rough))
+        country = web.text("http://geoip.cf/api/%s/country" % input.host, timeout=4)
+        if country:
+            code.say('{green}User is connecting from %s' % country)
     except:
         return
