@@ -58,14 +58,20 @@ def call(self, func, origin, code, input):
     input.channel = input.sender if input.sender.startswith('#') else False
     # custom decorators
     if func.ischannel and input.channel:
-        return code.say('{b}That can only be used in a channel!')
+        if not func.supress:
+            code.say('{b}That can only be used in a channel!')
+        return
 
     try:
         if func.op and not code.chan[input.sender][input.nick]['op']:
-            return code.say('{b}{red}You must be op to use that command!')
+            if not func.supress:
+                code.say('{b}{red}You must be op to use that command!')
+            return
 
         if func.voiced and not code.chan[input.sender][input.nick]['voiced']:
-            return code.say('{b}{red}You must be voiced to use that command!')
+            if not func.supress:
+                code.say('{b}{red}You must be voiced to use that command!')
+            return
 
         input.op = code.chan[input.sender][input.nick]['op']
         input.voiced = code.chan[input.sender][input.nick]['voiced']
@@ -74,10 +80,14 @@ def call(self, func, origin, code, input):
         pass
 
     if func.admin and not input.admin or func.trusted and not input.trusted:
-        return code.say('{b}{red}You are not authorized to use that command!')
+        if not func.supress:
+            code.say('{b}{red}You are not authorized to use that command!')
+        return
 
     if func.owner and not input.owner:
-        return code.say('{b}{red}You must be owner to use that command!')
+        if not func.supress:
+            code.say('{b}{red}You must be owner to use that command!')
+        return
 
     if func.args and not input.group(2):
         msg = '{red}No arguments supplied! Try: ' + \
