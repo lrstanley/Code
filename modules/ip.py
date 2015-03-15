@@ -38,7 +38,7 @@ def ip(code, input):
         return code.reply(doc['error'] % host)
 
     # Check if errored or localhost
-    if data['country'] == 'Reserved':
+    if 'country' not in data:
         return code.reply(doc['error'] % host)
 
     output = []
