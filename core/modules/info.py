@@ -32,7 +32,7 @@ def version(code, input):
         code.say(' - {b}Source{b}: https://github.com/Liamraystanley/Code/')
     except:
         code.say(
-            '%s does not use Github file management. Unable to determine version.' %
+            '%s does not use Git file management. Unable to determine version.' %
             code.nick)
 
 
