@@ -2,7 +2,7 @@
 """
 Code Copyright (C) 2012-2015 Liam Stanley
 Source: https://github.com/Liamraystanley/Code
-Docs: https://www.liamstanley.io/Code.git
+Docs: https://liamstanley.io/Code.git
 """
 
 import sys
@@ -16,9 +16,9 @@ import traceback
 from multiprocessing import Process
 from core import bot
 from util import output
+from util.tools import hash
 
 dotdir = os.path.expanduser('~/.code')
-configv = 7
 threads = []
 
 
@@ -37,7 +37,7 @@ def docstring():
         tmp += ' ' * sidedif + symbol
         output.normal(tmp, False)
     output.normal(outer, False)
-    output.normal('Initializing the bot', 'START')
+    output.success('Initializing the bot', 'START')
 
 
 def parse_json(filename):
@@ -50,12 +50,18 @@ def parse_json(filename):
             content = content[:match.start()] + content[match.end():]
             match = comment_re.search(content)
 
-        return json.loads(content)
+        contents = json.loads(content)
+
+    if 'servers' not in content:
+        # Backwards compatible with old config.json files
+        contents = {'servers': [contents]}
+
+    return contents
 
 
 def setupServer(server):
     defaults = {
-        'website': 'https://www.liamstanley.io/Code.git',
+        'website': 'https://liamstanley.io/Code.git',
         'name': '\x0307Code -- Python IRC Bot',
         'user': 'code',
         'port': 6667,
@@ -78,7 +84,6 @@ def setupServer(server):
 
 def main(argv=None):
     # 1: Parse The Command Line
-
     parser = optparse.OptionParser('%prog [options]')
     parser.add_option(
         '-c', '--config', metavar='fn',
@@ -91,15 +96,14 @@ def main(argv=None):
 
     # 3: Require python 2.7 or later
     if sys.version_info < (2, 7):
-        output.error('Requires Python 2.7 or later, from www.python.org')
+        output.error('Requires Python 2.7.x, from www.python.org')
         sys.exit(1)
 
     # 4. Create ~/.code if not made already
     if not os.path.isdir(dotdir):
         if not os.path.isdir(dotdir):
             try:
-                output.info(
-                    'Creating database directory in ~/.code...')
+                output.info('Creating database directory in ~/.code...')
                 os.mkdir(dotdir)
             except Exception as e:
                 output.error('There was a problem creating %s:' % dotdir)
@@ -124,9 +128,7 @@ def main(argv=None):
         sys.exit(1)
 
     global threads
-    if 'servers' not in config:
-        # Backwards compatible with old config.json files
-        config = {'servers': [config]}
+
     for server in config['servers']:
         if server['host'] == 'irc.anotherexample.net':
             continue
@@ -137,56 +139,71 @@ def main(argv=None):
         threads.append({'id': id, 'config': server, 'process': process})
         time.sleep(5)
 
-
-def connect(id, config):
-    while True:
-        try:
-            # Todo, pass thread number, if more than one thread, pass in
-            # console
-            bot.Code(config).run(id, config['host'], config['port'])
-        except:
-            output.error('Error in process (Server: %s, port: %s)' % (config['host'], config['port']))
-            output.error(traceback.format_exc())
-            delay = config['connect_delay'] if 'connect_delay' in config else 20
-            output.error('Terminating and restarting in {} seconds...'.format(delay))
-            time.sleep(int(delay))
-            output.error('Restarting...')
-            pass
-
-
-if __name__ == '__main__':
+    # 6: Begin managing these processes
     try:
-        main()
+        # set some temporary variables that we will be using for config
+        # file version checking
+        conf_last_check = int(time.time())
+        conf_last_mtime = int(os.path.getmtime(bot_config))
         while True:
             time.sleep(1)
+            if (int(time.time()) - conf_last_check) > 10 and int(os.path.getmtime(bot_config)) > conf_last_mtime:
+                conf_last_check = int(time.time())
+                conf_last_mtime = int(os.path.getmtime(bot_config))
+                try:
+                    # If the new configuration file isn't the same as the last
+                    # one that we saved, attempt to re-import it
+                    config_new = parse_json(bot_config)
+                    if len(config_new['servers']) == len(config['servers']) and len(config_new['servers']) == len(threads):
+                        output.success('Configuration file %s has changed! Use the restart command to take affect!' % bot_config)
+                        config = config_new
+                        for i in range(len(config['servers'])):
+                            # Once they reboot that connection, it should autoload
+                            # the new config.
+                            threads[i]['config'] = config['servers'][i]
+                except Exception as e:
+                    # Only spit out errors once per file modification
+                    output.error("Configuration file has been changed, however I cannot read it! (%s)" % str(e))
             if len(threads) == 0:
-                output.error(
-                    'No more processes to manage. Exiting...', 'ERROR')
+                output.warning('No more processes to manage. Exiting...')
                 sys.exit()
             for id in range(len(threads)):
                 p = threads[id]['process']
                 if p.exitcode == 0:
                     # Assume it exited safely. Ignore the termination.
                     p.terminate()
-                    output.success('Terminating process ID %s (%s:%s)' % (
-                        id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+                    output.status('Terminating process ID #%s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']))
                     del threads[id]
                     break
                 if p.exitcode == 1:
                     # Exited erronously. We'll just assume it wants a reboot.
                     p.terminate()
-                    p = Process(
-                        target=connect, args=(id, setupServer(threads[id]['config']),))
+                    p = Process(target=connect, args=(id, setupServer(threads[id]['config']),))
                     p.daemon = True
-                    output.success('Regenerating process ID %s (%s:%s)' % (
-                        id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+                    delay = threads[id]['config']['connect_delay'] if 'connect_delay' in threads[id]['config'] else 20
+                    output.error('Restarting process id #%s (%s:%s) in %s seconds.' % (
+                        id, threads[id]['config']['host'], threads[id]['config']['port'], str(delay)
+                    ))
+                    time.sleep(delay)
+                    output.status('Regenerating process ID #%s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']))
                     p.start()
                     threads[id]['process'] = p
     except KeyboardInterrupt:
         output.success('Shutting down bot...', 'REQUEST')
         for id in range(len(threads)):
             p = threads[id]['process']
-            output.success('Terminating process ID %s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']), 'STATUS')
+            output.status('Terminating process ID #%s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']))
             p.terminate()
         time.sleep(1)
         sys.exit()
+
+
+def connect(id, config):
+    bot.Code(config).run(id, config['host'], config['port'])
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except:
+        output.error(traceback.format_exc())
