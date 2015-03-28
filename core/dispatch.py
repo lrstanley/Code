@@ -57,7 +57,7 @@ def dispatch(self, origin, args):
 def call(self, func, origin, code, input):
     input.channel = input.sender if input.sender.startswith('#') else False
     # custom decorators
-    if func.ischannel and input.channel:
+    if func.ischannel and not input.channel:
         if not func.supress:
             code.say('{b}That can only be used in a channel!')
         return
