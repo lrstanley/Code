@@ -92,8 +92,7 @@ class Bot(asynchat.async_chat):
         self.initiate_connect(host, port)
 
     def initiate_connect(self, host, port):
-        output.normal('Connecting to %s:%s... ' %
-                      (host, port), 'STATUS')
+        output.normal('Connecting to %s:%s...' % (host, port), 'STATUS')
         try:
             # self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
             source_address = ((self.config('bind_ip'), 0) if self.config('bind_ip') else None)
@@ -103,8 +102,8 @@ class Bot(asynchat.async_chat):
         except KeyboardInterrupt:
             os._exit(0)
         except Exception as e:
-            output.error('Failed to keep connection to %s:%s! (%s)' % (host, port, str(e)))
-            sys.exit()
+            output.error('Connection to %s:%s failed! (%s)' % (host, port, str(e)))
+            os._exit(1)
 
     def handle_connect(self):
         self.irc_startup = int(time.time())
