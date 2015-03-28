@@ -91,5 +91,9 @@ def success(message, prefix='SUCCESS', color='green'):
     template(message, prefix, color)
 
 
-def normal(message, prefix, color='white'):
+def normal(message, prefix='STATUS', color='white'):
     template(message, prefix, color)
+
+
+def status(*args):
+    normal(*args)
