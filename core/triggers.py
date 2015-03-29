@@ -400,7 +400,8 @@ def trigger_KICK(code, origin, line, args, text):
 
 def trigger_write_KICK(code, args, text, raw):
     output.normal('I have kicked {} from {}'.format(args[2], args[1]), 'KICK', 'red')
-    del code.chan[args[1]][args[2]]
+    if args[2] in code.chan[args[1]]:
+        del code.chan[args[1]][args[2]]
 
 
 def trigger_MODE(code, origin, line, args, text):
