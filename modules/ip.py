@@ -70,6 +70,8 @@ def geoip(code, input):
         return
 
     try:
+        if not re.match(r'^[A-Za-z0-9\.\_\-\:]+$', input.host):
+            return
         country = web.text("http://geoip.cf/api/%s/country" % input.host, timeout=4)
         if country:
             code.say('{green}User is connecting from %s' % country)
