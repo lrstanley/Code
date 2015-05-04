@@ -136,7 +136,7 @@ class Code(irc.Bot):
         bind_commands(self)
 
     def register(self, variables):
-        # This is used by reload.py, hence it being methodised
+        # This is used by load.py, hence it being methodised
         for name, obj in variables.iteritems():
             if hasattr(obj, 'commands') or hasattr(obj, 'rule'):
                 self.variables[name] = obj

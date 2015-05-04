@@ -7,7 +7,7 @@ from util import output
 import json
 import os
 from util.tools import hrt
-from core.modules import reload
+from core.modules import load as reload
 
 # Some todo lists...
 # - As suggested by Allen, might add a public API that allows basic non-security-issue data to be given
