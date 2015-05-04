@@ -40,7 +40,7 @@ def split_len(seq, length):
 
 
 def add_commas(number):
-    return "{:,d}".format(number)
+    return "{:,d}".format(int(number))
 
 
 def remove_spaces(string):
