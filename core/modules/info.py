@@ -29,11 +29,9 @@ def version(code, input):
         code.say(' - {b}Commit{b}: %s ({b}%s{b})' % (commit, message))
         code.say(' - {b}Author{b}: %s' % author)
         code.say(' - {b}Date{b}: %s' % date)
-        code.say(' - {b}Source{b}: https://github.com/Liamraystanley/Code/')
+        code.say(' - {b}Source{b}: https://liamstanley.io/Code.git')
     except:
-        code.say(
-            '%s does not use Git file management. Unable to determine version.' %
-            code.nick)
+        code.say('%s does not use Git file management. Unable to determine version.' % code.nick)
 
 
 @hook(rule='\x01VERSION\x01', rate=20)
@@ -41,20 +39,15 @@ def ctcp_version(code, input):
     try:
         commit, author, date, message = git_info()
         date = date.replace('  ', ' ')
-        code.write(('NOTICE', input.nick), '\x01VERSION Code Python IRC Bot: {0} - {1} - https://github.com/Liamraystanley/Code/\x01'.format(commit, date))
+        code.write(('NOTICE', input.nick), '\x01VERSION Code Python IRC Bot: {0} - {1} - https://liamstanley.io/Code.git\x01'.format(commit, date))
     except:
-        code.write(('NOTICE', input.nick), '\x01VERSION Code - Python IRC Bot: https://github.com/Liamraystanley/Code/\x01')
+        code.write(('NOTICE', input.nick), '\x01VERSION Code - Python IRC Bot: https://liamstanley.io/Code.git\x01')
 
 
 @hook(rule='\x01SOURCE\x01', rate=20)
 def ctcp_source(code, input):
-    code.write(
-        ('NOTICE',
-         input.nick), '\x01SOURCE https://github.com/Liamraystanley/Code/\x01'
-    )
-    code.write(
-        ('NOTICE', input.nick), '\x01SOURCE\x01'
-    )
+    code.write(('NOTICE', input.nick), '\x01SOURCE https://liamstanley.io/Code.git\x01')
+    code.write(('NOTICE', input.nick), '\x01SOURCE\x01')
 
 
 @hook(rule='\x01PING\s(.*)\x01', rate=10)
@@ -62,15 +55,11 @@ def ctcp_ping(code, input):
     text = input.group()
     text = text.replace('PING ', '')
     text = text.replace('\x01', '')
-    code.write(
-        ('NOTICE', input.nick), '\x01PING {0}\x01'.format(text)
-    )
+    code.write(('NOTICE', input.nick), '\x01PING {0}\x01'.format(text))
 
 
 @hook(rule='\x01TIME\x01', rate=20)
 def ctcp_time(code, input):
     dt = datetime.now()
     current_time = dt.strftime('%A, %d. %B %Y %I:%M%p')
-    code.write(
-        ('NOTICE', input.nick), '\x01TIME {0}\x01'.format(current_time)
-    )
+    code.write(('NOTICE', input.nick), '\x01TIME {0}\x01'.format(current_time))
