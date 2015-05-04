@@ -23,7 +23,8 @@ def http(method, rdata='all', uri=None, timeout=7, params=None, data=None, heade
             'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.4 (KHTML, '
                           'like Gecko) Chrome/22.0.1229.79 Safari/537.4',
             'Cache-Control': 'max-age=0',
-            'Accept-Encoding': 'gzip,deflate,sdch'
+            'Accept-Encoding': 'gzip,deflate,sdch',
+            'X-Service': 'Code Python IRC Bot'
         }
     if method == 'get':
         response = requests.get(uri, timeout=timeout, params=params, headers=headers, **kwargs)
