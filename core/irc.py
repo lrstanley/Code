@@ -236,6 +236,8 @@ class Bot(asynchat.async_chat):
                     args[0])(self, args, text, raw,)
         except AttributeError:
             return
+        except KeyError:
+            pass
 
     def safe(self, input, u=False):
         """

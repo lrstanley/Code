@@ -205,5 +205,9 @@ def connect(id, config):
 if __name__ == '__main__':
     try:
         main()
+    except SystemExit:
+        sys.exit()
+    except KeyboardInterrupt:
+        sys.exit()
     except:
         output.error(traceback.format_exc())
