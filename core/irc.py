@@ -6,7 +6,6 @@ import socket
 import asyncore
 import asynchat
 import os
-import sys
 from util import output, database
 from util.tools import convertmask
 from util.web import uncharset, shorten
@@ -51,6 +50,7 @@ class Bot(asynchat.async_chat):
         self.muted = False
         self.debug = debug
         self.irc_startup = None
+        self.lastping = int(time.time())
         self.chan = {}
         self.bans = {}
         self.logs = {
@@ -150,6 +150,7 @@ class Bot(asynchat.async_chat):
 
         if args[0] == 'PING':
             self.write(('PONG', text))
+            self.lastping = int(time.time())
             return
 
         if self.debug:

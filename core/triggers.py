@@ -1,6 +1,7 @@
 from util import output
 import time
 import os
+from thread import start_new_thread as bg
 
 
 def trigger_001(code, origin, line, args, text):
@@ -103,6 +104,19 @@ def trigger_251(code, origin, line, args, text):
         code.join(channel)
         code.write(['WHO', channel, '%tcuhn,1'])
         time.sleep(0.5)
+
+    def checkping(code):
+        while True:
+            try:
+                diff = int(time.time()) - code.lastping
+                if diff > 120:
+                    output.warning("Connection from IRC timed out after 120 seconds, initiating reconnect...")
+                    code.restart()
+            except:
+                pass
+            time.sleep(5)
+
+    bg(checkping, (code,))
 
     return trigger_250(code, origin, line, args, text)
 
