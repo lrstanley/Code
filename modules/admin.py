@@ -69,6 +69,8 @@ def listmods(code, input):
 @hook(cmds=['join'], ex='join #example key', admin=True, args=True)
 def join(code, input):
     """ join <#channel> [key] - Join the specified channel. Admin only. """
+    if not input.group(2).startswith("#"):
+        return error(code)
     if len(input.group(2).split()) > 1:  # Channel + key
         return code.write(['JOIN', input.group(2).split(' ', 1)])
     else:
@@ -78,6 +80,8 @@ def join(code, input):
 @hook(cmds=['part', 'leave'], ex='part #example', admin=True, args=True)
 def part(code, input):
     """ part <#channel> - Part the specified channel. Admin only. """
+    if not input.group(2).startswith("#"):
+        return error(code)
     return code.write(['PART', input.group(2).strip()])
 
 
