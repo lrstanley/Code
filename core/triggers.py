@@ -109,7 +109,7 @@ def trigger_251(code, origin, line, args, text):
         while True:
             try:
                 diff = int(time.time()) - code.lastping
-                if diff > 120:
+                if diff > 240:
                     output.warning("Connection from IRC timed out after 120 seconds, initiating reconnect...")
                     code.restart()
             except:
