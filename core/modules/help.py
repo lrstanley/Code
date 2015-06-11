@@ -79,7 +79,7 @@ def about(code, input):
     response = (
         code.nick + ' was developed by Liam Stanley and many others. {b}' + code.nick + '{b} is a open-source ' +
         'Python Modular IRC Bot, that serves as a fun, fast, and collective resource ' +
-        'for large, and small channels. More info: http://liamstanley.io/Code.git'
+        'for large, and small channels. More info: https://github.com/Liamraystanley/Code'
     )
     code.reply(response)
 
