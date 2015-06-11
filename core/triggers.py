@@ -116,7 +116,7 @@ def trigger_251(code, origin, line, args, text):
                 pass
             time.sleep(5)
 
-    bg(checkping, (code,))
+    # bg(checkping, (code,))
 
     return trigger_250(code, origin, line, args, text)
 
