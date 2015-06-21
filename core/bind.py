@@ -96,7 +96,10 @@ def bind_commands(code):
         if hasattr(func, 'commands'):
             code.doc[name]['commands'] = list(func.commands)
             for command in list(func.commands):
-                template = r'(?i)^\%s(%s)(?: +(.*))?$'
-                pattern = template % (code.prefix, command)
-                regexp = re.compile(pattern)
+                template = r'(?i)^%s(%s)(?: +(.*))?$'
+                regexp = re.compile(template % (re.escape(code.prefix), command))
                 bind(code, func.priority, regexp, func)
+                template = r'(?i)^%s: (%s)(?: +(.*))?$'
+                regexp = re.compile(template % (re.escape(code.nick), command))
+                bind(code, func.priority, regexp, func)
+
