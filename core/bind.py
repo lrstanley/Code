@@ -102,4 +102,3 @@ def bind_commands(code):
                 template = r'(?i)^%s: (%s)(?: +(.*))?$'
                 regexp = re.compile(template % (re.escape(code.nick), command))
                 bind(code, func.priority, regexp, func)
-
