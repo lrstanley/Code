@@ -5,8 +5,8 @@ from util.tools import add_commas
 from util.hook import *
 
 yt_regex = r'.*://(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch.+?v=)?([a-zA-Z0-9_-]{5,15}).*'
-api_url = 'http://api.liam.sh/?video=%s'
-search_url = 'http://api.liam.sh/?youtube=%s&n=%s'
+api_url = 'http://api.liamstanley.io/youtube.php?video=%s'
+search_url = 'http://api.liamstanley.io/youtube.php?youtube=%s&n=%s'
 
 
 @hook(rule=yt_regex, thread=False, supress=True)
