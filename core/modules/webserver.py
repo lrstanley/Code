@@ -1,4 +1,3 @@
-# import time
 from util import output
 import threading
 from util.tools import hrt
@@ -7,8 +6,7 @@ import hashlib
 import os
 import functools
 from core.modules import load as reload
-from lib.bottle import TEMPLATE_PATH, route, get, post, run, request, response, \
-   redirect, static_file, jinja2_template as template
+from lib.bottle import TEMPLATE_PATH, route, get, post, run, request, response, redirect, static_file, jinja2_template as template
 
 host = '0.0.0.0'
 fmt = '%H:%M:%S'
@@ -312,9 +310,8 @@ def api(name=None):
 def daemon():
     try:
         port = bot.config('webserver_port', 8888)
-        if bot.debug:
-            output.info('Running daemon', 'WEBSERVER')
-        run(host='localhost', port=int(port), quiet=True)
+        output.info('Starting server [%s] [%s]' % (host, str(port)), 'WEBSERVER')
+        run(host=host, port=int(port), quiet=True)
     except Exception as e:
         if bot.debug:
             output.error(str(e), "WEBSERVER")
