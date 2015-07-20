@@ -1,0 +1,49 @@
+{% raw %}
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Code &middot; Python IRC Bot</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav" ng-show="api" ng-cloak>
+        <li class="navbar-text">
+          Connected to <span class="nav-data">{{api.server.NETWORK}}</span>
+          <span class="nav-data" ng-hide="api.server.NETWORK">{{api.config.host}}</span>
+        </li>
+        <li class="navbar-text" ng-show="api.nick">
+          Using nick <span class="nav-data">{{api.nick}}</span>
+        </li>
+        <li class="navbar-text" ng-show="api.modules">
+          <span class="nav-data">{{api.modules.length}}</span> modules loaded
+        </li>
+        <li class="navbar-text" ng-show="api.bot_startup">
+          Bot uptime: <span class="nav-data">{{api.bot_startup}}</span>
+        </li>
+        <!-- <li class="navbar-text">Using nick: </li> -->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Hello<span ng-show="api.config.owner">, </span>{{api.config.owner.split("!")[0]}}
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li ng-hide="api.muted"><a ng-click="mute()"><i class="fa fa-lock"></i> Mute bot</a></li>
+            <li ng-show="api.muted"><a ng-click="unmute()"><i class="fa fa-unlock"></i> Unmute bot</a></li>
+            <li><a ng-click="restart()"><i class="fa fa-repeat"></i> Restart bot</a></li>
+            <li><a ng-click="shutdown()"><i class="fa fa-trash"></i> Shutdown bot</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endraw %}

@@ -31,6 +31,7 @@ class Code(irc.Bot):
         self.data = {}
         self.webserver_data = {}
         self.bot_startup = int(time.time())
+        self.irc_startup = int(time.time())
         self.excludes = self.config('excluded_per_channel', [])
         # Setup modules
         self.setup()

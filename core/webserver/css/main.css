@@ -1,0 +1,112 @@
+body {
+    background-color: #2d2d2d;
+}
+
+#main {
+    margin-top: 70px;
+}
+
+#channel-log {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#module-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#channel-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#channel-log .list-group {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#modal-timeout {
+    color: red;
+    font-weight: 700;
+    font-size: 15px;
+    margin: 20% 0 20% 0;
+}
+
+#modal-password {
+    position: relative;
+    top: 25%;
+    left: 1%;
+}
+
+.channel {
+    width: 100px;
+}
+
+.module-icon {
+    padding-right: 10px;
+    padding-top: 2px;
+}
+
+.module-button {
+    margin-bottom: 10px;
+}
+
+.nav-data {
+    color: #0066FF;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.msg-date {
+    color: grey;
+}
+
+.alert-sm {
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 100px auto 0px auto;
+}
+.form-signin .form-signin-heading {
+    margin-bottom: 10px;
+    color: white;
+}
+
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 10px; }
+
+::-webkit-scrollbar-track-piece {
+  background-color: #F5F5F5;
+  background-clip: padding-box; }
+
+::-webkit-scrollbar-thumb {
+  background-color: #1E72FF;
+  background-clip: padding-box;
+  border: 3px solid #FFFFFF;
+  border-radius: 6px; }
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background-color: #BBBBBB; }

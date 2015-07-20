@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="main">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+
+    <title>Code &middot; {% block title %}Python IRC Bot {% endblock title %}</title>
+    <script src="/static/js/angular.min.js"></script>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/main.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  </head>
+  <body>
+    {% block page %}
+      <div ng-controller="mainCtrl">
+        {% include 'nav.html' %}
+        <div class="container" id="main" ng-hide="error || restarting || quit">
+          {% block content %}{% endblock content %}
+        </div>
+        <div class="container" id="main" ng-show="error" ng-cloak>
+          <div class="alert alert-danger"><b>Warning!</b> An unknown error has occurred. Unable to connect to the bot. Please ensure it's running!</div>
+        </div>
+        <div class="container" id="main" ng-show="restarting" ng-cloak>
+          <div class="alert alert-info"><b>Success!</b> You have attempted to restart the bot. As soon as the bot is available again, this warning will go away.</div>
+        </div>
+        <div class="container" id="main" ng-show="quit" ng-cloak>
+          <div class="alert alert-success"><b>Success!</b> You have shutdown the bot. You may now close this page.</div>
+        </div>
+      </div>
+    {% endblock page %}
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.growl.min.js"></script>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>

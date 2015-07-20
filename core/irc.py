@@ -49,7 +49,6 @@ class Bot(asynchat.async_chat):
         self.stack = list()
         self.muted = False
         self.debug = debug
-        self.irc_startup = None
         self.lastping = int(time.time())
         self.chan = {}
         self.bans = {}

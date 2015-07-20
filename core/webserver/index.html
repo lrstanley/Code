@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}{% raw %}
+<div class="row" ng-cloak>
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="fa fa-comment"></span> Console log</h3>
+      </div>
+      <div class="panel-body" id="channel-log">
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="msg in logs">
+            <div class="row">
+              <div class="col-md-10">
+                <span class="msg-channel">[<b>{{msg.channel}}</b>]</span>
+                <span class="msg-text">
+                  (<span class="msg-name"><b>{{msg.nick}}</b></span>)
+                  {{msg.message}}
+                </span>
+              </div>
+              <div class="col-md-2">
+                <span class="msg-date pull-right">[{{msg.timestamp}}]</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="panel-footer" style="display:block;">
+        <div class="row">
+          <div class="col-md-2">
+            <select class="form-control" ng-model="chatchannel" required>
+              <option value="" disabled selected style="display:none">Select a channel</option>
+              <option ng-repeat="channel in api.channels" value="{{channel}}">{{channel}}</option>
+            </select>
+          </div>
+          <div class="col-md-10">
+            <div class="input-group" id="msg-input" ng-hide="api.muted">
+              <input id="msg-text" type="text" class="form-control" placeholder="Text to send to the channel" ng-model="chatbox" ng-keyup="$event.keyCode == 13 && sendmessage()" required>
+              <span class="input-group-btn">
+                <button ng-click="sendmessage()" ng-disabled="!chatbox || !chatchannel" class="btn btn-primary" id="msg-btn">Send</button>
+              </span>
+            </div>
+            <div class="alert alert-info alert-sm" ng-show="api.muted">
+              <b>Warning!</b> {{api.nick}} is currently muted. Cannot send message.
+              <a ng-click="unmute()">Unmute</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <span class="fa fa-comment"></span> Module list ({{api.modules.length}} total)
+          <span class="pull-right"><a ng-click="reloadall()">Reload all</a></span>
+        </h3>
+      </div>
+      <div class="panel-body" id="module-list">
+        <div class="row" ng-show="api.modules">
+          <div class="col-md-6" ng-repeat="module in api.modules">
+            <button class="btn btn-info btn-xs btn-block module-button">{{module}}
+              <a ng-click="mod_unload(module)"><i class="fa fa-close pull-right module-icon"></i></a>
+              <a ng-click="reload(module)"><i class="fa fa-repeat pull-right module-icon"></i></a>
+            </button>
+          </div>
+        </div>
+        <div class="alert alert-info" ng-hide="api.modules">Loading module data...</div>
+      </div>
+      <div class="panel-footer" style="display:block;">
+        <div class="input-group">
+          <input type="text" class="form-control" ng-keyup="$event.keyCode == 13 && loadbox && mod_load()" placeholder="Module to load" ng-model="loadbox" required>
+          <span class="input-group-btn">
+            <button ng-click="mod_load()" ng-disabled="!loadbox" class="btn btn-primary" id="msg-btn">Load module</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <span class="fa fa-slack"></span> Channel list
+          <span ng-show="api.channels"> ({{api.channels.length}} total)</span>
+        </h3>
+      </div>
+      <div class="panel-body" id="channel-list">
+        <div class="row" ng-show="api.channels.length">
+          <div class="col-md-6" ng-repeat="channel in api.channels">
+            <button class="btn btn-info btn-xs btn-block module-button">{{channel}}
+              <a ng-click="part_channel(channel)"><i class="fa fa-close pull-right module-icon"></i></a>
+            </button>
+          </div>
+        </div>
+        <div class="alert alert-info" ng-hide="api.channels">{{api.nick}} currently isn't in any channels.</div>
+      </div>
+      <div class="panel-footer" style="display:block;">
+        <div class="input-group">
+          <input type="text" class="form-control" ng-keyup="$event.keyCode == 13 && joinbox && join_channel()" placeholder="Channel to join" ng-model="joinbox" required>
+          <span class="input-group-btn">
+            <button ng-click="join_channel()" ng-disabled="!joinbox" class="btn btn-primary" id="msg-btn">Join channel</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endraw %}{% endblock content %}

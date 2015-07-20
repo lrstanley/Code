@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+{% block page %}{% raw %}
+  <div class="container" ng-controller="loginCtrl">
+    <form class="form-signin">
+      <h2 class="form-signin-heading text-center" ng-hide="error">Please sign in</h2>
+      <h2 class="form-signin-heading text-center" ng-show="error" style="color: red">Invalid login</h2>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input ng-class="{'has-error': error}" ng-keyup="$event.keyCode == 13 && passwd && login()"
+             ng-model="passwd" type="password" id="inputPassword" class="form-control"
+             placeholder="Password" required>
+      <button ng-click="login()" ng-disabled="!passwd" class="btn btn-lg btn-primary btn-block">Sign in</button>
+    </form>
+  </div>
+{% endraw %}{% endblock page %}
