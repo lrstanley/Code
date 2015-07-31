@@ -112,7 +112,7 @@ def trigger_251(code, origin, line, args, text):
             except Exception as e:
                 if code.debug:
                     output.error('Error while pinging server. (%s)' % str(e))
-            time.sleep(code.irc_timeout)
+            time.sleep(int(float(code.irc_timeout) / 3))
 
     def checkping(code):
         while True:
