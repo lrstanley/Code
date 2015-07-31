@@ -105,18 +105,28 @@ def trigger_251(code, origin, line, args, text):
         code.write(['WHO', channel, '%tcuhn,1'])
         time.sleep(0.5)
 
+    def sendping(code):
+        while True:
+            try:
+                code.write(('PING', 'Code'))
+            except Exception as e:
+                if code.debug:
+                    output.error('Error while pinging server. (%s)' % str(e))
+            time.sleep(code.irc_timeout)
+
     def checkping(code):
         while True:
             try:
                 diff = int(time.time()) - code.lastping
-                if diff > 240:
-                    output.warning("Connection from IRC timed out after 120 seconds, initiating reconnect...")
+                if diff > code.irc_timeout:
+                    output.warning("Connection from IRC timed out after %s seconds, initiating reconnect..." % code.irc_timeout)
                     code.restart()
             except:
                 pass
             time.sleep(5)
 
-    # bg(checkping, (code,))
+    bg(sendping, (code,))
+    bg(checkping, (code,))
 
     return trigger_250(code, origin, line, args, text)
 

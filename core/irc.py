@@ -43,6 +43,7 @@ class Bot(asynchat.async_chat):
         self.default = nick
         self.name = name
         self.user = user
+        self.irc_timeout = 45
         self.server_options = {}
         self.server_password = server_password
         self.channels = channels or list()
@@ -149,6 +150,10 @@ class Bot(asynchat.async_chat):
 
         if args[0] == 'PING':
             self.write(('PONG', text))
+            self.lastping = int(time.time())
+            return
+
+        if args[0] == 'PONG':
             self.lastping = int(time.time())
             return
 
