@@ -37,8 +37,7 @@ def retrievequote(code, input):
         except:
             return code.reply('{red}I\'m sorry, there currently aren\'t any quote in the database. Use .addquote to add one!')
     if not (0 <= number <= MAX):
-        code.reply(
-            code.color('red', 'I\'m not sure which quote you would like to see.'))
+        code.reply('{red}I\'m not sure which quote you would like to see.')
     else:
         line = lines[number - 1]
         code.reply('Quote {blue}%s{c} of {blue}%s{c}: ' % (number, MAX) + line)
