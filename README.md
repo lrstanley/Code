@@ -1,47 +1,44 @@
-Code the flexible Python IRC Bot
-================================
+# Code the flexible Python IRC Bot
 
-Code (on #L @ irc.esper.net) is a open source python IRC bot. Code can run on any operating system that supports Python 2.7.
+Code is a open source python IRC bot. Code can run on any operating system that supports Python 2.7, but works best on Linux based distrobutions.
 
-Features
--------- 
-________
+Feel free to test Code here: http://byteirc.org/channel/L
+
+## Features
 
 Code is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
 
-Webpanel
-- Code has a builtin webpanel that you can enable, that also serves as a webserver and a JSON API (Almost like a REST API) that allows you to remotely execute functions or retrieve information from the bot, all via GET requests. Everything authenticated too!
+#### Control panel
+Code has a built-in control panel that you can enable, that also serves as a webserver and a REST api that allows you to remotely execute functions or retrieve information from the bot, all via GET/POST requests. Everything authenticated too!
 
-The Webserver itself:
-![Webserver](http://misc.liamstanley.io/code/code_webpanel.png "The Webserver itself")
+#### The control panel itself:
+![The control panel](http://i.imgur.com/ewAgVNu.png)
 
 Webserver authentication:
-![Webserver authentication](http://misc.liamstanley.io/code/code_webpanel_login.png "The Webserver authentication")
+![Control panel authentication](http://i.imgur.com/w5kbij3.png)
 
-Webserver module feature:
-![Webserver modules](http://misc.liamstanley.io/code/code_webpanel_modules.png "Webserver modules")
+Mute feature (also shutdown, reboot, etc):
+![Control panel muting](http://i.imgur.com/BAkdmw0.png)
 
-Fast & lightweight
-- Code is very small, so even with the extensive amount of features it has, it should run as little as possible.
+#### Fast & lightweight
+Code is very small, so even with the extensive amount of features it has, it should run as little as possible.
 
-Modules
-- Code uses modules for all of its commands and features. These modules can be loaded, unload, completely removed, and dynamically updated to fit the channels needs. Modules can be made easily, and because of the nature of the modules, you can make whatever you want/control the bot easily.
+#### Modules
+Code uses modules for all of its commands and features. These modules can be loaded, unload, completely removed, and dynamically updated to fit the channels needs. Modules can be made easily, and because of the nature of the modules, you can make whatever you want/control the bot easily.
 
-Very user friendly
-- It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <command>`
+#### Very user friendly
+It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <command>`
 
-Easy to use API
-- When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/Liamraystanley/Code/wiki) for more information.
+#### Easy to use API
+When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/Liamraystanley/Code/wiki) for more information.
 
-Open-Source
-- Found a bug, feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
+#### Open-Source
+Found a bug, feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
 
-Configuration
-- Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!
+#### Configuration
+Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!
 
-Installation - How do I install? 
-================================
-________________________________
+## Installation - How do I install? 
 
 **If you have any issues during the install, feel free to head to http://chat.liamstanley.io/ to get help**
 
