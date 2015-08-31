@@ -62,9 +62,9 @@ def help(code, input):
                 listcmds = '{green}(%s){c}' % ', '.join(cmds)
             if mod['syntax']:
                 code.say('{b}{purple}Syntax{c} %s{b}: %s' % (listcmds, mod['syntax']))
-                code.say('{b}{purple}Description{c}{b}: %s' % (mod['info']))
+                code.msg(input.sender, '{b}{purple}Description{c}{b}: %s' % (mod['info']), shorten_urls=False)
             else:
-                code.say('{b}{purple}Help{c} %s{b}: %s' % (listcmds, mod['info']))
+                code.msg(input.sender, '{b}{purple}Help{c} %s{b}: %s' % (listcmds, mod['info']), shorten_urls=False)
         if mod['example']:
             code.say('{b}{purple}Example{c}{b}: %s' % mod['example'])
     else:
