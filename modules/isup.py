@@ -8,9 +8,9 @@ def isup(code, input):
     try:
         data = web.text('http://isup.me/%s' % input.group(2))
         if 'not just you' in data:
-            return code.say('{red}%s is down! It\'s not just you!' % input.group(2))
+            return code.msg(input.sender, '{red}%s is down! It\'s not just you!' % input.group(2), shorten_urls=False)
         elif 'It\'s just you.' in data:
-            return code.say('{green}%s is up! Must just be you!' % input.group(2))
+            return code.msg(input.sender, '{green}%s is up! Must just be you!' % input.group(2), shorten_urls=False)
         else:
             return code.say('{red}Failed to get the status of the website!')
     except:
