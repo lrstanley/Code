@@ -5,14 +5,18 @@ from util.hook import *
 # http://www.speedtest.net/my-result/<id>
 # http://www.speedtest.net/result/<id>.png
 
-uri_regex = r'.*https?://www.speedtest.net/(?:result|my-result|android)/([0-9]{5,15})(?:\.png)?.*'
+uri_regex = r'.*https?://www.speedtest.net/((?:result|my-result|android)/(?:a/)?([0-9]{5,15}))(?:\.png)?.*'
 uri = 'http://www.speedtest.net/my-result/%s'
+uri_alt = 'http://www.speedtest.net/my-result/a/%s'
 
 
 @hook(rule=uri_regex, thread=False, supress=True)
 def speedtest(code, input):
-    id = input.group(1)
-    raw = web.clean(web.text(uri % id))
+    id = input.group(2)
+    if "/a/" in input.group(1):
+        raw = web.clean(web.text(uri_alt % id))
+    else:
+        raw = web.clean(web.text(uri % id))
     raw = raw.split('<div class="share-main">', 1)[1]
     raw = raw.split('</div><!--/share-main-->', 1)[0]
     results = web.findin(r'<p>.*?</p>', raw)

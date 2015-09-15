@@ -32,7 +32,7 @@ def get_url_data(url):
         uri = web.get(url, verify=False)
         if not uri.text:
             return False
-        title = re.compile('<title>(.*?)</title>', re.IGNORECASE | re.DOTALL).search(uri.text).group(1)
+        title = re.compile('<title.*?>(.*?)</title>', re.IGNORECASE | re.DOTALL).search(uri.text).group(1)
         title = web.escape(title)
         title = title.replace('\n', '').replace('\r', '')
 
