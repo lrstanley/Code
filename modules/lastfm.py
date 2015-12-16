@@ -18,4 +18,3 @@ def lastfm(code, input):
     track = data['track'][0]
     artist, song, url = track['artist']['#text'], track['name'], track['url']
     code.reply(code.format('{purple}{song} -- {artist}{c} {url}').format(artist=artist, song=song, url=url))
-
