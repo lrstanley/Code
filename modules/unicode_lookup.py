@@ -62,7 +62,7 @@ def setup(code):
     curr = int(time.time())
     db = database.get(code.default, 'unicodedata')
     if not db:
-        gen_db(code.defaultk)
+        gen_db(code.default)
     else:
         diff = int(curr - int(db['time']))
         if diff > 518400:
