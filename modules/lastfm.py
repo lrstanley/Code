@@ -33,5 +33,5 @@ def lastfm(code, input):
 
     track = data['track'][0]
     artist, song, url, name = track['artist']['#text'], track['name'], track['url'], data['@attr']['user']
-    code.reply(code.format('{purple}{song} -- {artist}{c} - {pink}{user}{c} - {url}').format(artist=artist, song=song, url=url, user=name))
-
+    code.reply(code.format('{purple}{song} -- {artist}{c} - {pink}{user}{c} - {url}').format(
+        artist=artist, song=song, url=url, user=name))
