@@ -3,7 +3,6 @@ from util.hook import *
 from util import web
 
 calc_uri = 'http://api.duckduckgo.com'
-py_uri = 'http://tumbolia.appspot.com/py/'
 
 
 @hook(cmds=['c', 'calc', 'calculate'], ex='calc 5 + 3', args=True)
@@ -21,15 +20,13 @@ def calc(code, input):
 @hook(cmds=['py', 'python'], ex='py print(int(1.0) + int(3))', args=True)
 def py(code, input):
     """python <commands> -- Execute Python inside of a sandbox"""
-    query = input.group(2).encode('utf-8')
+    query = input.group(2)
     try:
-        answer = web.text(py_uri + web.quote(query))
+        answer = web.exec_py(query)
         if answer:
-            answer = answer.replace('\n', ' ').replace(
-                '\t', ' ').replace('\r', '')
+            answer = answer.replace('\n', ' ').replace('\t', ' ').replace('\r', '')
             return code.reply(answer)
-        else:
-            return code.reply('Sorry, no {b}%s{b}')
+        return code.reply('{red}The server did not return an answer.')
     except:
         return code.reply('{red}The server did not return an answer.')
 
