@@ -17,27 +17,29 @@ def search(code, input):
     try:
         data = web.get(uri, params={'q': input.group(2)})
         tmp = data.text.replace('\r', '').replace('\n', '').strip()
-        target = r'(?im)<div class="results_links .*?(?!.*web\-result\-sponsored)">.*?<a .*? href="(.*?)">.*?</a>.*?' \
-            '<div class="snippet">(.*?)</div>.*?<div class="url">(.*?)</div>'
-        found = list(re.findall(target, tmp))
+        target = r'(?im)(<div class="result results_links.*?">.*?<a .*?class="result__a" href="([^"]+)">(.*?)</a>.*?</div>)'
+        found = [x for x in list(re.findall(target, tmp)) if len(x) > 0 and "badge--ad" not in x[0]]
         if len(found) > url_count:
             found = found[:url_count]
         results = []
-        if len(found) < 2:
+        if len(found) < 1:
             return code.say('{b}No results found{b}')
+
         count = 0
         for item in found:
             i = list(item)
             result = {}
-            result['url'] = web.escape(web.striptags(i[0]))
-            result['short'] = web.escape(web.striptags(i[2]).capitalize().split('/')[0])
-            result['title'] = web.escape(web.striptags(i[1]))
+            result['url'] = i[1]
+            result['title'] = web.escape(web.striptags(i[2]))
+
             if len(result['title']) > title_length:
                 result['title'] = result['title'][:title_length] + '{b}...{b}'
 
-            results.append('{b}%s{b} - {%s}%s{c} - %s' % (result['short'], url_colors[count], result['title'], result['url']))
+            results.append('{%s}%s{c} - %s' % (url_colors[count], result['title'], result['url']))
             count += 1
+
         return code.say(' | '.join(results))
+
     except Exception as e:
         output.error('Error in search.py: %s' % str(e))
         return code.say('{b}Unable to search for %s{b}' % input.group(2))
