@@ -92,8 +92,10 @@ def fml_fmt(data, id=0):
         except:
             items.append(False)
 
-    if id < 1: id = 1
-    if id > len(raw_items): id = len(raw_items)
+    if id < 1:
+        id = 1
+    if id > len(raw_items):
+        id = len(raw_items)
     id = id - 1
 
     return items[id]
