@@ -5,144 +5,95 @@ from util import web
 key = '51befff611067'
 language = 'en'
 mature = False
-# http://api.betacie.com/readme.php
+uri = 'http://api.fmylife.com/view%s'
+# API docs: http://api.betacie.com/readme.php
 
 
 @hook(cmds=['fml', 'fmylife'], ex='fml #12390101', rate=15)
 def fml(code, input):
-    """fml - Retrieve random FML's, via FMyLife.com's dev API."""
+    """fml - Retrieve random FML's from fmylife.com."""
     # Random/No input
     if not input.group(2):
-        try:
-            r = fml_random()
-            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b} - http://fmylife.com/%s' % (
-                str(r['fml-id']),
-                web.escape(r['fml']).replace('FML', '{red}FML{c}'),
-                r['+'],
-                r['-'],
-                str(r['fml-id'])
-            ))
-        except:
+        f = fml_fetch(random=True)
+        if not f:
             return code.say('{red}Failed to retrieve random FML.')
+
+        return code.say('#{blue}%(id)d{c} %(fml)s +{b}%(agree)d{b}/-{b}%(deserved)d{b} - http://fmylife.com/%(id)d' % f)
+
     elif input.group(2).startswith('#') and input.group(2).lstrip('#').isdigit():
-        try:
-            r = fml_id_search(input.group(2).lstrip('#'))
-            code.say('#{blue}%s{c} %s +{b}%s{b}/-{b}%s{b} - http://fmylife.com/%s' % (
-                str(r['fml-id']),
-                web.escape(r['fml']).replace('FML', '{red}FML{c}'),
-                r['+'],
-                r['-'],
-                str(r['fml-id'])
-            ))
-        except:
+        f = fml_fetch(by_id=input.group(2).lstrip('#'))
+        if not f:
             return code.say('Failed to retrieve FML via ID.')
+
+        return code.say('#{blue}%(id)d{c} %(fml)s +{b}%(agree)d{b}/-{b}%(deserved)d{b} - http://fmylife.com/%(id)d' % f)
+
     # Input/Assume search query, with (possible) number at end indicating FML
     # index
     else:
         msg = input.group(2).lower().strip()
         parts = msg.split()
-        if parts[-1].replace('-', '').isdigit():
-            if int(parts[-1]) <= 0:
-                id = 1
-            else:
-                id = int(parts[-1].replace('-', ''))
+        if parts[-1].isdigit():
+            id = int(parts[-1])
+
             del parts[-1]
             query = '+'.join(parts)
         else:
             id = 1
             query = msg.replace(' ', '+')
-        try:
-            r = fml_search(query, id)
-            code.say(
-                '(%s/%s) #{blue}%s{c} %s +{b}%s{b}/-{b}%s{b} - http://fmylife.com/%s' % (
-                    r['id'], r['max'],
-                    str(r['fml-id']),
-                    web.escape(r['fml']).replace('FML', '{red}FML{c}'),
-                    r['+'],
-                    r['-'],
-                    str(r['fml-id'])
-                ))
-        except:
+
+        f = fml_fetch(search=(query, id))
+        if not f:
             return code.say('Failed to search for FML.')
 
+        return code.say('(%(uid)d/%(max)d) #{blue}%(id)d{c} %(fml)s +{b}%(agree)d{b}/-{b}%(deserved)d{b} - http://fmylife.com/%(id)d' % f)
 
-def fml_random():
-    """fml - Retrieve random FML's, via FMyLife.com's dev API."""
-    try:
-        args = {
-            "language": language,
-            "key": key
-        }
-        r = web.text('http://api.fmylife.com/view/random/1', params=args)
-    except:
-        return
-    fml = re.compile(r'<text>.*?</text>').findall(r)
-    fmlid = re.compile(r'<item id=".*?">').findall(r)
-    agree = re.compile(r'<agree>.*?</agree>').findall(r)
-    deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
-    return {
-        'fml': web.escape(web.striptags(fml[0])),
-        'fml-id': fmlid[0].replace('<item id="', '', 1).replace('">', '', 1).strip(),
-        '+': web.striptags(agree[0]),
-        '-': web.striptags(deserved[0])
+
+def fml_fetch(random=False, by_id=False, search=False):
+    if not random and not by_id and not search:
+        raise ValueError
+
+    args = {
+        "language": language,
+        "key": key
     }
 
-
-def fml_search(query, id):  # ID is index of search query
-    """fml - Retrieve FML search results, via FMyLife.com's dev API."""
-    # Try to query FML
     try:
-        query = re.sub(r'[^\w\s]', '+', query)
-        query = query.replace('.', '+')
-        while query.find('++') > -1:
-            query = query.replace('++', '+').strip('+')
-        data = {
-            "search": query,
-            "language": language,
-            "key": key
-        }
-        r = web.text('http://api.fmylife.com/view/search', params=data)
+        if random:
+            return fml_fmt(web.text(uri % '/random/1', params=args))
+        elif by_id:
+            return fml_fmt(web.text(uri % '/{0}/nocomment'.format(str(by_id)), params=args))
+        elif search:
+            # search should be a tuple of (query, id) pair
+            args['search'] = search[0]
+            return fml_fmt(web.text(uri % '/search', params=args), id=search[1])
     except:
-        return
-    # find god awful FML
-    fml = re.compile(r'<text>.*?</text>').findall(r)
-    fmlid = re.compile(r'<item id=".*?">').findall(r)
-    count = len(fml)
-    if count == 0:
-        return code.say('The definition for "{purple}%s{c}" wasn\'t found.' % ' '.join(parts))
-    if id > count:
-        id = count
-    # Who agrees
-    agree = re.compile(r'<agree>.*?</agree>').findall(r)
-    # It's their fault!
-    deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
-    return {
-        'fml': web.striptags(fml[id - 1]),
-        'fml-id': fmlid[id - 1].replace('<item id="', '', 1).replace('">', '', 1).strip(),
-        '+': web.striptags(agree[id - 1]),
-        '-': web.striptags(deserved[id - 1]),
-        'id': id,
-        'max': count
-    }
+        return False
 
 
-def fml_id_search(query_id):
-    """fml - Retrieve the FML in accordance with the assigned ID, via FMyLife.com's dev API."""
-    try:
-        args = {
-            "language": language,
-            "key": key
-        }
-        r = web.text('http://api.fmylife.com/view/{}/nocomment'.format(str(query_id)), params=args)
-    except:
-        return
-    fml = re.compile(r'<text>.*?</text>').findall(r)
-    fmlid = re.compile(r'<item id=".*?">').findall(r)
-    agree = re.compile(r'<agree>.*?</agree>').findall(r)
-    deserved = re.compile(r'<deserved>.*?</deserved>').findall(r)
-    return {
-        'fml': web.escape(web.striptags(fml[0])),
-        'fml-id': fmlid[0].replace('<item id="', '', 1).replace('">', '', 1),
-        '+': web.striptags(agree[0]),
-        '-': web.striptags(deserved[0])
-    }
+def fml_fmt(data, id=0):
+    raw_items = [item for item in re.compile(r'<item .*?>.*?</item>').findall(data)]
+
+    if not raw_items:
+        return False
+
+    items, count = [], 0
+    for f in raw_items:
+        count += 1
+        try:
+            items.append({
+                'fml': web.escape(web.striptags(re.compile(r'<text>(.*?)</text>').findall(f)[0])).replace('FML', '{red}FML{c}'),
+                'id': int(re.compile(r'<item .*id="([0-9]+)".*>').findall(f)[0]),
+                'uid': count,
+                'max': len(raw_items),
+                'agree': int(web.striptags(re.compile(r'<agree>(.*?)</agree>').findall(f)[0])),
+                'deserved': int(web.striptags(re.compile(r'<deserved>(.*?)</deserved>').findall(f)[0]))
+            })
+
+        except:
+            items.append(False)
+
+    if id < 1: id = 1
+    if id > len(raw_items): id = len(raw_items)
+    id = id - 1
+
+    return items[id]
