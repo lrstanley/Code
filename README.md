@@ -12,13 +12,13 @@ Code is packed full of features ranging from raw IRC functions to modules that c
 Code has a built-in control panel that you can enable, that also serves as a webserver and a REST api that allows you to remotely execute functions or retrieve information from the bot, all via GET/POST requests. Everything authenticated too!
 
 #### The control panel itself:
-![The control panel](http://i.imgur.com/ewAgVNu.png)
+![The control panel](https://i.imgur.com/ewAgVNu.png)
 
 Webserver authentication:
-![Control panel authentication](http://i.imgur.com/w5kbij3.png)
+![Control panel authentication](https://i.imgur.com/w5kbij3.png)
 
 Mute feature (also shutdown, reboot, etc):
-![Control panel muting](http://i.imgur.com/BAkdmw0.png)
+![Control panel muting](https://i.imgur.com/BAkdmw0.png)
 
 #### Fast & lightweight
 Code is very small, so even with the extensive amount of features it has, it should run as little as possible.
@@ -72,7 +72,7 @@ Licensing
 ---------
 _________
 
-Code Copyright (C) 2012-2015 Liam Stanley
+Code Copyright (C) 2012-2016 Liam Stanley
     `Eiffel Forum License, version 2`
     
     1. Permission is hereby granted to use, copy, modify and/or
