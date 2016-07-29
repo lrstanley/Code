@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Code by Liamraystanley</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Code</h1>
+      <h2 class="project-tagline">Code - Python IRC Bot</h2>
+      <a href="https://github.com/Liamraystanley/Code" class="btn">View on GitHub</a>
+      <a href="https://github.com/Liamraystanley/Code/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Liamraystanley/Code/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="code-the-flexible-python-irc-bot" class="anchor" href="#code-the-flexible-python-irc-bot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Code the flexible Python IRC Bot</h1>
+
+<p>Code is a open source python IRC bot. Code can run on any operating system that supports Python 2.7, but works best on Linux based distrobutions.</p>
+
+<p>Feel free to test Code here: <a href="http://byteirc.org/channel/L">http://byteirc.org/channel/L</a></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+
+<p>Code is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:</p>
+
+<h4>
+<a id="control-panel" class="anchor" href="#control-panel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Control panel</h4>
+
+<p>Code has a built-in control panel that you can enable, that also serves as a webserver and a REST api that allows you to remotely execute functions or retrieve information from the bot, all via GET/POST requests. Everything authenticated too!</p>
+
+<h4>
+<a id="the-control-panel-itself" class="anchor" href="#the-control-panel-itself" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The control panel itself:</h4>
+
+<p><img src="http://i.imgur.com/ewAgVNu.png" alt="The control panel"></p>
+
+<p>Webserver authentication:
+<img src="http://i.imgur.com/w5kbij3.png" alt="Control panel authentication"></p>
+
+<p>Mute feature (also shutdown, reboot, etc):
+<img src="http://i.imgur.com/BAkdmw0.png" alt="Control panel muting"></p>
+
+<h4>
+<a id="fast--lightweight" class="anchor" href="#fast--lightweight" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fast &amp; lightweight</h4>
+
+<p>Code is very small, so even with the extensive amount of features it has, it should run as little as possible.</p>
+
+<h4>
+<a id="modules" class="anchor" href="#modules" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modules</h4>
+
+<p>Code uses modules for all of its commands and features. These modules can be loaded, unload, completely removed, and dynamically updated to fit the channels needs. Modules can be made easily, and because of the nature of the modules, you can make whatever you want/control the bot easily.</p>
+
+<h4>
+<a id="very-user-friendly" class="anchor" href="#very-user-friendly" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Very user friendly</h4>
+
+<p>It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try <code>.help &lt;command&gt;</code></p>
+
+<h4>
+<a id="easy-to-use-api" class="anchor" href="#easy-to-use-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Easy to use API</h4>
+
+<p>When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the <a href="https://github.com/Liamraystanley/Code/wiki">Wiki</a> for more information.</p>
+
+<h4>
+<a id="open-source" class="anchor" href="#open-source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Open-Source</h4>
+
+<p>Found a bug, feature, or need technical support/advice? You can always navigate to the <a href="https://github.com/Liamraystanley/Code/issues">Github</a> page to make requests and post bugs. Heck, even fork Code and make your own modifications!</p>
+
+<h4>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h4>
+
+<p>Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!</p>
+
+<h2>
+<a id="installation---how-do-i-install" class="anchor" href="#installation---how-do-i-install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation - How do I install?</h2>
+
+<p><strong>If you have any issues during the install, feel free to head to <a href="http://chat.liamstanley.io/">http://chat.liamstanley.io/</a> to get help</strong></p>
+
+<h2>
+<a id="unix--unix-like-os-" class="anchor" href="#unix--unix-like-os-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Unix &amp; Unix-like OS: </h2>
+
+<pre><code>apt-get install python2.7 git screen
+git clone https://github.com/Liamraystanley/Code.git
+cp -rf example.json config.json
+nano config.json
+python code.py
+</code></pre>
+
+<p>If you wish to not run your bot in the foreground, you may use the <code>screen</code> daemon as so:</p>
+
+<pre><code>screen -S code python code.py
+</code></pre>
+
+<p>This creates a terminal window that can be logged into and out without disturbing the process in that window. To exit screen safely, hit <code>CTRL+A</code> then <code>CTRL+D</code>.
+To log back into, and view the playback of Code, type <code>screen -x code</code>.</p>
+
+<h2>
+<a id="windows-" class="anchor" href="#windows-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Windows: </h2>
+
+<ul>
+<li>Make sure you have Python installed <code>http://www.python.org/download/releases/2.7.5/</code>
+</li>
+<li>Download Code here: <code>https://github.com/Liamraystanley/Code/zipball/master</code> and unzip it.</li>
+<li>Copy and rename <code>example.json</code> to <code>config.json</code> (Note, it's best NOT to use the Windows notepad, rather, use Notepad++)</li>
+<li>You can open up command prompt, <code>cd</code> to Codes directory, and execute Code with <code>python code.py</code>.</li>
+<li>Note, if command prompt says that <code>python</code> is not a internal or external command/program, that means Python failed to be added to your system-wide %PATH% file. So, you need to add it to the %PATH% variable.</li>
+</ul>
+
+<h2>
+<a id="licensing" class="anchor" href="#licensing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Licensing</h2>
+
+<hr>
+
+<p>Code Copyright (C) 2012-2015 Liam Stanley
+    <code>Eiffel Forum License, version 2</code></p>
+
+<pre><code>1. Permission is hereby granted to use, copy, modify and/or
+    distribute this package, provided that:
+        * copyright notices are retained unchanged,
+        * any distribution of this package, whether modified or not,
+          includes this license text.
+2. Permission is hereby also granted to distribute binary programs
+    which depend on this package. If the binary program depends on a
+    modified version of this package, you are encouraged to publicly
+    release the modified version of this package.
+
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT WARRANTY. ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE TO ANY PARTY FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THIS PACKAGE.
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Liamraystanley/Code">Code</a> is maintained by <a href="https://github.com/Liamraystanley">Liamraystanley</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
