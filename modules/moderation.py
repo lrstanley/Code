@@ -69,7 +69,7 @@ def kick(code, input):
         return code.say('...')
 
 
-@hook(cmds=['ban', 'b', 'kickban'], istrusted=True, ischannel=True, selfopped=True, args=True)
+@hook(cmds=['ban', 'b', 'kickban'], trusted=True, ischannel=True, selfopped=True, args=True)
 def ban(code, input):
     """ ban <user> - Bans a user from the current channel. Auto-kicks any users matching mask. """
     banmask = matchmask(input.group(2))
@@ -78,7 +78,7 @@ def ban(code, input):
     return code.write(['MODE', input.sender, '+b', banmask])
 
 
-@hook(cmds=['unban', 'ub'], istrusted=True, ischannel=True, selfopped=True, args=True)
+@hook(cmds=['unban', 'ub'], trusted=True, ischannel=True, selfopped=True, args=True)
 def unban(code, input):
     """ unban <user> - Unbans a user from the current channel. """
     banmask = matchmask(input.group(2))
@@ -87,7 +87,7 @@ def unban(code, input):
     return code.write(['MODE', input.sender, '-b', banmask])
 
 
-@hook(cmds=['topic'], istrusted=True, ischannel=True, selfopped=True, args=True)
+@hook(cmds=['topic'], trusted=True, ischannel=True, selfopped=True, args=True)
 def topic(code, input):
     """ topic <text> - Sets the topic of the current channel to the given text. """
     code.write(['PRIVMSG', 'ChanServ'], 'TOPIC %s %s' % (input.sender, input.group(2)))
