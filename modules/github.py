@@ -104,7 +104,7 @@ def github(code, input, message, auto=False):
             return '%s %s' % (str(number), word)
 
         output.append(is_multiple(response['stargazers_count'], 'star'))
-        output.append(is_multiple(response['watchers_count'], 'watcher'))
+        output.append(is_multiple(response['subscribers_count'], 'watchers'))
         output.append(is_multiple(response['forks_count'], 'fork'))
         output.append(is_multiple(response['open_issues_count'], 'issue'))
         output.append(is_multiple(response['network_count'], 'collaborator'))
