@@ -159,7 +159,7 @@ def ignore(code, input):
     """ ignore <mask> - Makes code ignore anyone matching <mask> """
     mask = matchmask(input.group(2))
     if not mask:
-        return code.say('Invalid mask! For more info, see: https://github.com/Liamraystanley/Code/wiki/Masks')
+        return code.say('Invalid mask! For more info, see: https://github.com/lrstanley/Code/wiki/Masks')
     blocks = database.get(code.nick, 'ignore', [])
     if mask not in blocks:
         blocks.append(mask)
@@ -176,7 +176,7 @@ def unignore(code, input):
     """ unignore <mask> - Removes <mask> from ignore list. """
     mask = matchmask(input.group(2))
     if not mask:
-        return code.say('Invalid mask! For more info, see: https://github.com/Liamraystanley/Code/wiki/Masks')
+        return code.say('Invalid mask! For more info, see: https://github.com/lrstanley/Code/wiki/Masks')
     blocks = database.get(code.nick, 'ignore', [])
     if mask not in blocks:
         return code.say('%s doesn\'t exist in the ignore list!' % mask)

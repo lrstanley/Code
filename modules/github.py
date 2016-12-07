@@ -18,7 +18,7 @@ def github_automatic(code, input):
         return
 
 
-@hook(cmds=['github', 'git'], ex='github Liamraystanley/Code', rate=15, args=True)
+@hook(cmds=['github', 'git'], ex='github lrstanley/Code', rate=15, args=True)
 def github_cmd(code, input):
     return github(code, input, input.group(2))
 

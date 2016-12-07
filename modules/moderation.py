@@ -74,7 +74,7 @@ def ban(code, input):
     """ ban <user> - Bans a user from the current channel. Auto-kicks any users matching mask. """
     banmask = matchmask(input.group(2))
     if not banmask:
-        return code.say('Invalid banmask! For more info, see: https://github.com/Liamraystanley/Code/wiki/Masks')
+        return code.say('Invalid banmask! For more info, see: https://github.com/lrstanley/Code/wiki/Masks')
     return code.write(['MODE', input.sender, '+b', banmask])
 
 
@@ -83,7 +83,7 @@ def unban(code, input):
     """ unban <user> - Unbans a user from the current channel. """
     banmask = matchmask(input.group(2))
     if not banmask:
-        return code.say('Invalid banmask! For more info, see: https://github.com/Liamraystanley/Code/wiki/Masks')
+        return code.say('Invalid banmask! For more info, see: https://github.com/lrstanley/Code/wiki/Masks')
     return code.write(['MODE', input.sender, '-b', banmask])
 
 

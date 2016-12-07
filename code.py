@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 """
 Code Copyright (C) 2012-2015 Liam Stanley
-Source/docs: https://github.com/Liamraystanley/Code
+Source/docs: https://github.com/lrstanley/Code
 """
 
 import sys
@@ -60,7 +60,7 @@ def parse_json(filename):
 
 def setupServer(server):
     defaults = {
-        'website': 'https://github.com/Liamraystanley/Code',
+        'website': 'https://github.com/lrstanley/Code',
         'name': '\x0307Code -- Python IRC Bot',
         'user': 'code',
         'port': 6667,

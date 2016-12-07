@@ -30,10 +30,10 @@ Code uses modules for all of its commands and features. These modules can be loa
 It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <command>`
 
 #### Easy to use API
-When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/Liamraystanley/Code/wiki) for more information.
+When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/lrstanley/Code/wiki) for more information.
 
 #### Open-Source
-Found a bug, feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/Liamraystanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
+Found a bug, feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/lrstanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
 
 #### Configuration
 Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!
@@ -46,7 +46,7 @@ Unix & Unix-like OS:
 --------------------
 
     apt-get install python2.7 git screen
-    git clone https://github.com/Liamraystanley/Code.git
+    git clone https://github.com/lrstanley/Code.git
     cp -rf example.json config.json
     nano config.json
     python code.py
@@ -63,7 +63,7 @@ Windows:
 
 
 - Make sure you have Python installed `http://www.python.org/download/releases/2.7.5/`
-- Download Code here: `https://github.com/Liamraystanley/Code/zipball/master` and unzip it.
+- Download Code here: `https://github.com/lrstanley/Code/zipball/master` and unzip it.
 - Copy and rename `example.json` to `config.json` (Note, it's best NOT to use the Windows notepad, rather, use Notepad++)
 - You can open up command prompt, `cd` to Codes directory, and execute Code with `python code.py`.
 - Note, if command prompt says that `python` is not a internal or external command/program, that means Python failed to be added to your system-wide %PATH% file. So, you need to add it to the %PATH% variable.

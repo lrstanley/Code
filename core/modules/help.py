@@ -79,7 +79,7 @@ def about(code, input):
     response = (
         code.nick + ' was developed by Liam Stanley and many others. {b}' + code.nick + '{b} is a open-source ' +
         'Python Modular IRC Bot, that serves as a fun, fast, and collective resource ' +
-        'for large, and small channels. More info: https://github.com/Liamraystanley/Code'
+        'for large, and small channels. More info: https://github.com/lrstanley/Code'
     )
     code.reply(response)
 
@@ -88,7 +88,7 @@ def about(code, input):
 def issue(code, input):
     code.reply('Having an issue with {b}' +
                code.nick + '{b}? Post a bug report here:')
-    code.say('https://github.com/Liamraystanley/Code/issues/new')
+    code.say('https://github.com/lrstanley/Code/issues/new')
 
 
 @hook(rule=r'$nickname!', priority='high', thread=False)
