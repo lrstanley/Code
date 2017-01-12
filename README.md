@@ -1,23 +1,23 @@
 # Code the flexible Python IRC Bot
 
-Code is a open source python IRC bot. Code can run on any operating system that supports Python 2.7, but works best on Linux based distrobutions.
+Code is a open source python IRC bot. Code can run on any operating system that supports Python 2.7, but works best on Linux based distributions.
 
 Feel free to test Code here: http://byteirc.org/channel/L
 
 ## Features
 
-Code is packed full of features ranging from raw IRC functions to modules that can be unloaded and loaded with ease. Some features include:
+Code is packed full of features ranging from raw IRC functions to modules that can be loaded and unloaded with ease. Some features include:
 
 #### Control panel
-Code has a built-in control panel that you can enable, that also serves as a webserver and a REST api that allows you to remotely execute functions or retrieve information from the bot, all via GET/POST requests. Everything authenticated too!
+Code has a built-in control panel that you can enable, that also serves as a webserver and REST API that allows you to remotely execute functions or retrieve information from the bot via GET/POST requests. Everything is authenticated, too!
 
 #### The control panel itself:
 ![The control panel](https://i.imgur.com/ewAgVNu.png)
 
-Webserver authentication:
+#### Webserver authentication:
 ![Control panel authentication](https://i.imgur.com/w5kbij3.png)
 
-Mute feature (also shutdown, reboot, etc):
+#### Mute feature (also shutdown, reboot, etc):
 ![Control panel muting](https://i.imgur.com/BAkdmw0.png)
 
 #### Fast & lightweight
@@ -27,16 +27,16 @@ Code is very small, so even with the extensive amount of features it has, it sho
 Code uses modules for all of its commands and features. These modules can be loaded, unload, completely removed, and dynamically updated to fit the channels needs. Modules can be made easily, and because of the nature of the modules, you can make whatever you want/control the bot easily.
 
 #### Very user friendly
-It is very easy to install and run Code, even if you have no knowledge of ever running a IRC bot before. I created the bot so it has either no external modules, or the modules are packaged with it. Help commands also help you with specific documentation for almost every command. Try `.help <command>`
+It is very easy to install and run Code, even if you have no knowledge of running an IRC bot. I created the bot so it has either no external modules, or the modules are packaged with it. The included 'help' commands provide specific documentation for almost every command. Try `.help <command>`
 
 #### Easy to use API
-When creating your own modules, it is always very easy to have a documented API and easy to understand functions. Note, the API isn't fully documented, so there are a lot of features that aren't listed there. See the [Wiki](https://github.com/lrstanley/Code/wiki) for more information.
+When creating your own modules, it is always very easy to have easy to understand functions and a documented API. Note the API isn't fully documented; there are a lot of features that aren't listed there. See the [Wiki](https://github.com/lrstanley/Code/wiki) for more information.
 
 #### Open-Source
-Found a bug, feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/lrstanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
+Found a bug, have an idea for a feature, or need technical support/advice? You can always navigate to the [Github](https://github.com/lrstanley/Code/issues) page to make requests and post bugs. Heck, even fork Code and make your own modifications!
 
 #### Configuration
-Almost ever single aspect of the bot is configurable to your likings. Don't like a module? Remove it. Like only ONE module? Whitelist it!
+Nearly every single aspect of the bot is configurable for your liking. Don't like a module? Remove it. Like only ONE module? Whitelist it!
 
 ## Installation - How do I install? 
 
@@ -51,7 +51,7 @@ Unix & Unix-like OS:
     nano config.json
     python code.py
 
-If you wish to not run your bot in the foreground, you may use the `screen` daemon as so:
+If you choose to not run your bot in the foreground, you may use the `screen` daemon, like so:
 
     screen -S code python code.py
 
