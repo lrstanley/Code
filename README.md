@@ -14,10 +14,10 @@ Code has a built-in control panel that you can enable, that also serves as a web
 #### The control panel itself:
 ![The control panel](https://i.imgur.com/ewAgVNu.png)
 
-Webserver authentication:
+#### Webserver authentication:
 ![Control panel authentication](https://i.imgur.com/w5kbij3.png)
 
-Mute feature (also shutdown, reboot, etc):
+#### Mute feature (also shutdown, reboot, etc):
 ![Control panel muting](https://i.imgur.com/BAkdmw0.png)
 
 #### Fast & lightweight
