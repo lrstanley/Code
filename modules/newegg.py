@@ -1,13 +1,12 @@
 from util import web
 from util.hook import *
 
-item_info = 'http://www.ows.newegg.com/Products.egg/%s/ProductDetails'
+item_info = 'http://www.ows.newegg.com/Products.egg/%s/Detail'
 item_re = r'.*(?:www.newegg.com|newegg.com)/Product/Product\.aspx\?.*?Item=([-_a-zA-Z0-9]+).*'
 
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46'
-                  '(KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3',
+    'User-Agent': 'Newegg Android App / 4.5.0',
     'Referer': 'http://www.newegg.com/'
 }
 
@@ -20,50 +19,46 @@ def newegg(code, input):
 
     try:
         data = web.json(item_info % id, headers=headers)
-    except:
+    except Exception as e:
         return  # Same as below
-    if not data:
+    if not data or not data.get('Basic'):
         return  # We had issues.. ignore
 
-    if len(data['Title']) > 50:
-        title = ' '.join(data['Title'][:50].split()[0:-1]) + '...'
+    if len(data['Basic'].get('Title', '')) > 50:
+        title = ' '.join(data['Basic']['Title'][:50].split()[0:-1]) + '...'
     else:
-        title = data['Title']
+        title = data['Basic']['Title']
     title = '{b}%s{b}' % title
 
-    if not data['FinalPrice'] == data['OriginalPrice']:
+    if not data['Basic']['FinalPrice'] == data['Basic']['OriginalPrice']:
         price = '{b}%s{b} (was {b}%s{b})' % (
-            data['FinalPrice'], data['OriginalPrice'])
+            data['Basic']['FinalPrice'], data['Basic']['OriginalPrice'])
     else:
-        price = '{b}' + data['FinalPrice'] + '{b}'
+        price = '{b}' + data['Basic']['FinalPrice'] + '{b}'
 
-    review_count = data['ReviewSummary']['TotalReviews']
-    review = data['ReviewSummary']['Rating']
+    review_count = data['Basic']['ReviewSummary']['TotalReviews']
+    review = data['Basic']['ReviewSummary']['Rating']
     if not review_count == '[]':
-        if review_count[1:-1] == '1':
+        if review_count == '1':
             rating_fmt = 'rating'
         else:
             rating_fmt = 'ratings'
-        rating = 'Rated {b}%s/5{b} ({b}%s %s{b})' % (review,
-                                                     review_count[1:-1], rating_fmt)
+        rating = 'Rated {b}%s/5{b} ({b}%s %s{b})' % (review, review_count, rating_fmt)
     else:
         rating = '{b}No Ratings{b}'
 
     tags = []
 
-    if data['IsFeaturedItem']:
+    if data['Basic']['IsFeaturedItem']:
         tags.append('{b}{blue}Featured{c}{b}')
 
-    if data['Instock']:
+    if data['Basic']['Instock']:
         tags.append('{b}{green}In Stock{c}{b}')
     else:
         tags.append('{b}{red}Out Of Stock{c}{b}')
 
-    if data['FreeShippingFlag']:
+    if data['Basic']['IsFreeShipping']:
         tags.append('{b}{green}Free Shipping{c}{b}')
-
-    if data['IsShellShockerItem']:
-        tags.append(u'{b}{green}Shell Shocker{c}{b}')
 
     tags = ', '.join(tags)
 
