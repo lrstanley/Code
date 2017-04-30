@@ -1,0 +1,19 @@
+; example systemd service file for Code:
+; can go in /etc/systemd/system/code.service
+; make sure to:
+;  $ systemctl enable code
+;  $ systemctl start code
+[Unit]
+Description=Code - Python IRC Bot
+After=network.target
+
+[Service]
+ExecStart=/opt/Code/code.py
+WorkingDirectory=/opt/Code
+LimitNOFILE=4096
+User=code
+Group=code
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
