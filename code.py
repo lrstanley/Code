@@ -100,15 +100,14 @@ def main(argv=None):
 
     # 4. Create ~/.code if not made already
     if not os.path.isdir(dotdir):
-        if not os.path.isdir(dotdir):
-            try:
-                output.info('Creating database directory in ~/.code...')
-                os.mkdir(dotdir)
-            except Exception as e:
-                output.error('There was a problem creating %s:' % dotdir)
-                output.error(str(e))
-                output.error('Please fix this and then run code again.')
-                sys.exit(1)
+        try:
+            output.info('Creating database directory in ~/.code...')
+            os.mkdir(dotdir)
+        except Exception as e:
+            output.error('There was a problem creating %s:' % dotdir)
+            output.error(e)
+            output.error('Please fix this and then run code again.')
+            sys.exit(1)
 
     # 5: Load The Configuration
     bot_config = opts.config or 'config.json'
@@ -165,7 +164,7 @@ def main(argv=None):
                     output.error("Configuration file has been changed, however I cannot read it! (%s)" % str(e))
             if len(threads) == 0:
                 output.warning('No more processes to manage. Exiting...')
-                sys.exit()
+                sys.exit(1)
             for id in range(len(threads)):
                 p = threads[id]['process']
                 if p.exitcode == 0:
@@ -194,7 +193,7 @@ def main(argv=None):
             output.status('Terminating process ID #%s (%s:%s)' % (id, threads[id]['config']['host'], threads[id]['config']['port']))
             p.terminate()
         time.sleep(1)
-        sys.exit()
+        sys.exit(0)
 
 
 def connect(id, config):
@@ -205,8 +204,8 @@ if __name__ == '__main__':
     try:
         main()
     except SystemExit:
-        sys.exit()
+        sys.exit(0)
     except KeyboardInterrupt:
-        sys.exit()
+        sys.exit(0)
     except:
         output.error(traceback.format_exc())
