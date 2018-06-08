@@ -2,7 +2,7 @@
 
 Code is a open source python IRC bot. Code can run on any operating system that supports Python 2.7, but works best on Linux based distributions.
 
-Feel free to test Code here: http://byteirc.org/channel/L
+Feel free to test Code here: https://byteirc.org/channel/%23%2Fdev%2Fnull
 
 ## Features
 
