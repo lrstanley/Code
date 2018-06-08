@@ -18,7 +18,7 @@ def setup(code):
     db = database.get(code.default, 'twss')
     if not db:
         try:
-            db = web.json('https://static.liam.sh/code/twss.json')['lines']
+            db = web.json('https://gist.githubusercontent.com/lrstanley/5448b6512827f69cc0a1b167fc9cf893/raw/twss.json')['lines']
             database.set(code.default, db, 'twss')
             output.info('Downloaded "That\'s What She Said" library and saved')
         except:
